@@ -67,12 +67,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             if (!_enablePan) return;
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 _dragOrigin = _camera.ScreenToWorldPoint(Input.mousePosition);
             }
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(1))
             {
                 var dragDifference = _dragOrigin - _camera.ScreenToWorldPoint(Input.mousePosition);
                 if (_infinitePan)

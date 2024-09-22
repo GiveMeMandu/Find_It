@@ -89,23 +89,25 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void HitHiddenObject()
         {
-            if (AudioWhenClick != null)
-            {
-                LevelManager.PlayItemFx(AudioWhenClick);
-            }
-
-            if (EnableBGAnimation)
-            {
-                BgAnimationTransform.gameObject.SetActive(true);
-            }
-
-            if (HideWhenFound)
-            {
-                gameObject.SetActive(false);
+            if(IsFound == false) {
                 IsFound = true;
-            }
+                if (AudioWhenClick != null)
+                {
+                    LevelManager.PlayItemFx(AudioWhenClick);
+                }
 
-            TargetClickAction?.Invoke();
+                if (EnableBGAnimation)
+                {
+                    BgAnimationTransform.gameObject.SetActive(true);
+                }
+
+                if (HideWhenFound)
+                {
+                    gameObject.SetActive(false);
+                }
+
+                TargetClickAction?.Invoke();
+            }
         }
     }
 }
