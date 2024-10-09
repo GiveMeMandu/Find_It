@@ -54,8 +54,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
                 if (target.Value.EnableTooltip)
                 {
-                    imgObj.InitializeTooltips(target.Value.Tooltips, target.Value.TooltipsType);
-                    imgObj.UIClickEvent = DisplayTooltips;
+                    if(target.Value.IsFound) {
+                        imgObj.FoundSprite.gameObject.SetActive(true);
+                    }
+                    else {
+                        imgObj.FoundSprite.gameObject.SetActive(false);
+                        imgObj.InitializeTooltips(target.Value.Tooltips, target.Value.TooltipsType);
+                        imgObj.UIClickEvent = DisplayTooltips;
+                    }
                 }
 
                 target.Value.TargetClickAction = () => { targetClick(target.Key); };

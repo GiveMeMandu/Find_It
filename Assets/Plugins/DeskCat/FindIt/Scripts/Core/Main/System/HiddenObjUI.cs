@@ -11,6 +11,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
     public class HiddenObjUI : MonoBehaviour, IPointerClickHandler
     {
         public Image targetSprite;
+        public Image FoundSprite;
         private bool isEnableTooltips;
         private List<MultiLanguageTextListModel> uiTooltipsListModel;
         private TooltipsType tooltipsType;

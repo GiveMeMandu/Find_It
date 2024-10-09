@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeskCat.FindIt.Scripts.Core.Model;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -15,6 +16,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         [Header("Hidden Object List")] 
         [Tooltip("Place The Hidden Object Into This Array")]
         public HiddenObj[] TargetObjs;
+        public HiddenObj[] RabbitObjs;
+        public TextMeshProUGUI RabbitCountText;
         public bool IsRandomItem;
         public int MaxRandomItem;
 
@@ -42,9 +45,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public UnityEvent GameEndEvent;
 
         private Dictionary<Guid, HiddenObj> TargetObjDic;
+        private Dictionary<Guid, HiddenObj> RabbitObjDic;
         private static LevelManager LevelManagerInstance;
         private DateTime StartTime;
         private DateTime EndTime;
+
+        private int hiddenObjCount = 0;
+        private int rabbitObjCount = 0;
 
         public static void PlayItemFx(AudioClip clip)
         {
@@ -80,7 +87,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void ToggleScrollView()
         {
-            UIScrollType = (UIScrollType == UIScrollType.Horizontal) ? UIScrollType.Vertical : UIScrollType.Horizontal;
+            UIScrollType = (UIScrollType == UIScrollType.Vertical) ? UIScrollType.Vertical : UIScrollType.Horizontal;
             ScrollViewTrigger();
         }
 
@@ -108,6 +115,20 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     TargetObjDic.Add(Guid.NewGuid(), target);
                 }
             }
+            hiddenObjCount = TargetObjDic.Count;
+            RabbitObjDic = new Dictionary<Guid, HiddenObj>();
+            foreach (var rabbit in RabbitObjs)
+            {
+                if (rabbit != null)
+                {
+                    Guid guid = Guid.NewGuid();
+                    RabbitObjDic.Add(guid, rabbit);
+                    
+                    rabbit.TargetClickAction = () => { TargetClick(guid); };
+                }
+            }
+            rabbitObjCount = RabbitObjDic.Count;
+            RabbitCountText.text = $"x {rabbitObjCount}";
 
             if (!IsRandomItem) return;
             
@@ -134,11 +155,17 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void TargetClick(Guid guid)
         {
-            if (!TargetObjDic.ContainsKey(guid)) return;
+            if (TargetObjDic.ContainsKey(guid)) {
+                if (TargetObjDic[guid].hiddenObjFoundType != HiddenObjFoundType.Click) return;
 
-            if (TargetObjDic[guid].hiddenObjFoundType != HiddenObjFoundType.Click) return;
+                FoundObjAction(guid);
+            }
+            else if(RabbitObjDic.ContainsKey(guid)) {
+                if (RabbitObjDic[guid].hiddenObjFoundType != HiddenObjFoundType.Click) return;
 
-            FoundObjAction(guid);
+                FoundRabbitObjAction(guid);
+            }
+
         }
 
         private void RegionToggle(Guid guid)
@@ -155,14 +182,26 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (TargetObjDic[guid].PlaySoundWhenFound)
                 FoundFx.Play();
 
-            TargetObjDic.Remove(guid);
+            // TargetObjDic.Remove(guid);
             CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+            hiddenObjCount--;
+            DetectGameEnd();
+        }
+        private void FoundRabbitObjAction(Guid guid)
+        {
+            if (RabbitObjDic[guid].PlaySoundWhenFound)
+                FoundFx.Play();
+
+            RabbitObjDic.Remove(guid);
+            rabbitObjCount--;
+            // todo : rabbit countt updata
+            RabbitCountText.text = $"x {rabbitObjCount}";
             DetectGameEnd();
         }
 
         private void DetectGameEnd()
         {
-            if (TargetObjDic.Count <= 0)
+            if (hiddenObjCount <= 0 && rabbitObjCount <= 0)
             {
                 if (IsOverwriteGameEnd)
                 {

@@ -12,6 +12,7 @@ public class Stage1Manager : MonoBehaviour, IStageManager
     private void Start() {
         _playableDirector.enabled = false;
         StartStage();
+        GameManager.SetResolution();
     }
 
     public void StartStage() {

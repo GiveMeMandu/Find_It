@@ -34,7 +34,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
 
             _camera = Camera.main;
-            ScaleOverflowCamera();
+            // ScaleOverflowCamera();
         }
 
 
@@ -63,16 +63,44 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
         }
 
-        private void PanCamera()
-        {
+        private void PanCamera() {
             if (!_enablePan) return;
 
-            if (Input.GetMouseButtonDown(1))
+            Pan();
+            MobilePan();
+        }
+        private void MobilePan() {
+
+            if (Input.touchCount != 1) return;
+            
+            Touch touch = Input.GetTouch(0);
+            if(touch.phase == TouchPhase.Began)
+            {
+                _dragOrigin = _camera.ScreenToWorldPoint(touch.position - touch.deltaPosition);
+            }
+
+            else if(touch.phase == TouchPhase.Moved)
+            {
+                var dragDifference = _dragOrigin - _camera.ScreenToWorldPoint(touch.position - touch.deltaPosition);
+                if (_infinitePan)
+                {
+                    _camera.transform.position += dragDifference;
+                }
+                else
+                {
+                    _camera.transform.position = ClampCamera(_camera.transform.position + dragDifference);
+                }
+            }
+        }
+        private void Pan()
+        {
+
+            if (Input.GetMouseButtonDown(0))
             {
                 _dragOrigin = _camera.ScreenToWorldPoint(Input.mousePosition);
             }
 
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButton(0))
             {
                 var dragDifference = _dragOrigin - _camera.ScreenToWorldPoint(Input.mousePosition);
                 if (_infinitePan)
