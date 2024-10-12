@@ -27,17 +27,13 @@ public class Stage2Manager : LevelManagerCount, IStageManager
         {
             if (n.isDisableOnStart) n.gameObject.SetActive(false);
         }
-        levelManager.OnEndEvnt.Add(ClearStage);
+        levelManager.OnEndEvnt.Add(ClearStageTask);
     }
 
 
     protected override void OnFoundObj(object sender, int e)
     {
         base.OnFoundObj(sender, e);
-        // if(curFoundCount == curFoundCountMax)
-        // {
-        //     ClearStage().Forget();
-        // }
     }
     public void StartStage()
     {
@@ -61,7 +57,7 @@ public class Stage2Manager : LevelManagerCount, IStageManager
         OnStartStage?.Invoke(this, EventArgs.Empty);
     }
 
-    public async UniTask ClearStage()
+    public async UniTask ClearStageTask()
     {
         _playableDirector.initialTime = 0;
         _playableDirector.enabled = true;
@@ -69,8 +65,10 @@ public class Stage2Manager : LevelManagerCount, IStageManager
         await UniTask.WaitUntil(() => _playableDirector.state != PlayState.Playing);
     }
 
-    void IStageManager.ClearStage()
+    public void ClearStage()
     {
+        
     }
+
 }
 

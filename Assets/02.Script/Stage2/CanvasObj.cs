@@ -2,18 +2,17 @@ using UnityEngine;
 
 namespace InGame
 {
-    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(AnimationObj))]
     public class CanvasObj : LevelManagerCount
     {
         [SerializeField] private Transform brush;
 
-        private Animator _animator;
-        private string curAnim;
+        private AnimationObj _animationObj;
 
         protected override void Awake()
         {
             base.Awake();
-            _animator = GetComponent<Animator>();
+            _animationObj = GetComponent<AnimationObj>();
         }
         protected override void OnEnable()
         {
@@ -46,11 +45,7 @@ namespace InGame
         }
         private void ChangeAnimation(string name, float crossFade = 0)
         {
-            if (curAnim != name)
-            {
-                curAnim = name;
-                _animator.CrossFade(name, crossFade);
-            }
+            _animationObj.ChangeAnimation(name, crossFade);
         }
 
         public void FoundBrush()
