@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using DeskCat.FindIt.Scripts.Core.Model;
 using TMPro;
 using UnityEngine;
@@ -13,6 +15,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
     public class LevelManager : MonoBehaviour
     {
+        //* 김일 추가 : 종료 조건에 등록된 함수들 먼저 실행
+        public List<Func<UniTask>> OnEndEvnt = new List<Func<UniTask>>();  // 비동기 메서드 참조
         //* 김일 추가 : 옵젝 찾으면 전역에 알릴려고 추가함
         public EventHandler<int> OnFoundObj;
         [Header("Hidden Object List")] 
@@ -202,20 +206,47 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             DetectGameEnd();
         }
 
-        private void DetectGameEnd()
+        //* 김일 수정 : 게임 종료 조건 = 숨긴 물건만 찾고 추가 조건은 태스크로 관리
+        private async void DetectGameEnd()
         {
-            if (hiddenObjCount <= 0 && rabbitObjCount <= 0)
+            if (hiddenObjCount <= 0)
             {
                 if (IsOverwriteGameEnd)
                 {
-                    GameEndEvent?.Invoke();
+                    // UnityEvent의 모든 리스너가 실행 완료될 때까지 대기
+                    if (OnEndEvnt.Count > 0)
+                    {
+                        foreach (var func in OnEndEvnt)
+                        {
+                            await func(); 
+                        }
+                    }
+
+                    GameEndEvent?.Invoke();  // 모든 UnityEvent 호출이 완료된 뒤에 종료 이벤트 호출
                     return;
                 }
-                
+                // UnityEvent의 모든 리스너가 실행 완료될 때까지 대기
+                if (OnEndEvnt.Count > 0)
+                {
+                    foreach (var func in OnEndEvnt)
+                    {
+                        await func();
+                    }
+                }
+
                 DefaultGameEndFunc();
             }
         }
 
+
+        // 비동기 이벤트 리스너를 기다리는 함수
+        public async UniTask InvokeAsync(Func<UniTask> eventHandler)
+        {
+            if (eventHandler != null)
+            {
+                await eventHandler.Invoke();  // 비동기 이벤트 호출
+            }
+        }
         public void DefaultGameEndFunc()
         {
             EndTime = DateTime.Now;

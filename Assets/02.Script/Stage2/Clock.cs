@@ -114,6 +114,7 @@ namespace InGame
             {
                 UniTask minTask = UniTask.WaitForSeconds(0);
                 UniTask hourTask = UniTask.WaitForSeconds(0);
+                if(minHand == null) return;
                 if (minHand.gameObject.activeSelf)
                 {
                     minRotateValueAdd += rotateValue;

@@ -51,7 +51,7 @@ namespace InGame
                     if (obj.DayObjs != null)
                     {
                         obj.DayObjs.DOFade(0, 0);
-                        obj.DayObjs.DOFade(1, 6.5f).SetEase(Ease.OutQuart);
+                        obj.DayObjs.DOFade(1, 5f).SetEase(Ease.OutQuart);
                     }
                 }
                 foreach(var obj in dayNightEnableObj) {
@@ -60,11 +60,12 @@ namespace InGame
                     if (obj.NightObjs != null)
                     {
                         obj.NightObjs.DOFade(0, 0);
-                        obj.NightObjs.DOFade(1, 6.5f).SetEase(Ease.OutQuart);
+                        obj.NightObjs.DOFade(1, 5f).SetEase(Ease.OutQuart);
                     }
                 }
                 foreach(var obj in nightDarkObj) {
-                    obj.DOColor(new Color(175f/255f,175f/255f,175f/255f), 1);
+                    obj.DOColor(new Color(1,1,1,0), 0);
+                    obj.DOColor(new Color(175f/255f,175f/255f,175f/255f), 5f);
                 }
             }
         }

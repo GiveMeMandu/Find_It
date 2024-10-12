@@ -56,6 +56,7 @@ namespace InGame
         public void FoundBrush()
         {
             brush.gameObject.SetActive(true);
+            OnFoundObj(this, curFoundCount);
         }
     }
 }
