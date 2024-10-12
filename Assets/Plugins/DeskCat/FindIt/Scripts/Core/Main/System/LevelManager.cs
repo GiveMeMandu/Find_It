@@ -13,6 +13,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
     public class LevelManager : MonoBehaviour
     {
+        //* 김일 추가 : 옵젝 찾으면 전역에 알릴려고 추가함
+        public EventHandler<int> OnFoundObj;
         [Header("Hidden Object List")] 
         [Tooltip("Place The Hidden Object Into This Array")]
         public HiddenObj[] TargetObjs;
@@ -185,6 +187,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             // TargetObjDic.Remove(guid);
             CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
             hiddenObjCount--;
+            OnFoundObj.Invoke(this, hiddenObjCount);
             DetectGameEnd();
         }
         private void FoundRabbitObjAction(Guid guid)
