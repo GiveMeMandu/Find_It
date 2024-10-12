@@ -187,7 +187,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             // TargetObjDic.Remove(guid);
             CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
             hiddenObjCount--;
-            OnFoundObj.Invoke(this, hiddenObjCount);
+            OnFoundObj?.Invoke(this, hiddenObjCount);
             DetectGameEnd();
         }
         private void FoundRabbitObjAction(Guid guid)
