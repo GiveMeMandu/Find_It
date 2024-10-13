@@ -28,6 +28,8 @@ namespace InGame
 
         [LabelText("시작시 아예 끌 것인가")]
         public bool isDisableOnStart = false;
+
+        public bool isNight;
         private void Awake() {
             if(isHideOnDay)
             {
@@ -51,7 +53,7 @@ namespace InGame
                     if (obj.DayObjs != null)
                     {
                         obj.DayObjs.DOFade(0, 0);
-                        obj.DayObjs.DOFade(1, 5f).SetEase(Ease.OutQuart);
+                        obj.DayObjs.DOFade(1, 4f).SetEase(Ease.OutQuart);
                     }
                 }
                 foreach(var obj in dayNightEnableObj) {
@@ -60,7 +62,7 @@ namespace InGame
                     if (obj.NightObjs != null)
                     {
                         obj.NightObjs.DOFade(0, 0);
-                        obj.NightObjs.DOFade(1, 5f).SetEase(Ease.OutQuart);
+                        obj.NightObjs.DOFade(1, 4f).SetEase(Ease.OutQuart);
                     }
                 }
                 foreach(var obj in nightDarkObj) {
@@ -68,6 +70,7 @@ namespace InGame
                     obj.DOColor(new Color(175f/255f,175f/255f,175f/255f), 5f);
                 }
             }
+            isNight = true;
         }
 
     }

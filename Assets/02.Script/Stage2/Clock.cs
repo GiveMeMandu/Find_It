@@ -11,15 +11,20 @@ namespace InGame
 {
     public class Clock : MonoBehaviour
     {
-        [BoxGroup("세부 설정")]
-        [LabelText("시침 옵젝")]
+        [BoxGroup("세부 설정")] [LabelText("태양")]
+        [SerializeField] private Transform sun;
+        [BoxGroup("세부 설정")] [LabelText("달")]
+        [SerializeField] private Transform moon;
+        [BoxGroup("세부 설정")] [LabelText("시침 옵젝")]
         [SerializeField] private Transform hourHand;
-        [BoxGroup("세부 설정")]
-        [LabelText("분침 옵젝")]
+        [BoxGroup("세부 설정")] [LabelText("시계추 옵젝")]
+        [SerializeField] private Transform clockHand;
+        [BoxGroup("세부 설정")] [LabelText("분침 옵젝")]
         [SerializeField] private Transform minHand;
-        [BoxGroup("세부 설정")]
-        [LabelText("시계 소리")]
+        [BoxGroup("효과음")] [LabelText("시계 소리")]
         [SerializeField] private AudioSource audioSource;
+        [BoxGroup("효과음")] [LabelText("후쉬소리")]
+        [SerializeField] private AudioClip whoosh;
         [BoxGroup("세부 설정")]
         [LabelText("시침 날짜 바뀔 때 돌릴 바퀴 수")]
         [SerializeField] private int hourRotateCount = 1;
@@ -57,6 +62,8 @@ namespace InGame
         public void FoundClock()
         {
             foundClcok = true;
+            clockHand.gameObject.SetActive(true);
+            StartClockHandRotate().Forget();
             CheckDayChange();
         }
         //* 초침 찾음
@@ -78,16 +85,27 @@ namespace InGame
         {
             if (foundClcok && foundHourHand && foundMinHand)
             {
-                stage2Manager.StartStage();
+                hourHand.gameObject.SetActive(true);
+                audioSource.Play();
+                needFastHourRotate = true;
+                needFastMinRotate = true;
+                StartClockSound().Forget();
+                UniTask.Void(async () => { 
+                    await UniTask.WaitForSeconds(1f);
+                    stage2Manager.StartStage();
+                });
+                UniTask.Void(async () => { 
+                    audioSource.PlayOneShot(whoosh);
+                    await sun.DOLocalMoveY(5f, 1f).SetEase(Ease.InOutBack);
+                    await UniTask.WaitForSeconds(3.5f);
+                    audioSource.PlayOneShot(whoosh);
+                    await moon.DOLocalMoveY(8.885f, 1f).SetEase(Ease.InOutBack);
+                });
+
             }
         }
         private void OnStartStage(object sender, EventArgs e)
         {
-            hourHand.gameObject.SetActive(true);
-            audioSource.Play();
-            needFastHourRotate = true;
-            needFastMinRotate = true;
-            StartClockSound().Forget();
         }
         private async UniTaskVoid StartClockSound()
         {
@@ -101,6 +119,16 @@ namespace InGame
                     needFastMinRotate = false;
                     needFastHourRotate = false;
                 }
+            }
+        }
+
+        private async UniTaskVoid StartClockHandRotate()
+        {
+            var dir = new Vector3(0,0,10);
+            while(gameObject.activeSelf)
+            {
+                await clockHand.DORotate(dir, 3).WithCancellation(destroyCancellationToken);
+                await clockHand.DORotate(dir * -1, 3).WithCancellation(destroyCancellationToken);
             }
         }
 
