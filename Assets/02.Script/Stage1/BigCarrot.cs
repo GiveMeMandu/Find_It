@@ -11,9 +11,19 @@ namespace InGame
         [SerializeField] private AnimationObj bunny1;
         [SerializeField] private AnimationObj bunny2;
         [SerializeField] private AnimationObj mole;
+        [SerializeField] private Transform leaf;
+        [SerializeField] private AudioClip knockdownSFX;
+        [SerializeField] private AudioSource audioSource;
+
+        public void LeafRotate()
+        {
+            leaf.DOLocalRotate(new Vector3(0,0,10), 0.5f);
+            leaf.DOLocalRotate(new Vector3(0,0,0), 0.5f).SetDelay(0.5f);
+        }
         //* 시작 시 토끼들이 뛰어옴
         public void StartBunniesRun()
         {
+            mole.gameObject.SetActive(true);
             mole.ChangeAnimation("Down");
 
             bunny1.ChangeAnimation("Walk");
@@ -47,8 +57,9 @@ namespace InGame
                     mole.ChangeAnimation("Angry");
                     await UniTask.WaitForSeconds(2f);
                     bunny1.ChangeAnimation("Jump", 0.2f);
-                    
                     mole.ChangeAnimation("KnockDown", 0.2f, 0.5f);
+                    await UniTask.WaitForSeconds(0.5f);
+                    audioSource.PlayOneShot(knockdownSFX);
                     await UniTask.WaitForSeconds(1.15f);
 
                     bunny1.ChangeAnimation("Walk", 0.2f);

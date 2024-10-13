@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Butterfly : MonoBehaviour
 {   
+    public float maxTimer = 5f;
+    public float timer = 0f;
     public float moveSpeed = 1f;
     public float flyForce = 1f;
     public GameObject visualObj;
@@ -19,12 +21,14 @@ public class Butterfly : MonoBehaviour
     enum State { Fly, Sit, Hold }
     State _currentState;
     Vector3 _goalPosition = Vector3.zero;
-    // Start is called before the first frame update
+    private int goalCount = 0;
     void Start()
     {
         _animator = GetComponent<Animator>();
         _rigid = GetComponent<Rigidbody2D>();
         _rigid.gravityScale = GRAVITY * flyForce;
+        _goalPosition = goalList[goalCount].position;
+        goalCount++;
         ChangeState(State.Fly);
     }
 
@@ -42,6 +46,17 @@ public class Butterfly : MonoBehaviour
         }
         else if(_currentState == State.Hold) {
             transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        }else if(_currentState == State.Sit)
+        {
+            timer += Time.deltaTime;
+            if(timer > maxTimer)
+            {
+                timer = 0;
+                _goalPosition = goalList[goalCount].position;
+                goalCount++;
+                if(goalCount > goalList.Length - 1) goalCount = 0;
+                ChangeState(State.Fly);
+            }
         }
     }
 
@@ -59,7 +74,7 @@ public class Butterfly : MonoBehaviour
         switch (_currentState)
         {
             case State.Fly:
-                _goalPosition = goalList.OrderBy(goal => Vector3.Distance(goal.position, transform.position)).First().position;
+                // _goalPosition = goalList.OrderBy(goal => Vector3.Distance(goal.position, transform.position)).First().position;
                 _rigid.isKinematic = false;
                 break;
             default:
