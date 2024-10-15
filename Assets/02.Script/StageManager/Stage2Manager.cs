@@ -49,8 +49,11 @@ public class Stage2Manager : LevelManagerCount, IStageManager
         }
         foreach (var c in childs)
         {
-            c.DOFade(0, 0);
-            c.DOFade(1, 4f).SetEase(Ease.Linear);
+            c.DOFade(1, 0f).SetEase(Ease.Linear);
+        }
+        foreach (var d in dChilds)
+        {
+            d.DOFade(0, 3f);
         }
 
         foreach (var n in nightObjs)
