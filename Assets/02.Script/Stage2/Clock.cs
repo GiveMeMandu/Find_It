@@ -97,7 +97,7 @@ namespace InGame
                 UniTask.Void(async () => { 
                     audioSource.PlayOneShot(whoosh);
                     await sun.DOLocalMoveY(5f, 1f).SetEase(Ease.InOutBack);
-                    await UniTask.WaitForSeconds(3.5f);
+                    await UniTask.WaitForSeconds(0.1f);
                     audioSource.PlayOneShot(whoosh);
                     await moon.DOLocalMoveY(8.885f, 1f).SetEase(Ease.InOutBack);
                 });

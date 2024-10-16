@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ public class Butterfly : MonoBehaviour
     public float moveSpeed = 1f;
     public float flyForce = 1f;
     public GameObject visualObj;
-    public Transform[] goalList;
+    public List<Transform> goalList;
 
     const float FLY_FORCE = 1.45f;
     const float GRAVITY = 0.25f;
@@ -54,10 +55,13 @@ public class Butterfly : MonoBehaviour
                 timer = 0;
                 _goalPosition = goalList[goalCount].position;
                 goalCount++;
-                if(goalCount > goalList.Length - 1) goalCount = 0;
+                if(goalCount > goalList.Count - 1) goalCount = 0;
                 ChangeState(State.Fly);
             }
         }
+    }
+    public void AddToGoalList(Transform goal) {
+        goalList.Add(goal);
     }
 
     void FlipX() {

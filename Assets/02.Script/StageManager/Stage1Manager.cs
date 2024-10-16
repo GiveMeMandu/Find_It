@@ -33,6 +33,7 @@ namespace InGame
             if (isTutorial)
             {
                 PlayerPrefs.SetInt("IsTutorial", 0);
+                PlayerPrefs.Save();
                 _levelManager.gameObject.SetActive(false);
                 _introDirector.initialTime = 0;
                 _introDirector.enabled = true;
