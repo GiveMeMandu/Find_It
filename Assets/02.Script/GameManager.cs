@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.Save();
         }
         SetResolution();
+        Application.targetFrameRate = 60;
     }
     
     /* 해상도 설정하는 함수 */

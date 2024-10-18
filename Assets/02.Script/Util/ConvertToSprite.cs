@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
@@ -60,3 +61,4 @@ public static class ConvertToSprite
         }
     }
 }
+#endif

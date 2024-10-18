@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -11,3 +12,4 @@ public class ResetPlayerPrefs : MonoBehaviour
         Debug.Log("PlayerPrefs has been reset.");
     }
 }
+#endif
