@@ -23,6 +23,7 @@ public class Butterfly : MonoBehaviour
     State _currentState;
     Vector3 _goalPosition = Vector3.zero;
     private int goalCount = 0;
+    private Vector3 _initScale;
     void Start()
     {
         _animator = GetComponent<Animator>();
@@ -30,9 +31,9 @@ public class Butterfly : MonoBehaviour
         _rigid.gravityScale = GRAVITY * flyForce;
         _goalPosition = goalList[goalCount].position;
         goalCount++;
+        _initScale =  transform.localScale;
         ChangeState(State.Fly);
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -44,6 +45,8 @@ public class Butterfly : MonoBehaviour
             Vector3 direction = (_goalPosition - transform.position).normalized;
             transform.position += moveSpeed * Time.deltaTime * direction;
             FlipX();
+            // 임시 사이즈 조절
+            transform.localScale = _initScale * Mathf.Lerp(1, 0.6f, (transform.position.y + 5.6f) / 2.6f );
         }
         else if(_currentState == State.Hold) {
             transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);

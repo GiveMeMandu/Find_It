@@ -23,6 +23,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public void Initialize(Sprite sprite)
         {
             targetSprite.sprite = sprite;
+            FoundSprite.gameObject.SetActive(false);
         }
         
         public void InitializeTooltips(List<MultiLanguageTextListModel> tooltipsList, TooltipsType type)
