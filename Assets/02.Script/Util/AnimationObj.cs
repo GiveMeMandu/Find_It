@@ -40,6 +40,10 @@ namespace InGame
                 }
             }
         }
+        public void RePlayCurAnimation()
+        {
+            _animator.Play(curAnim);
+        }
         public virtual void CheckAnimtion()
         {
 

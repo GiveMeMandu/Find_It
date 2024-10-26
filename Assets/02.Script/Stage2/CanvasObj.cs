@@ -5,6 +5,7 @@ namespace InGame
     [RequireComponent(typeof(AnimationObj))]
     public class CanvasObj : LevelManagerCount
     {
+        [SerializeField] private Transform hiddenCanvas;
         [SerializeField] private Transform brush;
 
         private AnimationObj _animationObj;
@@ -42,6 +43,10 @@ namespace InGame
                     ChangeAnimation("Scene4");
                 }
             }
+            if (curFoundCount >= curFoundCountMax - 1)
+            {
+                hiddenCanvas.gameObject.SetActive(true);
+            }
         }
         private void ChangeAnimation(string name, float crossFade = 0)
         {
@@ -51,7 +56,26 @@ namespace InGame
         public void FoundBrush()
         {
             brush.gameObject.SetActive(true);
-            OnFoundObj(this, curFoundCount+1);
+            if (curFoundCount >= curFoundCountMax)
+            {
+                ChangeAnimation("Scene4");
+            }
+            else if (curFoundCount >= curFoundCountMax / 2)
+            {
+                ChangeAnimation("Scene3");
+            }
+            else if (curFoundCount >= curFoundCountMax / 3)
+            {
+                ChangeAnimation("Scene2");
+            }
+            else if (curFoundCount >= 0)
+            {
+                ChangeAnimation("Scene1");
+            }
+            if (curFoundCount >= curFoundCountMax - 1)
+            {
+                hiddenCanvas.gameObject.SetActive(true);
+            }
         }
     }
 }
