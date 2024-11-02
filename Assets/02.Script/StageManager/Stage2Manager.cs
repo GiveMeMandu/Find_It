@@ -18,11 +18,20 @@ public class Stage2Manager : LevelManagerCount, IStageManager
     [SerializeField] private Transform DayGroup;
     [BoxGroup("스테이지 클리어 연출")]
     [SerializeField] private PlayableDirector _playableDirector;
+    [BoxGroup("스테이지 클리어 연출2")]
+    [SerializeField] private PlayableDirector _playableDirector2;
+    [BoxGroup("낮밤 바뀌는 연출")] [LabelText("아침 토끼들")]
+    [SerializeField] private Transform _dayRabbits;
+    [BoxGroup("낮밤 바뀌는 연출")] [LabelText("밤 토끼들")]
+    [SerializeField] private Transform _nightRabbits;
     public EventHandler OnStartStage;
     private List<NightObj> nightObjs = new List<NightObj>();
     private List<SpriteRenderer> nightObjsNoFade = new List<SpriteRenderer>();
+
+    private EndingSequenceStage2 _endingSequenceStage2;
     private void Start()
     {
+        _endingSequenceStage2 = GetComponent<EndingSequenceStage2>();
         nightObjs = FindObjectsOfType<NightObj>().ToList();
         foreach (var n in nightObjs)
         {
@@ -61,15 +70,23 @@ public class Stage2Manager : LevelManagerCount, IStageManager
             n.gameObject.SetActive(true);
             n.OnNight();
         }
+        _dayRabbits.gameObject.SetActive(false);
+        _nightRabbits.gameObject.SetActive(true);
         OnStartStage?.Invoke(this, EventArgs.Empty);
     }
 
     public async UniTask ClearStageTask()
     {
+        await _endingSequenceStage2.StartSequence();
         _playableDirector.initialTime = 0;
         _playableDirector.enabled = true;
         _playableDirector.Play();
         await UniTask.WaitUntil(() => _playableDirector.state != PlayState.Playing);
+
+        _playableDirector2.initialTime = 0;
+        _playableDirector2.enabled = true;
+        _playableDirector2.Play();
+        await UniTask.WaitUntil(() => _playableDirector2.state != PlayState.Playing);
     }
 
     public void ClearStage()
