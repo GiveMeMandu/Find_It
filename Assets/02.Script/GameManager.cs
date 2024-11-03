@@ -40,4 +40,10 @@ public class GameManager : MonoBehaviour
         }
 
     }
+    public void RestAllData()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(0);
+    }
 }

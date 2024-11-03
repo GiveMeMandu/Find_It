@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BunnyCafe.InGame
 {
     public class CameraResolution : MonoBehaviour
     {
+        [LabelText("카메라 커지면 내려가는 정도")]
+        [SerializeField] private float cameraPosDownRate = 0f;
         private readonly Vector2 targetAspectRatio = new(16, 9);
         private readonly Vector2 rectCenter = new(0.5f, 0.5f);
         private Vector2 lastResolution;
@@ -42,7 +45,10 @@ namespace BunnyCafe.InGame
                 //     cam.orthographicSize = camOrthographicSize * (1 + (1 - size.y));
                 // else
                 if(size.x < 1)
+                {
                     cam.orthographicSize = camOrthographicSize * size.x;
+                    cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y - cameraPosDownRate, cam.transform.position.z);
+                }
                 lastResolution = currentScreenResolution;
             }
             // var vcam = ActiveVcam;

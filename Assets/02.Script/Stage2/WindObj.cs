@@ -29,6 +29,12 @@ namespace InGame
                 await transform.DORotate(dir * -1, windTime).WithCancellation(destroyCancellationToken);
             }
         }
+        [SerializeField] [Button("바람 랜덤 세기")]
+        public void RandomWindForce()
+        {
+            windForce = Random.Range(1, 5);
+            windTime = Random.Range(1, 5);
+        }
     }
 
 }

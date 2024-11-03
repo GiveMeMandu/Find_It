@@ -27,16 +27,14 @@ namespace InGame
         [LabelText("밤낮 꺼버려서 교체할 옵젝들")]
         [EnableIf("isHideOnDay")]
         public List<DayNightObj> dayNightEnableObj;
-        [SerializeField]
-        [LabelText("밤에 어두워질 옵젝들")]
-        [EnableIf("isHideOnDay")]
+        [SerializeField] [LabelText("밤에 어두워질 옵젝들")] [EnableIf("isHideOnDay")] 
         public List<SpriteRenderer> nightDarkObj;
-        [LabelText("시작시 밤 오브젝트 숨길 것인가")]
-        public bool isHideOnDay = false;
-        [LabelText("페이드 효과 제외")]
-        public bool isNoFade = false;
-        [LabelText("시작시 아예 끌 것인가")]
-        public bool isDisableOnStart = false;
+        [SerializeField] [LabelText("밤에 변할 색깔")] [EnableIf("isChangeColor")] 
+        public Color nightColor = Color.black;
+        [LabelText("시작시 밤 오브젝트 숨길 것인가")] public bool isHideOnDay = false;
+        [LabelText("페이드 효과 제외")] public bool isNoFade = false;
+        [LabelText("시작시 아예 끌 것인가")] public bool isDisableOnStart = false;
+        [LabelText("밤에 색 변할 것인가")] public bool isChangeColor = false;
 
         public bool isNight;
         private void Awake()
@@ -85,6 +83,12 @@ namespace InGame
             {
                 obj.DOColor(new Color(1, 1, 1, 0), 0);
                 obj.DOColor(new Color(175f / 255f, 175f / 255f, 175f / 255f), 5f);
+            }
+
+            if(isChangeColor) 
+            {
+                var sr = transform.GetComponent<SpriteRenderer>(); 
+                sr.color = nightColor;
             }
             isNight = true;
         }
