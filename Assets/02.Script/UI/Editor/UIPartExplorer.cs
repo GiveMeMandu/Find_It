@@ -23,7 +23,7 @@ namespace UI.Editor
                 this.uiPartHelper = uiPartHelper;
             }
         }
-        private readonly string ROOT_PATH = "Assets/5.Prefabs/UI/UIPart/";
+        private readonly string ROOT_PATH = "Assets/03.Resource/Prefab/UI/UIPart/";
 
         [MenuItem("UI/파츠 탐색기", false, 201)]
         public static void ShowWindow()
