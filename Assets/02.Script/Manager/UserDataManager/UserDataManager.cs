@@ -14,13 +14,13 @@ namespace Manager
             recipeUpgradeData = new List<UpgradeData>();
             GoldData = "0";
             CashData = "0";
-            curScene = SceneName.InGame1;
+            curStage = SceneName.Stage1;
             EPS = "0";
             dailyRewardData = new DailyRewardData();
         }
         // public HashSet<int> CollectedItem = new();
         public List<SceneData> sceneData;
-        public SceneName curScene;
+        public SceneName curStage;
         public List<UpgradeData> recipeUpgradeData;
         public string GoldData;
         public string CashData;

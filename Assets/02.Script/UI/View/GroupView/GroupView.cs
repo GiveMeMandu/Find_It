@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UI;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -26,23 +27,29 @@ namespace UnityWeld
         public int Count => _count;
         [SerializeField] private ViewModel baseViewModel;
 
-        [SerializeField] private Transform scrollParent;
+        [LabelText("모델 생성 부모")]
+        [SerializeField] private Transform modelParent;
         private List<ViewModel> _pool = new();
 
+        private bool IsInitial = false;
         protected override void Awake()
         {
             base.Awake();
-            if (scrollParent == null && baseViewModel != null) scrollParent = baseViewModel.transform.parent;
-            if(baseViewModel != null) baseViewModel.gameObject.SetActive(false);
+            if (baseViewModel == null) return;
+            if (modelParent == null) modelParent = transform;
+            baseViewModel.gameObject.SetActive(false);
+            IsInitial = true;
         }
 
         public void PrepareViewModels(int count)
         {
+            if(!IsInitial) Awake();
             if (_pool.Count < count)
             {
                 for (int i = _pool.Count; i < count; i++)
                 {
-                    var viewModel = Instantiate(baseViewModel, scrollParent);
+                    var viewModel = Instantiate(baseViewModel, modelParent);
+
                     _pool.Add(viewModel);
                 }
             }
@@ -67,5 +74,6 @@ namespace UnityWeld
         {
             return _pool.GetRange(0, Count);
         }
+
     }
 }

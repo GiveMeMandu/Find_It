@@ -57,7 +57,7 @@ namespace Manager
             // }
             // storeEPS = (int)expensive;
             //* 임시
-            storeEPS = 0;
+            storeEPS = 1;
             SaveEPS();
         }
 

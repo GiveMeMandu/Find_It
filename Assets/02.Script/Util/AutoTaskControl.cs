@@ -6,7 +6,6 @@ using UnityEngine;
 public class AutoTaskControl : MonoBehaviour
 {
     protected CancellationTokenSource destroyCancellation = new CancellationTokenSource(); //삭제시 취소처리
-    protected CancellationTokenSource disableCancellation = new CancellationTokenSource(); //비활성화시 취소처리
     protected virtual void OnEnable()
     {
         if (destroyCancellation != null)
@@ -17,9 +16,28 @@ public class AutoTaskControl : MonoBehaviour
     }
     protected virtual void OnDisable()
     {
-        if (!disableCancellation.IsCancellationRequested)
+        if (!destroyCancellation.IsCancellationRequested)
         {
-            disableCancellation.Cancel();
+            destroyCancellation.Cancel();
         }
+    }
+    protected virtual void OnDestroy()
+    {
+        if (destroyCancellation != null)
+        {
+            destroyCancellation.Cancel();
+            destroyCancellation.Dispose();
+        }
+    }
+    protected void StopAllTask()
+    {
+        if (destroyCancellation != null)
+        {
+            if (!destroyCancellation.IsCancellationRequested)
+            {
+                destroyCancellation.Cancel();
+            }
+        }
+        destroyCancellation = new CancellationTokenSource();
     }
 }

@@ -10,29 +10,57 @@ namespace UI.Effect
 {
     public class PageSlideEffect : MonoBehaviour
     {
-        [LabelText("슬라이드 될 방향이 행인가")]
-        [SerializeField] private bool isSlideHorizontal = true;
-        [LabelText("역으로 오는가")]
-        [SerializeField] private bool isReverse = true;
-        [LabelText("회전할건가")]
-        [SerializeField] private bool isRotate = true;
+        [SerializeField] [LabelText("시작시 실행")] private bool isPlayEnable = false;
+        [SerializeField] [LabelText("슬라이드 될 방향이 행인가")] private bool isSlideHorizontal = true;
+        [SerializeField] [LabelText("역으로 오는가")] private bool isReverse = true;
+        [SerializeField] [LabelText("회전할건가")] private bool isRotate = true;
+
+        [LabelText("이펙트 타입")]
+        [SerializeField] private Ease easeType = Ease.Linear;
+        private RectTransform r;
+        void Start()
+        {
+            r = transform.GetComponent<RectTransform>();
+        }
         void OnEnable()
         {
-            RectTransform r = transform.GetComponent<RectTransform>();
+            SlideIn();
+        }
+        public void SlideOut(bool isForceReverse = false)
+        {
+            int isReverseValue = 1;
 
-            int isReverseValue = isReverse ? -1 : 1;
+            if(isForceReverse) isReverseValue = -1;
 
             if (isSlideHorizontal)
             {
-                r.DOLocalMoveX(1080 * isReverseValue, 0);
-                r.DOLocalMoveX(-100, 0.7f).SetEase(Ease.OutExpo);
-                r.DOLocalMoveX(0, 0.2f).SetEase(Ease.Linear).SetDelay(0.7f);
+                r.DOLocalMoveX(0, 0);
+                r.DOLocalMoveX(1920 * isReverseValue, 0.2f).SetEase(easeType);
             }
             else
             {
-                r.DOLocalMoveY(1920 * isReverseValue, 0);
-                r.DOLocalMoveY(-4, 0.7f).SetEase(Ease.OutExpo);
-                r.DOLocalMoveY(0, 0.2f).SetEase(Ease.Linear).SetDelay(0.7f);
+                r.DOLocalMoveY(0, 0f);
+                r.DOLocalMoveY(1080 * isReverseValue, 0.2f).SetEase(easeType);
+            }
+        }
+
+        public void SlideIn(bool isForceReverse = false)
+        {
+            if(!isPlayEnable) return;
+
+            int isReverseValue = isReverse ? -1 : 1;
+
+            if(isForceReverse) isReverseValue = -1;
+
+            if (isSlideHorizontal)
+            {
+                r.DOLocalMoveX(1920 * isReverseValue, 0);
+                r.DOLocalMoveX(0, 0.2f).SetEase(easeType);
+            }
+            else
+            {
+                r.DOLocalMoveY(1080 * isReverseValue, 0);
+                r.DOLocalMoveY(0, 0.2f).SetEase(easeType);
             }
 
             if (isRotate)

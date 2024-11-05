@@ -14,9 +14,9 @@ public class UVMover : MonoBehaviour
 
     void Start()
     {
+        rawImage = GetComponent<RawImage>();
         if (RandomizeBGColor)
         {
-            rawImage = GetComponent<RawImage>();
             Color background = new Color(
             Random.Range(0f, 1f),
             Random.Range(0f, 1f),

@@ -9,14 +9,20 @@ namespace BunnyCafe.InGame
     {
         [LabelText("카메라 커지면 내려가는 정도")]
         [SerializeField] private float cameraPosDownRate = 0f;
+        [LabelText("내려가는 정도 적용할 옵젝")]
+        [SerializeField] private Transform targetObj;
         private readonly Vector2 targetAspectRatio = new(16, 9);
         private readonly Vector2 rectCenter = new(0.5f, 0.5f);
         private Vector2 lastResolution;
 
         private float camOrthographicSize;
-
+        private Vector3 lastTargetPos;
         private void Start()
         {
+            if(targetObj == null) targetObj = Camera.main.transform;
+            lastTargetPos = targetObj.position;
+
+
             camOrthographicSize = Camera.main.orthographicSize;
         }
 
@@ -47,7 +53,7 @@ namespace BunnyCafe.InGame
                 if(size.x < 1)
                 {
                     cam.orthographicSize = camOrthographicSize * size.x;
-                    cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y - cameraPosDownRate, cam.transform.position.z);
+                    targetObj.position = new Vector3(lastTargetPos.x, lastTargetPos.y - cameraPosDownRate, lastTargetPos.z);
                 }
                 lastResolution = currentScreenResolution;
             }

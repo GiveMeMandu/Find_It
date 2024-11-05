@@ -4,18 +4,23 @@ using UnityEngine;
 
 namespace Data
 {
+    public static class SceneNum
+    {
+        public const int BOOTSTRAP = 0;
+        public const int LOADING = 1;
+        public const int START = 2;
+        public const int SELECT = 3;
+        public const int STAGE1 = 4;
+        public const int STAGE2 = 5;
+    
+    }
     public enum SceneName{
-        MainMenu,
-        InGame1,
-        InGame2,
-        InGame3,
-        InGame4,
-        InGame5,
-        InGame6,
-        InGame7,
-        InGame8,
-        InGame9,
-        InGame10,
+        Bootstrap,
+        LoadingScene,
+        Start,
+        Select,
+        Stage1,
+        Stage2
     }
     public class SceneData
     {

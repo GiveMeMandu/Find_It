@@ -11,11 +11,6 @@ namespace Data
     {
         NONE,
         Title,
-        Huh,
-        AirHead,
-        FunOuting,
-        Chatter,
-        Silly
     }
     [LabelText("효과음 이름")]
     public enum SFXEnum

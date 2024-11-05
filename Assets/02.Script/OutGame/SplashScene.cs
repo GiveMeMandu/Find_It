@@ -22,7 +22,7 @@ namespace OutGame
         
         async UniTaskVoid SplashScreenTask()
         {
-            AsyncOperation asyncOp = SceneManager.LoadSceneAsync((int)SceneNum.LOADING, LoadSceneMode.Single);
+            AsyncOperation asyncOp = SceneManager.LoadSceneAsync(Data.SceneName.Start.ToString(), LoadSceneMode.Single);
             asyncOp.allowSceneActivation = false;
             await _canvasGroup.DOFade(1, 0.5f).AsyncWaitForCompletion();
             await UniTask.Delay(250, true);

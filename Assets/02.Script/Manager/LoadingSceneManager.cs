@@ -3,21 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Data;
 
 namespace Manager
 {
-    public static class SceneNum
-    {
-        public const int BootStrap = 0;
-        public const int MAIN = 1;
-        public const int LOADING = 2;
-        public const int InGame1 = 3;
-        public const int InGame2 = 4;
-        public const int InGame3 = 5;
-        public const int OUTSIDE = 6;
-        public const int AniPang = 7;
 
-    }
     public class LoadingSceneManager : MonoBehaviour
     {
         public Slider progressBar;
@@ -26,7 +16,7 @@ namespace Manager
         private void Start()
         {
             if(nextScene == 0) 
-                nextScene = (int)SceneNum.InGame1;
+                nextScene = (int)SceneNum.START;
             StartCoroutine(LoadSceneSide());
         }
 
