@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
@@ -70,18 +71,20 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             MobilePan();
         }
         private void MobilePan() {
-
-            if (Input.touchCount != 1) return;
+            if (Touchscreen.current == null || !Touchscreen.current.touches[0].isInProgress) return;
             
-            Touch touch = Input.GetTouch(0);
-            if(touch.phase == TouchPhase.Began)
+            var touch = Touchscreen.current.touches[0];
+            var touchPosition = touch.position.ReadValue();
+            
+            if (touch.phase.ReadValue() == UnityEngine.InputSystem.TouchPhase.Began)
             {
-                _dragOrigin = _camera.ScreenToWorldPoint(touch.position - touch.deltaPosition);
+                _dragOrigin = _camera.ScreenToWorldPoint(touchPosition);
             }
-
-            else if(touch.phase == TouchPhase.Moved)
+            else if (touch.phase.ReadValue() == UnityEngine.InputSystem.TouchPhase.Moved)
             {
-                var dragDifference = _dragOrigin - _camera.ScreenToWorldPoint(touch.position - touch.deltaPosition);
+                var currentPosition = _camera.ScreenToWorldPoint(touchPosition);
+                var dragDifference = _dragOrigin - currentPosition;
+                
                 if (_infinitePan)
                 {
                     _camera.transform.position += dragDifference;
@@ -94,15 +97,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         }
         private void Pan()
         {
-
-            if (Input.GetMouseButtonDown(0))
+            if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-                _dragOrigin = _camera.ScreenToWorldPoint(Input.mousePosition);
+                _dragOrigin = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             }
 
-            if (Input.GetMouseButton(0))
+            if (Mouse.current.leftButton.isPressed)
             {
-                var dragDifference = _dragOrigin - _camera.ScreenToWorldPoint(Input.mousePosition);
+                var dragDifference = _dragOrigin - _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
                 if (_infinitePan)
                 {
                     _camera.transform.position += dragDifference;
@@ -117,7 +119,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private void ZoomCamera()
         {
             if (!_enableZoom) return;
-            Zoom(Input.GetAxis("Mouse ScrollWheel"));
+            Zoom(Mouse.current.scroll.ReadValue().y);
             MobileTouchZoom();
             if (!_infinitePan)
             {
@@ -127,16 +129,16 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void MobileTouchZoom()
         {
-            if (Input.touchCount != 2) return;
+            if (Touchscreen.current == null || !Touchscreen.current.touches[0].isInProgress || !Touchscreen.current.touches[1].isInProgress) return;
 
-            var touch0 = Input.GetTouch(0);
-            var touch1 = Input.GetTouch(1);
+            var touch0 = Touchscreen.current.touches[0];
+            var touch1 = Touchscreen.current.touches[1];
 
-            var touch0PrevPos = touch0.position - touch0.deltaPosition;
-            var touch1PrevPos = touch1.position - touch1.deltaPosition;
+            var touch0PrevPos = touch0.position.ReadValue() - touch0.delta.ReadValue();
+            var touch1PrevPos = touch1.position.ReadValue() - touch1.delta.ReadValue();
 
             var prevMagnitude = (touch0PrevPos - touch1PrevPos).magnitude;
-            var currentMagnitude = (touch0.position - touch1.position).magnitude;
+            var currentMagnitude = (touch0.position.ReadValue() - touch1.position.ReadValue()).magnitude;
 
             var touchDifference = currentMagnitude - prevMagnitude;
 

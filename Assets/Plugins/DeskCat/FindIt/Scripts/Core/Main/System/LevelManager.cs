@@ -58,6 +58,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private int hiddenObjCount = 0;
         private int rabbitObjCount = 0;
+        private int maxRabbitObjCount = 0;
 
         public static void PlayItemFx(AudioClip clip)
         {
@@ -133,9 +134,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     rabbit.TargetClickAction = () => { TargetClick(guid); };
                 }
             }
-            rabbitObjCount = RabbitObjDic.Count;
-            RabbitCountText.text = $"x {rabbitObjCount}";
-
+            maxRabbitObjCount = RabbitObjDic.Count;
+            rabbitObjCount = maxRabbitObjCount;
+            RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
             if (!IsRandomItem) return;
             
             var randomIndex = new List<int>();
@@ -201,8 +202,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
             RabbitObjDic.Remove(guid);
             rabbitObjCount--;
-            // todo : rabbit countt updata
-            RabbitCountText.text = $"x {rabbitObjCount}";
+            RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
             DetectGameEnd();
         }
 

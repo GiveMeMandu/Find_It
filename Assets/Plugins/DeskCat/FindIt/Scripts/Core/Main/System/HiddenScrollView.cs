@@ -75,7 +75,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             int clickCount, Transform uiTransform)
         {
             UIClickAction?.Invoke();
-            
+
             var currentLanguage = GlobalSetting.CurrentLanguage;
             var targetTooltipsList = multiLanguageTextList.FirstOrDefault(x => x.LanguageKey == currentLanguage)?.Value;
 

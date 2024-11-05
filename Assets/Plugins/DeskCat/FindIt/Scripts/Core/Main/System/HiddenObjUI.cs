@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
-    public class HiddenObjUI : MonoBehaviour, IPointerClickHandler
+    public class HiddenObjUI : MonoBehaviour
     {
         public Image targetSprite;
         public Image FoundSprite;
@@ -32,13 +32,21 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             tooltipsType = type;
             uiTooltipsListModel = tooltipsList;
         }
-
-        public void OnPointerClick(PointerEventData eventData)
+        public void Click()
         {
             OnUIClickEvent?.Invoke();
             if (isEnableTooltips) {
                 UIClickEvent?.Invoke(uiTooltipsListModel, tooltipsType, clickCount++, transform);
-            }
+            }         
         }
+
+        //! 김일 : 이딴 유니티 기본 함수 쓰면 안됨. 이건 진짜 인게임 함수인데 에셋 만든사람 왜 이렇게 했을까 하
+        // public void OnPointerClick(PointerEventData eventData)
+        // {
+        //     OnUIClickEvent?.Invoke();
+        //     if (isEnableTooltips) {
+        //         UIClickEvent?.Invoke(uiTooltipsListModel, tooltipsType, clickCount++, transform);
+        //     }
+        // }
     }
 } 

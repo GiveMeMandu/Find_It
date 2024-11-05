@@ -99,8 +99,9 @@ namespace Manager
             }
             return false;
         }
-
+#if UNITY_EDITOR
         [UnityEditor.MenuItem("Debug/Daily Login/Reset")]
+#endif
         public void ResetReward()
         {
             store = new DailyRewardData();

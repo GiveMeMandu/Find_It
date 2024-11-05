@@ -9,16 +9,16 @@ namespace UI.Page
     [Binding]
     public class InGameMainPage : PageViewModel
     {
-        private string _EPS;
+        private int _hiddenRabbitCount;
 
         [Binding]
-        public string EPS
+        public int HiddenRabbitCount
         {
-            get => _EPS;
+            get => _hiddenRabbitCount;
             set
             {
-                _EPS = value;
-                OnPropertyChanged(nameof(EPS));
+                _hiddenRabbitCount = value;
+                OnPropertyChanged(nameof(HiddenRabbitCount));
             }
         }
         
