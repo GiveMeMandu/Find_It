@@ -11,6 +11,8 @@ namespace Data
     {
         NONE,
         Title,
+        Stage1,
+        Stage2,
     }
     [LabelText("효과음 이름")]
     public enum SFXEnum

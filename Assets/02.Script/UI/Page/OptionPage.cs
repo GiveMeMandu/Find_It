@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Data;
+using I2.Loc;
 using Manager;
 // using I2.Loc;
 using UnityWeld.Binding;
@@ -8,6 +10,18 @@ namespace UI.Page
     [Binding]
     public class OptionPage : PageViewModel
     {
+        private bool _isMainMenuButtonActive;
+
+        [Binding]
+        public bool IsMainMenuButtonActive
+        {
+            get => _isMainMenuButtonActive;
+            set
+            {
+                _isMainMenuButtonActive = value;
+                OnPropertyChanged(nameof(IsMainMenuButtonActive));
+            }
+        }
         private string _curLanguage;
 
         [Binding]
@@ -45,51 +59,86 @@ namespace UI.Page
             }
         }
 
-        // protected override void Awake()
-        // {
-        //     base.Awake();
-        //     CurLanguage = LocalizationManager.CurrentLanguage;
-        // }
-        // [Binding]
-        // public void OnClickChangeLanguage()
-        // {
-        //     var allLanguage = LocalizationManager.GetAllLanguages();
-        //     for (int i = 0; i < allLanguage.Count; i++)
-        //     {
-        //         if (LocalizationManager.CurrentLanguage == allLanguage[i])
-        //         {
-        //             int nextLang = (i + 1) >= allLanguage.Count ? 0 : i + 1;
+        protected override void Awake()
+        {
+            base.Awake();
+            CurLanguage = LocalizationManager.CurrentLanguage;
+            if(Global.CurrentScene is OutGame.MainMenu)
+                IsMainMenuButtonActive = false;
+            else
+                IsMainMenuButtonActive = true;
+        }
+        [Binding]
+        public void OnClickPrevLanguage()
+        {
+            var allLanguage = LocalizationManager.GetAllLanguages();
+            for (int i = 0; i < allLanguage.Count; i++)
+            {
+                if (LocalizationManager.CurrentLanguage == allLanguage[i])
+                {
+                    int prevLang = (i - 1) < 0 ? allLanguage.Count - 1 : i - 1;
+                    LocalizationManager.CurrentLanguage = allLanguage[prevLang];
+                    break;
+                }
+            }
+            CurLanguage = LocalizationManager.CurrentLanguage;
+        }
 
-        //             LocalizationManager.CurrentLanguage = allLanguage[nextLang];
-        //             break; 
-        //         }
-        //     }
-        //     CurLanguage = LocalizationManager.CurrentLanguage;
-        // }
+        [Binding]
+        public void OnClickNextLanguage()
+        {
+            var allLanguage = LocalizationManager.GetAllLanguages();
+            for (int i = 0; i < allLanguage.Count; i++)
+            {
+                if (LocalizationManager.CurrentLanguage == allLanguage[i])
+                {
+                    int nextLang = (i + 1) >= allLanguage.Count ? 0 : i + 1;
+                    LocalizationManager.CurrentLanguage = allLanguage[nextLang];
+                    break;
+                }
+            }
+            CurLanguage = LocalizationManager.CurrentLanguage;
+        }
+        [Binding]
+        public void OnClickChangeLanguage()
+        {
+            var allLanguage = LocalizationManager.GetAllLanguages();
+            for (int i = 0; i < allLanguage.Count; i++)
+            {
+                if (LocalizationManager.CurrentLanguage == allLanguage[i])
+                {
+                    int nextLang = (i + 1) >= allLanguage.Count ? 0 : i + 1;
 
-        // [Binding]
-        // public void OnClickMuteBGM()
-        // {
-        //     IsMuteBGM = Global.SoundManager.MuteBGM();
-        // }
-        // [Binding]
-        // public void OnClickStage1()
-        // {
-        //     Global.UserDataManager.bunnyStorage.curScene = BunnyCafe.Data.SceneName.InGame1;
-        //     Global.UserDataManager.Save();
-        //     LoadingSceneManager.LoadScene(SceneNum.InGame1);
-        // }
-        // [Binding]
-        // public void OnClickStage2()
-        // {
-        //     Global.UserDataManager.bunnyStorage.curScene = BunnyCafe.Data.SceneName.InGame3;
-        //     Global.UserDataManager.Save();
-        //     LoadingSceneManager.LoadScene(SceneNum.InGame3);
-        // }
+                    LocalizationManager.CurrentLanguage = allLanguage[nextLang];
+                    break; 
+                }
+            }
+            CurLanguage = LocalizationManager.CurrentLanguage;
+        }
+        [Binding]
+        public void OnClickBackToMainMenu()
+        {
+            LoadingSceneManager.LoadScene(SceneNum.START);
+        }
+        [Binding]
+        public void OnClickMuteBGM()
+        {
+            IsMuteBGM = Global.SoundManager.MuteBGM();
+        }
         [Binding]
         public void OnClickMuteSFX()
         {
             IsMuteSFX = Global.SoundManager.MuteSFX();
+        }
+
+        
+        [Binding]
+        public void OnClickExitButton()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            UnityEngine.Application.Quit();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace DeskCat.FindIt.Scripts.Scene.Cover
 
         public Button BackToTitleBtn;
         public Button ResumeBtn;
-        private string TitleSceneName = "1_Start";
+        private string TitleSceneName = "Start";
 
         private void Start()
         {

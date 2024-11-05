@@ -19,8 +19,9 @@ namespace InGame
         [SerializeField] private PlayableDirector _outroDirector2;
         [SerializeField] private PlayableDirector _outroDirector3;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             _introDirector.enabled = false;
             StartStage();
             GameManager.SetResolution();

@@ -35,8 +35,8 @@ namespace UI.Page
         [Binding]
         public void OnClickStartButton()
         {
-            if (CanPlay)
-                LoadingSceneManager.LoadScene(SceneNum.SELECT);
+            var main = Global.CurrentScene as OutGame.MainMenu;
+            main.OnClickStartButton();
         }
         [Binding]
         public void OnClickIntroButton()
@@ -47,7 +47,7 @@ namespace UI.Page
         [Binding]
         public void OnClickOptionButton()
         {
-
+            Global.UIManager.OpenPage<OptionPage>();
         }
         [Binding]
         public void OnClickMapButton()
@@ -55,6 +55,12 @@ namespace UI.Page
             CanPlay = false;
             var main = Global.CurrentScene as OutGame.MainMenu;
             main.OnClickMapButton();
+        }
+        [Binding]
+        public void OnClickMainMenuButton()
+        {
+            var main = Global.CurrentScene as OutGame.MainMenu;
+            main.OnClickMainMenuButton();
         }
         [Binding]
         public void OnClickResetButton()

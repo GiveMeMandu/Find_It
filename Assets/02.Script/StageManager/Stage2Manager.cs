@@ -29,8 +29,9 @@ public class Stage2Manager : LevelManagerCount, IStageManager
     private List<SpriteRenderer> nightObjsNoFade = new List<SpriteRenderer>();
 
     private EndingSequenceStage2 _endingSequenceStage2;
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         _endingSequenceStage2 = GetComponent<EndingSequenceStage2>();
         nightObjs = FindObjectsOfType<NightObj>().ToList();
         foreach (var n in nightObjs)
