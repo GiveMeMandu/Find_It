@@ -1,28 +1,34 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction
 {
-    public class ClickEvent : MonoBehaviour
+    public class ClickEvent : MonoBehaviour, 
+        IPointerDownHandler, 
+        IPointerUpHandler
     {
         public bool Enable = true;
         public UnityEvent OnMouseDownEvent;
         public UnityEvent OnMouseUpEvent;
         public UnityEvent OnClickEvent;
 
-        public void OnMouseUp()
+        public void OnPointerDown(PointerEventData eventData)
         {
-            if(Enable)
-                OnMouseUpEvent?.Invoke();
+            if (!Enable) return;
+            OnMouseDownEvent?.Invoke();
+            OnClickEvent?.Invoke();
         }
-        public void OnMouseDown()
+
+        public void OnPointerUp(PointerEventData eventData)
         {
-            if(Enable) {
-                OnMouseDownEvent?.Invoke();
-                OnClickEvent?.Invoke();
-            }
+            if (!Enable) return;
+            
+            OnMouseUpEvent?.Invoke();
         }
-        public void IsEnable(bool enable) {
+
+        public void IsEnable(bool enable)
+        {
             Enable = enable;
         }
     }

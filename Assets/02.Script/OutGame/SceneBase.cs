@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Data;
 using Manager;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace OutGame
 {
     public class SceneBase : MonoBehaviour
     {
+        [BoxGroup("씬 정보")]
+        public SceneName SceneName;
         [BoxGroup("음악 설정")]
         public Data.BGMEnum bGMEnum;
         [BoxGroup("음악 설정")] [LabelText("무한 반복 재생")]

@@ -35,7 +35,7 @@ namespace UI.Effect
                 if (isUIEffect)
                 {
                     var rectTransform = GetComponent<RectTransform>();
-                    rectTransform.localPosition = targetPosition;
+                    rectTransform.anchoredPosition = targetPosition;
                     if (isSmallOnEnd)
                     {
                         rectTransform.localScale = Vector3.zero;
@@ -59,7 +59,14 @@ namespace UI.Effect
         {
             if (!isInitialized)
             {
-                startPosition = transform.localPosition;
+                if (isUIEffect)
+                {
+                    startPosition = GetComponent<RectTransform>().anchoredPosition;
+                }
+                else
+                {
+                    startPosition = transform.localPosition;
+                }
                 isInitialized = true;
             }
         }
@@ -85,12 +92,10 @@ namespace UI.Effect
         }
         protected override async UniTask VFXOnceUI()
         {
-            // 이전 작업 취소
             destroyCancellation.Cancel();
             destroyCancellation = new CancellationTokenSource();
 
             var rectTransform = GetComponent<RectTransform>();
-            
             if (isResetOnNext && !isResetedThisTime)
             {
                 isResetedThisTime = true;
@@ -98,11 +103,11 @@ namespace UI.Effect
             }
             else
             {
-                isResetedThisTime = false;
                 await UniTask.WhenAll(
-                    rectTransform.DOLocalMove(targetPosition * (effectAddValue + 1), 1 * effectSpeed).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
+                    rectTransform.DOAnchorPos(targetPosition * (effectAddValue + 1), 1 * effectSpeed).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
                     isSmallOnEnd ? rectTransform.DOScale(0, 0.5f).SetEase(Ease.OutCubic).SetDelay(1 * effectSpeed * smallTiming).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
                 );
+                isResetedThisTime = false;
             }
         }
         private async UniTask ResetPositionTask()
@@ -111,9 +116,9 @@ namespace UI.Effect
             {
                 var rectTransform = GetComponent<RectTransform>();
                 await UniTask.WhenAll(
-                    rectTransform.DOLocalMove(startPosition * (effectAddValue + 1), 1 * effectSpeed).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
+                    rectTransform.DOAnchorPos(startPosition * (effectAddValue + 1), 1 * effectSpeed).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
                     isSmallOnEnd ? rectTransform.DOScale(1, 0.5f).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
-              );
+                );
             }
             else
             {

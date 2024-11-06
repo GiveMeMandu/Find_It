@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction
 {
-    public class MultipleClickEvent : MonoBehaviour
+    public class MultipleClickEvent : MonoBehaviour, IPointerClickHandler
     {
         public bool EnableClickLoop = true;
         
@@ -13,7 +14,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction
         [SerializeField]
         private int CurrentClickCount = 0;
 
-        public void OnMouseDown()
+        // 이 오브젝트를 클릭했을 때만 호출됨
+        public void OnPointerClick(PointerEventData eventData)
         {
             Click();
         }

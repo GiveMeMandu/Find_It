@@ -31,7 +31,6 @@ namespace UI.Effect
         protected override void Start() {
             base.Start();
             if(chainType == ChainType.OnStart) PlayOtherVFX().Forget();
-            if(chainType == ChainType.OnEnd) OnEffectEnd.AddListener(OnEffectEndCall);
         }
         protected override void OnEnable() {
             base.OnEnable();
@@ -41,13 +40,15 @@ namespace UI.Effect
             base.OnDisable();
             if(chainType == ChainType.OnDisable) PlayOtherVFX().Forget();
         }
-        public void OnEffectEndCall()
+        protected override void OnVFXEnd()
         {
+            base.OnVFXEnd();
             if(chainFireType == ChainFireType.OnFuntionCall) PlayOtherVFX().Forget();
             if(chainFireType == ChainFireType.OnClick) {
                 if(isClicked)
                 {
                     PlayOtherVFX().Forget();
+                    isClicked = false;
                 }
             }
         }
@@ -64,7 +65,6 @@ namespace UI.Effect
                 otherVFX.PlayVFXAppend();
                 await UniTask.Delay(TimeSpan.FromSeconds(chainDelay), cancellationToken: destroyCancellation.Token);
             }
-            isClicked = false;
         }
     }
 }

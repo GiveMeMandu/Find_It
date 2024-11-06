@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using DeskCat.FindIt.Scripts.Core.Main.System;
 using DG.Tweening;
 using InGame;
+using OutGame;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class Stage2Manager : LevelManagerCount, IStageManager
+public class Stage2Manager : InGameSceneBase, IStageManager
 {
     [BoxGroup("낮밤 바뀌는 연출")] [LabelText("밤 전체 옵젝 부모")]
     [SerializeField] private Transform NightGroup;
@@ -38,18 +40,18 @@ public class Stage2Manager : LevelManagerCount, IStageManager
         {
             if (n.isDisableOnStart) n.gameObject.SetActive(false);
         }
-        levelManager.OnEndEvnt.Add(ClearStageTask);
+        if(_levelManager == null) {
+            _levelManager = FindObjectOfType<LevelManager>();
+            _levelManager.OnEndEvnt.Add(ClearStageTask);
+        }else 
+            _levelManager.OnEndEvnt.Add(ClearStageTask);
+
         nightObjsNoFade = NightNoFadeGroup.GetComponentsInChildren<SpriteRenderer>().ToList();
         foreach(var obj in nightObjsNoFade) {
             obj.gameObject.SetActive(false);
         }
     }
 
-
-    protected override void OnFoundObj(object sender, int e)
-    {
-        base.OnFoundObj(sender, e);
-    }
     public void StartStage()
     {
         var childs = NightGroup.GetComponentsInChildren<SpriteRenderer>();

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DeskCat.FindIt.Scripts.Core.Main.System;
+using OutGame;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -9,9 +10,8 @@ using UnityEngine.Playables;
 namespace InGame
 {
 
-    public class Stage1Manager : LevelManagerCount, IStageManager
+    public class Stage1Manager : InGameSceneBase, IStageManager
     {
-        [SerializeField] private LevelManager _levelManager;
         [LabelText("인트로")]
         [SerializeField] private PlayableDirector _introDirector;
         [LabelText("아웃트로")]
@@ -25,7 +25,14 @@ namespace InGame
             _introDirector.enabled = false;
             StartStage();
             GameManager.SetResolution();
-            levelManager.OnEndEvnt.Add(ClearStageTask);
+
+            if (_levelManager == null)
+            {
+                _levelManager = FindObjectOfType<LevelManager>();
+                _levelManager.OnEndEvnt.Add(ClearStageTask);
+            }
+            else
+                _levelManager.OnEndEvnt.Add(ClearStageTask);
         }
 
         public void StartStage()

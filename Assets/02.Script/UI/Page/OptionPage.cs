@@ -22,6 +22,18 @@ namespace UI.Page
                 OnPropertyChanged(nameof(IsMainMenuButtonActive));
             }
         }
+        private bool _isRetryButtonActive;
+
+        [Binding]
+        public bool IsRetryButtonActive
+        {
+            get => _isRetryButtonActive;
+            set
+            {
+                _isRetryButtonActive = value;
+                OnPropertyChanged(nameof(IsRetryButtonActive));
+            }
+        }
         private string _curLanguage;
 
         [Binding]
@@ -64,9 +76,16 @@ namespace UI.Page
             base.Awake();
             CurLanguage = LocalizationManager.CurrentLanguage;
             if(Global.CurrentScene is OutGame.MainMenu)
+            {
                 IsMainMenuButtonActive = false;
+                IsRetryButtonActive = false;
+            }
             else
+            {
                 IsMainMenuButtonActive = true;
+                IsRetryButtonActive = true;
+            }
+            
         }
         [Binding]
         public void OnClickPrevLanguage()
@@ -119,6 +138,11 @@ namespace UI.Page
         public void OnClickBackToMainMenu()
         {
             LoadingSceneManager.LoadScene(SceneNum.START);
+        }
+        [Binding]
+        public void OnClickRetry()
+        {
+            LoadingSceneManager.LoadScene((int)Global.CurrentScene.SceneName);
         }
         [Binding]
         public void OnClickMuteBGM()

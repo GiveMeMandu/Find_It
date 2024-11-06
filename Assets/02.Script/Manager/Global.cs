@@ -21,7 +21,7 @@ namespace Manager
         public static GoldManager GoldManager { get; set; }
         public static CashManager CashManager { get; set; }
         // public static GameStateManager GameStateManager { get; set; }
-        // public static InputManager InputManager { get; set; }
+        public static InputManager InputManager { get; set; }
         // public static OptionManager OptionManager { get; private set; }
         // public static GameDataManager GameDataManager { get; set; }
         // public static SceneBase CurrentScene { get; private set; }
@@ -80,6 +80,11 @@ namespace Manager
             {
                 RewardManager = Instantiate(Resources.Load<RewardManager>(prefixManager + nameof(RewardManager)), transform);
                 RewardManager.name = nameof(RewardManager);
+            }
+            if (InputManager == null)
+            {
+                InputManager = Instantiate(Resources.Load<InputManager>(prefixManager + nameof(InputManager)), transform);
+                InputManager.name = nameof(InputManager);
             }
         }
     }

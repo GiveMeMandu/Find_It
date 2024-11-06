@@ -141,8 +141,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             var currentMagnitude = (touch0.position.ReadValue() - touch1.position.ReadValue()).magnitude;
 
             var touchDifference = currentMagnitude - prevMagnitude;
-
-            Zoom(touchDifference * 0.01f);
+            
+            var zoomSpeed = 0.005f;
+            Zoom(touchDifference * zoomSpeed);
+            
+            if (!_infinitePan)
+            {
+                _camera.transform.position = ClampCamera(_camera.transform.position);
+            }
         }
 
         private void Zoom(float increment)
@@ -158,15 +164,27 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             var position = backgroundSprite.transform.position;
             var bounds = backgroundSprite.bounds;
 
-            _panMinX = position.x - bounds.size.x / 2f;
-            _panMinY = position.y - bounds.size.y / 2f;
-            _panMaxX = position.x + bounds.size.x / 2f;
-            _panMaxY = position.y + bounds.size.y / 2f;
+            var margin = 0.01f;
+            _panMinX = position.x - bounds.size.x / 2f + margin;
+            _panMinY = position.y - bounds.size.y / 2f + margin;
+            _panMaxX = position.x + bounds.size.x / 2f - margin;
+            _panMaxY = position.y + bounds.size.y / 2f - margin;
 
             var minX = _panMinX + camWidth;
             var minY = _panMinY + orthographicSize;
             var maxX = _panMaxX - camWidth;
             var maxY = _panMaxY - orthographicSize;
+
+            if (minX > maxX)
+            {
+                var center = (_panMinX + _panMaxX) * 0.5f;
+                minX = maxX = center;
+            }
+            if (minY > maxY)
+            {
+                var center = (_panMinY + _panMaxY) * 0.5f;
+                minY = maxY = center;
+            }
 
             var clampX = Mathf.Clamp(targetPosition.x, minX, maxX);
             var clampY = Mathf.Clamp(targetPosition.y, minY, maxY);

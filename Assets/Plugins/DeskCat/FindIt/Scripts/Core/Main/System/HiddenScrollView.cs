@@ -55,7 +55,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 if (target.Value.EnableTooltip)
                 {
                     if(target.Value.IsFound) {
-                        imgObj.FoundSprite.gameObject.SetActive(true);
+                        imgObj.Found();
                     }
                     else {
                         imgObj.FoundSprite.gameObject.SetActive(false);

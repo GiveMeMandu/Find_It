@@ -9,21 +9,18 @@ using UnityEngine;
 
 namespace InGame
 {
-    public class LevelManagerCount : SceneBase
+    public class LevelManagerCount : MonoBehaviour
     {
-
         protected int curFoundCount = 0;
         protected int curFoundCountMax = 0;
         protected LevelManager levelManager;
 
-        protected override void Awake() {
-            base.Awake();
+        protected virtual void Awake() {
             levelManager = FindObjectOfType<LevelManager>();
             curFoundCountMax = levelManager.TargetObjs.Length;
         }
-        protected override void Start()
+        protected virtual void Start()
         {
-            base.Start();
             Global.UIManager.OpenPage<InGameMainPage>();
         }
         

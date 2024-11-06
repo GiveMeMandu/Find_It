@@ -42,10 +42,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public AudioSource FoundFx;
         public AudioSource ItemFx;
 
-        [Header("Game End")] 
+        [Header("Game End 내용물")] 
         public GameObject GameEndUI;
         public Button GameEndBtn;
         public Text GameTimeText;
+        public Text FoundObjCountText;
+        public Text FoundRabbitCountText;
+        public List<Transform> StarList = new List<Transform>();
+    
         public string NextLevelName;
         public bool IsOverwriteGameEnd;
         public UnityEvent GameEndEvent;
@@ -135,7 +139,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 }
             }
             maxRabbitObjCount = RabbitObjDic.Count;
-            rabbitObjCount = maxRabbitObjCount;
+            rabbitObjCount = 0;
             RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
             if (!IsRandomItem) return;
             
@@ -201,7 +205,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 FoundFx.Play();
 
             RabbitObjDic.Remove(guid);
-            rabbitObjCount--;
+            rabbitObjCount++;
             RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
             DetectGameEnd();
         }
@@ -222,7 +226,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                         }
                     }
 
-                    GameEndEvent?.Invoke();  // 모든 UnityEvent 호출이 완료된 뒤에 종료 이벤트 호출
+                    GameEndEvent?.Invoke();  // ���든 UnityEvent 호출이 완료된 뒤에 종료 이벤트 호출
                     return;
                 }
                 // UnityEvent의 모든 리스너가 실행 완료될 때까지 대기
@@ -251,7 +255,34 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             EndTime = DateTime.Now;
             var timeUsed = EndTime.Subtract(StartTime);
-            GameTimeText.text = timeUsed.ToString(@"hh\:mm\:ss");
+            
+            FoundObjCountText.text = $"{TargetObjDic.Count - hiddenObjCount} / {TargetObjDic.Count}";
+            FoundRabbitCountText.text = $"{rabbitObjCount} / {maxRabbitObjCount}";
+
+            // 1시간 미만일 경우 mm:ss 형식으로, 1시간 이상일 경우 hh:mm:ss 형식으로 표시
+            GameTimeText.text = timeUsed.Hours > 0 
+                ? timeUsed.ToString(@"hh\:mm\:ss")
+                : timeUsed.ToString(@"mm\:ss");
+
+            var starCount = 0;
+            
+            // 찾은 오브젝트 비율 (0.0 ~ 1.0)
+            float foundObjRatio = (float)(TargetObjDic.Count - hiddenObjCount) / TargetObjDic.Count;
+            // 찾은 토끼 비율 (0.0 ~ 1.0)
+            float foundRabbitRatio = (float)rabbitObjCount / maxRabbitObjCount;
+            
+            // 전체 진행률 평균 계산 (0.0 ~ 1.0)
+            float totalProgress = (foundObjRatio + foundRabbitRatio) / 2;
+            
+            // 별 개수 계산 (0~3)
+            if (totalProgress >= 0.9f) starCount = 3;
+            else if (totalProgress >= 0.6f) starCount = 2;
+            else if (totalProgress >= 0.3f) starCount = 1;
+            
+            for(int i = 0; i < starCount; i++) {
+                StarList[i].gameObject.SetActive(true);
+            }
+
             GameEndUI.SetActive(true);
         }
     }
