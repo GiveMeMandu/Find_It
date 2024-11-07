@@ -32,6 +32,7 @@ namespace InGame
         [SerializeField] [LabelText("밤에 변할 색깔")] [EnableIf("isChangeColor")] 
         public Color nightColor = Color.black;
         [LabelText("시작시 밤 오브젝트 숨길 것인가")] public bool isHideOnDay = false;
+        [LabelText("밤에 강제 활성화 여부")] public bool isActiveOnNight = true;
         [LabelText("페이드 효과 제외")] public bool isNoFade = false;
         [LabelText("시작시 아예 끌 것인가")] public bool isDisableOnStart = false;
         [LabelText("밤에 색 변할 것인가")] public bool isChangeColor = false;

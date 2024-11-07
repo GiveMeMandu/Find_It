@@ -70,7 +70,7 @@ public class Stage2Manager : InGameSceneBase, IStageManager
 
         foreach (var n in nightObjs)
         {
-            n.gameObject.SetActive(true);
+            if(n.isActiveOnNight) n.gameObject.SetActive(true);
             n.OnNight();
         }
         _dayRabbits.gameObject.SetActive(false);

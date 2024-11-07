@@ -50,12 +50,13 @@ namespace BunnyCafe.InGame.VFX
 
         public void PlayVFXAppend()
         {
-            if (isPlayLock && isPlaying || isPendingPlay)
+            if (isPlaying)
             {
                 isPendingPlay = true;  // 재생 대기 요청
                 return;
+            }else{
+                PlayVFXTask(false, 0).Forget();
             }
-            PlayVFXTask(false, 0).Forget();
         }
 
         public void PlayVFXForce()

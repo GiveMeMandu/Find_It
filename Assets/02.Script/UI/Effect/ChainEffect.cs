@@ -54,6 +54,7 @@ namespace UI.Effect
         }
         public void PlayVFXByClick()
         {
+            if(isPlaying) return;
             if (isClicked) return;
             isClicked = true;
             PlayVFX();

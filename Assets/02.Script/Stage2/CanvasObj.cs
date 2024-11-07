@@ -43,10 +43,6 @@ namespace InGame
                     ChangeAnimation("Scene4");
                 }
             }
-            if (curFoundCount >= curFoundCountMax - 1)
-            {
-                hiddenCanvas.gameObject.SetActive(true);
-            }
         }
         private void ChangeAnimation(string name, float crossFade = 0)
         {
@@ -71,10 +67,6 @@ namespace InGame
             else if (curFoundCount >= 0)
             {
                 ChangeAnimation("Scene1");
-            }
-            if (curFoundCount >= curFoundCountMax - 1)
-            {
-                hiddenCanvas.gameObject.SetActive(true);
             }
         }
     }

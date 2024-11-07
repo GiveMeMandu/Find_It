@@ -48,8 +48,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public Text GameTimeText;
         public Text FoundObjCountText;
         public Text FoundRabbitCountText;
+        public TextMeshProUGUI StageCompleteText;
+
         public List<Transform> StarList = new List<Transform>();
     
+        public string CurrentLevelName;
         public string NextLevelName;
         public bool IsOverwriteGameEnd;
         public UnityEvent GameEndEvent;
@@ -258,6 +261,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             
             FoundObjCountText.text = $"{TargetObjDic.Count - hiddenObjCount} / {TargetObjDic.Count}";
             FoundRabbitCountText.text = $"{rabbitObjCount} / {maxRabbitObjCount}";
+            StageCompleteText.text = CurrentLevelName + " CLEAR!";
 
             // 1시간 미만일 경우 mm:ss 형식으로, 1시간 이상일 경우 hh:mm:ss 형식으로 표시
             GameTimeText.text = timeUsed.Hours > 0 
