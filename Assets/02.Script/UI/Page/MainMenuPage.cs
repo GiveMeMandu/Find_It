@@ -24,25 +24,15 @@ namespace UI.Page
         }
         private void OnEnable()
         {
-            if (PlayerPrefs.GetInt("IsTutorial") == 1)
-            {
-                LoadingSceneManager.LoadScene(SceneNum.STAGE1);
-            }
             DeskCat.FindIt.Scripts.Core.Model.GlobalSetting.InitializeSetting();
-
-            
         }
         [Binding]
         public void OnClickStartButton()
         {
+            PlayerPrefs.SetInt("IsIntro1", 1);
+            PlayerPrefs.Save();
             var main = Global.CurrentScene as OutGame.MainMenu;
             main.OnClickStartButton();
-        }
-        [Binding]
-        public void OnClickIntroButton()
-        {
-            PlayerPrefs.SetInt("IsTutorial", 1);
-            SceneManager.LoadScene("3_Stage1");
         }
         [Binding]
         public void OnClickOptionButton()

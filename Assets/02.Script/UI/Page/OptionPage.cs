@@ -2,6 +2,8 @@
 using Data;
 using I2.Loc;
 using Manager;
+using OutGame;
+
 // using I2.Loc;
 using UnityWeld.Binding;
 
@@ -10,6 +12,19 @@ namespace UI.Page
     [Binding]
     public class OptionPage : PageViewModel
     {
+
+        private string _settingTitle;
+
+        [Binding]
+        public string SettingTitle
+        {
+            get => _settingTitle;
+            set
+            {
+                _settingTitle = value;
+                OnPropertyChanged(nameof(SettingTitle));
+            }
+        }
         private bool _isMainMenuButtonActive;
 
         [Binding]
@@ -85,7 +100,10 @@ namespace UI.Page
                 IsMainMenuButtonActive = true;
                 IsRetryButtonActive = true;
             }
-            
+            if( Global.CurrentScene is InGameSceneBase)
+                SettingTitle = "PAUSE";
+            else
+                SettingTitle = "SETTING";
         }
         [Binding]
         public void OnClickPrevLanguage()

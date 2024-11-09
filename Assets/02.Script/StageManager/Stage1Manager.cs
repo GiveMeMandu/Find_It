@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DeskCat.FindIt.Scripts.Core.Main.System;
+using Manager;
 using OutGame;
 using Sirenix.OdinInspector;
+using UI.Page;
 using UnityEngine;
 using UnityEngine.Playables;
 
 namespace InGame
 {
 
-    public class Stage1Manager : InGameSceneBase, IStageManager
+    public class Stage1Manager : InGameSceneBase
     {
         [LabelText("인트로")]
         [SerializeField] private PlayableDirector _introDirector;
@@ -24,36 +26,55 @@ namespace InGame
             base.Start();
             _introDirector.enabled = false;
             StartStage();
-            GameManager.SetResolution();
-
-            if (_levelManager == null)
+        }
+        public override void SkipIntro()
+        {
+            if(Global.UIManager.GetCurrentPage() is InGameMainPage currentPage)
             {
-                _levelManager = FindObjectOfType<LevelManager>();
-                _levelManager.OnEndEvnt.Add(ClearStageTask);
+                // 타임라인 완전 초기화 후 마지막으로 이동
+                _introDirector.Stop();
+                _introDirector.time = 0;
+                _introDirector.Evaluate();
+                _introDirector.playableGraph.Evaluate(0f);
+                
+                // 타임라인 재생 후 즉시 마지막으로 이동
+                _introDirector.enabled = true;
+                _introDirector.Play();
+                _introDirector.time = _introDirector.duration;
+                _introDirector.Evaluate();
+                _introDirector.Stop();
+                _introDirector.enabled = false;
+                
+                currentPage.ShowSkipButton = false;
             }
-            else
-                _levelManager.OnEndEvnt.Add(ClearStageTask);
+            base.SkipIntro();
         }
 
         public void StartStage()
         {
-            bool isTutorial = PlayerPrefs.GetInt("IsTutorial") == 1;
-            if (isTutorial)
+            bool isIntro = PlayerPrefs.GetInt("IsIntro1") == 1;
+            if (isIntro)
             {
-                PlayerPrefs.SetInt("IsTutorial", 0);
+                PlayerPrefs.SetInt("IsIntro1", 0);
                 PlayerPrefs.Save();
                 _levelManager.gameObject.SetActive(false);
                 _introDirector.initialTime = 0;
                 _introDirector.enabled = true;
+                
+                // StartStageBase();
+                // 스킵 버튼 2초 후 활성화
+                if(Global.UIManager.GetCurrentPage() is InGameMainPage currentPage)
+                {
+                    ShowSkipButtonDelayed(currentPage).Forget();
+                }
             }
-            else _levelManager.gameObject.SetActive(true);
+            else
+            {
+                StartStageBase();
+            }
         }
 
-        public void ClearStage()
-        {
-
-        }
-        public async UniTask ClearStageTask()
+        protected override async UniTask ClearStageTask()
         {
             _outroDirector.initialTime = 0;
             _outroDirector.enabled = true;
@@ -71,5 +92,12 @@ namespace InGame
 
             PlayerPrefs.Save();
         }
+
+        private async UniTaskVoid ShowSkipButtonDelayed(InGameMainPage page)
+        {
+            await UniTask.Delay(5000); // 2초 대기
+            page.ShowSkipButton = true;
+        }
     }
+
 }

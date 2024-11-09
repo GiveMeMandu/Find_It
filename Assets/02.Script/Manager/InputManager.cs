@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using DeskCat.FindIt.Scripts.Core.Main.System;
+using Util.CameraSetting;
 
 namespace Manager
 {
@@ -17,16 +20,22 @@ namespace Manager
 
         public PlayerAction playerAction;
 
+        private EventSystem eventSystem;
+
         private void Awake()
         {
             playerAction = new PlayerAction();
-            playerAction.playerControl.Enable();
-            //* 뒤로가기 등 여러 조작
-            playerAction.playerControl.Pause.performed += Pause_Performed;
-            //* 터치 조작
-            playerAction.Touch.Enable();
+            
+            // 터치 이벤트 바인딩을 먼저 설정
             playerAction.Touch.TouchPress.performed += TouchPress_Performed;
             playerAction.Touch.TouchPress.canceled += TouchPressEnd_Performed;
+            playerAction.playerControl.Pause.performed += Pause_Performed;
+
+            // 그 다음 활성화
+            playerAction.Touch.Enable();
+            playerAction.playerControl.Enable();
+
+            eventSystem = EventSystem.current;
         }
         private void OnDisable()
         {
@@ -59,6 +68,39 @@ namespace Manager
         public Vector2 GetCurMousePos()
         {
             return playerAction.Touch.TouchPosition.ReadValue<Vector2>();
+        }
+
+        public void DisableAllInput()
+        {
+            playerAction.Touch.Disable();
+            playerAction.playerControl.Disable();
+            playerAction.Disable();
+            
+            // EventSystem 비활성화
+            if (eventSystem != null)
+            {
+                eventSystem.enabled = false;
+            }
+            
+            // CameraView2D 비활성화
+            CameraView2D.SetEnablePanAndZoom(false);
+        }
+
+        public void EnableAllInput()
+        {
+            // 활성화 전에 입력 상태 초기화
+            playerAction.Touch.TouchPress.Reset();
+            
+            playerAction.Touch.Enable();
+            playerAction.playerControl.Enable();
+            playerAction.Enable();
+            
+            if (eventSystem != null)
+            {
+                eventSystem.enabled = true;
+            }
+            
+            CameraView2D.SetEnablePanAndZoom(true);
         }
     }
 

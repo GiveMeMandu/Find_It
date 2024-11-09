@@ -72,5 +72,7 @@ namespace Manager
         }
         public bool MuteSFX(bool? muteSFX = null) => sfxSource.mute = muteSFX ?? !sfxSource.mute;
         public bool MuteBGM(bool? muteBGM = null) => bgmSource.mute = muteBGM ?? !bgmSource.mute;
+
+
     }
 }

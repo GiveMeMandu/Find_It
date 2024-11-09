@@ -1,28 +1,180 @@
 using System;
+using DeskCat.FindIt.Scripts.Core.Main.System;
 using Manager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityWeld.Binding;
+using Cysharp.Threading.Tasks;
 
 namespace UI.Page
 {
     [Binding]
     public class InGameMainPage : PageViewModel
     {
-        private int _hiddenRabbitCount;
+        private bool _showSkipButton;
 
         [Binding]
-        public int HiddenRabbitCount
+        public bool ShowSkipButton
         {
-            get => _hiddenRabbitCount;
+            get => _showSkipButton;
             set
             {
-                _hiddenRabbitCount = value;
-                OnPropertyChanged(nameof(HiddenRabbitCount));
+                _showSkipButton = value;
+                OnPropertyChanged(nameof(ShowSkipButton));
             }
         }
         
+        private bool _showFoundObjToolTip;
+
+        [Binding]
+        public bool ShowFoundObjToolTip
+        {
+            get => _showFoundObjToolTip;
+            set
+            {
+                _showFoundObjToolTip = value;
+                OnPropertyChanged(nameof(ShowFoundObjToolTip));
+            }
+        }
         
+        private Vector3 _tooltipLocalScale = Vector3.one;
+
+        [Binding]
+        public Vector3 TooltipLocalScale
+        {
+            get => _tooltipLocalScale;
+            set
+            {
+                _tooltipLocalScale = value;
+                OnPropertyChanged(nameof(TooltipLocalScale));
+            }
+        }
+        private Vector2 _foundObjToolTipPos;
+
+        [Binding]
+        public Vector2 FoundObjToolTipPos
+        {
+            get => _foundObjToolTipPos;
+            set
+            {
+                _foundObjToolTipPos = value;
+                OnPropertyChanged(nameof(FoundObjToolTipPos));
+            }
+        }
+
+        private LevelManager _levelManager;
+        private void OnEnable() {
+            _levelManager = FindObjectOfType<LevelManager>();
+            _levelManager.OnFoundObj += OnFoundObj;
+            ShowFoundObjToolTip = false;
+            ShowSkipButton = false;
+        }
+        private void OnFoundObj(object sender, HiddenObj e)
+        {
+            ShowFoundObjAsync(e).Forget();
+        }
+        private async UniTask ShowFoundObjAsync(HiddenObj e)
+        {
+            var camera = Camera.main;
+            Vector3 objPosition;
+            SpriteRenderer spriteRenderer = null;
+            
+            if (e.BgAnimationTransform != null && e.BgAnimationSpriteRenderer != null)
+            {
+                // 저장된 초기 bounds 정보 사용
+                Bounds bounds = e.BgAnimationLerp.InitialBounds;
+                objPosition = new Vector3(
+                    bounds.center.x,
+                    bounds.max.y,
+                    bounds.center.z
+                );
+            }
+            else if (e.TryGetComponent(out spriteRenderer))
+            {
+                Bounds bounds = spriteRenderer.bounds;
+                objPosition = new Vector3(
+                    bounds.center.x,
+                    bounds.max.y,
+                    bounds.center.z
+                );
+            }
+            else
+            {
+                objPosition = e.transform.position;
+            }
+
+            Vector3 screenPos = camera.WorldToScreenPoint(objPosition);
+            
+            // Canvas의 ScaleFactor를 가져옵니다
+            var canvas = GetComponentInParent<Canvas>();
+            float scaleFactor = canvas.scaleFactor;
+            
+            // 스크린의 중앙을 (0,0)으로 하는 좌표계로 변환 (scaleFactor 적용)
+            Vector2 localPoint = new Vector2(
+                (screenPos.x - Screen.width * 0.5f) / scaleFactor,
+                (screenPos.y - Screen.height * 0.5f) / scaleFactor
+            );
+            
+            // 툴팁 크기도 scaleFactor로 나누어 조정
+            Vector2 tooltipSize = new Vector2(235.2f, 135f);
+            Vector2 tooltipHalfSize = tooltipSize * 0.5f;
+            
+            // 화면 경계 계산 (scaleFactor 적용)
+            Vector2 screenHalfSize = new Vector2(
+                (Screen.width * 0.5f) / scaleFactor, 
+                (Screen.height * 0.5f) / scaleFactor
+            );
+            Vector2 maxBound = screenHalfSize - tooltipHalfSize;
+            Vector2 minBound = -maxBound;
+            
+            // 기본 스케일 설정
+            TooltipLocalScale = Vector3.one;
+            
+            // 화면 위로 넘어갈 경우
+            if (localPoint.y + tooltipHalfSize.y > maxBound.y)
+            {
+                // 위치를 오브젝트 아래로 이동
+                if (e.BgAnimationTransform != null && e.BgAnimationSpriteRenderer != null)
+                {
+                    // 배경 이미지의 하단 위치로 이동
+                    objPosition = new Vector3(
+                        e.BgAnimationLerp.InitialBounds.center.x,
+                        e.BgAnimationLerp.InitialBounds.min.y, 
+                        e.BgAnimationLerp.InitialBounds.center.z
+                    );
+                }
+                else if (spriteRenderer != null)
+                {
+                    Bounds bounds = spriteRenderer.bounds;
+                    objPosition = new Vector3(
+                        bounds.center.x,
+                        bounds.min.y,
+                        bounds.center.z
+                    );
+                }
+                
+                screenPos = camera.WorldToScreenPoint(objPosition);
+                screenPos -= new Vector3(0, tooltipSize.y * scaleFactor, 0);
+                localPoint = new Vector2(
+                    (screenPos.x - Screen.width * 0.5f) / scaleFactor,
+                    (screenPos.y - Screen.height * 0.5f) / scaleFactor
+                );
+                
+                // 스케일 y축 반전
+                TooltipLocalScale = new Vector3(1, -1, 1);
+            }
+            
+            // 툴팁이 화면 밖으로 나가지 않도록 위치 조정
+            localPoint.x = Mathf.Clamp(localPoint.x, minBound.x, maxBound.x);
+            localPoint.y = Mathf.Clamp(localPoint.y, minBound.y, maxBound.y);
+            
+            FoundObjToolTipPos = localPoint;
+            
+            ShowFoundObjToolTip = true;
+            await UniTask.Delay(TimeSpan.FromSeconds(0.6f));
+            ShowFoundObjToolTip = false;
+        }
+
         [Binding]
         public void OnClickOptionButton()
         {
@@ -34,5 +186,12 @@ namespace UI.Page
             // Global.GoogleMobileAdsManager.ShowRewardedAd();
         }
         
+        
+        [Binding]
+        public void OnClickSkipButton()
+        {
+            var inGameSceneBase = FindObjectOfType<OutGame.InGameSceneBase>();
+            inGameSceneBase.SkipIntro();
+        }
     }
 }

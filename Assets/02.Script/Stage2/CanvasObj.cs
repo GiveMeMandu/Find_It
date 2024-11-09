@@ -21,7 +21,7 @@ namespace InGame
             brush.gameObject.SetActive(false);
         }
 
-        protected override void OnFoundObj(object sender, int e)
+        protected override void OnFoundObj(object sender, DeskCat.FindIt.Scripts.Core.Main.System.HiddenObj e)
         {
             base.OnFoundObj(sender, e);
             if (brush.gameObject.activeSelf)

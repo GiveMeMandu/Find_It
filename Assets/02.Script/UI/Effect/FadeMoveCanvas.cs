@@ -8,6 +8,9 @@ namespace UI.Effect
 {
     public class FadeMoveCanvas : MonoBehaviour
     {
+        [SerializeField] private bool isMove = true;
+        [SerializeField] private float playTime = 3f;
+        [SerializeField] private float startDelay = 0f;
         [SerializeField] private CanvasGroup canvasGroup;
         private Vector2 originVec;
         private RectTransform r;
@@ -23,12 +26,15 @@ namespace UI.Effect
             r.localPosition = originVec;
             canvasGroup.alpha = 0;
 
-            //* 이동 효과
-            r.DOLocalMoveY(originVec.y + 1.25f, 1f).SetEase(Ease.OutExpo);
+            if(isMove)
+            {
+                //* 이동 효과
+                r.DOLocalMoveY(originVec.y + 1.25f, playTime).SetEase(Ease.OutExpo).SetDelay(startDelay);
+            }
 
             //* 페이드 효과
-            canvasGroup.DOFade(1, 0.5f).SetEase(Ease.InSine);
-            canvasGroup.DOFade(0, 0.5f).SetEase(Ease.InSine).SetDelay(1.5f);
+            canvasGroup.DOFade(1, 0.5f).SetEase(Ease.InSine).SetDelay(startDelay);
+            canvasGroup.DOFade(0, 0.5f).SetEase(Ease.InSine).SetDelay(playTime - 0.5f);
         }
 
     }

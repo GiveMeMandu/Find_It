@@ -19,10 +19,6 @@ namespace InGame
             levelManager = FindObjectOfType<LevelManager>();
             curFoundCountMax = levelManager.TargetObjs.Length;
         }
-        protected virtual void Start()
-        {
-            Global.UIManager.OpenPage<InGameMainPage>();
-        }
         
         protected virtual void OnEnable()
         {
@@ -34,9 +30,9 @@ namespace InGame
             levelManager.OnFoundObj -= OnFoundObj;
         }
 
-        protected virtual void OnFoundObj(object sender, int e)
+        protected virtual void OnFoundObj(object sender, HiddenObj e)
         {
-            curFoundCount = curFoundCountMax - e;
+            curFoundCount = levelManager.GetLeftHiddenObjCount();
         }
     }
 }

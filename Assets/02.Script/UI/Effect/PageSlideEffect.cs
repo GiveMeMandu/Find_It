@@ -18,10 +18,10 @@ namespace UI.Effect
 
         [LabelText("이펙트 타입")]
         [SerializeField] private Ease easeType = Ease.Linear;
-        private RectTransform r;
+        [SerializeField] private RectTransform r;
         void Start()
         {
-            r = transform.GetComponent<RectTransform>();
+            if(r == null) r = transform.GetComponent<RectTransform>();
         }
         void OnEnable()
         {
