@@ -157,13 +157,14 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5732768603091877206}
   m_Father: {fileID: 6190765803122662031}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 62.5}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 95.16941}
+  m_SizeDelta: {x: 0, y: -20.7231}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1307595270246351475
 CanvasRenderer:
@@ -627,13 +628,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6226577779720837071}
-  - {fileID: 5732768603091877206}
   m_Father: {fileID: 5796630087996543523}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0.41973525}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 235.20001, y: 135.9447}
+  m_AnchoredPosition: {x: 0, y: 22.088898}
+  m_SizeDelta: {x: 167.6883, y: 50.853}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3706504440700875005
 CanvasRenderer:
@@ -1789,7 +1789,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6190765803122662031}
+    m_TransformParent: {fileID: 6226577779720837071}
     m_Modifications:
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_Pivot.x
@@ -1801,27 +1801,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 212.8171
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 63.1463
+      value: -43.6873
+      objectReference: {fileID: 0}
+    - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1857,7 +1861,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 75.1
+      value: 6.8971
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366344, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1881,11 +1885,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366347, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_fontSize
-      value: 38.4
+      value: 25.3
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366347, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_margin.y
-      value: -11.932617
+      value: -1.9663086
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366347, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_fontAsset
@@ -1905,7 +1909,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366347, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_fontSizeMax
-      value: 38.4
+      value: 25.3
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366347, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_sharedMaterial
@@ -1921,7 +1925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366347, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_VerticalAlignment
-      value: 1024
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 2847752364105366347, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       propertyPath: m_hasFontAssetChanged
@@ -1934,6 +1938,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2847752364105366345, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2298151591734591302}
+    - targetCorrespondingSourceObject: {fileID: 2847752364105366345, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5628527413280414174}
   m_SourcePrefab: {fileID: 100100000, guid: 91c1b1c807d35944fb268631f7b1585a, type: 3}
 --- !u!224 &5732768603091877206 stripped
 RectTransform:
@@ -1962,3 +1969,20 @@ MonoBehaviour:
   viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: UI.Page.InGameMainPage.ShowFoundObjToolTip
   viewPropertyName: TMPro.TextMeshProUGUI.enabled
+--- !u!114 &5628527413280414174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5732768603091877207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.Page.InGameMainPage.TooltipTextLocalScale
+  viewPropertyName: UnityEngine.RectTransform.localScale

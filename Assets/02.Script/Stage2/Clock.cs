@@ -99,6 +99,8 @@ namespace InGame
                     await sun.DOLocalMoveY(5f, 1f).SetEase(Ease.InOutBack);
                     await UniTask.WaitForSeconds(0.1f);
                     audioSource.PlayOneShot(whoosh);
+                    moon.gameObject.SetActive(true);
+                    await moon.DOLocalMoveY(-1.46f, 0f);
                     await moon.DOLocalMoveY(8.885f, 1f).SetEase(Ease.InOutBack);
                 });
 

@@ -46,7 +46,20 @@ namespace UI.Page
             set
             {
                 _tooltipLocalScale = value;
+                TooltipTextLocalScale = value;
                 OnPropertyChanged(nameof(TooltipLocalScale));
+            }
+        }
+        private Vector3 _tooltipTextLocalScale = Vector3.one;
+
+        [Binding]
+        public Vector3 TooltipTextLocalScale
+        {
+            get => _tooltipTextLocalScale;
+            set
+            {
+                _tooltipTextLocalScale = value;
+                OnPropertyChanged(nameof(TooltipTextLocalScale));
             }
         }
         private Vector2 _foundObjToolTipPos;
