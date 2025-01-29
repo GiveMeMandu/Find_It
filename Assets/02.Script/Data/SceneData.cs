@@ -20,7 +20,8 @@ namespace Data
         Start,
         Select,
         Stage1,
-        Stage2
+        Stage2,
+        Puzzle
     }
     public class SceneData
     {
