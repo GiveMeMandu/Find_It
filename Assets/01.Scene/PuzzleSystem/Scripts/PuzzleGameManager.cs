@@ -14,101 +14,32 @@ public class PuzzleGameManager : MonoBehaviour
     private Transform draggedPiece = null;
     private Vector3 dragOffset;
     private Vector3 originalPosition;
-    private Material pieceMaterial;
-    private PuzzleData currentPuzzle;
-    private int currentSize;
+    private int currentPuzzleIndex = 0;
 
-    private void Start()
+    void Start()
     {
         pieces = new List<Transform>();
+        InitializePuzzle(currentPuzzleIndex);
     }
 
     public void InitializePuzzle(int puzzleIndex)
     {
         if (puzzleIndex < 0 || puzzleIndex >= puzzleDataList.Length) return;
 
-        // 기존 피스 제거
-        ClearCurrentPuzzle();
+        // 기존 피스들 제거
+        foreach (var piece in pieces)
+        {
+            if (piece != null) Destroy(piece.gameObject);
+        }
+        pieces.Clear();
 
         // 새 퍼즐 설정
-        currentPuzzle = puzzleDataList[puzzleIndex];
-        currentSize = currentPuzzle.size;
-        
-        // 머티리얼 생성 및 설정
-        CreatePuzzleMaterial();
-        
-        // 퍼즐 피스 생성
-        CreateGamePieces(0.01f);
-        
-        // 셔플 시작
+        PuzzleData puzzleData = puzzleDataList[puzzleIndex];
+        currentPuzzleIndex = puzzleIndex;
+
+        // 퍼즐 생성
+        CreateGamePieces(puzzleData, 0.01f);
         StartCoroutine(WaitShuffle(0.5f));
-    }
-
-    private void ClearCurrentPuzzle()
-    {
-        if (pieces != null)
-        {
-            foreach (var piece in pieces)
-            {
-                if (piece != null)
-                    Destroy(piece.gameObject);
-            }
-            pieces.Clear();
-        }
-
-        if (pieceMaterial != null)
-            Destroy(pieceMaterial);
-    }
-
-    private void CreatePuzzleMaterial()
-    {
-        pieceMaterial = new Material(Shader.Find("Unlit/Texture"));
-        pieceMaterial.mainTexture = currentPuzzle.puzzleImage.texture;
-    }
-
-    private void CreateGamePieces(float gapThickness)
-    {
-        float width = 1f / currentSize;
-        
-        for (int row = 0; row < currentSize; row++)
-        {
-            for (int col = 0; col < currentSize; col++)
-            {
-                CreatePiece(row, col, width, gapThickness);
-            }
-        }
-    }
-
-    private void CreatePiece(int row, int col, float width, float gapThickness)
-    {
-        Transform piece = Instantiate(piecePrefab, gameTransform);
-        pieces.Add(piece);
-
-        piece.localPosition = new Vector3(
-            -1 + (2 * width * col) + width,
-            +1 - (2 * width * row) - width,
-            0
-        );
-        piece.localScale = ((2 * width) - gapThickness) * Vector3.one;
-        piece.name = $"{(row * currentSize) + col}";
-        
-        MeshRenderer renderer = piece.GetComponent<MeshRenderer>();
-        renderer.material = new Material(pieceMaterial);
-
-        SetupPieceUV(piece, row, col, width, gapThickness);
-    }
-
-    private void SetupPieceUV(Transform piece, int row, int col, float width, float gap)
-    {
-        Mesh mesh = piece.GetComponent<MeshFilter>().mesh;
-        Vector2[] uv = new Vector2[4];
-        
-        uv[0] = new Vector2((width * col) + gap/2, 1 - ((width * (row + 1)) - gap/2));
-        uv[1] = new Vector2((width * (col + 1)) - gap/2, 1 - ((width * (row + 1)) - gap/2));
-        uv[2] = new Vector2((width * col) + gap/2, 1 - ((width * row) + gap/2));
-        uv[3] = new Vector2((width * (col + 1)) - gap/2, 1 - ((width * row) + gap/2));
-        
-        mesh.uv = uv;
     }
 
     void Update()
@@ -188,6 +119,58 @@ public class PuzzleGameManager : MonoBehaviour
         }
 
         draggedPiece = null;
+    }
+
+    private void CreateGamePieces(PuzzleData data, float gapThickness)
+    {
+        float width = 1f / data.size;
+        
+        // 퍼즐 이미지로 머티리얼 생성
+        Material pieceMaterial = new Material(Shader.Find("Unlit/Texture"));
+        pieceMaterial.mainTexture = data.puzzleImage.texture;
+
+        for (int row = 0; row < data.size; row++)
+        {
+            for (int col = 0; col < data.size; col++)
+            {
+                CreatePiece(row, col, width, gapThickness, pieceMaterial, data.size);
+            }
+        }
+    }
+
+    private void CreatePiece(int row, int col, float width, float gapThickness, Material material, int size)
+    {
+        Transform piece = Instantiate(piecePrefab, gameTransform);
+        pieces.Add(piece);
+
+        // 위치 및 크기 설정
+        piece.localPosition = new Vector3(
+            -1 + (2 * width * col) + width,
+            +1 - (2 * width * row) - width,
+            0
+        );
+        piece.localScale = ((2 * width) - gapThickness) * Vector3.one;
+        piece.name = $"{(row * size) + col}";
+
+        // 머티리얼 설정
+        MeshRenderer renderer = piece.GetComponent<MeshRenderer>();
+        renderer.material = new Material(material);
+
+        // UV 설정
+        SetupPieceUV(piece, row, col, width, gapThickness);
+    }
+
+    private void SetupPieceUV(Transform piece, int row, int col, float width, float gap)
+    {
+        Mesh mesh = piece.GetComponent<MeshFilter>().mesh;
+        Vector2[] uv = new Vector2[4];
+        
+        uv[0] = new Vector2((width * col) + gap/2, 1 - ((width * (row + 1)) - gap/2));
+        uv[1] = new Vector2((width * (col + 1)) - gap/2, 1 - ((width * (row + 1)) - gap/2));
+        uv[2] = new Vector2((width * col) + gap/2, 1 - ((width * row) + gap/2));
+        uv[3] = new Vector2((width * (col + 1)) - gap/2, 1 - ((width * row) + gap/2));
+        
+        mesh.uv = uv;
     }
 
     private bool CheckCompletion()

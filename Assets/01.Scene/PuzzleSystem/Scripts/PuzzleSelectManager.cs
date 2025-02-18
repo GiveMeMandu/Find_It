@@ -6,13 +6,27 @@ public class PuzzleSelectManager : MonoBehaviour
     [SerializeField] private PuzzleData[] availablePuzzles;
 
     public PuzzleData[] AvailablePuzzles => availablePuzzles;
-    void OnEnable()
+
+    private void Awake()
+    {
+        if (gameManager == null)
+        {
+            Debug.LogError("PuzzleGameManager reference is missing!");
+            return;
+        }
+    }
+
+    private void OnEnable()
     {
         SelectPuzzle(0);
     }
+
     public void SelectPuzzle(int index)
     {
-        gameManager.InitializePuzzle(index);
+        if (gameManager != null)
+        {
+            // gameManager.InitializePuzzle(index);
+        }
     }
 
     public Color GetDifficultyColor(float difficulty)
