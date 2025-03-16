@@ -1,15 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using Sirenix.OdinInspector;
 using UI;
 using UnityWeld.Binding;
-using Manager;
 using Data;
 using I2.Loc;
-using System.Text.RegularExpressions;
 using System.Linq;
+using AYellowpaper.SerializedCollections;
 
 namespace UnityWeld
 {
@@ -18,7 +15,8 @@ namespace UnityWeld
     {
         public static PuzzleLevelSelectView Instance { get; private set; }
         
-        private Dictionary<SceneName, List<PuzzleData>> _stageGroups = new Dictionary<SceneName, List<PuzzleData>>();
+        [SerializedDictionary]
+        public SerializedDictionary<SceneName, List<PuzzleData>> _stageGroups = new SerializedDictionary<SceneName, List<PuzzleData>>();
         private SceneName _currentSceneName;
         private int _currentStageIndex;
         
@@ -249,16 +247,17 @@ namespace UnityWeld
         
         public void StartStage(SceneName sceneName, int stageIndex)
         {
-            if (!_stageGroups.ContainsKey(sceneName) || 
-                stageIndex < 0 || 
-                stageIndex >= _stageGroups[sceneName].Count)
-            {
+            if (!_stageGroups.ContainsKey(sceneName))
                 return;
-            }
+                
+            var stages = _stageGroups[sceneName];
+            var selectedStage = stages.FirstOrDefault(s => s.stageIndex == stageIndex);
+            
+            if (selectedStage == null)
+                return;
             
             // 선택된 스테이지의 정보로 게임 시작
-            PuzzleData selectedStage = _stageGroups[sceneName][stageIndex];
-            PuzzleGameManager.Instance.InitializePuzzle(selectedStage.stageIndex);
+            PuzzleGameManager.Instance.InitializePuzzle(sceneName, selectedStage.stageIndex);
         }
         
         [Binding]

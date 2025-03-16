@@ -18,9 +18,10 @@ public class PuzzleSelectManager : MonoBehaviour
 
     public void SelectPuzzle(int index)
     {
-        if (puzzleGameManager != null)
+        if (puzzleGameManager != null && index >= 0 && index < availablePuzzles.Length)
         {
-            puzzleGameManager.InitializePuzzle(index);
+            PuzzleData selectedPuzzle = availablePuzzles[index];
+            puzzleGameManager.InitializePuzzle(selectedPuzzle.sceneName, selectedPuzzle.stageIndex);
         }
     }
 

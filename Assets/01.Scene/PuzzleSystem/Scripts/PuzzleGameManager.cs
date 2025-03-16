@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
+using Data;
 
 public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
 {
@@ -22,9 +24,11 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         pieces = new List<Transform>();
     }
 
-    public void InitializePuzzle(int puzzleIndex)
+    public void InitializePuzzle(SceneName sceneName, int stageIndex)
     {
-        if (puzzleIndex < 0 || puzzleIndex >= puzzleDataList.Length) return;
+        // sceneName과 stageIndex에 맞는 퍼즐 찾기
+        PuzzleData puzzleData = puzzleDataList.FirstOrDefault(p => p.sceneName == sceneName && p.stageIndex == stageIndex);
+        if (puzzleData == null) return;
 
         // 기존 피스들 제거
         foreach (var piece in pieces)
@@ -32,10 +36,6 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
             if (piece != null) Destroy(piece.gameObject);
         }
         pieces.Clear();
-
-        // 새 퍼즐 설정
-        PuzzleData puzzleData = puzzleDataList[puzzleIndex];
-        currentPuzzleIndex = puzzleIndex;
 
         // 퍼즐 생성
         CreateGamePieces(puzzleData, 0.01f);
