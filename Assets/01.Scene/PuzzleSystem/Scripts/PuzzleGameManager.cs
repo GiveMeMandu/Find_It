@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PuzzleGameManager : MonoBehaviour
+public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
 {
     [SerializeField] private Transform gameTransform;
     [SerializeField] private Transform piecePrefab;
@@ -16,10 +16,10 @@ public class PuzzleGameManager : MonoBehaviour
     private Vector3 originalPosition;
     private int currentPuzzleIndex = 0;
 
+    public PuzzleData[] PuzzleDataList => puzzleDataList;
     void Start()
     {
         pieces = new List<Transform>();
-        InitializePuzzle(currentPuzzleIndex);
     }
 
     public void InitializePuzzle(int puzzleIndex)

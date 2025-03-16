@@ -23,11 +23,6 @@ namespace UI.Page
             }
         }
         [Binding]
-        public void OnClickStartButton()
-        {
-            
-        }
-        [Binding]
         public void OnClickOptionButton()
         {
             Global.UIManager.OpenPage<OptionPage>();

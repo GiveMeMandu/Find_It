@@ -106,7 +106,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 {
                     LevelManager.PlayItemFx(AudioWhenClick);
                 }
-
                 if (EnableBGAnimation)
                 {
                     BgAnimationTransform.gameObject.SetActive(true);

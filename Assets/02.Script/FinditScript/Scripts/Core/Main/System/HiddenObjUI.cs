@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DeskCat.FindIt.Scripts.Core.Model;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -15,6 +16,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public Image backGround;
         public Image targetSprite;
         public Image FoundSprite;
+        public Image countSprite;
+        public TextMeshProUGUI countText;
+
+        private int remainingCount = 0;
         private bool isEnableTooltips;
         private List<MultiLanguageTextListModel> uiTooltipsListModel;
         private TooltipsType tooltipsType;
@@ -28,6 +33,31 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             targetSprite.sprite = sprite;
             FoundSprite.gameObject.SetActive(false);
         }
+
+        public void SetCount(int count)
+        {
+            remainingCount = count;
+            UpdateCountUI();
+            
+            // 남은 개수가 0이면 Found 상태로 변경
+            if (remainingCount <= 0)
+            {
+                Found();
+            }
+        }
+
+        private void UpdateCountUI()
+        {
+            if (countText != null)
+            {
+                countText.text = remainingCount.ToString();
+            }
+
+            if (countSprite != null)
+            {
+                countSprite.gameObject.SetActive(remainingCount > 0);
+            }
+        }
         
         public void InitializeTooltips(List<MultiLanguageTextListModel> tooltipsList, TooltipsType type)
         {
@@ -35,6 +65,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             tooltipsType = type;
             uiTooltipsListModel = tooltipsList;
         }
+        
         public void Click()
         {
             OnUIClickEvent?.Invoke();
@@ -42,8 +73,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 UIClickEvent?.Invoke(uiTooltipsListModel, tooltipsType, clickCount++, transform);
             }
         }
+        
         public void Found()
         {
+            if (FoundSprite.gameObject.activeSelf) return; // 이미 Found 상태면 무시
+            
             FoundSprite.gameObject.SetActive(true);
             if(backGround != null && backGroundToChange != null) {
                 backGround.sprite = backGroundToChange;
