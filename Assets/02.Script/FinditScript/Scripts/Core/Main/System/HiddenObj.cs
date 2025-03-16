@@ -53,12 +53,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public bool bgAnimBool = true;
         public bool actionFoldoutBool = true;
 
+        public SpriteRenderer spriteRenderer;
+
 
         private void Awake()
         {
             if (UISprite == null)
             {
-                if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+                if (TryGetComponent(out spriteRenderer))
                 {
                     UISprite = spriteRenderer.sprite;
                 }

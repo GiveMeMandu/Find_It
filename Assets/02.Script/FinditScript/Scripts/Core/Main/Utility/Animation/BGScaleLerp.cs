@@ -1,4 +1,5 @@
 using UnityEngine;
+using DeskCat.FindIt.Scripts.Core.Main.System;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
 {
@@ -13,29 +14,57 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
 
         private void Awake()
         {
-            if (UseCustomScale == false)
+            if (UseCustomScale == false && transform.localScale == Vector3.zero)
             {
                 FromScale = Vector3.zero;
+                
+                // HiddenObj의 spriteRenderer 사용
+                if (transform.parent != null && transform.parent.TryGetComponent<HiddenObj>(out var hiddenObj) && hiddenObj.spriteRenderer != null)
+                {
+                    var bgSprite = GetComponent<SpriteRenderer>();
+                    if (bgSprite != null)
+                    {
+                        // 스프라이트 실제 크기 사용
+                        float targetWidth = hiddenObj.spriteRenderer.sprite.bounds.size.x;
+                        float targetHeight = hiddenObj.spriteRenderer.sprite.bounds.size.y;
+                        float bgWidth = bgSprite.sprite.bounds.size.x;
+                        float bgHeight = bgSprite.sprite.bounds.size.y;
+                        
+                        float scaleX = targetWidth / bgWidth;
+                        float scaleY = targetHeight / bgHeight;
+                        float scale = Mathf.Max(scaleX, scaleY) * 1.5f; // 약간 더 크게 설정
+                        
+                        ToScale = new Vector3(scale, scale, 1f);
+                        
+                        // sorting order 설정
+                        bgSprite.sortingOrder = hiddenObj.spriteRenderer.sortingOrder - 1;
+                    }
+                    else
+                    {
+                        ToScale = Vector3.one;
+                    }
+                }
+                else
+                {
+                    ToScale = Vector3.one;
+                }
+            }else
+            {
                 ToScale = transform.localScale;
             }
             
-            // 초기 bounds 정보 저장
-            if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
-            {
-                InitialBounds = spriteRenderer.bounds;
-            }
             gameObject.SetActive(false);
         }
 
         private void OnEnable()
         {
-            transform.localScale = Vector3.zero;
+            transform.localScale = FromScale;
         }
 
         private void Update()
         {
             var value = GetLerpValue(currentTime);
-            transform.localScale = (FromScale * (1-value)) + (ToScale * value);
+            transform.localScale = Vector3.Lerp(FromScale, ToScale, value);
         }
     }
 }

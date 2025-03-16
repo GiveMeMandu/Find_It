@@ -19,11 +19,36 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public int TotalCount => Objects.Count;
         public int FoundCount { get; set; }
         public HiddenObj Representative => Objects[0];
+        public Dictionary<HiddenObj, bool> ObjectStates { get; private set; }
+        public HiddenObj LastClickedObject { get; set; }
+        public string BaseGroupName { get; private set; }
 
-        public HiddenObjGroup(List<HiddenObj> objects)
+        public HiddenObjGroup(List<HiddenObj> objects, string baseGroupName)
         {
             Objects = objects;
+            BaseGroupName = baseGroupName;
             FoundCount = 0;
+            ObjectStates = new Dictionary<HiddenObj, bool>();
+            foreach (var obj in objects)
+            {
+                ObjectStates[obj] = false;
+            }
+        }
+
+        public void MarkObjectAsFound(HiddenObj obj)
+        {
+            if (ObjectStates.ContainsKey(obj) && !ObjectStates[obj])
+            {
+                ObjectStates[obj] = true;
+                LastClickedObject = obj;
+                FoundCount++;
+                obj.IsFound = true;
+            }
+        }
+
+        public bool IsObjectFound(HiddenObj obj)
+        {
+            return ObjectStates.ContainsKey(obj) && ObjectStates[obj];
         }
     }
 
@@ -135,6 +160,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                             }
                             
                             // 배경 애니메이션 설정
+                            hiddenObj.HideWhenFound = false;
                             hiddenObj.EnableBGAnimation = true;
                             hiddenObj.BGAnimationPrefab = DefaultBgAnimation;
                             
@@ -142,16 +168,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                             if (DefaultBgAnimation != null)
                             {
                                 var bgObj = Instantiate(DefaultBgAnimation, hiddenObj.transform);
-                                if (child.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
-                                {
-                                    bgObj.GetComponent<SpriteRenderer>().sortingOrder = spriteRenderer.sortingOrder - 1;
-                                }
                                 hiddenObj.BgAnimationTransform = bgObj.transform;
-                                
-                                // 자동 스케일 조정
-                                var currentScale = bgObj.transform.localScale;
-                                float maxScale = Mathf.Max(currentScale.x, currentScale.y);
-                                bgObj.transform.localScale = new Vector3(maxScale, maxScale, currentScale.z);
                             }
                             
                             Debug.Log($"Added HiddenObj component and BoxCollider2D to {child.name}");
@@ -183,7 +200,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public void AddHiddenObject(HiddenObj hiddenObj)
         {
             Debug.Log("time");
-            var group = new HiddenObjGroup(new List<HiddenObj> { hiddenObj });
+            var group = new HiddenObjGroup(new List<HiddenObj> { hiddenObj }, hiddenObj.gameObject.name);
             TargetObjDic.Add(Guid.NewGuid(), group);
             ScrollViewTrigger();
         }
@@ -229,7 +246,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     {
                         endIndex--;
                     }
-                    return name.Substring(startIndex, endIndex - startIndex + 1).Trim();
+                    return name.Substring(0, endIndex + 1).Trim();  // 숫자를 제외한 기본 이름
                 })
                 .ToDictionary(g => g.Key, g => g.ToList());
 
@@ -239,7 +256,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 if (group.Value.Count > 0)
                 {
-                    var hiddenObjGroup = new HiddenObjGroup(group.Value);
+                    var hiddenObjGroup = new HiddenObjGroup(group.Value, group.Key);
                     TargetObjDic.Add(Guid.NewGuid(), hiddenObjGroup);
                     Debug.Log($"Added {group.Key} to target dictionary with {group.Value.Count} similar objects");
                     
@@ -247,7 +264,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     foreach (var obj in group.Value)
                     {
                         var guid = TargetObjDic.First(x => x.Value.Objects.Contains(obj)).Key;
-                        obj.TargetClickAction = () => { TargetClick(guid); };
+                        obj.TargetClickAction = () => { 
+                            var targetGroup = TargetObjDic[guid];
+                            targetGroup.LastClickedObject = obj;
+                            TargetClick(guid); 
+                        };
                     }
                 }
             }
@@ -321,10 +342,16 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (group.Representative.PlaySoundWhenFound)
                 FoundFx.Play();
 
-            group.FoundCount++;
-            CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
-            hiddenObjCount--;
-            OnFoundObj?.Invoke(this, group.Representative);
+            var clickedObj = group.LastClickedObject;
+            if (clickedObj != null && !group.IsObjectFound(clickedObj))
+            {
+                group.MarkObjectAsFound(clickedObj);
+                CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+                hiddenObjCount--;
+                OnFoundObj?.Invoke(this, clickedObj);
+                
+                Debug.Log($"Found {clickedObj.name} from group {group.BaseGroupName} ({group.FoundCount}/{group.TotalCount})");
+            }
 
             DetectGameEnd();
         }
