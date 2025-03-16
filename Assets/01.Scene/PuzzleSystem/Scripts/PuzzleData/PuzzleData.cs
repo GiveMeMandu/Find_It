@@ -32,6 +32,6 @@ public class PuzzleData : ScriptableObject
     public int stageIndex;
     public Sprite puzzleImage;    // 전체 퍼즐 이미지
     public int size = 4;             // 퍼즐 크기 (4x4, 3x3 등)
-    public string puzzleName = "예시이름";    // 퍼즐 이름
+    public string puzzleName = "";    // 퍼즐 이름
     public float difficulty = 1.0f;     // 난이도
 }

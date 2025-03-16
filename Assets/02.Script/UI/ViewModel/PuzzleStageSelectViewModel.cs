@@ -72,8 +72,8 @@ namespace UI
         [Binding]
         public void OnClickStage()
         {
-            // 스테이지 선택 시 PuzzleLevelSelectView에 알림
-            PuzzleLevelSelectView.Instance.SelectStage(_sceneName, _stageIndex);
+            // 스테이지 클릭 시 바로 해당 스테이지 시작
+            PuzzleLevelSelectView.Instance.StartStage(_sceneName, _stageIndex);
         }
     }
 }

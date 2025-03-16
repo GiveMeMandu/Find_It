@@ -158,60 +158,57 @@ namespace UnityWeld
         
         private void SetupStageButtons()
         {
-            // 스테이지 그룹 수에 맞게 버튼 생성
-            int stageGroupCount = _stageGroups.Count;
-            PrepareViewModels(stageGroupCount);
-            
-            // 각 버튼에 스테이지 그룹 정보 설정
-            int index = 0;
-            foreach (var stageGroup in _stageGroups)
-            {
-                SceneName sceneName = stageGroup.Key;
-                List<PuzzleData> stages = stageGroup.Value;
-                
-                if (stages.Count > 0)
-                {
-                    PuzzleData representativeStage = stages[0]; // 대표 스테이지로 첫 번째 스테이지 사용
-                    
-                    var viewModel = GetViewModel(index);
-                    PuzzleStageSelectViewModel stageViewModel = viewModel.GetComponent<PuzzleStageSelectViewModel>();
-                    if (stageViewModel != null)
-                    {
-                        string stageName = string.Format("{0}", (int)sceneName - 3);
-                        stageViewModel.Initialize(stageName, 0, sceneName, representativeStage.puzzleImage);
-                    }
-                    
-                    index++;
-                }
-            }
-            
-            // 첫 번째 스테이지 그룹 선택
             if (_stageGroups.Count > 0)
             {
                 SelectStage(_stageGroups.Keys.First(), 0);
+                RefreshStageButtons(_stageGroups.Keys.First());
+            }
+        }
+        
+        private void RefreshStageButtons(SceneName sceneName)
+        {
+            if (!_stageGroups.ContainsKey(sceneName))
+                return;
+
+            List<PuzzleData> stages = _stageGroups[sceneName];
+            
+            // 현재 선택된 스테이지의 모든 인덱스에 맞는 버튼 생성
+            PrepareViewModels(stages.Count);
+            
+            for (int i = 0; i < stages.Count; i++)
+            {
+                var viewModel = GetViewModel(i);
+                PuzzleStageSelectViewModel stageViewModel = viewModel.GetComponent<PuzzleStageSelectViewModel>();
+                if (stageViewModel != null)
+                {
+                    PuzzleData stageData = stages[i];
+                    string stageName = $"{(int)sceneName}-{stageData.stageIndex}";
+                    stageViewModel.Initialize(stageName, stageData.stageIndex, sceneName, stageData.puzzleImage);
+                }
             }
         }
         
         public void SelectStage(SceneName sceneName, int stageIndex)
         {
-            if (!_stageGroups.ContainsKey(sceneName) || 
-                stageIndex < 0 || 
-                stageIndex >= _stageGroups[sceneName].Count)
-            {
+            if (!_stageGroups.ContainsKey(sceneName))
                 return;
-            }
+                
+            var stages = _stageGroups[sceneName];
+            var selectedStage = stages.FirstOrDefault(s => s.stageIndex == stageIndex + 1);
             
+            if (selectedStage == null)
+                return;
+                
             _currentSceneName = sceneName;
             _currentStageIndex = stageIndex;
             
-            PuzzleData selectedStage = _stageGroups[sceneName][stageIndex];
-            
             // UI 업데이트
             int sceneNumber = (int)sceneName;
-            int totalStagesInGroup = _stageGroups[sceneName].Count;
             
-            // 스테이지 제목 형식: "Stage 1-2: 퍼즐 이름 (2/5)"
-            StageTitle = $"Stage {sceneNumber}-{stageIndex + 1}: {selectedStage.puzzleName} ({stageIndex + 1}/{totalStagesInGroup})";
+            // 스테이지 제목 형식: "1-2: 퍼즐 이름" 또는 "1-2"
+            StageTitle = string.IsNullOrEmpty(selectedStage.puzzleName) 
+                ? $"{sceneNumber}-{selectedStage.stageIndex}"
+                : $"{sceneNumber}-{selectedStage.stageIndex}: {selectedStage.puzzleName}";
             StageImage = selectedStage.puzzleImage;
             
             // 버튼 상태 업데이트
@@ -229,7 +226,8 @@ namespace UnityWeld
             {
                 // 다음 SceneName으로 이동
                 SceneName nextSceneName = sceneNames[currentIndex + 1];
-                SelectStage(nextSceneName, 0); // 다음 SceneName의 첫 번째 스테이지 선택
+                SelectStage(nextSceneName, 0);
+                RefreshStageButtons(nextSceneName);
             }
         }
         
@@ -244,15 +242,30 @@ namespace UnityWeld
             {
                 // 이전 SceneName으로 이동
                 SceneName prevSceneName = sceneNames[currentIndex - 1];
-                SelectStage(prevSceneName, 0); // 이전 SceneName의 첫 번째 스테이지 선택
+                SelectStage(prevSceneName, 0);
+                RefreshStageButtons(prevSceneName);
             }
+        }
+        
+        public void StartStage(SceneName sceneName, int stageIndex)
+        {
+            if (!_stageGroups.ContainsKey(sceneName) || 
+                stageIndex < 0 || 
+                stageIndex >= _stageGroups[sceneName].Count)
+            {
+                return;
+            }
+            
+            // 선택된 스테이지의 정보로 게임 시작
+            PuzzleData selectedStage = _stageGroups[sceneName][stageIndex];
+            PuzzleGameManager.Instance.InitializePuzzle(selectedStage.stageIndex);
         }
         
         [Binding]
         public void OnClickStartButton()
         {
-            // 선택된 스테이지 시작
-            PuzzleGameManager.Instance.InitializePuzzle(_stageGroups[_currentSceneName][_currentStageIndex].stageIndex);
+            // 현재 선택된 스테이지 시작
+            StartStage(_currentSceneName, _currentStageIndex);
         }
         
         private void UpdateButtonStates()
@@ -265,8 +278,14 @@ namespace UnityWeld
             IsNextButtonActive = currentIndex < sceneNames.Count - 1;
             
             // 스테이지 내 이동 버튼 상태 업데이트
-            IsPrevSubStageActive = _currentStageIndex > 0;
-            IsNextSubStageActive = _currentStageIndex < _stageGroups[_currentSceneName].Count - 1;
+            var currentStages = _stageGroups[_currentSceneName];
+            var currentStageData = currentStages.FirstOrDefault(s => s.stageIndex == _currentStageIndex + 1);
+            if (currentStageData != null)
+            {
+                int currentStageListIndex = currentStages.IndexOf(currentStageData);
+                IsPrevSubStageActive = currentStageListIndex > 0;
+                IsNextSubStageActive = currentStageListIndex < currentStages.Count - 1;
+            }
         }
     }
 }
