@@ -35,6 +35,15 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseWheel"",
+                    ""type"": ""Value"",
+                    ""id"": ""753617f5-5f0d-44ff-a092-4c6d9e07e6a6"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -68,6 +77,17 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a5124fc9-645e-4c84-ae44-3e339367901d"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseWheel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -127,6 +147,7 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
         // playerControl
         m_playerControl = asset.FindActionMap("playerControl", throwIfNotFound: true);
         m_playerControl_Pause = m_playerControl.FindAction("Pause", throwIfNotFound: true);
+        m_playerControl_MouseWheel = m_playerControl.FindAction("MouseWheel", throwIfNotFound: true);
         // Touch
         m_Touch = asset.FindActionMap("Touch", throwIfNotFound: true);
         m_Touch_TouchPosition = m_Touch.FindAction("TouchPosition", throwIfNotFound: true);
@@ -193,11 +214,13 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_playerControl;
     private List<IPlayerControlActions> m_PlayerControlActionsCallbackInterfaces = new List<IPlayerControlActions>();
     private readonly InputAction m_playerControl_Pause;
+    private readonly InputAction m_playerControl_MouseWheel;
     public struct PlayerControlActions
     {
         private @PlayerAction m_Wrapper;
         public PlayerControlActions(@PlayerAction wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pause => m_Wrapper.m_playerControl_Pause;
+        public InputAction @MouseWheel => m_Wrapper.m_playerControl_MouseWheel;
         public InputActionMap Get() { return m_Wrapper.m_playerControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -210,6 +233,9 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @MouseWheel.started += instance.OnMouseWheel;
+            @MouseWheel.performed += instance.OnMouseWheel;
+            @MouseWheel.canceled += instance.OnMouseWheel;
         }
 
         private void UnregisterCallbacks(IPlayerControlActions instance)
@@ -217,6 +243,9 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @MouseWheel.started -= instance.OnMouseWheel;
+            @MouseWheel.performed -= instance.OnMouseWheel;
+            @MouseWheel.canceled -= instance.OnMouseWheel;
         }
 
         public void RemoveCallbacks(IPlayerControlActions instance)
@@ -291,6 +320,7 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
     public interface IPlayerControlActions
     {
         void OnPause(InputAction.CallbackContext context);
+        void OnMouseWheel(InputAction.CallbackContext context);
     }
     public interface ITouchActions
     {

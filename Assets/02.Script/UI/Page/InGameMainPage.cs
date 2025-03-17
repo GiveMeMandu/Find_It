@@ -101,7 +101,6 @@ namespace UI.Page
                     bounds.max.y,
                     bounds.center.z
                 );
-                Debug.Log(e.name + "배경 오브젝트 위치 : " + objPosition);
             }
             else if (e.spriteRenderer != null)
             {
@@ -109,13 +108,11 @@ namespace UI.Page
                 objPosition = e.transform.position;
                 float spriteHeight = spriteRenderer.sprite.bounds.size.y * e.transform.localScale.y;
                 objPosition.y += spriteHeight * 0.5f;  // 스프라이트의 상단 위치로 조정
-                Debug.Log(e.name + "스프라이트 오브젝트 위치 : " + objPosition);
             }
             else
             {
                 objPosition = e.transform.position;
             }
-            Debug.Log( e.name + "objPosition : " + objPosition);
             Vector3 screenPos = camera.WorldToScreenPoint(objPosition);
             
             // Canvas의 ScaleFactor를 가져옵니다

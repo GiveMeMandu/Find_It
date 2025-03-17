@@ -1,34 +1,70 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
 using Data;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using Manager;
 
 public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
 {
     [SerializeField] private Transform gameTransform;
     [SerializeField] private Transform piecePrefab;
     [SerializeField] private PuzzleData[] puzzleDataList;
+    [SerializeField] private float completionAnimationDuration = 0.5f;
+    [SerializeField] private Ease completionEaseType = Ease.InOutQuad;
 
     private List<Transform> pieces;
     private bool shuffling = false;
     private Transform draggedPiece = null;
     private Vector3 dragOffset;
     private Vector3 originalPosition;
-    private int currentPuzzleIndex = 0;
+    private PuzzleData currentPuzzleData;
+    private bool isGamePaused = false;
+    private bool isAnimating = false;
+    private bool isGameCompleted = false;
+    private InputManager inputManager;
 
     public PuzzleData[] PuzzleDataList => puzzleDataList;
+    public bool IsGamePaused => isGamePaused;
+    public PuzzleData CurrentPuzzleData => currentPuzzleData;
+    
+    public event Action OnPuzzleCompleted;
+    public event Action OnPuzzleStarted;
+    public event Action OnPuzzlePaused;
+    public event Action OnPuzzleResumed;
+
     void Start()
     {
         pieces = new List<Transform>();
+        inputManager = FindObjectOfType<InputManager>();
+        if (inputManager != null)
+        {
+            inputManager.OnTouchPressAction += HandleTouchStart;
+            inputManager.OnTouchMoveAction += HandleTouchMove;
+            inputManager.OnTouchPressEndAction += HandleTouchEnd;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (inputManager != null)
+        {
+            inputManager.OnTouchPressAction -= HandleTouchStart;
+            inputManager.OnTouchMoveAction -= HandleTouchMove;
+            inputManager.OnTouchPressEndAction -= HandleTouchEnd;
+        }
     }
 
     public void InitializePuzzle(SceneName sceneName, int stageIndex)
     {
+        isGameCompleted = false;
         // sceneName과 stageIndex에 맞는 퍼즐 찾기
-        PuzzleData puzzleData = puzzleDataList.FirstOrDefault(p => p.sceneName == sceneName && p.stageIndex == stageIndex);
-        if (puzzleData == null) return;
+        currentPuzzleData = puzzleDataList.FirstOrDefault(p => p.sceneName == sceneName && p.stageIndex == stageIndex);
+        if (currentPuzzleData == null) return;
 
         // 기존 피스들 제거
         foreach (var piece in pieces)
@@ -38,56 +74,56 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         pieces.Clear();
 
         // 퍼즐 생성
-        CreateGamePieces(puzzleData, 0.01f);
+        CreateGamePieces(currentPuzzleData, 0.01f);
         StartCoroutine(WaitShuffle(0.5f));
+        OnPuzzleStarted?.Invoke();
     }
 
-    void Update()
+    public void PauseGame()
     {
-        if (shuffling) return;
-
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (!isGamePaused)
         {
-            HandleDragStart();
-        }
-        else if (Mouse.current.leftButton.wasReleasedThisFrame)
-        {
-            HandleDragEnd();
-        }
-        else if (draggedPiece != null)
-        {
-            HandleDragging();
+            isGamePaused = true;
+            inputManager?.DisableAllInput();
+            OnPuzzlePaused?.Invoke();
         }
     }
 
-    private void HandleDragStart()
+    public void ResumeGame()
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(mousePosition), Vector2.zero);
+        if (isGamePaused)
+        {
+            isGamePaused = false;
+            inputManager?.EnableAllInput();
+            OnPuzzleResumed?.Invoke();
+        }
+    }
 
+    private void HandleTouchStart(object sender, InputManager.TouchData touchData)
+    {
+        if (shuffling || isGamePaused || isGameCompleted) return;
+
+        RaycastHit2D hit = Physics2D.Raycast(touchData.WorldPosition, Vector2.zero);
         if (hit && hit.transform != null)
         {
             draggedPiece = hit.transform;
             originalPosition = draggedPiece.localPosition;
-            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 0));
-            dragOffset = draggedPiece.position - mouseWorld;
-            draggedPiece.SetAsLastSibling(); // 드래그 중인 피스를 최상단에 표시
+            dragOffset = draggedPiece.position - new Vector3(touchData.WorldPosition.x, touchData.WorldPosition.y, 0);
+            draggedPiece.SetAsLastSibling();
         }
     }
 
-    private void HandleDragging()
+    private void HandleTouchMove(object sender, InputManager.TouchData touchData)
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 0));
-        draggedPiece.position = mouseWorld + dragOffset;
+        if (draggedPiece == null || shuffling || isGamePaused || isGameCompleted) return;
+        draggedPiece.position = new Vector3(touchData.WorldPosition.x, touchData.WorldPosition.y, 0) + dragOffset;
     }
 
-    private void HandleDragEnd()
+    private void HandleTouchEnd(object sender, InputManager.TouchData touchData)
     {
-        if (draggedPiece == null) return;
+        if (draggedPiece == null || isAnimating || shuffling || isGamePaused || isGameCompleted) return;
 
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(mousePosition), Vector2.zero);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(touchData.WorldPosition, Vector2.zero);
 
         Transform targetPiece = null;
         foreach (var hit in hits)
@@ -101,24 +137,142 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
 
         if (targetPiece != null)
         {
-            // 두 조각의 위치 교환
             Vector3 targetPosition = targetPiece.localPosition;
             targetPiece.localPosition = originalPosition;
             draggedPiece.localPosition = targetPosition;
 
-            // pieces 리스트에서의 위치도 교환
             int draggedIndex = pieces.IndexOf(draggedPiece);
             int targetIndex = pieces.IndexOf(targetPiece);
             pieces[draggedIndex] = targetPiece;
             pieces[targetIndex] = draggedPiece;
+
+            if (CheckCompletion())
+            {
+                OnPuzzleCompleted?.Invoke();
+            }
         }
         else
         {
-            // 교환할 대상이 없으면 원래 위치로 복귀
             draggedPiece.localPosition = originalPosition;
         }
 
         draggedPiece = null;
+    }
+
+    private async UniTask PlayCompletionAnimation()
+    {
+        isAnimating = true;
+        float width = 1f / currentPuzzleData.size;
+
+        var tasks = new List<UniTask>();
+        
+        for (int row = 0; row < currentPuzzleData.size; row++)
+        {
+            for (int col = 0; col < currentPuzzleData.size; col++)
+            {
+                int index = (row * currentPuzzleData.size) + col;
+                Transform piece = pieces[index];
+                
+                Vector3 targetPosition = new Vector3(
+                    -1 + (2 * width * col) + width,
+                    +1 - (2 * width * row) - width,
+                    0
+                );
+
+                float delay = (row * currentPuzzleData.size + col) * 0.05f;
+                
+                // 위치 이동과 크기 조정을 동시에 실행
+                tasks.Add(UniTask.Delay(TimeSpan.FromSeconds(delay))
+                    .ContinueWith(async () => {
+                        await UniTask.WhenAll(
+                            piece.DOLocalMove(targetPosition, completionAnimationDuration)
+                                .SetEase(completionEaseType)
+                                .ToUniTask(),
+                            piece.DOScale(Vector3.one * 2 * width, completionAnimationDuration)
+                                .SetEase(completionEaseType)
+                                .ToUniTask()
+                        );
+                    }));
+            }
+        }
+
+        await UniTask.WhenAll(tasks);
+        
+        isAnimating = false;
+        OnPuzzleCompleted?.Invoke();
+    }
+
+    private async UniTask PlayCompletionAnimationSimultaneous()
+    {
+        isAnimating = true;
+        float width = 1f / currentPuzzleData.size;
+
+        var tasks = new List<UniTask>();
+        
+        for (int row = 0; row < currentPuzzleData.size; row++)
+        {
+            for (int col = 0; col < currentPuzzleData.size; col++)
+            {
+                int index = (row * currentPuzzleData.size) + col;
+                Transform piece = pieces[index];
+                
+                Vector3 targetPosition = new Vector3(
+                    -1 + (2 * width * col) + width,
+                    +1 - (2 * width * row) - width,
+                    0
+                );
+
+                tasks.Add(UniTask.WhenAll(
+                    piece.DOLocalMove(targetPosition, completionAnimationDuration)
+                        .SetEase(completionEaseType)
+                        .ToUniTask(),
+                    piece.DOScale(Vector3.one * 2 * width, completionAnimationDuration)
+                        .SetEase(completionEaseType)
+                        .ToUniTask()
+                ));
+            }
+        }
+
+        await UniTask.WhenAll(tasks);
+        
+        isAnimating = false;
+        isGameCompleted = true;
+        OnPuzzleCompleted?.Invoke();
+    }
+
+    private bool CheckCompletion()
+    {
+        if (isAnimating) return false;
+
+        for (int i = 0; i < pieces.Count; i++)
+        {
+            if (pieces[i].name != $"{(i)}") return false;
+        }
+
+        PlayCompletionAnimationSimultaneous().Forget();
+        return true;
+    }
+
+    private IEnumerator WaitShuffle(float duration)
+    {
+        shuffling = true;
+        yield return new WaitForSeconds(duration);
+        Shuffle();
+        shuffling = false;
+    }
+
+    private void Shuffle()
+    {
+        for (int i = 0; i < pieces.Count; i++)
+        {
+            int random = UnityEngine.Random.Range(0, pieces.Count);
+            
+            Vector3 tempPosition = pieces[i].localPosition;
+            pieces[i].localPosition = pieces[random].localPosition;
+            pieces[random].localPosition = tempPosition;
+
+            (pieces[i], pieces[random]) = (pieces[random], pieces[i]);
+        }
     }
 
     private void CreateGamePieces(PuzzleData data, float gapThickness)
@@ -171,55 +325,5 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         uv[3] = new Vector2((width * (col + 1)) - gap/2, 1 - ((width * row) + gap/2));
         
         mesh.uv = uv;
-    }
-
-    private bool CheckCompletion()
-    {
-        for (int i = 0; i < pieces.Count; i++)
-        {
-            if (pieces[i].name != $"{i}") return false;
-        }
-        return true;
-    }
-
-    private IEnumerator WaitShuffle(float duration)
-    {
-        shuffling = true;
-        yield return new WaitForSeconds(duration);
-        Shuffle();
-        shuffling = false;
-        
-        // 셔플이 완료된 후에 완성 체크를 시작하기 위해 새로운 코루틴 시작
-        StartCoroutine(CheckCompletionRoutine());
-    }
-
-    private IEnumerator CheckCompletionRoutine()
-    {
-        while (true)
-        {
-            if (!shuffling && CheckCompletion())
-            {
-                Debug.Log("퍼즐 완성!");
-                yield break; // 완성되면 코루틴 종료
-            }
-            yield return new WaitForSeconds(0.5f); // 0.5초마다 체크
-        }
-    }
-
-    private void Shuffle()
-    {
-        shuffling = true;
-        for (int i = 0; i < pieces.Count; i++)
-        {
-            int random = Random.Range(0, pieces.Count);
-            
-            // 위치 교환
-            Vector3 tempPosition = pieces[i].localPosition;
-            pieces[i].localPosition = pieces[random].localPosition;
-            pieces[random].localPosition = tempPosition;
-
-            // 리스트에서 교환
-            (pieces[i], pieces[random]) = (pieces[random], pieces[i]);
-        }
     }
 }

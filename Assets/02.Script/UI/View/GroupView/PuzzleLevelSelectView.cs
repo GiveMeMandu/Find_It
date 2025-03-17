@@ -7,6 +7,8 @@ using Data;
 using I2.Loc;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using UI.Page;
+using Manager;
 
 namespace UnityWeld
 {
@@ -180,7 +182,7 @@ namespace UnityWeld
                 if (stageViewModel != null)
                 {
                     PuzzleData stageData = stages[i];
-                    string stageName = $"{(int)sceneName}-{stageData.stageIndex}";
+                    string stageName = $"{(int)sceneName - 3}-{stageData.stageIndex + 1}";
                     stageViewModel.Initialize(stageName, stageData.stageIndex, sceneName, stageData.puzzleImage);
                 }
             }
@@ -203,9 +205,9 @@ namespace UnityWeld
             // UI 업데이트
             int sceneNumber = (int)sceneName;
             
-            // 스테이지 제목 형식: "1-2: 퍼즐 이름" 또는 "1-2"
+            // 스테이지 제목 형식
             StageTitle = string.IsNullOrEmpty(selectedStage.puzzleName) 
-                ? $"{sceneNumber}-{selectedStage.stageIndex}"
+                ? $"{LocalizationManager.GetTranslation("SceneName/" + sceneName)}"
                 : $"{sceneNumber}-{selectedStage.stageIndex}: {selectedStage.puzzleName}";
             StageImage = selectedStage.puzzleImage;
             
@@ -258,6 +260,8 @@ namespace UnityWeld
             
             // 선택된 스테이지의 정보로 게임 시작
             PuzzleGameManager.Instance.InitializePuzzle(sceneName, selectedStage.stageIndex);
+            Global.UIManager.ClosePage(transform.GetComponentInParent<PuzzlePage>());
+            Global.UIManager.OpenPage<PuzzleInGamePage>();
         }
         
         [Binding]
