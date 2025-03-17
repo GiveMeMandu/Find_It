@@ -90,12 +90,23 @@ namespace Manager
             await UniTask.Yield();
 
             if (eventSystem.IsPointerOverGameObject(finger.index)) return;
-
-            Vector2 screenPos = finger.currentTouch.screenPosition;
-            Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
             
-            OnTouchPressAction?.Invoke(this, touchData);
+            // 터치가 유효한지 확인
+            if (!finger.currentTouch.valid) return;
+
+            try 
+            {
+                Vector2 screenPos = finger.currentTouch.screenPosition;
+                Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+                var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
+                
+                OnTouchPressAction?.Invoke(this, touchData);
+            }
+            catch (InvalidOperationException)
+            {
+                Debug.LogWarning("터치 입력이 유효하지 않습니다.");
+                return;
+            }
         }
 
         private void OnFingerUp(Finger finger)

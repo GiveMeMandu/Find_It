@@ -261,7 +261,16 @@ namespace UnityWeld
             // 선택된 스테이지의 정보로 게임 시작
             PuzzleGameManager.Instance.InitializePuzzle(sceneName, selectedStage.stageIndex);
             Global.UIManager.ClosePage(transform.GetComponentInParent<PuzzlePage>());
-            Global.UIManager.OpenPage<PuzzleInGamePage>();
+
+            // 타이머 카운트 페이지 열기
+            var timerPage = Global.UIManager.OpenPage<TimerCountPage>();
+            PuzzleGameManager.Instance.PauseGame(); // 게임 일시정지
+
+            // 3초 타이머 설정 및 완료 후 게임 재개
+            timerPage.SetTimer(3, () => {
+                PuzzleGameManager.Instance.ResumeGame();
+                Global.UIManager.OpenPage<PuzzleInGamePage>();
+            });
         }
         
         [Binding]

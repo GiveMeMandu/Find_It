@@ -76,21 +76,22 @@ namespace InGame
 
         protected override async UniTask ClearStageTask()
         {
-            _outroDirector.initialTime = 0;
-            _outroDirector.enabled = true;
-            _outroDirector.Play();
-            _outroDirector2.initialTime = 0;
-            _outroDirector2.enabled = true;
-            _outroDirector2.Play();
-            await UniTask.WaitUntil(() => _outroDirector.state != PlayState.Playing);
-            await UniTask.WaitUntil(() => _outroDirector2.state != PlayState.Playing);
-            await UniTask.WaitForSeconds(5.5f);
-            _outroDirector3.initialTime = 0;
-            _outroDirector3.enabled = true;
-            _outroDirector3.Play();
-            await UniTask.WaitUntil(() => _outroDirector3.state != PlayState.Playing);
+            await base.ClearStageTask();
+            // _outroDirector.initialTime = 0;
+            // _outroDirector.enabled = true;
+            // _outroDirector.Play();
+            // _outroDirector2.initialTime = 0;
+            // _outroDirector2.enabled = true;
+            // _outroDirector2.Play();
+            // await UniTask.WaitUntil(() => _outroDirector.state != PlayState.Playing);
+            // await UniTask.WaitUntil(() => _outroDirector2.state != PlayState.Playing);
+            // await UniTask.WaitForSeconds(5.5f);
+            // _outroDirector3.initialTime = 0;
+            // _outroDirector3.enabled = true;
+            // _outroDirector3.Play();
+            // await UniTask.WaitUntil(() => _outroDirector3.state != PlayState.Playing);
 
-            PlayerPrefs.Save();
+            // PlayerPrefs.Save();
         }
 
         private async UniTaskVoid ShowSkipButtonDelayed(InGameMainPage page)

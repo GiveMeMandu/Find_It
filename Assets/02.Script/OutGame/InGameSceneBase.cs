@@ -16,7 +16,6 @@ namespace OutGame
         {
             base.Start();
             Global.UIManager.OpenPage<InGameMainPage>();
-            
             if(_levelManager == null) {
                 _levelManager = FindObjectOfType<LevelManager>();
                 _levelManager.OnEndEvnt.Add(ClearStageTask);
@@ -33,8 +32,8 @@ namespace OutGame
 
         protected virtual async UniTask ClearStageTask()
         {
-            // 기본 구현은 비어있음 - 자식 클래스에서 구현
-            await UniTask.CompletedTask;
+            var outroPage = Global.UIManager.OpenPage<InGameOutroPage>();
+            await outroPage.WaitForClose();
         }
 
         public virtual void SkipIntro()
