@@ -205,9 +205,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             ScrollViewTrigger();
         }
 
-        private void ToggleScrollView()
+        public void ToggleScrollView()
         {
-            UIScrollType = (UIScrollType == UIScrollType.Vertical) ? UIScrollType.Vertical : UIScrollType.Horizontal;
+            UIScrollType = (UIScrollType == UIScrollType.Vertical) ? UIScrollType.Horizontal : UIScrollType.Vertical;
             ScrollViewTrigger();
         }
 
