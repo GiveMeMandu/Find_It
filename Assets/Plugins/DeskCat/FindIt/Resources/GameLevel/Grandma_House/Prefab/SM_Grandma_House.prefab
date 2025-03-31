@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39996853200217051}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0.1543987, y: 0.092629105, z: 0.061151084}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7905490442489587764
 MeshFilter:
@@ -60,6 +60,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -93,9 +96,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39996853200217051}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2369674516235736284, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -133,6 +144,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -141,6 +154,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &170700151803991589
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,13 +182,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170700151803991589}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -0.7350563, y: 2.64505, z: -2.2328277}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5361698314972639559
 MeshFilter:
@@ -201,6 +215,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -234,9 +251,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 170700151803991589}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5476890549418117310, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -270,6 +295,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -278,6 +305,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &387650476757222661
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,13 +333,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387650476757222661}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 2.3397453, y: 1.424273, z: 2.1858835}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8299807735234053318
 MeshFilter:
@@ -338,6 +366,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -371,9 +402,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387650476757222661}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1860930330592635140, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -407,6 +446,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -415,6 +456,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &703434718729543962
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,13 +484,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 703434718729543962}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -1.8139716, y: 0.9554695, z: -2.2480993}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8311614889536355853
 MeshFilter:
@@ -475,6 +517,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -508,9 +553,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 703434718729543962}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8742401282597279494, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -544,6 +597,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -552,6 +607,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &916336259876303168
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,13 +633,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 916336259876303168}
+  serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: -0, w: 0.00000031391647}
   m_LocalPosition: {x: 2.3698516, y: 3.0575087, z: 0.45721716}
   m_LocalScale: {x: 10.310778, y: 10.310778, z: 10.310778}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5252762650291391148
 MeshFilter:
@@ -610,6 +666,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -662,13 +721,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315173339427834555}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: 2.0013077, y: 0.65364623, z: 1.480663}
   m_LocalScale: {x: 44.740788, y: 44.740788, z: 44.740788}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4600025169007635312
 MeshFilter:
@@ -695,6 +754,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -728,9 +790,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315173339427834555}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8499898097768642962, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -764,6 +834,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 8300000, guid: 60c74ec1fdebdb64eb52343054b7dd36, type: 3}
@@ -772,6 +844,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &1371137508606831288
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,13 +870,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1371137508606831288}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -2.039446, y: 0.7668234, z: -2.0978909}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1810013817926895932
 MeshFilter:
@@ -830,6 +903,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -880,13 +956,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428994965109379682}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 2.0333436, y: 0.6500906, z: 1.4988253}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2359791527143537522
 MeshFilter:
@@ -913,6 +989,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -965,13 +1044,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3147200008500627994}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.54884887, y: -3.1871474e-17, z: 3.1871468e-17, w: 0.8359216}
   m_LocalPosition: {x: 1.9801856, y: 1.4491866, z: 0.804835}
   m_LocalScale: {x: 6.8885646, y: 6.8885646, z: 13.984319}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8788633761939866062
 MeshFilter:
@@ -998,6 +1077,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1031,9 +1113,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3147200008500627994}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6328413491498278260, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -1067,6 +1157,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -1075,6 +1167,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &3365985615429306122
 GameObject:
   m_ObjectHideFlags: 0
@@ -1102,13 +1195,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3365985615429306122}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.75003916, y: -0.00000020762221, z: 0.6613934, w: 0.00000023544958}
   m_LocalPosition: {x: 2.4979708, y: 1.5909927, z: -1.1189648}
   m_LocalScale: {x: 11.932265, y: 11.932264, z: 11.932265}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &32934120845403272
 MeshFilter:
@@ -1135,6 +1228,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1168,9 +1264,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3365985615429306122}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1173781688151504383, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -1204,6 +1308,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -1212,6 +1318,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &3939864184024450551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1237,13 +1344,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3939864184024450551}
+  serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: -0, w: 0.00000031391647}
   m_LocalPosition: {x: 2.3698516, y: 3.0575087, z: 0.45721716}
   m_LocalScale: {x: 10.310778, y: 10.310778, z: 10.310778}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &668712378625149599
 MeshFilter:
@@ -1270,6 +1377,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1326,13 +1436,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3983985812254666400}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 1.989098, y: 0.7662128, z: 1.506}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &830285452188861150
 MeshFilter:
@@ -1359,6 +1469,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1392,15 +1505,23 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3983985812254666400}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 9115798747255734617, guid: f87022d69141941329bd1cebe41067ff, type: 3}
 --- !u!95 &9039681105533279283
 Animator:
-  serializedVersion: 4
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1414,10 +1535,12 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &9039681105533279281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1513,6 +1636,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 1de7aebdac2d7d140ad2e54a579216bc, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1de7aebdac2d7d140ad2e54a579216bc, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1640,6 +1764,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5519277152045696008}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -2.059081, y: 0.563187, z: -1.99}
   m_LocalScale: {x: 49.889694, y: 66.35215, z: 87.99926}
@@ -1647,7 +1772,6 @@ Transform:
   m_Children:
   - {fileID: 8087972418384085080}
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8607168596490479860
 MeshFilter:
@@ -1674,6 +1798,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1701,7 +1828,7 @@ MeshRenderer:
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!95 &3262601421395015284
 Animator:
-  serializedVersion: 4
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1715,10 +1842,12 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!64 &3262601421395015290
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1727,9 +1856,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5519277152045696008}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -489488133608878608, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -1787,6 +1924,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c6edfed0a49d5fe4e9252848957dd6b6, type: 3}
+  m_Resource: {fileID: 8300000, guid: c6edfed0a49d5fe4e9252848957dd6b6, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -1909,13 +2047,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6148233962537324599}
+  serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: -0, w: 0.00000031391647}
   m_LocalPosition: {x: 2.3698516, y: 3.0575087, z: 0.45721716}
   m_LocalScale: {x: 10.310778, y: 10.310778, z: 10.310778}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6463229581067903011
 MeshFilter:
@@ -1942,6 +2080,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1997,13 +2138,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7497773099877390695}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -2.028905, y: 0.1980955, z: -1.9703152}
   m_LocalScale: {x: 49.889694, y: 66.35215, z: 87.99926}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7073659107921091731
 MeshFilter:
@@ -2030,6 +2171,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2057,7 +2201,7 @@ MeshRenderer:
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!95 &3975432394722273656
 Animator:
-  serializedVersion: 4
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2071,10 +2215,12 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &3975432394722273657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2126,9 +2272,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7497773099877390695}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2943548684666248225, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -2143,6 +2297,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c6edfed0a49d5fe4e9252848957dd6b6, type: 3}
+  m_Resource: {fileID: 8300000, guid: c6edfed0a49d5fe4e9252848957dd6b6, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -2267,13 +2422,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7714188775498954413}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 2.2284515, y: 0.80521774, z: 0.13795888}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4057611209142915221
 MeshFilter:
@@ -2300,6 +2455,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2333,9 +2491,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7714188775498954413}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -2052561803746819051, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -2369,6 +2535,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -2377,6 +2545,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &8192628004597139035
 GameObject:
   m_ObjectHideFlags: 0
@@ -2403,6 +2572,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8192628004597139035}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -2426,11 +2596,10 @@ Transform:
   - {fileID: 8812245651011012359}
   - {fileID: 1471936847033530266}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &9039681106074947057
 Animator:
-  serializedVersion: 4
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2444,10 +2613,12 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &9039681106074947062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2481,6 +2652,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -2489,6 +2662,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &8688426633952815205
 GameObject:
   m_ObjectHideFlags: 0
@@ -2516,13 +2690,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8688426633952815205}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 2.135825, y: 0.8844521, z: 0.64085424}
   m_LocalScale: {x: 248.95877, y: 248.95877, z: 248.95877}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8861359410138471649}
-  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3159239572528039637
 MeshFilter:
@@ -2549,6 +2723,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2582,9 +2759,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8688426633952815205}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4697646569788504997, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -2618,6 +2803,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -2626,6 +2813,7 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
 --- !u!1 &9220275062126165317
 GameObject:
   m_ObjectHideFlags: 0
@@ -2653,13 +2841,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9220275062126165317}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.004940136, y: 0.0005946096, z: -0.00029899288}
   m_LocalScale: {x: 0.9355467, y: 0.7034307, z: 0.8851096}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3262601421395015287}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8982652542907497518
 MeshFilter:
@@ -2686,6 +2874,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2719,9 +2910,17 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9220275062126165317}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6781602578154086440, guid: f87022d69141941329bd1cebe41067ff, type: 3}
@@ -2755,6 +2954,8 @@ MonoBehaviour:
   EnableBGAnimation: 0
   BGAnimationPrefab: {fileID: 0}
   BgAnimationTransform: {fileID: 0}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
   AudioWhenClick: {fileID: 0}
@@ -2763,3 +2964,4 @@ MonoBehaviour:
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}

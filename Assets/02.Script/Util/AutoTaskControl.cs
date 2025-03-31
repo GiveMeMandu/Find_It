@@ -8,11 +8,7 @@ public class AutoTaskControl : MonoBehaviour
     protected CancellationTokenSource destroyCancellation = new CancellationTokenSource(); //삭제시 취소처리
     protected virtual void OnEnable()
     {
-        if (destroyCancellation != null)
-        {
-            destroyCancellation.Dispose();
-        }
-        destroyCancellation = new CancellationTokenSource();
+        ResetCancellationToken();
     }
     protected virtual void OnDisable()
     {
@@ -31,12 +27,20 @@ public class AutoTaskControl : MonoBehaviour
     }
     protected void StopAllTask()
     {
+        if (!destroyCancellation.IsCancellationRequested)
+        {
+            destroyCancellation.Cancel();
+        }
+    }
+    protected void ResetCancellationToken()
+    {
         if (destroyCancellation != null)
         {
             if (!destroyCancellation.IsCancellationRequested)
             {
                 destroyCancellation.Cancel();
             }
+            destroyCancellation.Dispose();
         }
         destroyCancellation = new CancellationTokenSource();
     }
