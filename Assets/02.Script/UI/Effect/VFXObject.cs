@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace BunnyCafe.InGame.VFX
+namespace Effect
 {
     public class VFXObject : AutoTaskControl
     {

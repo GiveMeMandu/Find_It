@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using BunnyCafe.InGame.VFX;
 using Cysharp.Threading.Tasks;
+using Effect;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;

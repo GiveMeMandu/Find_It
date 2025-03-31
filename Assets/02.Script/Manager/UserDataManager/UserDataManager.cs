@@ -2,36 +2,42 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Data;
+using UnityEngine;
 
 namespace Manager
 {
 
     public class Storage
     {
+        //! ES3는 ScriptableObject를 지원하지 않음
         public Storage()
         {
             sceneData = new List<SceneData>();
             recipeUpgradeData = new List<UpgradeData>();
             GoldData = "0";
             CashData = "0";
-            curStage = SceneName.Stage1;
+            SpinTicketData = "0";
             EPS = "0";
             dailyRewardData = new DailyRewardData();
+            spinRewardNames = new List<string>();
         }
         // public HashSet<int> CollectedItem = new();
         public List<SceneData> sceneData;
-        public SceneName curStage;
+        public SceneName curScene;
         public List<UpgradeData> recipeUpgradeData;
         public string GoldData;
         public string CashData;
+        public string SpinTicketData;
         public DailyRewardData dailyRewardData;
         public DateTime lastUTCTime;
+        public DateTime lastOfflineRewardTime;
         public string EPS;
+        public List<string> spinRewardNames;
     }
     public partial class UserDataManager
     {
         public Storage userStorage { get; private set; } = new Storage();
-        private string KeyName = "findItStorage";
+        private string KeyName = "Storage";
         private string FileName = "SaveFile.es3";
         /// <summary>
         /// TODO : 
@@ -45,14 +51,56 @@ namespace Manager
         /// </summary>
         public void Load()
         {
-            if(ES3.FileExists(FileName))
-                ES3.LoadInto(KeyName, userStorage, _saveSettings);
-            else
+            try 
+            {
+                if (ES3.FileExists(FileName) && ES3.KeyExists(KeyName, FileName))
+                {
+                    ES3.LoadInto(KeyName, userStorage, _saveSettings);
+                }
+                else
+                {
+                    userStorage = new Storage();
+                    Save();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"저장 데이터 로드 중 오류 발생: {e.Message}");
+                userStorage = new Storage();
                 Save();
+            }
         }
         public void Save()
         {
             ES3.Save(KeyName, userStorage, _saveSettings);
+        }
+        /// <summary>
+        /// 모든 게임 데이터를 초기화합니다
+        /// </summary>
+        /// <returns>초기화 성공 여부</returns>
+        public bool Reset()
+        {
+            try
+            {
+                // 파일이 존재하는 경우에만 삭제 시도
+                if (ES3.FileExists(FileName))
+                {
+                    ES3.DeleteFile(FileName);
+                }
+                
+                // PlayerPrefs 초기화
+                PlayerPrefs.DeleteAll();
+                PlayerPrefs.Save();
+                
+                userStorage = new Storage();
+                Save();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"데이터 리셋 중 오류 발생: {e.Message}");
+                return false;
+            }
         }
         
         /// <summary>

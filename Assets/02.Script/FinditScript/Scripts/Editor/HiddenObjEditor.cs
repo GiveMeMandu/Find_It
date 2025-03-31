@@ -213,7 +213,12 @@ namespace DeskCat.FindIt.Scripts.Editor
                     }
                     EditorGUILayout.EndHorizontal();
                     
-                    HiddenObjTarget.HideWhenFound = false;
+                    if (HiddenObjTarget.HideWhenFound)
+                    {
+                        EditorGUILayout.HelpBox("Background animation may not work properly when 'Hide When Found' is enabled.", MessageType.Warning);
+                    }
+                    
+                    EditorGUI.indentLevel--;
                 }
                 
                 EditorGUI.indentLevel--;

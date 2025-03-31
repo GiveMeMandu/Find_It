@@ -20,14 +20,19 @@ namespace Manager
 
     public partial class RewardManager : MonoBehaviour
     {
-        private DailyRewardData store = Global.UserDataManager.userStorage.dailyRewardData;
+        private const int MAX_DAILY_REWARD_DAYS = 6;
+        
+        private DailyRewardData store;
+        void Awake()
+        {
+            store = Global.UserDataManager.userStorage.dailyRewardData;
+        }
 
         private void OnEnable()
         {
             CheckFirstInit();
-            if(store.needToRestOnNextDay) ResetReward();
             Global.DailyCheckManager.OnInternetTimeChecked += OnInternetTimeChecked;
-            Global.DailyCheckManager.OnDayChanged += OnDayChanged;
+            Global.DailyCheckManager.SubscribeToDayChanged(OnDayChanged);
         }
 
         private void CheckFirstInit()
@@ -51,14 +56,21 @@ namespace Manager
 
         public void UpdateLoginDate(DateTime currentUTCTime)
         {
-            // 마지막 로그인 날짜와 현재 날짜가 다르면 누적 출석 일수를 증가시킴
-            int DayDiff = store.lastRwardUTCTime.Day - currentUTCTime.Day;
-            DayDiff = Mathf.Abs(DayDiff);
-            if (DayDiff > 0)
+            // 날짜 차이 계산을 더 정확하게 수정
+            int dayDiff = (currentUTCTime.Date - store.lastRwardUTCTime.Date).Days;
+            Debug.Log($"dayDiff: {dayDiff}");
+            
+            if (dayDiff > 0)
             {
-                Debug.Log("성공적으로 일일보상 갱신");
-                store.curCountDay = (store.curCountDay + DayDiff) % 7; // 7일 주기로 초기화
+                if(store.needToRestOnNextDay) 
+                {
+                    ResetReward();
+                    return;
+                }
+
+                store.curCountDay += dayDiff;
                 SaveStore();
+                Debug.Log($"일일보상 갱신: {dayDiff}일 증가");
             }
         }
         public (bool, DailyRewardStatus) GetDailyRewardStatus(int day)
@@ -78,7 +90,7 @@ namespace Manager
             return (false, DailyRewardStatus.UNCLAIMED_UNAVAILABLE); // 아직 수령 불가
         }
 
-        public bool ClaimReward(int day, SO.DailyRewardSO dailyRewardSO) //* 인자로 보상 주기
+        public bool ClaimReward(int day, SO.DailyRewardSO dailyRewardSO)
         {
             if (day <= store.curCountDay && !store.claimedDays.Contains(day))
             {
@@ -86,19 +98,21 @@ namespace Manager
 
                 GiveRewardByType(dailyRewardSO);
 
-                // 인자로 온 보상 지급한 뒤 
-                store.claimedDays.Add(day); // 보상을 수령한 날로 기록
-                store.lastRwardUTCTime = Global.DailyCheckManager.GetClientTime();  // 보상 받은 날짜 기록
-                if(day >= 7 && store.curCountDay > 7) {
-                    store.needToRestOnNextDay = true;
-                } 
-                SaveStore();
+                store.claimedDays.Add(day);
+                store.lastRwardUTCTime = Global.DailyCheckManager.GetClientTime();
                 
+                if(store.curCountDay >= MAX_DAILY_REWARD_DAYS) 
+                {
+                    store.needToRestOnNextDay = true;
+                }
+                
+                SaveStore();
                 Global.UIManager.ClosePage();
                 return true;
             }
             return false;
         }
+
 #if UNITY_EDITOR
         [UnityEditor.MenuItem("Debug/Daily Login/Reset")]
 #endif

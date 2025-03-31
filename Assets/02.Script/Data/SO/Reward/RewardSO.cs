@@ -9,6 +9,8 @@ namespace SO
     [CreateAssetMenu(fileName ="Reward", menuName = "보상/일반 보상")]
     public class RewardSO : SerializedScriptableObject
     {
+        [BoxGroup("보상 이미지")] [LabelText("보상 이미지")] [EnumToggleButtons]
+        public Sprite rewardSprite;
         [BoxGroup("보상 설정")] [LabelText("보상 재화 종류")] [EnumToggleButtons]
         public MoneyType moneyType;
         [BoxGroup("보상 설정")] [LabelText("보상 방법")] [EnumToggleButtons]

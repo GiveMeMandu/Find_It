@@ -86,7 +86,7 @@ public class Butterfly : MonoBehaviour
                 break;
             default:
                 _rigid.isKinematic = true;
-                _rigid.velocity = Vector2.zero;
+                _rigid.linearVelocity = Vector2.zero;
                 _rigid.totalForce = Vector2.zero;
                 break;
         }
@@ -94,7 +94,7 @@ public class Butterfly : MonoBehaviour
     }
 
     void Force() {
-        _rigid.velocity = Vector2.zero;
+        _rigid.linearVelocity = Vector2.zero;
         _rigid.AddForce(FLY_FORCE * flyForce * new Vector2(0,1), ForceMode2D.Impulse);
     }
     public void Hold(bool isHold = true) {

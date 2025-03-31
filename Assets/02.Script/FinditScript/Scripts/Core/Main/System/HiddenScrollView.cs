@@ -35,10 +35,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         }
 
         public void UpdateScrollView(
-            Dictionary<Guid, HiddenObj> targetObjDic,
-            GameObject targetImagePrefab,
-            Action<Guid> targetClick,
-            Action<Guid> regionToggle,
+            Dictionary<Guid, HiddenObjGroup> objDic,
+            GameObject prefab, 
+            Action<Guid> targetClick, 
+            Action<Guid> regionToggle, 
             Action uiClick)
         {
             foreach (Transform obj in contentContainer.transform)
@@ -46,26 +46,32 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Destroy(obj.gameObject);
             }
 
-            foreach (var target in targetObjDic)
+            foreach (var pair in objDic)
             {
-                GameObject img = Instantiate(targetImagePrefab, contentContainer.transform);
+                var obj = pair.Value.Representative;
+                GameObject img = Instantiate(prefab, contentContainer.transform);
                 var imgObj = img.GetComponent<HiddenObjUI>();
-                imgObj.Initialize(target.Value.UISprite);
+                imgObj.Initialize(obj.UISprite);
+                
+                // 남은 개수 설정 (전체 개수 - 찾은 개수)
+                int remainingCount = pair.Value.TotalCount - pair.Value.FoundCount;
+                imgObj.SetCount(remainingCount);
 
-                if (target.Value.EnableTooltip)
+                if (obj.EnableTooltip)
                 {
-                    if(target.Value.IsFound) {
+                    if(obj.IsFound) {
                         imgObj.Found();
                     }
                     else {
                         imgObj.FoundSprite.gameObject.SetActive(false);
-                        imgObj.InitializeTooltips(target.Value.Tooltips, target.Value.TooltipsType);
+                        imgObj.InitializeTooltips(obj.Tooltips, obj.TooltipsType);
                         imgObj.UIClickEvent = DisplayTooltips;
                     }
                 }
 
-                target.Value.TargetClickAction = () => { targetClick(target.Key); };
-                target.Value.DragRegionAction = () => { regionToggle(target.Key); };
+                // 클릭 이벤트 설정
+                var guid = pair.Key;
+                imgObj.OnUIClickEvent.AddListener(() => targetClick(guid));
             }
 
             UIClickAction += uiClick;

@@ -7,6 +7,7 @@ namespace Manager
 {
     public partial class UIManager
     {
+        public Canvas uiCanvas;
         public const string PAGE_ROOT_PATH = "Prefabs/UI/Page/";
 
         [SerializeField]
@@ -62,6 +63,14 @@ namespace Manager
             PageViewModel page = _uiPageList[_uiPageList.Count - 1];
             _uiPageList.Remove(page);
             Destroy(page.gameObject);
+        }
+        public void ClosePage(PageViewModel page)
+        {
+            if(_uiPageList.Contains(page))
+            {
+                _uiPageList.Remove(page);
+                Destroy(page.gameObject);
+            }
         }
         
         public void CloseAllPages()

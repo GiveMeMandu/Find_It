@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace Util.CameraSetting
 {
@@ -7,144 +9,193 @@ namespace Util.CameraSetting
     {
         public SpriteRenderer backgroundSprite;
 
-        [Header("---Zoom---")] public bool _enableZoom;
+        [Header("---Zoom---")]
+        public bool _enableZoom;
         public float zoomMin = 2f;
         public float zoomMax = 5.4f;
+        public float zoomSpeed = 0.005f;
+        public float mouseWheelZoomSpeed = 2f;
         public float zoomPan = 0f;
 
-        [Header("---Pan---")] public bool _enablePan;
+        [Header("---Pan---")]
+        public bool _enablePan;
         public bool _infinitePan = false;
         public bool _autoPanBoundary = true;
         public float _panMinX, _panMinY;
         public float _panMaxX, _panMaxY;
 
         private UnityEngine.Camera _camera;
-        private Vector3 _dragOrigin;
-        private Vector3 _touchStart;
+        private Vector2 _previousTouchPosition;
+        private float _previousTouchDistance;
+        private bool _isDragging;
+        private const float MIN_PINCH_DISTANCE = 50f;
+
         protected override void Awake()
         {
             base.Awake();
             _camera = UnityEngine.Camera.main;
-            // ScaleOverflowCamera();
+            EnhancedTouchSupport.Enable();
         }
 
+        private void OnEnable()
+        {
+            EnhancedTouchSupport.Enable();
+        }
+
+        private void OnDisable()
+        {
+            if (EnhancedTouchSupport.enabled)
+            {
+                EnhancedTouchSupport.Disable();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            // PlayerAction 관련 코드 제거
+        }
+
+        private void OnMouseWheel(InputAction.CallbackContext context)
+        {
+            if (!_enableZoom) return;
+            
+            var scrollValue = context.ReadValue<Vector2>();
+            var scrollDelta = scrollValue.y * mouseWheelZoomSpeed;
+            
+            if (!Mathf.Approximately(scrollDelta, 0f))
+            {
+                Debug.Log($"Mouse Wheel Delta from Action: {scrollDelta}");
+                HandleZoom(scrollDelta, Mouse.current.position.ReadValue());
+            }
+        }
+
+        private void HandleMouseInput()
+        {
+            if (Mouse.current == null) return;
+
+            // 마우스 드래그로 이동
+            if (_enablePan && Mouse.current.leftButton.isPressed)
+            {
+                var mouseDelta = Mouse.current.delta.ReadValue() * (_camera.orthographicSize / _camera.pixelHeight);
+                var newPosition = _camera.transform.position - new Vector3(mouseDelta.x, mouseDelta.y, 0);
+                _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
+            }
+
+            // 마우스 휠로 줌
+            if (_enableZoom)
+            {
+                var scroll = Mouse.current.scroll.ReadValue();
+                if (Mathf.Abs(scroll.y) > 0.01f)  // 작은 임계값 추가
+                {
+                    Debug.Log($"Mouse wheel scroll value: {scroll.y}");
+                    HandleZoom(-scroll.y * mouseWheelZoomSpeed * 0.1f, Mouse.current.position.ReadValue());
+                }
+            }
+        }
 
         private void Update()
         {
-            if(backgroundSprite == null) return;
-            PanCamera();
-            ZoomCamera();
+            if (backgroundSprite == null) return;
+            if (!_enablePan && !_enableZoom) return;
+
+            HandleTouchInput();
+            HandleMouseInput();
         }
 
+        private void HandleTouchInput()
+        {
+            var touches = Touch.activeTouches;
+            if (touches.Count == 0) return;
+
+            if (touches.Count == 1 && _enablePan)
+            {
+                HandleSingleTouch(touches[0]);
+            }
+            else if (touches.Count >= 2 && _enableZoom)
+            {
+                HandlePinchToZoom(touches[0], touches[1]);
+            }
+        }
+
+        private void HandleSingleTouch(Touch touch)
+        {
+            switch (touch.phase)
+            {
+                case UnityEngine.InputSystem.TouchPhase.Began:
+                    _isDragging = true;
+                    _previousTouchPosition = touch.screenPosition;
+                    break;
+
+                case UnityEngine.InputSystem.TouchPhase.Moved:
+                    if (!_isDragging) return;
+                    
+                    var touchDelta = (Vector2)touch.screenPosition - _previousTouchPosition;
+                    var scaledDelta = touchDelta * (_camera.orthographicSize / _camera.pixelHeight);
+                    
+                    var newPosition = _camera.transform.position - new Vector3(scaledDelta.x, scaledDelta.y, 0);
+                    _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
+                    
+                    _previousTouchPosition = touch.screenPosition;
+                    break;
+
+                case UnityEngine.InputSystem.TouchPhase.Ended:
+                case UnityEngine.InputSystem.TouchPhase.Canceled:
+                    _isDragging = false;
+                    break;
+            }
+        }
+
+        private void HandlePinchToZoom(Touch touch1, Touch touch2)
+        {
+            var currentTouchDistance = Vector2.Distance(touch1.screenPosition, touch2.screenPosition);
+            
+            if (currentTouchDistance < MIN_PINCH_DISTANCE) return;
+
+            if (touch1.phase == UnityEngine.InputSystem.TouchPhase.Began || 
+                touch2.phase == UnityEngine.InputSystem.TouchPhase.Began)
+            {
+                _previousTouchDistance = currentTouchDistance;
+                return;
+            }
+
+            var touchDelta = currentTouchDistance - _previousTouchDistance;
+            var zoomDelta = touchDelta * zoomSpeed;
+
+            // 줌 포인트를 두 터치의 중간점으로 설정
+            var zoomCenter = (touch1.screenPosition + touch2.screenPosition) * 0.5f;
+            HandleZoom(-zoomDelta, zoomCenter);
+
+            _previousTouchDistance = currentTouchDistance;
+        }
+
+        private void HandleZoom(float zoomDelta, Vector2 screenZoomCenter)
+        {
+            if (Mathf.Approximately(zoomDelta, 0f)) return;
+
+            Debug.Log($"Zooming with delta: {zoomDelta}, current size: {_camera.orthographicSize}");
+            
+            var prevSize = _camera.orthographicSize;
+            _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize - zoomDelta, zoomMin, zoomMax);
+
+            if (!Mathf.Approximately(prevSize, _camera.orthographicSize))
+            {
+                // 줌 포인트를 기준으로 카메라 위치 조정
+                var worldZoomCenter = _camera.ScreenToWorldPoint(new Vector3(screenZoomCenter.x, screenZoomCenter.y, 0));
+                var newWorldZoomCenter = _camera.ScreenToWorldPoint(new Vector3(screenZoomCenter.x, screenZoomCenter.y, 0));
+                var offset = worldZoomCenter - newWorldZoomCenter;
+
+                var newPosition = _camera.transform.position + offset;
+                _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
+                
+                Debug.Log($"New camera size: {_camera.orthographicSize}");
+            }
+        }
 
         public static void SetEnablePanAndZoom(bool value)
         {
             if (Instance == null) return;
             Instance._enablePan = value;
             Instance._enableZoom = value;
-        }
-
-        private void ScaleOverflowCamera()
-        {
-            if (_camera == null || !(_camera.pixelWidth > backgroundSprite.sprite.textureRect.width)) return;
-            var pixel = (_camera.aspect - 1.7f) / 0.4375f;
-            zoomMax -= pixel;
-            if (zoomMax <= zoomMin)
-            {
-                zoomMax = zoomMin;
-            }
-        }
-
-        private void PanCamera() {
-            if (!_enablePan) return;
-
-            Pan();
-            MobilePan();
-        }
-        private void MobilePan() {
-            if (Touchscreen.current == null || !Touchscreen.current.touches[0].isInProgress) return;
-            
-            var touch = Touchscreen.current.touches[0];
-            var touchPosition = touch.position.ReadValue();
-            
-            if (touch.phase.ReadValue() == UnityEngine.InputSystem.TouchPhase.Began)
-            {
-                _dragOrigin = _camera.ScreenToWorldPoint(touchPosition);
-            }
-            else if (touch.phase.ReadValue() == UnityEngine.InputSystem.TouchPhase.Moved)
-            {
-                var currentPosition = _camera.ScreenToWorldPoint(touchPosition);
-                var dragDifference = _dragOrigin - currentPosition;
-                
-                if (_infinitePan)
-                {
-                    _camera.transform.position += dragDifference;
-                }
-                else
-                {
-                    _camera.transform.position = ClampCamera(_camera.transform.position + dragDifference);
-                }
-            }
-        }
-        private void Pan()
-        {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                _dragOrigin = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            }
-
-            if (Mouse.current.leftButton.isPressed)
-            {
-                var dragDifference = _dragOrigin - _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-                if (_infinitePan)
-                {
-                    _camera.transform.position += dragDifference;
-                }
-                else
-                {
-                    _camera.transform.position = ClampCamera(_camera.transform.position + dragDifference);
-                }
-            }
-        }
-
-        private void ZoomCamera()
-        {
-            if (!_enableZoom) return;
-            Zoom(Mouse.current.scroll.ReadValue().y);
-            MobileTouchZoom();
-            if (!_infinitePan)
-            {
-                _camera.transform.position = ClampCamera(_camera.transform.position);
-            }
-        }
-
-        private void MobileTouchZoom()
-        {
-            if (Touchscreen.current == null || !Touchscreen.current.touches[0].isInProgress || !Touchscreen.current.touches[1].isInProgress) return;
-
-            var touch0 = Touchscreen.current.touches[0];
-            var touch1 = Touchscreen.current.touches[1];
-
-            var touch0PrevPos = touch0.position.ReadValue() - touch0.delta.ReadValue();
-            var touch1PrevPos = touch1.position.ReadValue() - touch1.delta.ReadValue();
-
-            var prevMagnitude = (touch0PrevPos - touch1PrevPos).magnitude;
-            var currentMagnitude = (touch0.position.ReadValue() - touch1.position.ReadValue()).magnitude;
-
-            var touchDifference = currentMagnitude - prevMagnitude;
-            
-            var zoomSpeed = 0.005f;
-            Zoom(touchDifference * zoomSpeed);
-            
-            if (!_infinitePan)
-            {
-                _camera.transform.position = ClampCamera(_camera.transform.position);
-            }
-        }
-
-        private void Zoom(float increment)
-        {
-            _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize - increment, zoomMin, zoomMax);
         }
 
         private Vector3 ClampCamera(Vector3 targetPosition)
@@ -180,44 +231,6 @@ namespace Util.CameraSetting
             var clampX = Mathf.Clamp(targetPosition.x, minX, maxX);
             var clampY = Mathf.Clamp(targetPosition.y, minY, maxY);
             return new Vector3(clampX, clampY, targetPosition.z);
-            // if (_camera.orthographicSize < zoomMax + zoomPan && _autoPanBoundary)
-            // {
-            //     var position = backgroundSprite.transform.position;
-            //     var bounds = backgroundSprite.bounds;
-
-            //     _panMinX = position.x - bounds.size.x / 2f;
-            //     _panMinY = position.y - bounds.size.y / 2f;
-            //     _panMaxX = position.x + bounds.size.x / 2f;
-            //     _panMaxY = position.y + bounds.size.y / 2f;
-
-            //     var minX = _panMinX + camWidth;
-            //     var minY = _panMinY + orthographicSize;
-            //     var maxX = _panMaxX - camWidth;
-            //     var maxY = _panMaxY - orthographicSize;
-
-            //     var clampX = Mathf.Clamp(targetPosition.x, minX, maxX);
-            //     var clampY = Mathf.Clamp(targetPosition.y, minY, maxY);
-            //     return new Vector3(clampX, clampY, targetPosition.z);
-            // }
-            // else
-            // {
-            //     if (_autoPanBoundary)
-            //     {
-            //         _panMinX = 0f;
-            //         _panMinY = -0.5f;
-            //         _panMaxX = 0;
-            //         _panMaxY = -0.5f;
-            //     }
-
-            //     var minX = _panMinX; // + camWidth;
-            //     var minY = _panMinY; //+ orthographicSize;
-            //     var maxX = _panMaxX; // - camWidth;
-            //     var maxY = _panMaxY; //- orthographicSize;
-
-            //     var clampX = Mathf.Clamp(targetPosition.x, minX, maxX);
-            //     var clampY = Mathf.Clamp(targetPosition.y, minY, maxY);
-            //     return new Vector3(clampX, clampY, targetPosition.z);
-            // }
         }
     }
 }

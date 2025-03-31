@@ -2,30 +2,26 @@ using UnityEngine;
 
 public class PuzzleSelectManager : MonoBehaviour
 {
-    [SerializeField] private PuzzleGameManager gameManager;
+    [SerializeField] private PuzzleGameManager puzzleGameManager;
     [SerializeField] private PuzzleData[] availablePuzzles;
 
     public PuzzleData[] AvailablePuzzles => availablePuzzles;
 
     private void Awake()
     {
-        if (gameManager == null)
+        if (puzzleGameManager == null)
         {
             Debug.LogError("PuzzleGameManager reference is missing!");
             return;
         }
     }
 
-    private void OnEnable()
-    {
-        SelectPuzzle(0);
-    }
-
     public void SelectPuzzle(int index)
     {
-        if (gameManager != null)
+        if (puzzleGameManager != null && index >= 0 && index < availablePuzzles.Length)
         {
-            // gameManager.InitializePuzzle(index);
+            PuzzleData selectedPuzzle = availablePuzzles[index];
+            puzzleGameManager.InitializePuzzle(selectedPuzzle.sceneName, selectedPuzzle.stageIndex);
         }
     }
 

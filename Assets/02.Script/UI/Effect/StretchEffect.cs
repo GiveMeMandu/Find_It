@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using BunnyCafe.InGame.VFX;
+using Effect;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;

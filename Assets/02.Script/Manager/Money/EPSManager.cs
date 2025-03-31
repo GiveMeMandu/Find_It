@@ -31,7 +31,6 @@ namespace Manager
             }
         }
 
-        private float avgUnit = 10;
         private BigInteger EPS = 0;
         private BigInteger storeEPS = Global.GoldManager.GetGoldUnitValue(Global.UserDataManager.userStorage.EPS);
 
@@ -49,15 +48,7 @@ namespace Manager
         //* EPS 초기화 예) 스테이지 변경시
         public void ResetEPS()
         {
-            // var recipeList = Global.GetRecipeStatsUpgradeList(Global.UserDataManager.userStorage.curScene);
-            // var expensive = recipeList[0].GetUpgradeValueConvert();
-            // foreach(var r in recipeList) {
-            //     if(expensive < r.GetUpgradeValueConvert())
-            //         expensive = r.GetUpgradeValueConvert();
-            // }
-            // storeEPS = (int)expensive;
-            //* 임시
-            storeEPS = 1;
+            storeEPS = 0;
             SaveEPS();
         }
 

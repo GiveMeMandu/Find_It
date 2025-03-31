@@ -102,20 +102,17 @@ namespace UI.Page
                     bounds.center.z
                 );
             }
-            else if (e.TryGetComponent(out spriteRenderer))
+            else if (e.spriteRenderer != null)
             {
-                Bounds bounds = spriteRenderer.bounds;
-                objPosition = new Vector3(
-                    bounds.center.x,
-                    bounds.max.y,
-                    bounds.center.z
-                );
+                spriteRenderer = e.spriteRenderer;
+                objPosition = e.transform.position;
+                float spriteHeight = spriteRenderer.sprite.bounds.size.y * e.transform.localScale.y;
+                objPosition.y += spriteHeight * 0.5f;  // 스프라이트의 상단 위치로 조정
             }
             else
             {
                 objPosition = e.transform.position;
             }
-
             Vector3 screenPos = camera.WorldToScreenPoint(objPosition);
             
             // Canvas의 ScaleFactor를 가져옵니다

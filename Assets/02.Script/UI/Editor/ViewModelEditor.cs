@@ -21,9 +21,20 @@ namespace UI.Editor
         protected override void OnInspector()
         {
             DrawLine(Color.black);
+            
             if (GUILayout.Button("바인딩 검사하기"))
             {
                 CheckBindings();
+            }
+            
+            if (GUILayout.Button("클래스 수정하기"))
+            {
+                OpenScript();
+            }
+            
+            if (GUILayout.Button("클래스 위치 보기"))
+            {
+                ShowScriptLocation();
             }
         }
         
@@ -32,6 +43,8 @@ namespace UI.Editor
             GameObject gameObject = ((Component)target).gameObject;
             var bindings = gameObject.GetComponentsInChildren<AbstractMemberBinding>(true);
             StringBuilder sb = new();
+            List<GameObject> errorObjects = new();
+            
             foreach (var binding in bindings)
             {
                 try
@@ -39,13 +52,16 @@ namespace UI.Editor
                     if (TypeResolver.IsWrongBinding(binding))
                     {
                         sb.AppendLine($"ㄴ{binding.gameObject.name} - {binding.name}");
+                        errorObjects.Add(binding.gameObject);
                     }
                 }
                 catch(Exception)
                 {
                     sb.AppendLine($"ㄴ{binding.gameObject.name} - {binding.name}");
+                    errorObjects.Add(binding.gameObject);
                 }
             }
+            
             if(sb.Length == 0)
             {
                 sb.AppendLine("바인딩 오류가 없습니다.");
@@ -53,9 +69,39 @@ namespace UI.Editor
             else
             {
                 sb.Insert(0, "바인딩 오류가 발견되었습니다.\n");
+                // 오류가 있는 오브젝트들을 Selection에 등록하여 하이라이트
+                Selection.objects = errorObjects.ToArray();
             }
-            EditorUtility.DisplayDialog("바인딩 검사 결과", sb.ToString(), "확인");
             
+            EditorUtility.DisplayDialog("바인딩 검사 결과", sb.ToString(), "확인");
+        }
+
+        private void OpenScript()
+        {
+            MonoScript script = MonoScript.FromMonoBehaviour((MonoBehaviour)target);
+            if (script != null)
+            {
+                AssetDatabase.OpenAsset(script);
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("오류", "스크립트를 찾을 수 없습니다.", "확인");
+            }
+        }
+
+        private void ShowScriptLocation()
+        {
+            MonoScript script = MonoScript.FromMonoBehaviour((MonoBehaviour)target);
+            if (script != null)
+            {
+                string assetPath = AssetDatabase.GetAssetPath(script);
+                var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
+                EditorGUIUtility.PingObject(obj);
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("오류", "스크립트를 찾을 수 없습니다.", "확인");
+            }
         }
 
         void DrawLine(Color color)
