@@ -20,6 +20,7 @@ namespace Manager
         // public static GoogleMobileAdsManager GoogleMobileAdsManager { get; set; }
         public static GoldManager GoldManager { get; set; }
         public static CashManager CashManager { get; set; }
+        public static SpinTicketManager SpinTicketManager { get; set; }
         // public static GameStateManager GameStateManager { get; set; }
         public static InputManager InputManager { get; set; }
         // public static OptionManager OptionManager { get; private set; }
@@ -30,7 +31,7 @@ namespace Manager
 
         //* SO 데이터 관련 매니저
         public static DailyCheckManager DailyCheckManager { get; set; }
-        // public static QuestManager QuestManager { get; set; }
+        public static QuestManager QuestManager { get; set; }
         public static RewardManager RewardManager { get; set; }
 
         protected override void Awake()
@@ -49,6 +50,9 @@ namespace Manager
 
             CashManager = new();
             CashManager.Initial();
+
+            SpinTicketManager = new();
+            SpinTicketManager.Initial();
         }
 
         private void OnApplicationPause(bool pauseStatus) => OnApplicationPauseEvt?.Invoke(this, EventArgs.Empty);
@@ -85,6 +89,11 @@ namespace Manager
             {
                 InputManager = Instantiate(Resources.Load<InputManager>(prefixManager + nameof(InputManager)), transform);
                 InputManager.name = nameof(InputManager);
+            }
+            if (QuestManager == null)
+            {
+                QuestManager = Instantiate(Resources.Load<QuestManager>(prefixManager + nameof(QuestManager)), transform);
+                QuestManager.name = nameof(QuestManager);
             }
         }
     }

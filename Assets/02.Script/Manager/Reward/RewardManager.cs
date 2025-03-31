@@ -77,13 +77,27 @@ namespace Manager
 
         private void AddReward(MoneyType moneyType, BigInteger value)
         {
-            if (moneyType == MoneyType.Gold)
+            int particleCount = value < 20 ? (int)value : 20;
+            
+            switch (moneyType)
             {
-                Global.GoldManager.AddGold(value);
+                case MoneyType.Gold:
+                    Global.GoldManager.AddGold(value, false, particleCount);
+                    break;
+                case MoneyType.Cash:
+                    Global.CashManager.AddCash(value, particleCount);
+                    break;
+                case MoneyType.SpinTicket:
+                    Global.SpinTicketManager.AddSpinTicket(value, particleCount);
+                    break;
             }
-            else if (moneyType == MoneyType.Cash)
+        }
+
+        public void ClaimRewards(RewardSO[] rewards)
+        {
+            foreach (var reward in rewards)
             {
-                Global.CashManager.AddCash(value);
+                GiveRewardByType(reward);
             }
         }
     }

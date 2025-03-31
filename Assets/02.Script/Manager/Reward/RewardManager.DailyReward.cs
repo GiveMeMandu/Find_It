@@ -90,13 +90,13 @@ namespace Manager
             return (false, DailyRewardStatus.UNCLAIMED_UNAVAILABLE); // 아직 수령 불가
         }
 
-    public bool ClaimReward(int day, SO.RewardSO dailyLoginRewardSO)
+        public bool ClaimReward(int day, SO.DailyRewardSO dailyRewardSO)
         {
             if (day <= store.curCountDay && !store.claimedDays.Contains(day))
             {
                 Global.UIManager.OpenPage<UI.Page.LoadingPopUpPage>();
 
-                GiveRewardByType(dailyLoginRewardSO);
+                GiveRewardByType(dailyRewardSO);
 
                 store.claimedDays.Add(day);
                 store.lastRwardUTCTime = Global.DailyCheckManager.GetClientTime();

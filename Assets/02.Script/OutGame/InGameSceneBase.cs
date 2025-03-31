@@ -16,12 +16,12 @@ namespace OutGame
         {
             base.Start();
             Global.UIManager.OpenPage<InGameMainPage>();
-            if(_levelManager == null) {
-                _levelManager = FindObjectOfType<LevelManager>();
-                _levelManager.OnEndEvnt.Add(ClearStageTask);
-            } else {
-                _levelManager.OnEndEvnt.Add(ClearStageTask);
-            }
+            // if(_levelManager == null) {
+            //     _levelManager = FindObjectOfType<LevelManager>();
+            //     _levelManager.OnEndEvnt.Add(ClearStageTask);
+            // } else {
+            //     _levelManager.OnEndEvnt.Add(ClearStageTask);
+            // }
         }
 
         protected virtual void StartStageBase()

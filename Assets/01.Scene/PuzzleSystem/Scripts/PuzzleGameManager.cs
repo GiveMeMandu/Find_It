@@ -249,7 +249,7 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
             if (pieces[i].name != $"{(i)}") return false;
         }
 
-        PlayCompletionAnimationSimultaneous().Forget();
+        PlayCompletionAnimation().Forget();
         return true;
     }
 

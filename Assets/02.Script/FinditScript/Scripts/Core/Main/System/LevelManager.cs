@@ -236,18 +236,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             
             var groupedObjects = normalHiddenObjs
                 .Where(obj => obj != null)
-                .GroupBy(obj => {
-                    string name = obj.gameObject.name;
-                    if (!name.Contains("hide_")) return name;
-
-                    int startIndex = name.IndexOf("hide_") + 5;
-                    int endIndex = name.Length - 1;
-                    while (endIndex > startIndex && char.IsDigit(name[endIndex]))
-                    {
-                        endIndex--;
-                    }
-                    return name.Substring(0, endIndex + 1).Trim();  // 숫자를 제외한 기본 이름
-                })
+                .GroupBy(obj => InGameObjectNameFilter.GetBaseGroupName(obj.gameObject.name))
                 .ToDictionary(g => g.Key, g => g.ToList());
 
             Debug.Log($"Grouped objects: {string.Join(", ", groupedObjects.Keys)}");
@@ -369,7 +358,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         //* 김일 수정 : 게임 종료 조건 = 숨긴 물건만 찾고 추가 조건은 태스크로 관리
         private async void DetectGameEnd()
         {
-            if (hiddenObjCount <= 0)
+            // 모든 숨겨진 오브젝트를 찾았고, ItemSetManager의 모든 세트도 찾았을 때만 게임 종료
+            if (hiddenObjCount <= 0 && ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount)
             {
                 if (IsOverwriteGameEnd)
                 {
@@ -439,6 +429,15 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
 
             GameEndUI.SetActive(true);
+        }
+
+        // 그룹 상태를 확인하기 위한 public 메서드 추가
+        public (bool exists, bool isComplete, string baseGroupName) GetGroupStatus(string groupName)
+        {
+            var group = TargetObjDic.FirstOrDefault(x => x.Value.BaseGroupName == groupName).Value;
+            return group != null 
+                ? (true, group.FoundCount == group.TotalCount, group.BaseGroupName) 
+                : (false, false, string.Empty);
         }
     }
 }
