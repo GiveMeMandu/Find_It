@@ -36,6 +36,7 @@ public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
                 LevelManager.PlayItemFx(AudioWhenClick);
             }
             OnSetFound?.Invoke();
+            CompletionView.SetActive(true);
             AlertView.SetActive(false);
         }
     }
@@ -45,7 +46,6 @@ public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
         gameObject.SetActive(true);  // 세트가 완성되면 알림 표시
         if (CompletionView != null)
         {
-            CompletionView.SetActive(true);
             AlertView.SetActive(true);
         }
     }

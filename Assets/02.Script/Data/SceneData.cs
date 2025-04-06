@@ -21,7 +21,8 @@ namespace Data
         Select,
         Stage1,
         Stage2,
-        Puzzle
+        Puzzle,
+        Credit
     }
     public class SceneData
     {

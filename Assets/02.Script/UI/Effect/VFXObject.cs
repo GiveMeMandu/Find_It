@@ -13,6 +13,7 @@ namespace Effect
         [BoxGroup("세부 설정")] [LabelText("시작시 재생")] [SerializeField] private bool isPlayOnStart = false;
         [BoxGroup("세부 설정")] [LabelText("활성화시 재생")] [SerializeField] private bool isPlayOnEnable = false;
         [BoxGroup("세부 설정")] [LabelText("재생시 다른 이펙트 멈춤")] [SerializeField] private bool isStopOtherEffect = false;
+        [BoxGroup("세부 설정")] [LabelText("재생 시작 전 딜레이 (초)")] [SerializeField] private float startDelay = 0;
         [BoxGroup("세부 설정")] [LabelText("반복 재생시 딜레이 (초)")] [SerializeField] private float delay = 0;
         [BoxGroup("세부 설정")] [LabelText("재생시 무조건 무한루프")] [SerializeField] private bool isLoopForce = false;
         [BoxGroup("세부 설정")] [LabelText("UI 이펙트인가")] [SerializeField] protected bool isUIEffect = false;
@@ -85,6 +86,12 @@ namespace Effect
                         effect.StopVFX();
                     }
                 }
+            }
+
+            // 재생 시작 전 딜레이 적용
+            if(startDelay > 0)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(startDelay), cancellationToken: destroyCancellation.Token);
             }
 
             int loop = 0;

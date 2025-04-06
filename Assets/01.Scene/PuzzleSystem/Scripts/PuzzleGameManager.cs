@@ -16,6 +16,7 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
     [SerializeField] private PuzzleData[] puzzleDataList;
     [SerializeField] private float completionAnimationDuration = 0.5f;
     [SerializeField] private Ease completionEaseType = Ease.InOutQuad;
+    [SerializeField] private GameObject completionParticleEffect;
 
     private List<Transform> pieces;
     private bool shuffling = false;
@@ -40,12 +41,18 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
     void Start()
     {
         pieces = new List<Transform>();
-        inputManager = FindObjectOfType<InputManager>();
+        inputManager = FindAnyObjectByType<InputManager>();
         if (inputManager != null)
         {
             inputManager.OnTouchPressAction += HandleTouchStart;
             inputManager.OnTouchMoveAction += HandleTouchMove;
             inputManager.OnTouchPressEndAction += HandleTouchEnd;
+        }
+        
+        // 파티클 시스템 초기 비활성화
+        if (completionParticleEffect != null)
+        {
+            completionParticleEffect.SetActive(false);
         }
     }
 
@@ -62,6 +69,12 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
     public void InitializePuzzle(SceneName sceneName, int stageIndex)
     {
         isGameCompleted = false;
+        // 파티클 이펙트 비활성화
+        if (completionParticleEffect != null)
+        {
+            completionParticleEffect.SetActive(false);
+        }
+        
         // sceneName과 stageIndex에 맞는 퍼즐 찾기
         currentPuzzleData = puzzleDataList.FirstOrDefault(p => p.sceneName == sceneName && p.stageIndex == stageIndex);
         if (currentPuzzleData == null) return;
@@ -199,6 +212,14 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         await UniTask.WhenAll(tasks);
         
         isAnimating = false;
+        isGameCompleted = true;
+        
+        // 파티클 효과 활성화
+        if (completionParticleEffect != null)
+        {
+            completionParticleEffect.SetActive(true);
+        }
+        
         OnPuzzleCompleted?.Invoke();
     }
 
@@ -237,6 +258,13 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         
         isAnimating = false;
         isGameCompleted = true;
+        
+        // 파티클 효과 활성화
+        if (completionParticleEffect != null)
+        {
+            completionParticleEffect.SetActive(true);
+        }
+        
         OnPuzzleCompleted?.Invoke();
     }
 
