@@ -17,17 +17,14 @@ namespace OutGame
 {
     public class PuzzleScene : SceneBase
     {
-        public static float Speed = 1;
         private PuzzlePage puzzlePage = null;
         private PageSlideEffect pageSlideEffect = null;
-        [SerializeField] private MapSelectView mapSelectView;
         public bool CanPlay = false;
         protected override void Start()
 
         {
             base.Start();
             puzzlePage = Global.UIManager.OpenPage<PuzzlePage>();
-            if(mapSelectView == null) mapSelectView = FindObjectOfType<MapSelectView>();
             if (puzzlePage != null)
             {
                 pageSlideEffect = puzzlePage.GetComponent<PageSlideEffect>();
