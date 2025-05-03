@@ -22,6 +22,7 @@ namespace Data
         Stage1,
         Stage2,
         Puzzle,
+        CloudRabbit,
         Credit
     }
     public class SceneData
