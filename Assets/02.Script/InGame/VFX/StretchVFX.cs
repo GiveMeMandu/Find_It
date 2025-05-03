@@ -5,6 +5,9 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using Sirenix.OdinInspector;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Effect
 {
@@ -71,23 +74,23 @@ namespace Effect
             {
                 // 정확하게 StretchEffect와 같은 애니메이션 패턴 사용
                 // X축 늘어나기
-                await transform.DOScaleX(originalScale.x * stretchMultiplier + effectAddValue, 0.1f * effectSpeed)
-                    .SetEase(Ease.OutSine)
+                await transform.DOScaleX(originalScale.x * stretchMultiplier + effectAddValue, xAnimDuration * effectSpeed)
+                    .SetEase(animationEase)
                     .WithCancellation(destroyCancellation.Token);
                 
                 // X축 복원 및 Y축 늘어나기 동시에
                 await UniTask.WhenAll(
-                    transform.DOScaleX(originalScale.x, 0.1f * effectSpeed)
-                        .SetEase(Ease.OutSine)
+                    transform.DOScaleX(originalScale.x, xAnimDuration * effectSpeed)
+                        .SetEase(animationEase)
                         .WithCancellation(destroyCancellation.Token),
-                    transform.DOScaleY(originalScale.y * stretchMultiplier + effectAddValue, 0.1f * effectSpeed)
-                        .SetEase(Ease.OutSine)
+                    transform.DOScaleY(originalScale.y * stretchMultiplier + effectAddValue, xAnimDuration * effectSpeed)
+                        .SetEase(animationEase)
                         .WithCancellation(destroyCancellation.Token)
                 );
                 
                 // Y축 복원
-                await transform.DOScaleY(originalScale.y, 0.15f * effectSpeed)
-                    .SetEase(Ease.OutSine)
+                await transform.DOScaleY(originalScale.y, yRestoreDuration * effectSpeed)
+                    .SetEase(animationEase)
                     .WithCancellation(destroyCancellation.Token);
             }
             catch (OperationCanceledException)
@@ -113,22 +116,23 @@ namespace Effect
             try
             {
                 // X축 늘어나기
-                await rectTransform.DOScaleX(originalUIScale.x * stretchMultiplier + effectAddValue, 0.1f * effectSpeed)
-                    .SetEase(Ease.OutSine)
+                await rectTransform.DOScaleX(originalUIScale.x * stretchMultiplier + effectAddValue, xAnimDuration * effectSpeed)
+                    .SetEase(animationEase)
                     .WithCancellation(destroyCancellation.Token);
                 
                 // X축 복원 및 Y축 늘어나기 동시에
                 await UniTask.WhenAll(
-                    rectTransform.DOScaleX(originalUIScale.x, 0.1f).SetEase(Ease.OutSine)
+                    rectTransform.DOScaleX(originalUIScale.x, xAnimDuration * effectSpeed)
+                        .SetEase(animationEase)
                         .WithCancellation(destroyCancellation.Token),
-                    rectTransform.DOScaleY(originalUIScale.y * stretchMultiplier + effectAddValue, 0.1f * effectSpeed)
-                        .SetEase(Ease.OutSine)
+                    rectTransform.DOScaleY(originalUIScale.y * stretchMultiplier + effectAddValue, xAnimDuration * effectSpeed)
+                        .SetEase(animationEase)
                         .WithCancellation(destroyCancellation.Token)
                 );
                 
                 // Y축 복원
-                await rectTransform.DOScaleY(originalUIScale.y, 0.15f * effectSpeed)
-                    .SetEase(Ease.OutSine)
+                await rectTransform.DOScaleY(originalUIScale.y, yRestoreDuration * effectSpeed)
+                    .SetEase(animationEase)
                     .WithCancellation(destroyCancellation.Token);
             }
             catch (OperationCanceledException)
@@ -159,7 +163,99 @@ namespace Effect
                 ResetAnimation();
                 VFXOnceInGame().Forget();
             }
+            else
+            {
+                // 에디터 모드에서 미리보기 실행
+                EditorPreviewAnimation();
+            }
             #endif
         }
+        
+        #if UNITY_EDITOR
+        // 에디터 모드에서 미리보기 애니메이션을 실행하는 함수
+        private void EditorPreviewAnimation()
+        {
+            // 현재 스케일 저장
+            Vector3 currentScale = transform.localScale;
+            originalScale = currentScale;
+            
+            // 애니메이션 취소 및 초기화
+            transform.DOKill();
+            
+            EditorApplication.update += EditorAnimationUpdate;
+            
+            // 애니메이션 단계 및 타이머 초기화
+            _editorAnimStep = 0;
+            _editorAnimTimer = 0f;
+        }
+        
+        private int _editorAnimStep = 0;
+        private float _editorAnimTimer = 0f;
+        private const float EDITOR_TIME_STEP = 0.01f; // 에디터 업데이트 시간 간격
+        
+        private void EditorAnimationUpdate()
+        {
+            if (this == null || transform == null)
+            {
+                EditorApplication.update -= EditorAnimationUpdate;
+                return;
+            }
+            
+            _editorAnimTimer += EDITOR_TIME_STEP;
+            
+            switch (_editorAnimStep)
+            {
+                case 0: // X축 늘어나기
+                    if (_editorAnimTimer <= xAnimDuration * effectSpeed)
+                    {
+                        float t = _editorAnimTimer / (xAnimDuration * effectSpeed);
+                        float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
+                        float newXScale = Mathf.Lerp(originalScale.x, originalScale.x * stretchMultiplier + effectAddValue, easedT);
+                        transform.localScale = new Vector3(newXScale, originalScale.y, originalScale.z);
+                    }
+                    else
+                    {
+                        _editorAnimStep = 1;
+                        _editorAnimTimer = 0f;
+                    }
+                    break;
+                
+                case 1: // X축 복원 및 Y축 늘어나기
+                    if (_editorAnimTimer <= xAnimDuration * effectSpeed)
+                    {
+                        float t = _editorAnimTimer / (xAnimDuration * effectSpeed);
+                        float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
+                        float newXScale = Mathf.Lerp(originalScale.x * stretchMultiplier + effectAddValue, originalScale.x, easedT);
+                        float newYScale = Mathf.Lerp(originalScale.y, originalScale.y * stretchMultiplier + effectAddValue, easedT);
+                        transform.localScale = new Vector3(newXScale, newYScale, originalScale.z);
+                    }
+                    else
+                    {
+                        _editorAnimStep = 2;
+                        _editorAnimTimer = 0f;
+                    }
+                    break;
+                
+                case 2: // Y축 복원
+                    if (_editorAnimTimer <= yRestoreDuration * effectSpeed)
+                    {
+                        float t = _editorAnimTimer / (yRestoreDuration * effectSpeed);
+                        float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
+                        float newYScale = Mathf.Lerp(originalScale.y * stretchMultiplier + effectAddValue, originalScale.y, easedT);
+                        transform.localScale = new Vector3(originalScale.x, newYScale, originalScale.z);
+                    }
+                    else
+                    {
+                        // 애니메이션 종료
+                        transform.localScale = originalScale;
+                        EditorApplication.update -= EditorAnimationUpdate;
+                    }
+                    break;
+            }
+            
+            // 에디터 업데이트 요청
+            SceneView.RepaintAll();
+        }
+        #endif
     }
 }

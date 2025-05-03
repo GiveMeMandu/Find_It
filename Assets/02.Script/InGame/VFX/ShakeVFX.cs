@@ -3,6 +3,9 @@ using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Effect
 {
@@ -187,7 +190,143 @@ namespace Effect
                 ResetAnimation();
                 VFXOnceInGame().Forget();
             }
+            else
+            {
+                // 에디터 모드에서 미리보기 실행
+                EditorPreviewAnimation();
+            }
             #endif
         }
+        
+        #if UNITY_EDITOR
+        // 에디터 모드에서 미리보기 애니메이션을 실행하는 함수
+        private void EditorPreviewAnimation()
+        {
+            // 현재 회전 저장
+            originalRotation = transform.localRotation;
+            
+            // 애니메이션 취소 및 초기화
+            transform.DOKill();
+            
+            // 에디터 업데이트를 통해 애니메이션 효과를 시뮬레이션
+            EditorApplication.update += EditorAnimationUpdate;
+            
+            // 애니메이션 단계 및 타이머 초기화
+            _editorAnimStep = 0;
+            _editorAnimSubStep = 0;
+            _editorAnimTimer = 0f;
+            _currentAngle = maxRotationAngle + effectAddValue;
+        }
+        
+        private int _editorAnimStep = 0;
+        private int _editorAnimSubStep = 0;
+        private float _editorAnimTimer = 0f;
+        private float _currentAngle = 0f;
+        private const float EDITOR_TIME_STEP = 0.01f; // 에디터 업데이트 시간 간격
+        
+        private void EditorAnimationUpdate()
+        {
+            if (this == null || transform == null)
+            {
+                EditorApplication.update -= EditorAnimationUpdate;
+                return;
+            }
+            
+            _editorAnimTimer += EDITOR_TIME_STEP;
+            
+            // 현재 흔들림 스텝에 따라 애니메이션 처리
+            if (_editorAnimStep < shakeCount)
+            {
+                float currentShakeAngle = _currentAngle * (1f - (decayFactor * _editorAnimStep / shakeCount));
+                
+                switch (_editorAnimSubStep)
+                {
+                    case 0: // 왼쪽으로 회전
+                        if (_editorAnimTimer <= shakeDuration * effectSpeed)
+                        {
+                            float t = _editorAnimTimer / (shakeDuration * effectSpeed);
+                            float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
+                            Vector3 newRotation = Vector3.Lerp(originalRotation.eulerAngles, new Vector3(0, 0, currentShakeAngle), easedT);
+                            transform.localRotation = Quaternion.Euler(newRotation);
+                        }
+                        else
+                        {
+                            _editorAnimTimer = 0f;
+                            _editorAnimSubStep = 1;
+                        }
+                        break;
+                    
+                    case 1: // 오른쪽으로 회전
+                        if (_editorAnimTimer <= shakeDuration * effectSpeed * 2)
+                        {
+                            float t = _editorAnimTimer / (shakeDuration * effectSpeed * 2);
+                            float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
+                            Vector3 startRot = new Vector3(0, 0, currentShakeAngle);
+                            Vector3 endRot = new Vector3(0, 0, -currentShakeAngle);
+                            Vector3 newRotation = Vector3.Lerp(startRot, endRot, easedT);
+                            transform.localRotation = Quaternion.Euler(newRotation);
+                        }
+                        else
+                        {
+                            _editorAnimTimer = 0f;
+                            _editorAnimSubStep = 2;
+                        }
+                        break;
+                    
+                    case 2: // 마지막이 아니면 다시 왼쪽으로
+                        if (_editorAnimStep < shakeCount - 1)
+                        {
+                            if (_editorAnimTimer <= shakeDuration * effectSpeed)
+                            {
+                                float t = _editorAnimTimer / (shakeDuration * effectSpeed);
+                                float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
+                                Vector3 startRot = new Vector3(0, 0, -currentShakeAngle);
+                                Vector3 endRot = new Vector3(0, 0, currentShakeAngle);
+                                Vector3 newRotation = Vector3.Lerp(startRot, endRot, easedT);
+                                transform.localRotation = Quaternion.Euler(newRotation);
+                            }
+                            else
+                            {
+                                _editorAnimTimer = 0f;
+                                _editorAnimSubStep = 0;
+                                _editorAnimStep++;
+                            }
+                        }
+                        else
+                        {
+                            _editorAnimTimer = 0f;
+                            _editorAnimStep = shakeCount; // 복원 단계로 진행
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                // 복원 애니메이션
+                if (_editorAnimTimer <= restoreDuration * effectSpeed)
+                {
+                    float t = _editorAnimTimer / (restoreDuration * effectSpeed);
+                    // OutElastic 이징을 시뮬레이션
+                    float overshoot = 0.5f;
+                    float period = 0.2f;
+                    float easedT = DOVirtual.EasedValue(0, 1, t, Ease.OutElastic, overshoot, period);
+                    
+                    Vector3 startRot = new Vector3(0, 0, -_currentAngle * (1f - (decayFactor * (shakeCount - 1) / shakeCount)));
+                    Vector3 endRot = originalRotation.eulerAngles;
+                    Vector3 newRotation = Vector3.Lerp(startRot, endRot, easedT);
+                    transform.localRotation = Quaternion.Euler(newRotation);
+                }
+                else
+                {
+                    // 애니메이션 종료
+                    transform.localRotation = originalRotation;
+                    EditorApplication.update -= EditorAnimationUpdate;
+                }
+            }
+            
+            // 에디터 업데이트 요청
+            SceneView.RepaintAll();
+        }
+        #endif
     }
 }
