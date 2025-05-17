@@ -58,6 +58,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public List<Func<UniTask>> OnEndEvnt = new List<Func<UniTask>>();  // 비동기 메서드 참조
         //* 김일 추가 : 옵젝 찾으면 전역에 알릴려고 추가함
         public EventHandler<HiddenObj> OnFoundObj;
+        public EventHandler OnFoundObjCountChanged;
         [Header("Hidden Object List")] 
         [Tooltip("Normal hidden objects parent transform")]
         public Transform normalHiddenObjGroup; // 일반 숨김 오브젝트들의 부모 Transform
@@ -79,6 +80,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public HiddenScrollView VerticalScrollView;
         private HiddenScrollView CurrentScrollView;
         public UnityEvent UIClickEvent;
+        public TextMeshProUGUI FoundObjCountText;
+        public Image FoundObjCountFillImage;
 
         [Header("Sound Effect")] 
         public AudioSource FoundFx;
@@ -88,7 +91,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public GameObject GameEndUI;
         public Button GameEndBtn;
         public Text GameTimeText;
-        public Text FoundObjCountText;
+        public Text CurrentFoundObjCountText;
         public Text FoundRabbitCountText;
         public TextMeshProUGUI StageCompleteText;
 
@@ -132,6 +135,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 Canvas.SetActive(true);
             }
+            OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void CollectHiddenObjects()
@@ -196,6 +200,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         }
 
         public int GetLeftHiddenObjCount() => TargetObjDic.Sum(x => x.Value.TotalCount - x.Value.FoundCount);
+
+        public int GetTotalHiddenObjCount() => TargetObjDic.Sum(x => x.Value.TotalCount);
 
         public void AddHiddenObject(HiddenObj hiddenObj)
         {
@@ -406,6 +412,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             int foundObjects = TargetObjDic.Sum(x => x.Value.FoundCount);
             
             FoundObjCountText.text = $"{foundObjects} / {totalObjects}";
+            CurrentFoundObjCountText.text = $"{foundObjects} / {totalObjects}";
+            FoundObjCountFillImage.fillAmount = (float)foundObjects / totalObjects;
             FoundRabbitCountText.text = $"{rabbitObjCount} / {maxRabbitObjCount}";
             StageCompleteText.text = CurrentLevelName + " CLEAR!";
 

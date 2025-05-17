@@ -77,7 +77,7 @@ namespace UI.Page
 
         private LevelManager _levelManager;
         private void OnEnable() {
-            _levelManager = FindObjectOfType<LevelManager>();
+            _levelManager = FindFirstObjectByType<LevelManager>();
             _levelManager.OnFoundObj += OnFoundObj;
             ShowFoundObjToolTip = false;
             ShowSkipButton = false;
@@ -200,8 +200,15 @@ namespace UI.Page
         [Binding]
         public void OnClickSkipButton()
         {
-            var inGameSceneBase = FindObjectOfType<OutGame.InGameSceneBase>();
+            var inGameSceneBase = FindFirstObjectByType<OutGame.InGameSceneBase>();
             inGameSceneBase.SkipIntro();
+        }
+
+        
+        [Binding]
+        public void OnClickRotateUIButton()
+        {
+            _levelManager.ToggleScrollView();
         }
     }
 }
