@@ -17,17 +17,17 @@ namespace OutGame
 {
     public class CloudRabbitScene : SceneBase
     {
-        private PuzzlePage puzzlePage = null;
+        private CloudRabbitPage cloudRabbitPage = null;
         private PageSlideEffect pageSlideEffect = null;
         public bool CanPlay = false;
         protected override void Start()
 
         {
             base.Start();
-            puzzlePage = Global.UIManager.OpenPage<PuzzlePage>();
-            if (puzzlePage != null)
+            cloudRabbitPage = Global.UIManager.OpenPage<CloudRabbitPage>();
+            if (cloudRabbitPage != null)
             {
-                pageSlideEffect = puzzlePage.GetComponent<PageSlideEffect>();
+                pageSlideEffect = cloudRabbitPage.GetComponent<PageSlideEffect>();
             }
 
 
