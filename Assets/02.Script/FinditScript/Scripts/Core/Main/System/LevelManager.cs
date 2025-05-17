@@ -171,7 +171,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                                 hiddenObj.BgAnimationTransform = bgObj.transform;
                             }
                             
-                            Debug.Log($"Added HiddenObj component and BoxCollider2D to {child.name}");
+                            // Debug.Log($"Added HiddenObj component and BoxCollider2D to {child.name}");
                         }
                         normalHiddenObjs.Add(hiddenObj);
                     }
@@ -187,7 +187,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     if (!obj.TryGetComponent<HiddenObj>(out HiddenObj hiddenObj))
                     {
                         hiddenObj = obj.AddComponent<HiddenObj>();
-                        Debug.Log($"Added HiddenObj component to {obj.name}");
+                        // Debug.Log($"Added HiddenObj component to {obj.name}");
                     }
                     normalHiddenObjs.Add(hiddenObj);
                 }
@@ -239,7 +239,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 .GroupBy(obj => InGameObjectNameFilter.GetBaseGroupName(obj.gameObject.name))
                 .ToDictionary(g => g.Key, g => g.ToList());
 
-            Debug.Log($"Grouped objects: {string.Join(", ", groupedObjects.Keys)}");
+            // Debug.Log($"Grouped objects: {string.Join(", ", groupedObjects.Keys)}");
 
             foreach (var group in groupedObjects)
             {
@@ -247,7 +247,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 {
                     var hiddenObjGroup = new HiddenObjGroup(group.Value, group.Key);
                     TargetObjDic.Add(Guid.NewGuid(), hiddenObjGroup);
-                    Debug.Log($"Added {group.Key} to target dictionary with {group.Value.Count} similar objects");
+                    // Debug.Log($"Added {group.Key} to target dictionary with {group.Value.Count} similar objects");
                     
                     // 각 오브젝트에 클릭 이벤트 설정
                     foreach (var obj in group.Value)
