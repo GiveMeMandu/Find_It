@@ -9,6 +9,8 @@ using System.Linq;
 using AYellowpaper.SerializedCollections;
 using UI.Page;
 using Manager;
+using static CloudRabbitGameManager;
+using Cysharp.Threading.Tasks;
 
 namespace UnityWeld
 {
@@ -18,7 +20,7 @@ namespace UnityWeld
         public static CloudRabbitLevelSelectView Instance { get; private set; }
         
         [SerializedDictionary]
-        public SerializedDictionary<SceneName, List<CloudRabbitData>> _stageGroups = new SerializedDictionary<SceneName, List<CloudRabbitData>>();
+        public SerializedDictionary<SceneName, List<CloudRabbitData>> _stageGroups = new SerializedDictionary<SceneName, List<CloudRabbitGameManager.CloudRabbitData>>();
         private SceneName _currentSceneName;
         private int _currentStageIndex;
         
@@ -143,16 +145,11 @@ namespace UnityWeld
             {
                 if (!_stageGroups.ContainsKey(cloudRabbitData.sceneName))
                 {
-                    _stageGroups[cloudRabbitData.sceneName] = new List<CloudRabbitData>();
+                    _stageGroups[cloudRabbitData.sceneName] = new List<CloudRabbitGameManager.CloudRabbitData>();
                 }
                 
-                // GameManager의 CloudRabbitData를 ScriptableObject로 변환
-                CloudRabbitData data = ScriptableObject.CreateInstance<CloudRabbitData>();
-                data.sceneName = cloudRabbitData.sceneName;
-                data.stageIndex = cloudRabbitData.stageIndex;
-                // 기타 필요한 속성 복사
-                
-                _stageGroups[cloudRabbitData.sceneName].Add(data);
+                // GameManager의 CloudRabbitData를 직접 추가
+                _stageGroups[cloudRabbitData.sceneName].Add(cloudRabbitData);
             }
             
             // 각 그룹 내에서 stageIndex 기준으로 정렬
@@ -176,7 +173,7 @@ namespace UnityWeld
             if (!_stageGroups.ContainsKey(sceneName))
                 return;
 
-            List<CloudRabbitData> stages = _stageGroups[sceneName];
+            List<CloudRabbitGameManager.CloudRabbitData> stages = _stageGroups[sceneName];
             
             // 현재 선택된 스테이지의 모든 인덱스에 맞는 버튼 생성
             PrepareViewModels(stages.Count);
@@ -187,7 +184,7 @@ namespace UnityWeld
                 PuzzleStageSelectViewModel stageViewModel = viewModel.GetComponent<PuzzleStageSelectViewModel>();
                 if (stageViewModel != null)
                 {
-                    CloudRabbitData stageData = stages[i];
+                    CloudRabbitGameManager.CloudRabbitData stageData = stages[i];
                     string stageName = $"{(int)sceneName - 3}-{stageData.stageIndex + 1}";
                     // 마지막 매개변수를 null로 전달하고 나중에 별도로 이미지 설정 방법을 구현
                     stageViewModel.Initialize(stageName, stageData.stageIndex, sceneName, null);
@@ -265,18 +262,7 @@ namespace UnityWeld
                 return;
             
             // 구름 토끼 게임 시작
-            CloudRabbitGameManager.Instance.InitializeGame(sceneName, selectedStage.stageIndex);
-            Global.UIManager.ClosePage(transform.GetComponentInParent<CloudRabbitPage>());
-
-            // 타이머 카운트 페이지 열기
-            var timerPage = Global.UIManager.OpenPage<TimerCountPage>();
-            CloudRabbitGameManager.Instance.PauseGame(); // 게임 일시정지
-
-            // 3초 타이머 설정 및 완료 후 게임 재개
-            timerPage.SetTimer(3, () => {
-                CloudRabbitGameManager.Instance.ResumeGame();
-                // Global.UIManager.OpenPage<CloudRabbitInGamePage>();
-            });
+            CloudRabbitGameManager.Instance.InitializeGame(sceneName, selectedStage.stageIndex).Forget();
         }
         
         [Binding]

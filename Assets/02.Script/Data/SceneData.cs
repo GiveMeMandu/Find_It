@@ -12,6 +12,12 @@ namespace Data
         public const int SELECT = 3;
         public const int STAGE1 = 4;
         public const int STAGE2 = 5;
+        public const int PUZZLE = 6;
+        public const int CLOUD_RABBIT = 7;
+        public const int CREDIT = 8;
+        public const int CLOUD_RABBIT_STAGE1 = 9;
+        public const int CLOUD_RABBIT_STAGE2 = 10;
+        public const int CLOUD_RABBIT_STAGE3 = 11;
     
     }
     public enum SceneName{
@@ -23,7 +29,10 @@ namespace Data
         Stage2,
         Puzzle,
         CloudRabbit,
-        Credit
+        Credit,
+        CloudRabbitStage1,
+        CloudRabbitStage2,
+        CloudRabbitStage3
     }
     public class SceneData
     {

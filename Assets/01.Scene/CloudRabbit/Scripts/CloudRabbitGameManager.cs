@@ -5,6 +5,7 @@ using System.Linq;
 using Data;
 using Manager;
 using Cysharp.Threading.Tasks;
+using UI.Page;
 
 public class CloudRabbitGameManager : MMSingleton<CloudRabbitGameManager>
 {
@@ -13,6 +14,8 @@ public class CloudRabbitGameManager : MMSingleton<CloudRabbitGameManager>
     {
         public SceneName sceneName;
         public int stageIndex;
+        public string stageName = "";
+        public float difficulty = 1.0f;
         public Sprite backgroundImage;
         public List<RabbitInfo> rabbitList;
     }
@@ -34,7 +37,7 @@ public class CloudRabbitGameManager : MMSingleton<CloudRabbitGameManager>
     public CloudRabbitData[] CloudRabbitDataList => cloudRabbitDataList;
     public bool IsGamePaused => isGamePaused;
     public CloudRabbitData CurrentData => currentData;
-    
+
     public event Action OnGameCompleted;
     public event Action OnGameStarted;
     public event Action OnGamePaused;
@@ -59,10 +62,15 @@ public class CloudRabbitGameManager : MMSingleton<CloudRabbitGameManager>
         }
     }
 
-    public void InitializeGame(SceneName sceneName, int stageIndex)
+    public async UniTask InitializeGame(SceneName sceneName, int stageIndex)
     {
         isGameCompleted = false;
-        
+        Global.UIManager.ClosePage(transform.GetComponentInParent<CloudRabbitPage>());
+
+        // 스테이지에 맞는 씬 로드
+        int sceneToLoad = (int)sceneName;
+        await LoadStage(sceneToLoad);
+
         // sceneName과 stageIndex에 맞는 데이터 찾기
         currentData = cloudRabbitDataList.FirstOrDefault(d => d.sceneName == sceneName && d.stageIndex == stageIndex);
         if (currentData == null) return;
@@ -73,7 +81,25 @@ public class CloudRabbitGameManager : MMSingleton<CloudRabbitGameManager>
             rabbit.isFound = false;
         }
 
+
+        // 타이머 카운트 페이지 열기
+        var timerPage = Global.UIManager.OpenPage<TimerCountPage>();
+        CloudRabbitGameManager.Instance.PauseGame(); // 게임 일시정지
+
+        // // 3초 타이머 설정 및 완료 후 게임 재개
+        // timerPage.SetTimer(3, () =>
+        // {
+        //     CloudRabbitGameManager.Instance.ResumeGame();
+        //     // Global.UIManager.OpenPage<CloudRabbitInGamePage>();
+        // });
         OnGameStarted?.Invoke();
+    }
+
+    private async UniTask LoadStage(int sceneNumber)
+    {
+        // 로딩 씬을 통해 스테이지 로드
+        LoadingSceneManager.LoadScene(sceneNumber);
+        await UniTask.NextFrame();
     }
 
     private void HandleTouchPress(object sender, InputManager.TouchData touchData)
@@ -100,7 +126,7 @@ public class CloudRabbitGameManager : MMSingleton<CloudRabbitGameManager>
                 // 토끼 발견
                 rabbit.isFound = true;
                 OnRabbitFound?.Invoke(rabbit);
-                
+
                 // 모든 토끼를 찾았는지 확인
                 CheckCompletion();
                 break;
@@ -140,6 +166,6 @@ public class CloudRabbitGameManager : MMSingleton<CloudRabbitGameManager>
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
