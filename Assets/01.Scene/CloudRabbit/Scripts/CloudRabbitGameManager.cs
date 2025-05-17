@@ -82,8 +82,8 @@ public class CloudRabbitGameManager : MMSingleton<CloudRabbitGameManager>
         }
 
 
-        // 타이머 카운트 페이지 열기
-        var timerPage = Global.UIManager.OpenPage<TimerCountPage>();
+        // // 타이머 카운트 페이지 열기
+        // var timerPage = Global.UIManager.OpenPage<TimerCountPage>();
         CloudRabbitGameManager.Instance.PauseGame(); // 게임 일시정지
 
         // // 3초 타이머 설정 및 완료 후 게임 재개
