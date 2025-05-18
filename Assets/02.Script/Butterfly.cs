@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Butterfly : MonoBehaviour
 {   
     public float maxTimer = 5f;
@@ -26,7 +27,7 @@ public class Butterfly : MonoBehaviour
     private Vector3 _initScale;
     void Start()
     {
-        _animator = GetComponent<Animator>();
+        TryGetComponent(out _animator);
         _rigid = GetComponent<Rigidbody2D>();
         _rigid.gravityScale = GRAVITY * flyForce;
         _goalPosition = goalList[goalCount].position;
@@ -82,15 +83,15 @@ public class Butterfly : MonoBehaviour
         {
             case State.Fly:
                 // _goalPosition = goalList.OrderBy(goal => Vector3.Distance(goal.position, transform.position)).First().position;
-                _rigid.isKinematic = false;
+                _rigid.bodyType = RigidbodyType2D.Dynamic;
                 break;
             default:
-                _rigid.isKinematic = true;
+                _rigid.bodyType = RigidbodyType2D.Kinematic;
                 _rigid.linearVelocity = Vector2.zero;
                 _rigid.totalForce = Vector2.zero;
                 break;
         }
-        _animator.Play(_currentState.ToString());
+        if(_animator != null) _animator.Play(_currentState.ToString());
     }
 
     void Force() {
