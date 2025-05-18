@@ -143,7 +143,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (normalHiddenObjGroup != null)
             {
                 // 그룹 내의 모든 자식들을 검사
-                Transform[] children = normalHiddenObjGroup.GetComponentsInChildren<Transform>();
+                Transform[] children = normalHiddenObjGroup.GetComponentsInChildren<Transform>(true);
                 foreach (Transform child in children)
                 {
                     // 자기 자신은 제외
