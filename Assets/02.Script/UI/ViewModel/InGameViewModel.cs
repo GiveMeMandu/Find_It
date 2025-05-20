@@ -33,24 +33,46 @@ namespace UI
             }
         }
 
+        private void Start()
+        {
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.OnFoundObj += OnFoundObj;
+                LevelManager.Instance.OnFoundObjCountChanged += OnFoundObjCountChanged;
+                
+                // 현재 상태로 UI 강제 업데이트
+                UpdateFoundObjCountDisplay();
+            }
+        }
 
-        private LevelManager _levelManager;
-        private void OnEnable() {
-            _levelManager = FindFirstObjectByType<LevelManager>();
-            _levelManager.OnFoundObj += OnFoundObj;
-            _levelManager.OnFoundObjCountChanged += OnFoundObjCountChanged;
+        private void OnDisable()
+        {
+            LevelManager.Instance.OnFoundObj -= OnFoundObj;
+            LevelManager.Instance.OnFoundObjCountChanged -= OnFoundObjCountChanged;
         }
 
         private void OnFoundObj(object sender, HiddenObj e)
         {
-            FoundObjCountText = string.Format("{0}/{1}", _levelManager.GetTotalHiddenObjCount() - _levelManager.GetLeftHiddenObjCount(), _levelManager.GetTotalHiddenObjCount());
-            FoundObjCountFillAmount = (_levelManager.GetTotalHiddenObjCount() - _levelManager.GetLeftHiddenObjCount()) / (float)_levelManager.GetTotalHiddenObjCount();
+            FoundObjCountText = string.Format("{0}/{1}", LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount(), LevelManager.Instance.GetTotalHiddenObjCount());
+            FoundObjCountFillAmount = (LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount()) / (float)LevelManager.Instance.GetTotalHiddenObjCount();
         }
 
         private void OnFoundObjCountChanged(object sender, EventArgs e)
         {
-            FoundObjCountText = string.Format("{0}/{1}", _levelManager.GetTotalHiddenObjCount() - _levelManager.GetLeftHiddenObjCount(), _levelManager.GetTotalHiddenObjCount());
-            FoundObjCountFillAmount = (_levelManager.GetTotalHiddenObjCount() - _levelManager.GetLeftHiddenObjCount()) / (float)_levelManager.GetTotalHiddenObjCount();
+            FoundObjCountText = string.Format("{0}/{1}", LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount(), LevelManager.Instance.GetTotalHiddenObjCount());
+            FoundObjCountFillAmount = (LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount()) / (float)LevelManager.Instance.GetTotalHiddenObjCount();
+        }
+
+        private void UpdateFoundObjCountDisplay()
+        {
+            if (LevelManager.Instance != null)
+            {
+                FoundObjCountText = string.Format("{0}/{1}", 
+                    LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount(), 
+                    LevelManager.Instance.GetTotalHiddenObjCount());
+                FoundObjCountFillAmount = (LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount()) 
+                    / (float)LevelManager.Instance.GetTotalHiddenObjCount();
+            }
         }
 
         [Binding]

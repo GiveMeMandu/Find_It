@@ -102,8 +102,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public bool IsOverwriteGameEnd;
         public UnityEvent GameEndEvent;
 
-        private Dictionary<Guid, HiddenObjGroup> TargetObjDic;
-        private Dictionary<Guid, HiddenObj> RabbitObjDic;
+        public Dictionary<Guid, HiddenObjGroup> TargetObjDic;
+        public Dictionary<Guid, HiddenObj> RabbitObjDic;
         private DateTime StartTime;
         private DateTime EndTime;
 
@@ -199,9 +199,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
         }
 
-        public int GetLeftHiddenObjCount() => TargetObjDic.Sum(x => x.Value.TotalCount - x.Value.FoundCount);
+        public int GetLeftHiddenObjCount() => TargetObjDic?.Sum(x => x.Value.TotalCount - x.Value.FoundCount) ?? 0;
 
-        public int GetTotalHiddenObjCount() => TargetObjDic.Sum(x => x.Value.TotalCount);
+        public int GetTotalHiddenObjCount() => TargetObjDic?.Sum(x => x.Value.TotalCount) ?? 0;
 
         public void AddHiddenObject(HiddenObj hiddenObj)
         {
@@ -446,6 +446,23 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             return group != null 
                 ? (true, group.FoundCount == group.TotalCount, group.BaseGroupName) 
                 : (false, false, string.Empty);
+        }
+
+        // 그룹 이름으로 HiddenObj 목록을 찾는 메서드
+        public List<HiddenObj> GetHiddenObjsByGroupName(string groupName)
+        {
+            // 씬에서 모든 HiddenObj 컴포넌트를 찾음
+            var allHiddenObjs = TargetObjDic.Values.SelectMany(group => group.Objects).ToList();
+            
+            // 그룹 이름이 일치하는 HiddenObj들 반환
+            return allHiddenObjs
+                .Where(obj => InGameObjectNameFilter.GetBaseGroupName(obj.gameObject.name) == groupName)
+                .ToList();
+        }
+
+        public string GetBaseGroupName(string objName)
+        {
+            return InGameObjectNameFilter.GetBaseGroupName(objName);
         }
     }
 }

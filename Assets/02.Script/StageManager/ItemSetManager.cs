@@ -136,5 +136,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             page.MissionName = setData.SetName;
             await page.WaitForClose();
         }
+
+
+        public List<ItemSetData> GetItemSetDataList()
+        {
+            return itemSetDataList;
+        }
     }
 }

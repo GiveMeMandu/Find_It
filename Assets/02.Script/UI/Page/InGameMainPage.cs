@@ -75,13 +75,19 @@ namespace UI.Page
             }
         }
 
-        private LevelManager _levelManager;
         private void OnEnable() {
-            _levelManager = FindFirstObjectByType<LevelManager>();
-            _levelManager.OnFoundObj += OnFoundObj;
             ShowFoundObjToolTip = false;
             ShowSkipButton = false;
         }
+        private void Start()
+        {
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.OnFoundObj += OnFoundObj;
+            }
+        }
+
+
         private void OnFoundObj(object sender, HiddenObj e)
         {
             ShowFoundObjAsync(e).Forget();
@@ -208,7 +214,10 @@ namespace UI.Page
         [Binding]
         public void OnClickRotateUIButton()
         {
-            _levelManager.ToggleScrollView();
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.ToggleScrollView();
+            }
         }
     }
 }
