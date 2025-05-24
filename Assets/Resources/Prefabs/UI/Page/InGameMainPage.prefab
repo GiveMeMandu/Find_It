@@ -1238,6 +1238,7 @@ GameObject:
   - component: {fileID: 6338632210465521922}
   - component: {fileID: 3528766445973574090}
   - component: {fileID: 453641735851512987}
+  - component: {fileID: 44576114830930710}
   m_Layer: 5
   m_Name: Alarm
   m_TagString: Untagged
@@ -1303,6 +1304,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &44576114830930710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876614109476461747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.Page.InGameMainPage.ShowMissionButton
+  viewPropertyName: UnityEngine.UI.Image.enabled
 --- !u!1 &2208678595650014517
 GameObject:
   m_ObjectHideFlags: 0
@@ -4862,6 +4880,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 453641735851512987}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6100033081916760558}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &3343552474622636283
 Animator:
   serializedVersion: 7
@@ -7681,13 +7723,49 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2847752364105366345, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7015987187315142092}
   m_SourcePrefab: {fileID: 100100000, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
+--- !u!1 &6100033081916760556 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2847752364105366345, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
+  m_PrefabInstance: {fileID: 8296356651439544997}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7015987187315142092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100033081916760556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.Page.InGameMainPage.ShowMissionButton
+  viewPropertyName: TMPro.TextMeshProUGUI.enabled
 --- !u!224 &6100033081916760557 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2847752364105366344, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
   m_PrefabInstance: {fileID: 8296356651439544997}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6100033081916760558 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2847752364105366347, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
+  m_PrefabInstance: {fileID: 8296356651439544997}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100033081916760556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &9027179378490812941
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -23,6 +23,17 @@ namespace UI.Page
                 OnPropertyChanged(nameof(ShowSkipButton));
             }
         }
+        private bool _showMissionButton;
+        [Binding]
+        public bool ShowMissionButton
+        {
+            get => _showMissionButton;
+            set
+            {
+                _showMissionButton = value;
+                OnPropertyChanged(nameof(ShowMissionButton));
+            }
+        }
 
         private bool _showFoundObjToolTip;
 
@@ -82,6 +93,7 @@ namespace UI.Page
         {
             ShowFoundObjToolTip = false;
             ShowSkipButton = false;
+            ShowMissionButton = false;
             _currentFoundObj = null;
         }
 
@@ -91,6 +103,34 @@ namespace UI.Page
             {
                 LevelManager.Instance.OnFoundObj += OnFoundObj;
             }
+            
+            if (ItemSetManager.Instance != null)
+            {
+                ItemSetManager.Instance.OnSetCompleted += OnSetCompleted;
+                // 이미 완료된 미션이 있다면 버튼 활성화
+                if (ItemSetManager.Instance.FoundSetsCount > 0)
+                {
+                    ShowMissionButton = true;
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.OnFoundObj -= OnFoundObj;
+            }
+            
+            if (ItemSetManager.Instance != null)
+            {
+                ItemSetManager.Instance.OnSetCompleted -= OnSetCompleted;
+            }
+        }
+
+        private void OnSetCompleted(string setName)
+        {
+            ShowMissionButton = true;
         }
 
         private void Update()
