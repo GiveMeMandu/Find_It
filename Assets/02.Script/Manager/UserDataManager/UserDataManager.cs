@@ -20,6 +20,9 @@ namespace Manager
             EPS = "0";
             dailyRewardData = new DailyRewardData();
             spinRewardNames = new List<string>();
+            
+            // 아이템 데이터 초기화
+            itemData = new List<ItemData>();
         }
         // public HashSet<int> CollectedItem = new();
         public List<SceneData> sceneData;
@@ -33,6 +36,10 @@ namespace Manager
         public DateTime lastOfflineRewardTime;
         public string EPS;
         public List<string> spinRewardNames;
+        public bool AdsRemoved;
+        
+        // 아이템 수량 저장
+        public List<ItemData> itemData;
     }
     public partial class UserDataManager
     {
@@ -115,5 +122,66 @@ namespace Manager
                 Save();
             }   
         }
+
+        #region 아이템 데이터 관리 헬퍼 메서드들
+        
+        /// <summary>
+        /// 특정 아이템 타입의 ItemData를 찾습니다. 없으면 새로 생성합니다.
+        /// </summary>
+        public ItemData GetOrCreateItemData(ItemType itemType)
+        {
+            var item = userStorage.itemData.Find(x => x.itemType == itemType);
+            if (item == null)
+            {
+                item = new ItemData { itemType = itemType, count = 0 };
+                userStorage.itemData.Add(item);
+            }
+            return item;
+        }
+
+        /// <summary>
+        /// 특정 아이템의 수량을 가져옵니다.
+        /// </summary>
+        public int GetItemCount(ItemType itemType)
+        {
+            return GetOrCreateItemData(itemType).count;
+        }
+
+        /// <summary>
+        /// 특정 아이템의 수량을 설정합니다.
+        /// </summary>
+        public void SetItemCount(ItemType itemType, int count)
+        {
+            var item = GetOrCreateItemData(itemType);
+            item.count = Math.Max(0, count); // 0 이하로 떨어지지 않도록
+            Save();
+        }
+
+        /// <summary>
+        /// 특정 아이템을 추가합니다.
+        /// </summary>
+        public void AddItem(ItemType itemType, int count)
+        {
+            var item = GetOrCreateItemData(itemType);
+            item.count += count;
+            Save();
+        }
+
+        /// <summary>
+        /// 특정 아이템을 사용합니다. 성공하면 true 반환.
+        /// </summary>
+        public bool UseItem(ItemType itemType, int count = 1)
+        {
+            var item = GetOrCreateItemData(itemType);
+            if (item.count >= count)
+            {
+                item.count -= count;
+                Save();
+                return true;
+            }
+            return false;
+        }
+
+        #endregion
     }
 }

@@ -17,10 +17,11 @@ namespace Manager
         public static UIManager UIManager { get; private set; }
         public static UserDataManager UserDataManager { get; set; }
         public static SoundManager SoundManager { get; set; }
-        // public static GoogleMobileAdsManager GoogleMobileAdsManager { get; set; }
+        public static GoogleMobileAdsManager GoogleMobileAdsManager { get; set; }
         public static GoldManager GoldManager { get; set; }
         public static CashManager CashManager { get; set; }
         public static SpinTicketManager SpinTicketManager { get; set; }
+        public static ItemManager ItemManager { get; set; }
         // public static GameStateManager GameStateManager { get; set; }
         public static InputManager InputManager { get; set; }
         // public static OptionManager OptionManager { get; private set; }
@@ -53,10 +54,17 @@ namespace Manager
 
             SpinTicketManager = new();
             SpinTicketManager.Initial();
+
+            ItemManager = new();
+            ItemManager.Initial();
         }
 
         private void OnApplicationPause(bool pauseStatus) => OnApplicationPauseEvt?.Invoke(this, EventArgs.Empty);
-        private void OnApplicationQuit() => OnApplicationPauseEvt?.Invoke(this, EventArgs.Empty);
+        private void OnApplicationQuit()
+        {
+            OnApplicationPauseEvt?.Invoke(this, EventArgs.Empty);
+            ItemManager?.Dispose();
+        }
         private void LoadManagerPrefabs()
         {
             string prefixManager = "Prefabs/Manager/";
@@ -94,6 +102,11 @@ namespace Manager
             {
                 QuestManager = Instantiate(Resources.Load<QuestManager>(prefixManager + nameof(QuestManager)), transform);
                 QuestManager.name = nameof(QuestManager);
+            }
+            if (GoogleMobileAdsManager == null)
+            {
+                GoogleMobileAdsManager = Instantiate(Resources.Load<GoogleMobileAdsManager>(prefixManager + nameof(GoogleMobileAdsManager)), transform);
+                GoogleMobileAdsManager.name = nameof(GoogleMobileAdsManager);
             }
         }
     }
