@@ -45,14 +45,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 LevelManager.Instance.OnFoundObj += OnObjectFound;
             }
 
-            // 각 세트의 CompletionObject 이벤트 설정
-            foreach (var setData in itemSetDataList)
-            {
-                if (setData.CompletionObject != null)
-                {
-                    setData.CompletionObject.OnSetFound += () => OnSetObjectFound(setData.SetName);
-                }
-            }
         }
 
         private void OnObjectFound(object sender, HiddenObj obj)
@@ -64,6 +56,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 if (setData.RequiredGroups.Contains(groupName))
                 {
                     var (exists, isComplete, _) = LevelManager.Instance.GetGroupStatus(groupName);
+                    if(exists)
+                    {
+                        // 세트에 속한 물건을 찾았을 때 알림 페이지 표시
+                        ShowTaskAlertPage(setData, obj).Forget();
+                    }
                     if (exists && isComplete)
                     {
                         completedGroups[setData.SetName].Add(groupName);
@@ -89,20 +86,15 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
             if (allGroupsCompletelyFound && !foundSets.Contains(setData.SetName))
             {
-                Debug.Log($"세트 완성 : {setData.SetName}");
+                // Debug.Log($"세트 완성 : {setData.SetName}");
                 if (setData.CompletionObject != null)
                 {
                     setData.CompletionObject.ShowSetCompletionNotification();
                 }
-                ClearStageTask(setData).Forget();
+                foundSets.Add(setData.SetName);
                 OnSetCompleted?.Invoke(setData.SetName);
+                CheckAllSetsFound();
             }
-        }
-
-        private void OnSetObjectFound(string setName)
-        {
-            foundSets.Add(setName);
-            CheckAllSetsFound();
         }
 
         private void CheckAllSetsFound()
@@ -130,11 +122,41 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             return (completedGroups[setName].Count, setData.RequiredGroups.Count);
         }
 
-        protected virtual async UniTask ClearStageTask(ItemSetData setData)
+        protected virtual async UniTask ShowTaskAlertPage(ItemSetData setData, HiddenObj obj)
         {
             var page = Global.UIManager.OpenPage<InGameMissionCompletePage>();
-            page.MissionName = setData.SetName;
+            
+            string groupName = GetGroupName(obj);
+            // LevelManager에서 그룹 정보를 가져옴
+            var groupList = LevelManager.Instance.TargetObjDic.Values
+                .FirstOrDefault(g => g.BaseGroupName == groupName);
+            
+            int foundInGroup = groupList != null ? groupList.FoundCount : 0;
+            int totalInGroup = groupList != null ? groupList.TotalCount : 0;
+            bool isGroupComplete = foundInGroup == totalInGroup;
+            
+            float missionNameAlpha = isGroupComplete && !completedGroups[setData.SetName].Contains(groupName) ? 0.6f : 1f;
+            
+            page.Initialize(
+                missionName: setData.SetName,
+                missionNameDivider: string.Format("<alpha=#00>{0}", setData.SetName),
+                missionSetIcon: obj.UISprite,
+                missionSetFoundLeft: $"({foundInGroup} / {totalInGroup})",
+                isSetFoundComplete: completedGroups[setData.SetName].Count == setData.RequiredGroups.Count,
+                isGroupComplete: isGroupComplete,
+                missionStatus: $"Mission! ({FoundSetsCount}/{TotalSetsCount})",
+                missionNameAlpha: missionNameAlpha
+            );
+            
+            // 그룹이 완전히 찾아졌고 아직 세트에 추가되지 않았다면
+            if (isGroupComplete && !completedGroups[setData.SetName].Contains(groupName))
+            {
+                completedGroups[setData.SetName].Add(groupName);
+                CheckSetCompletion(setData);
+            }
+            
             await page.WaitForClose();
+            Debug.Log("MissionCompletePage closed");
         }
 
 

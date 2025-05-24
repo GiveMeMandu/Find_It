@@ -122,5 +122,15 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
         }
 
+        public void SetBgAnimation(GameObject bgAnimationPrefab)
+        {
+            HideWhenFound = false;
+            EnableBGAnimation = true;
+            BGAnimationPrefab = bgAnimationPrefab;
+            BgAnimationTransform = bgAnimationPrefab.transform;
+            BgAnimationSpriteRenderer = bgAnimationPrefab.GetComponentInChildren<SpriteRenderer>();
+            BgAnimationLerp = bgAnimationPrefab.GetComponent<BGScaleLerp>();
+        }
+
     }
 }

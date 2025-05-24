@@ -4,6 +4,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
     {
         public static string GetBaseGroupName(string objectName)
         {
+            if (objectName == null) return string.Empty;
+            
             if (!objectName.Contains("hide_")) return objectName;
 
             // "hide_" 이후의 문자열을 가져옴

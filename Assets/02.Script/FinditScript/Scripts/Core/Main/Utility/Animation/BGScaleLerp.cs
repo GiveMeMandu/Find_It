@@ -14,6 +14,22 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
 
         private void Awake()
         {
+            // 부모에 HiddenObj가 있고, Collider가 있는지 확인하여 위치 설정
+            if (transform.parent != null && transform.parent.TryGetComponent<HiddenObj>(out var parentHiddenObj))
+            {
+                // Collider 체크 및 위치 설정
+                if (parentHiddenObj.TryGetComponent<Collider>(out var collider))
+                {
+                    transform.position = collider.bounds.center;
+                    InitialBounds = collider.bounds;
+                }
+                else if (parentHiddenObj.TryGetComponent<Collider2D>(out var collider2D))
+                {
+                    transform.position = collider2D.bounds.center;
+                    InitialBounds = collider2D.bounds;
+                }
+            }
+
             if (UseCustomScale == false && transform.localScale == Vector3.zero)
             {
                 FromScale = Vector3.zero;

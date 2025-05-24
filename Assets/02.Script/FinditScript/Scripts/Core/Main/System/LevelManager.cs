@@ -164,15 +164,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                             }
                             
                             // 배경 애니메이션 설정
-                            hiddenObj.HideWhenFound = false;
-                            hiddenObj.EnableBGAnimation = true;
-                            hiddenObj.BGAnimationPrefab = DefaultBgAnimation;
                             
                             // BG Object 생성 및 설정
                             if (DefaultBgAnimation != null)
                             {
                                 var bgObj = Instantiate(DefaultBgAnimation, hiddenObj.transform);
                                 hiddenObj.BgAnimationTransform = bgObj.transform;
+                                hiddenObj.SetBgAnimation(bgObj);
                             }
                             
                             // Debug.Log($"Added HiddenObj component and BoxCollider2D to {child.name}");
@@ -411,8 +409,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             int totalObjects = TargetObjDic.Sum(x => x.Value.TotalCount);
             int foundObjects = TargetObjDic.Sum(x => x.Value.FoundCount);
             
-            FoundObjCountText.text = $"{foundObjects} / {totalObjects}";
-            CurrentFoundObjCountText.text = $"{foundObjects} / {totalObjects}";
+            if(FoundObjCountText != null)
+            {
+                FoundObjCountText.text = $"{foundObjects} / {totalObjects}";
+            }
+            if(CurrentFoundObjCountText != null)
+            {
+                CurrentFoundObjCountText.text = $"{foundObjects} / {totalObjects}";
+            }
             FoundObjCountFillImage.fillAmount = (float)foundObjects / totalObjects;
             FoundRabbitCountText.text = $"{rabbitObjCount} / {maxRabbitObjCount}";
             StageCompleteText.text = CurrentLevelName + " CLEAR!";

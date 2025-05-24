@@ -12,6 +12,39 @@ namespace UI
     [Binding]
     public class MissionElementViewModel : ViewModel
     {
+        private Color _missionItemColor;
+        [Binding]
+        public Color MissionItemColor
+        {
+            get => _missionItemColor;
+            set
+            {
+                _missionItemColor = value;
+                OnPropertyChanged(nameof(MissionItemColor));
+            }
+        }
+        private float _missionItemColorAlpha;
+        [Binding]
+        public float MissionItemColorAlpha
+        {
+            get => _missionItemColorAlpha;
+            set
+            {
+                _missionItemColorAlpha = value;
+                OnPropertyChanged(nameof(MissionItemColorAlpha));
+            }
+        }
+        private Color _missionItemColorWhite;
+        [Binding]
+        public Color MissionItemColorWhite
+        {
+            get => _missionItemColorWhite;
+            set
+            {
+                _missionItemColorWhite = value;
+                OnPropertyChanged(nameof(MissionItemColorWhite));
+            }
+        }
         private string _missionName;
         private string _currentSetName;
 
@@ -64,7 +97,10 @@ namespace UI
         {
             if (setName == _currentSetName)
             {
-                IsComplete = true;
+                IsComplete = true;            
+                MissionItemColor = new Color(39f / 255f, 156f / 255f, 123f / 255f, 0.6f);
+                MissionItemColorAlpha = 0.6f;
+                MissionItemColorWhite = new Color(1f, 1f, 1f, 0.6f);
             }
         }
 
@@ -73,6 +109,17 @@ namespace UI
             _currentSetName = itemSetData.SetName;
             MissionName = string.Format("{0}", itemSetData.SetName);
             MissionNameDivider = string.Format("<alpha=#00>{0}", itemSetData.SetName);
+            MissionItemColor = new Color(39f / 255f, 156f / 255f, 123f / 255f, 1f);
+            MissionItemColorAlpha = 1f;
+            MissionItemColorWhite = new Color(1f, 1f, 1f, 1f);
+
+            if (IsComplete)
+            {
+                MissionItemColor = new Color(39f / 255f, 156f / 255f, 123f / 255f, 0.6f);
+                MissionItemColorAlpha = 0.6f;
+                MissionItemColorWhite = new Color(1f, 1f, 1f, 0.6f);
+            }
+
 
             if (ItemSetManager.Instance != null)
             {

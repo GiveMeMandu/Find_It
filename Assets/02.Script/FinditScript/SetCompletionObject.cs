@@ -14,7 +14,6 @@ public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
     public bool PlaySoundWhenFound = true;
     public AudioClip AudioWhenClick;
     
-    public event Action OnSetFound;
 
     private void Awake()
     {
@@ -35,7 +34,6 @@ public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
             {
                 LevelManager.PlayItemFx(AudioWhenClick);
             }
-            OnSetFound?.Invoke();
             CompletionView.SetActive(true);
             AlertView.SetActive(false);
         }

@@ -14,6 +14,21 @@ namespace UI
     [Binding]
     public class MissionItemViewMdoel : ViewModel
     {
+        public float MissionItemViewSizeX = 35f;
+        public float MissionItemViewSizeY = 35f;
+        private Vector2 _missionItemIconSizeDelta;
+
+        [Binding]
+        public Vector2 MissionItemIconSizeDelta
+        {
+            get => _missionItemIconSizeDelta;
+            set
+            {
+                _missionItemIconSizeDelta = value;
+                OnPropertyChanged(nameof(MissionItemIconSizeDelta));
+            }
+        }
+
         private string _missionItemCount;
 
         [Binding]
@@ -85,9 +100,26 @@ namespace UI
             MissionItemCount = string.Format("{0} / {1}", foundCount, totalCount);
 
             // 대표 HiddenObj를 사용하여 아이콘 설정 (첫 번째 아이템 사용)
-            if (hiddenObjs.Count > 0)
+            if (hiddenObjs.Count > 0 && hiddenObjs[0].UISprite != null)
             {
                 MissionItemIcon = hiddenObjs[0].UISprite;
+                
+                // 스프라이트의 원본 크기를 가져옵니다
+                Rect spriteRect = hiddenObjs[0].UISprite.rect;
+                float originalWidth = spriteRect.width;
+                float originalHeight = spriteRect.height;
+                
+                // MissionItemViewSize에 맞춰 비율 계산
+                if (originalWidth >= originalHeight)
+                {
+                    float scale = MissionItemViewSizeX / originalWidth;
+                    MissionItemIconSizeDelta = new Vector2(MissionItemViewSizeX, originalHeight * scale);
+                }
+                else
+                {
+                    float scale = MissionItemViewSizeY / originalHeight;
+                    MissionItemIconSizeDelta = new Vector2(originalWidth * scale, MissionItemViewSizeY);
+                }
             }
         }
     }

@@ -49,6 +49,24 @@ namespace Effect
             PlayVFXTask(false, 0).Forget();
         }
 
+        public void PlayVFX(float customStartDelay)
+        {
+            if (isPlayLock && isPlaying || isPendingPlay) return;
+            float originalStartDelay = startDelay;
+            startDelay = customStartDelay;
+            PlayVFXTask(false, 0).Forget();
+            startDelay = originalStartDelay;
+        }
+
+        public void PlayVFX(bool isLoop, int loopCount, float customStartDelay)
+        {
+            if (isPlayLock && isPlaying || isPendingPlay) return;
+            float originalStartDelay = startDelay;
+            startDelay = customStartDelay;
+            PlayVFXTask(isLoop, loopCount).Forget();
+            startDelay = originalStartDelay;
+        }
+
         public void PlayVFXAppend()
         {
             if (isPlaying)

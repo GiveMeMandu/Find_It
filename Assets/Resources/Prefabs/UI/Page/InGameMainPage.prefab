@@ -257,6 +257,7 @@ GameObject:
   - component: {fileID: 5430424627591713165}
   - component: {fileID: 8012167886754719166}
   - component: {fileID: 8377932389178513636}
+  - component: {fileID: 4798317368114292167}
   m_Layer: 5
   m_Name: icon
   m_TagString: Untagged
@@ -338,6 +339,23 @@ MonoBehaviour:
   viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: UI.MissionItemViewMdoel.MissionItemIcon
   viewPropertyName: UnityEngine.UI.Image.sprite
+--- !u!114 &4798317368114292167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286870106835896786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.MissionItemViewMdoel.MissionItemIconSizeDelta
+  viewPropertyName: UnityEngine.RectTransform.sizeDelta
 --- !u!1 &667579540791444256
 GameObject:
   m_ObjectHideFlags: 0
@@ -2843,6 +2861,7 @@ MonoBehaviour:
   isResetOnNext: 1
   isResetedThisTime: 1
   isResetOnStart: 0
+  useAnchorReference: 1
 --- !u!1 &4702017462525270842
 GameObject:
   m_ObjectHideFlags: 0
@@ -4608,6 +4627,7 @@ GameObject:
   - component: {fileID: 504596650280315484}
   - component: {fileID: 4069639332852548492}
   - component: {fileID: 7680729283032355566}
+  - component: {fileID: 2125660994325707636}
   m_Layer: 5
   m_Name: outline
   m_TagString: Untagged
@@ -4687,6 +4707,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1a70fe48b2a4e4f8be20b7faaee27c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MissionItemViewSizeX: 35
+  MissionItemViewSizeY: 35
+--- !u!114 &2125660994325707636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6742218741193272069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.MissionElementViewModel.MissionItemColor
+  viewPropertyName: UnityEngine.UI.Image.color
 --- !u!1 &6788081564202436274
 GameObject:
   m_ObjectHideFlags: 0
@@ -5093,6 +5132,7 @@ MonoBehaviour:
   isResetOnNext: 1
   isResetedThisTime: 1
   isResetOnStart: 0
+  useAnchorReference: 1
 --- !u!1 &7319798333365123977
 GameObject:
   m_ObjectHideFlags: 0
@@ -6439,6 +6479,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2847752364105366345, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6911457287476882550}
+    - targetCorrespondingSourceObject: {fileID: 2847752364105366345, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3124423783149644657}
   m_SourcePrefab: {fileID: 100100000, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
 --- !u!224 &2671818181952511674 stripped
 RectTransform:
@@ -6451,6 +6494,23 @@ GameObject:
   m_PrefabInstance: {fileID: 184942068642276850}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6911457287476882550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2671818181952511675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.MissionElementViewModel.MissionItemColorAlpha
+  viewPropertyName: TMPro.TextMeshProUGUI.alpha
+--- !u!114 &3124423783149644657
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6638,6 +6698,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2847752364105366345, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
       insertIndex: -1
       addedObject: {fileID: 343862809678517385}
+    - targetCorrespondingSourceObject: {fileID: 2847752364105366345, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3584348890665985595}
   m_SourcePrefab: {fileID: 100100000, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
 --- !u!1 &4327507613483056530 stripped
 GameObject:
@@ -6661,6 +6724,23 @@ MonoBehaviour:
   viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: UI.MissionElementViewModel.MissionName
   viewPropertyName: TMPro.TextMeshProUGUI.text
+--- !u!114 &3584348890665985595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4327507613483056530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.MissionElementViewModel.MissionItemColorAlpha
+  viewPropertyName: TMPro.TextMeshProUGUI.alpha
 --- !u!224 &4327507613483056531 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2847752364105366344, guid: 6c3f69e0d9e8fde41823ce1dd6e02026, type: 3}
@@ -6991,12 +7071,37 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6618287776917572772, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8538030936178226870}
+    - targetCorrespondingSourceObject: {fileID: 3666674526951693031, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6716315671052687615}
   m_SourcePrefab: {fileID: 100100000, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
 --- !u!224 &620668909967404289 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3719996582987609917, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
   m_PrefabInstance: {fileID: 4268596862574451260}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &711497501289808091 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3666674526951693031, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
+  m_PrefabInstance: {fileID: 4268596862574451260}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6716315671052687615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711497501289808091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.MissionElementViewModel.MissionItemColorWhite
+  viewPropertyName: UnityEngine.UI.Image.color
 --- !u!1 &6982263401781368472 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6618287776917572772, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
