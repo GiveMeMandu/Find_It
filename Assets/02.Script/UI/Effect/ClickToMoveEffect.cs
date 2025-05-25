@@ -31,6 +31,45 @@ namespace UI.Effect
         {
             isResetOnNext = true;
         }
+        
+        /// <summary>
+        /// 복귀 상태를 설정합니다
+        /// </summary>
+        /// <param name="resetedState">이미 복귀된 상태인지 여부</param>
+        public void SetResetedState(bool resetedState)
+        {
+            isResetedThisTime = resetedState;
+        }
+
+        /// <summary>
+        /// 이펙트를 초기 상태로 리셋합니다
+        /// </summary>
+        public void ResetToInitialState()
+        {
+            // 복귀 관련 플래그 초기화
+            isResetOnNext = false;
+            isResetedThisTime = false;
+            
+            // 위치를 초기 위치로 즉시 이동
+            if (isUIEffect)
+            {
+                var rectTransform = GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    rectTransform.anchoredPosition = startPosition;
+                    rectTransform.localScale = Vector3.one;
+                }
+            }
+            else
+            {
+                transform.localPosition = startPosition;
+                transform.localScale = Vector3.one;
+            }
+            
+            // 진행 중인 이펙트 중지
+            StopVFX();
+        }
+
         protected override void Start()
         {
             base.Start();

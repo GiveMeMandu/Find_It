@@ -14,6 +14,10 @@ namespace UI
     {
         private void Start() {
             var itemSetDataList = ItemSetManager.Instance.GetItemSetDataList();
+            if(itemSetDataList.Count == 0)
+            {
+                return;
+            }
             PrepareViewModels(itemSetDataList.Count);
 
             for (int i = 0; i < GetViewModels().Count; i++)

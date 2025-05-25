@@ -35,25 +35,46 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
                 FromScale = Vector3.zero;
                 
                 // HiddenObj의 spriteRenderer 사용
-                if (transform.parent != null && transform.parent.TryGetComponent<HiddenObj>(out var hiddenObj) && hiddenObj.spriteRenderer != null)
+                if (transform.parent != null && transform.parent.TryGetComponent<HiddenObj>(out var hiddenObj))
                 {
                     var bgSprite = GetComponent<SpriteRenderer>();
                     if (bgSprite != null)
                     {
-                        // 스프라이트 실제 크기 사용
-                        float targetWidth = hiddenObj.spriteRenderer.sprite.bounds.size.x;
-                        float targetHeight = hiddenObj.spriteRenderer.sprite.bounds.size.y;
-                        float bgWidth = bgSprite.sprite.bounds.size.x;
-                        float bgHeight = bgSprite.sprite.bounds.size.y;
-                        
-                        float scaleX = targetWidth / bgWidth;
-                        float scaleY = targetHeight / bgHeight;
-                        float scale = Mathf.Max(scaleX, scaleY) * 1.5f; // 약간 더 크게 설정
-                        
-                        ToScale = new Vector3(scale, scale, 1f);
-                        
-                        // sorting order 설정
-                        bgSprite.sortingOrder = hiddenObj.spriteRenderer.sortingOrder - 1;
+                        if (hiddenObj.spriteRenderer != null && hiddenObj.spriteRenderer.sprite != null)
+                        {
+                            // 스프라이트 실제 크기 사용
+                            float targetWidth = hiddenObj.spriteRenderer.sprite.bounds.size.x;
+                            float targetHeight = hiddenObj.spriteRenderer.sprite.bounds.size.y;
+                            float bgWidth = bgSprite.sprite.bounds.size.x;
+                            float bgHeight = bgSprite.sprite.bounds.size.y;
+                            
+                            float scaleX = targetWidth / bgWidth;
+                            float scaleY = targetHeight / bgHeight;
+                            float scale = Mathf.Max(scaleX, scaleY) * 1.5f; // 약간 더 크게 설정
+                            
+                            ToScale = new Vector3(scale, scale, 1f);
+                            
+                            // sorting order 설정
+                            bgSprite.sortingOrder = hiddenObj.spriteRenderer.sortingOrder - 1;
+                        }
+                        else if (InitialBounds.size != Vector3.zero)
+                        {
+                            // sprite가 없으면 collider 크기 사용
+                            float targetWidth = InitialBounds.size.x;
+                            float targetHeight = InitialBounds.size.y;
+                            float bgWidth = bgSprite.sprite.bounds.size.x;
+                            float bgHeight = bgSprite.sprite.bounds.size.y;
+                            
+                            float scaleX = targetWidth / bgWidth;
+                            float scaleY = targetHeight / bgHeight;
+                            float scale = Mathf.Max(scaleX, scaleY) * 1.8f; // 약간 더 크게 설정
+                            
+                            ToScale = new Vector3(scale, scale, 1f);
+                        }
+                        else
+                        {
+                            ToScale = Vector3.one;
+                        }
                     }
                     else
                     {

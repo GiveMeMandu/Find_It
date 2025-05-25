@@ -36,6 +36,12 @@ public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
             }
             CompletionView.SetActive(true);
             AlertView.SetActive(false);
+            
+            // ItemSetManager에 클릭되었음을 알림
+            if (ItemSetManager.Instance != null)
+            {
+                ItemSetManager.Instance.OnCompletionObjectClicked(SetName);
+            }
         }
     }
 
@@ -46,5 +52,6 @@ public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
         {
             AlertView.SetActive(true);
         }
+        // Debug.Log($"SetCompletionObject {SetName} is now active and ready to be clicked!");
     }
 }

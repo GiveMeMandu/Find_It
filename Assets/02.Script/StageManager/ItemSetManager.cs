@@ -27,16 +27,24 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private HashSet<string> foundSets = new HashSet<string>();
         public event Action<string> OnAllSetsFound;  // 모든 세트를 찾았을 때 발생하는 이벤트
 
+        // SetCompletionObject 클릭 상태 추적
+        private HashSet<string> clickedCompletionObjects = new HashSet<string>();
+        private bool allSetsFoundAndWaitingForClicks = false;
+
         // public 속성 추가
         public int FoundSetsCount => foundSets.Count;
         public int TotalSetsCount => itemSetDataList.Count;
+        public bool AllSetsFoundAndWaitingForClicks => allSetsFoundAndWaitingForClicks;
 
         private void Start()
         {
-            // 각 세트별로 완료된 그룹을 추적하기 위한 초기화
-            foreach (var setData in itemSetDataList)
+            if(itemSetDataList.Count != 0)
             {
-                completedGroups[setData.SetName] = new HashSet<string>();
+                // 각 세트별로 완료된 그룹을 추적하기 위한 초기화
+                foreach (var setData in itemSetDataList)
+                {
+                    completedGroups[setData.SetName] = new HashSet<string>();
+                }
             }
 
             // LevelManager의 OnFoundObj 이벤트 구독
@@ -90,6 +98,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 if (setData.CompletionObject != null)
                 {
                     setData.CompletionObject.ShowSetCompletionNotification();
+                    // Debug.Log($"SetCompletionObject notification shown for: {setData.SetName}");
                 }
                 foundSets.Add(setData.SetName);
                 OnSetCompleted?.Invoke(setData.SetName);
@@ -102,11 +111,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (foundSets.Count == itemSetDataList.Count)
             {
                 OnAllSetsFound?.Invoke(null);
-                // LevelManager의 종료 이벤트에 등록
+                allSetsFoundAndWaitingForClicks = true;
+                
+                // LevelManager의 종료 이벤트에 등록 - 모든 SetCompletionObject가 클릭될 때까지 대기
                 LevelManager.Instance.OnEndEvnt.Add(async () => 
                 {
-                    await UniTask.CompletedTask;
-                    return;
+                    await WaitForAllCompletionObjectsClicked();
                 });
             }
         }
@@ -156,13 +166,53 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
             
             await page.WaitForClose();
-            Debug.Log("MissionCompletePage closed");
+            // Debug.Log("MissionCompletePage closed");
         }
 
 
         public List<ItemSetData> GetItemSetDataList()
         {
             return itemSetDataList;
+        }
+
+        // SetCompletionObject 클릭 처리
+        public void OnCompletionObjectClicked(string setName)
+        {
+            if (!clickedCompletionObjects.Contains(setName))
+            {
+                clickedCompletionObjects.Add(setName);
+            }
+        }
+
+        // 모든 SetCompletionObject가 클릭되었는지 확인
+        public bool AreAllCompletionObjectsClicked()
+        {
+            // CompletionObject가 있는 세트들만 확인 (Unity Object null 체크 포함)
+            var setsWithCompletionObject = itemSetDataList.Where(x => 
+                x.CompletionObject != null && 
+                !ReferenceEquals(x.CompletionObject, null) && 
+                x.CompletionObject).ToList();
+            
+            // CompletionObject가 있는 모든 세트가 클릭되었는지 확인
+            return setsWithCompletionObject.All(setData => clickedCompletionObjects.Contains(setData.SetName));
+        }
+
+        // 모든 SetCompletionObject가 클릭될 때까지 대기
+        private async UniTask WaitForAllCompletionObjectsClicked()
+        {
+            // CompletionObject가 없는 경우 즉시 완료 (Unity Object null 체크 포함)
+            var setsWithCompletionObject = itemSetDataList.Where(x => 
+                x.CompletionObject != null && 
+                !ReferenceEquals(x.CompletionObject, null) && 
+                x.CompletionObject).ToList();
+            
+            if (setsWithCompletionObject.Count == 0)
+            {
+                return;
+            }
+
+            // 모든 SetCompletionObject가 클릭될 때까지 대기
+            await UniTask.WaitUntil(() => AreAllCompletionObjectsClicked());
         }
     }
 }

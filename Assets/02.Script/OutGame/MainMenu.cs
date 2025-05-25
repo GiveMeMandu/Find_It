@@ -17,7 +17,6 @@ namespace OutGame
 {
     public class MainMenu : SceneBase
     {
-        public static float Speed = 1;
         private MainMenuPage mainMenuPage = null;
         private PageSlideEffect pageSlideEffect = null;
         [SerializeField] private MapSelectView mapSelectView;
@@ -26,7 +25,7 @@ namespace OutGame
         {
             base.Start();
             mainMenuPage = Global.UIManager.OpenPage<MainMenuPage>();
-            if(mapSelectView == null) mapSelectView = FindObjectOfType<MapSelectView>();
+            if(mapSelectView == null) mapSelectView = FindAnyObjectByType<MapSelectView>();
             if (mainMenuPage != null)
             {
                 pageSlideEffect = mainMenuPage.GetComponent<PageSlideEffect>();
