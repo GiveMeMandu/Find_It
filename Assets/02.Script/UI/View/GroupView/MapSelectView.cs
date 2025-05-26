@@ -11,6 +11,7 @@ using I2.Loc;
 using UI.Effect;
 using System.Linq;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 namespace UnityWeld
 {
@@ -184,15 +185,25 @@ namespace UnityWeld
                 // 해당 인덱스가 유효한 범위인지 확인 후 이펙트 실행
                 if (firstStageIndex >= 0 && firstStageIndex < clickToMoveEffects.Count)
                 {
-                    var effect = clickToMoveEffects[firstStageIndex];
-                    
-                    // 이미 복귀된 상태로 설정하여 다시 복귀하지 않고 바로 이펙트 재생되도록
-                    effect.SetResetedState(true);
-                    
-                    // 이펙트 재생
-                    effect.PlayVFXForce();
+                    // 복귀하지 않고 바로 이펙트 재생하도록 PlayVFXForce 사용
+                    PlayInitialStageEffectAsync(firstStageIndex).Forget();
                 }
             }
+        }
+        private async UniTaskVoid PlayInitialStageEffectAsync(int firstStageIndex)
+        {
+            await UniTask.WaitForSeconds(0.5f);
+            clickToMoveEffects[firstStageIndex].PlayVFXForce();
+        }
+        
+        /// <summary>
+        /// 씬 변경 후 딜레이를 두고 첫 번째 스테이지 이펙트를 재생합니다
+        /// </summary>
+        private async UniTaskVoid PlayInitialStageEffectDelayed()
+        {
+            // 이펙트 리셋 후 약간의 딜레이
+            await UniTask.WaitForSeconds(0.1f);
+            PlayInitialStageEffect();
         }
         [Binding]
         public void NextStageGroup()
@@ -255,21 +266,26 @@ namespace UnityWeld
         /// <param name="stageIndex">선택할 스테이지 인덱스</param>
         public void SelectStage(int stageIndex)
         {
-            if (stageIndex == _currentStageIndex) return;
+            // 같은 스테이지를 다시 클릭해도 이펙트는 재생되도록 수정
+            bool isSameStage = (stageIndex == _currentStageIndex);
             
-            // 현재 스테이지 인덱스가 유효한 범위인지 확인 후 이펙트 실행
-            if (clickToMoveEffects != null && _currentStageIndex >= 0 && _currentStageIndex < clickToMoveEffects.Count)
+            if (!isSameStage)
             {
-                clickToMoveEffects[_currentStageIndex].SetIsResetOnNext();
-                clickToMoveEffects[_currentStageIndex].PlayVFX();
+                // 현재 스테이지 인덱스가 유효한 범위인지 확인 후 이펙트 실행
+                if (clickToMoveEffects != null && _currentStageIndex >= 0 && _currentStageIndex < clickToMoveEffects.Count)
+                {
+                    clickToMoveEffects[_currentStageIndex].SetIsResetOnNext();
+                    clickToMoveEffects[_currentStageIndex].PlayVFX();
+                }
+                
+                SetCurMap(stageIndex);
             }
-            
-            SetCurMap(stageIndex);
 
-            // 새로운 스테이지 인덱스가 유효한 범위인지 확인 후 이펙트 실행
+            // 새로운 스테이지 인덱스가 유효한 범위인지 확인 후 이펙트 실행 (같은 스테이지여도 실행)
             if (clickToMoveEffects != null && stageIndex >= 0 && stageIndex < clickToMoveEffects.Count)
             {
-                clickToMoveEffects[stageIndex].PlayVFX();
+                // 강제로 이펙트 재생 (이미 재생 중이어도 실행)
+                clickToMoveEffects[stageIndex].PlayVFXForce();
             }
         }
 
@@ -290,8 +306,8 @@ namespace UnityWeld
                     // 씬 변경 시에는 이전 스테이지 이펙트 처리 없이 바로 맵만 설정
                     SetCurMap(i);
                     
-                    // 새로운 씬의 첫 번째 스테이지에 이펙트 재생
-                    PlayInitialStageEffect();
+                    // 새로운 씬의 첫 번째 스테이지에 이펙트 재생 (약간의 딜레이 후)
+                    PlayInitialStageEffectDelayed().Forget();
                     break;
                 }
             }
@@ -409,15 +425,29 @@ namespace UnityWeld
                     bool shouldBeActive = i < currentSceneStageCount;
                     
                     // 버튼 활성화/비활성화
+                    if(!shouldBeActive)
+                        clickToMoveEffects[i].StopVFX();
                     clickToChangeStageBtns[i].gameObject.SetActive(shouldBeActive);
-                    
-                    // 비활성화된 버튼은 초기 위치로 이동
-                    if (!shouldBeActive && i < clickToChangeStageBtnsPositions.Count)
+                    if(!shouldBeActive)
                     {
-                        var rectTransform = clickToChangeStageBtns[i].GetComponent<RectTransform>();
-                        if (rectTransform != null)
+                        if(clickToChangeStageBtns[i].gameObject.activeSelf)
                         {
-                            rectTransform.position = clickToChangeStageBtnsPositions[i];
+                            
+                            // 비활성화된 버튼은 초기 위치로 이동하고 복귀된 상태로 설정
+                            if (!shouldBeActive && i < clickToChangeStageBtnsPositions.Count)
+                            {
+                                var rectTransform = clickToChangeStageBtns[i].GetComponent<RectTransform>();
+                                if (rectTransform != null)
+                                {
+                                    rectTransform.position = clickToChangeStageBtnsPositions[i];
+                                }
+                                
+                                // 해당 이펙트도 복귀된 상태로 설정
+                                if (i < clickToMoveEffects.Count && clickToMoveEffects[i] != null)
+                                {
+                                    clickToMoveEffects[i].ResetVFX();
+                                }
+                            }
                         }
                     }
                 }

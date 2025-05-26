@@ -54,8 +54,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 imgObj.Initialize(obj.UISprite);
                 
                 // 남은 개수 설정 (전체 개수 - 찾은 개수)
-                int remainingCount = pair.Value.TotalCount - pair.Value.FoundCount;
-                imgObj.SetCount(remainingCount);
+                imgObj.SetCount(pair.Value.TotalCount, pair.Value.FoundCount);
 
                 if (obj.EnableTooltip)
                 {

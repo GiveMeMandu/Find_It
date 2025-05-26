@@ -19,7 +19,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public Image countSprite;
         public TextMeshProUGUI countText;
 
-        private int remainingCount = 0;
+        private int foundCount = 0;
+        private int totalCount = 0;
         private bool isEnableTooltips;
         private List<MultiLanguageTextListModel> uiTooltipsListModel;
         private TooltipsType tooltipsType;
@@ -34,13 +35,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             FoundSprite.gameObject.SetActive(false);
         }
 
-        public void SetCount(int count)
+        public void SetCount(int totalCount, int foundCount)
         {
-            remainingCount = count;
+            this.foundCount = foundCount;
+            this.totalCount = totalCount;
             UpdateCountUI();
             
             // 남은 개수가 0이면 Found 상태로 변경
-            if (remainingCount <= 0)
+            if (foundCount >= totalCount)
             {
                 Found();
             }
@@ -50,12 +52,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             if (countText != null)
             {
-                countText.text = remainingCount.ToString();
+                countText.text = string.Format("{0}/{1}", foundCount, totalCount);
             }
 
             if (countSprite != null)
             {
-                countSprite.gameObject.SetActive(remainingCount > 0);
+                countSprite.gameObject.SetActive(foundCount < totalCount);
             }
         }
         

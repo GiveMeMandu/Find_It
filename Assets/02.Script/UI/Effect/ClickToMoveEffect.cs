@@ -26,10 +26,23 @@ namespace UI.Effect
         private Vector3 startPosition;
         private Vector2 anchorReference = new Vector2(0.5f, 0.5f); // 기준 앵커 (중앙)
         private bool isInitialized = false;  // 초기화 여부를 체크하는 플래그
-        
+        private RectTransform rectTransform;
         public void SetIsResetOnNext()
         {
             isResetOnNext = true;
+        }
+        
+        /// <summary>
+        /// 강제로 이펙트를 재생합니다 (재생 중이어도 실행)
+        /// </summary>
+        public void PlayVFXForce()
+        {
+            // 기존 이펙트 중지
+            StopVFX();
+            isPlaying = false;
+            
+            // 강제 재생
+            base.PlayVFXForce();
         }
         
         /// <summary>
@@ -46,6 +59,9 @@ namespace UI.Effect
         /// </summary>
         public void ResetToInitialState()
         {
+            // 진행 중인 이펙트 중지 (먼저 중지)
+            StopVFX();
+            
             // 복귀 관련 플래그 초기화
             isResetOnNext = false;
             isResetedThisTime = false;
@@ -53,7 +69,6 @@ namespace UI.Effect
             // 위치를 초기 위치로 즉시 이동
             if (isUIEffect)
             {
-                var rectTransform = GetComponent<RectTransform>();
                 if (rectTransform != null)
                 {
                     rectTransform.anchoredPosition = startPosition;
@@ -66,8 +81,8 @@ namespace UI.Effect
                 transform.localScale = Vector3.one;
             }
             
-            // 진행 중인 이펙트 중지
-            StopVFX();
+            // 재생 상태 강제 초기화
+            isPlaying = false;
         }
 
         protected override void Start()
@@ -108,7 +123,7 @@ namespace UI.Effect
             {
                 if (isUIEffect)
                 {
-                    var rectTransform = GetComponent<RectTransform>();
+                    rectTransform = GetComponent<RectTransform>();
                     startPosition = rectTransform.anchoredPosition;
                     if (useAnchorReference)
                     {
@@ -214,6 +229,21 @@ namespace UI.Effect
                     transform.DOLocalMove(startPosition * (effectAddValue + 1), 1 * effectSpeed).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
                     isSmallOnEnd ? transform.DOScale(1, 0.5f).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
               );
+            }
+        }
+        public void ResetVFX()
+        {
+            isResetedThisTime = false;
+            isResetOnNext = false;
+            StopVFX();
+            transform.localScale = Vector3.one;
+            if (isUIEffect)
+            {
+                rectTransform.anchoredPosition = startPosition;
+            }
+            else
+            {
+                transform.localPosition = startPosition;
             }
         }
     }
