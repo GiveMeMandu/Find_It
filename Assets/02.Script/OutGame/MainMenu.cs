@@ -21,6 +21,7 @@ namespace OutGame
         private PageSlideEffect pageSlideEffect = null;
         [SerializeField] private MapSelectView mapSelectView;
         public bool CanPlay = false;
+        bool isMapButtonClicked = false;
         protected override void Start()
         {
             base.Start();
@@ -35,6 +36,8 @@ namespace OutGame
 
         public void OnClickMapButton()
         {
+            if(isMapButtonClicked) return;
+            isMapButtonClicked = true;
             mapSelectView.Refresh();
             Camera.main.transform.DOLocalMoveX(-19.86f, 1f).SetEase(Ease.OutQuint);
             pageSlideEffect.SlideOut(true, 0.8f);
@@ -42,6 +45,7 @@ namespace OutGame
 
         public void OnClickMainMenuButton()
         {
+            isMapButtonClicked = false;
             Camera.main.transform.DOLocalMoveX(0f, 1f).SetEase(Ease.OutQuint);
             pageSlideEffect.SlideIn(true, 0.8f);
         }

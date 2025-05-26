@@ -20,6 +20,11 @@ namespace Manager
         [LabelText("로딩 문구")] [SerializeField] private TextMeshProUGUI loadingText;
         public UnityEvent onLoadScene;
         public Slider progressBar;
+        [RuntimeInitializeOnLoadMethod]
+        public static void Initialize() 
+        {
+            nextScene = (int)SceneNum.START;
+        }
         public static int nextScene;
 
         private void Start()

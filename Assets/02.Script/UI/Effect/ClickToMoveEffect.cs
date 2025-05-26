@@ -35,7 +35,7 @@ namespace UI.Effect
         /// <summary>
         /// 강제로 이펙트를 재생합니다 (재생 중이어도 실행)
         /// </summary>
-        public void PlayVFXForce()
+        public override void PlayVFXForce()
         {
             // 기존 이펙트 중지
             StopVFX();
@@ -244,6 +244,32 @@ namespace UI.Effect
             else
             {
                 transform.localPosition = startPosition;
+            }
+        }
+        
+        /// <summary>
+        /// DOTween을 사용해서 0초만에 즉시 초기 위치로 이동합니다
+        /// </summary>
+        public void ResetVFXImmediate()
+        {
+            isResetedThisTime = false;
+            isResetOnNext = false;
+            StopVFX();
+            
+            if (isUIEffect)
+            {
+                if (rectTransform != null)
+                {
+                    // DOTween을 사용해서 0초만에 즉시 이동
+                    rectTransform.DOAnchorPos(startPosition, 0f).SetEase(Ease.Linear);
+                    rectTransform.DOScale(Vector3.one, 0f).SetEase(Ease.Linear);
+                }
+            }
+            else
+            {
+                // DOTween을 사용해서 0초만에 즉시 이동
+                transform.DOLocalMove(startPosition, 0f).SetEase(Ease.Linear);
+                transform.DOScale(Vector3.one, 0f).SetEase(Ease.Linear);
             }
         }
     }

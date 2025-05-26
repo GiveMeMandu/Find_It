@@ -78,7 +78,7 @@ namespace Effect
             }
         }
 
-        public void PlayVFXForce()
+        public virtual void PlayVFXForce()
         {
             PlayVFXTask(false, 0).Forget();
         }

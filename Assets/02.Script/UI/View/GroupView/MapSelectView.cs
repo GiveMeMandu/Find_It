@@ -35,7 +35,6 @@ namespace UnityWeld
     {
         public List<ClickToMoveEffect> clickToMoveEffects = new List<ClickToMoveEffect>();
         public List<Button> clickToChangeStageBtns = new List<Button>();
-        private List<Vector3> clickToChangeStageBtnsPositions = new List<Vector3>();
         [SerializeField] private List<SceneInfo> sceneInfos = new List<SceneInfo>();
         
         [BoxGroup("버튼 이미지 설정")]
@@ -154,7 +153,6 @@ namespace UnityWeld
         {
             clickToMoveEffects = GetComponentsInChildren<ClickToMoveEffect>().ToList();
             clickToChangeStageBtns = clickToMoveEffects.Select(x => x.GetComponent<Button>()).ToList();
-            clickToChangeStageBtnsPositions = clickToChangeStageBtns.Select(x => x.GetComponent<RectTransform>().position).ToList();
             InitialStageGroup();
             SetupStageButtons();
         }
@@ -432,20 +430,13 @@ namespace UnityWeld
                     {
                         if(clickToChangeStageBtns[i].gameObject.activeSelf)
                         {
-                            
                             // 비활성화된 버튼은 초기 위치로 이동하고 복귀된 상태로 설정
-                            if (!shouldBeActive && i < clickToChangeStageBtnsPositions.Count)
+                            if (!shouldBeActive)
                             {
-                                var rectTransform = clickToChangeStageBtns[i].GetComponent<RectTransform>();
-                                if (rectTransform != null)
-                                {
-                                    rectTransform.position = clickToChangeStageBtnsPositions[i];
-                                }
-                                
-                                // 해당 이펙트도 복귀된 상태로 설정
+                                // 해당 이펙트도 복귀된 상태로 설정 (DOTween으로 0초만에 즉시 이동)
                                 if (i < clickToMoveEffects.Count && clickToMoveEffects[i] != null)
                                 {
-                                    clickToMoveEffects[i].ResetVFX();
+                                    clickToMoveEffects[i].ResetVFXImmediate();
                                 }
                             }
                         }
