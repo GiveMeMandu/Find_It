@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using Cysharp.Threading.Tasks;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace Util.CameraSetting
@@ -29,6 +30,9 @@ namespace Util.CameraSetting
         private float _previousTouchDistance;
         private bool _isDragging;
         private const float MIN_PINCH_DISTANCE = 50f;
+        
+        // 카메라 이동 관련 변수들
+        private bool _isMovingCamera = false;
 
         protected override void Awake()
         {
@@ -97,6 +101,9 @@ namespace Util.CameraSetting
         {
             if (backgroundSprite == null) return;
             if (!_enablePan && !_enableZoom) return;
+            
+            // 카메라가 자동 이동 중일 때는 사용자 입력 무시
+            if (_isMovingCamera) return;
 
             HandleTouchInput();
             HandleMouseInput();
@@ -232,5 +239,52 @@ namespace Util.CameraSetting
             var clampY = Mathf.Clamp(targetPosition.y, minY, maxY);
             return new Vector3(clampX, clampY, targetPosition.z);
         }
+        
+        /// <summary>
+        /// 지정된 위치로 카메라를 부드럽게 이동시킵니다.
+        /// </summary>
+        /// <param name="targetPosition">목표 위치</param>
+        /// <param name="duration">이동 시간 (초)</param>
+        public async UniTask MoveCameraToPositionAsync(Vector3 targetPosition, float duration = 2f)
+        {
+            if (_isMovingCamera) return; // 이미 이동 중이면 무시
+            
+            _isMovingCamera = true;
+            
+            var startPosition = _camera.transform.position;
+            var clampedTargetPosition = _infinitePan ? targetPosition : ClampCamera(targetPosition);
+            
+            // Z 좌표는 유지
+            clampedTargetPosition.z = startPosition.z;
+            
+            float elapsedTime = 0f;
+            
+            Debug.Log($"카메라 이동 시작: {startPosition} -> {clampedTargetPosition}");
+            
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / duration;
+                
+                // 부드러운 이동을 위한 이징 함수 (ease-out)
+                t = 1f - Mathf.Pow(1f - t, 3f);
+                
+                var currentPosition = Vector3.Lerp(startPosition, clampedTargetPosition, t);
+                _camera.transform.position = currentPosition;
+                
+                await UniTask.Yield();
+            }
+            
+            // 최종 위치 설정
+            _camera.transform.position = clampedTargetPosition;
+            _isMovingCamera = false;
+            
+            Debug.Log($"카메라 이동 완료: {clampedTargetPosition}");
+        }
+        
+        /// <summary>
+        /// 카메라가 현재 이동 중인지 확인합니다.
+        /// </summary>
+        public bool IsMovingCamera => _isMovingCamera;
     }
 }

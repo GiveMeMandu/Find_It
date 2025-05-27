@@ -52,8 +52,9 @@ namespace OutGame
 
         public void OnClickStartButton(int stageIndex = 0)
         {
+            Debug.Log($"[MainMenu] OnClickStartButton called with stageIndex: {stageIndex}");
             if(CanPlay)
-                LoadingSceneManager.LoadScene(stageIndex + 4);
+                LoadingSceneManager.LoadScene(stageIndex);
         }
     }
 }

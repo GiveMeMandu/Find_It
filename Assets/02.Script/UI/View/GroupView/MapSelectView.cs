@@ -217,7 +217,68 @@ namespace UnityWeld
         public void OnClickStartButton()
         {
             var main = Global.CurrentScene as OutGame.MainMenu;
-            main.OnClickStartButton(_currentStageIndex);
+            
+            // ChallengeSelectView가 있는지 확인하고 챌린지가 선택되었는지 확인
+            var challengeSelectView = FindAnyObjectByType<ChallengeSelectView>();
+            if (challengeSelectView != null && challengeSelectView.SelectedChallengeType != ChallengeType.None)
+            {
+                // 챌린지가 선택된 경우 ChallengeSelectView에서 처리
+                challengeSelectView.ExecuteSelectedChallenge();
+            }
+            else
+            {
+                // 일반 게임 시작 - 현재 선택된 씬과 버튼 인덱스로 계산
+                int targetSceneIndex = CalculateSceneIndex(_currentSceneName, GetCurrentButtonIndex());
+                Debug.Log($"[MapSelectView] Normal game start - Scene: {_currentSceneName}, ButtonIndex: {GetCurrentButtonIndex()}, TargetScene: {targetSceneIndex}");
+                main.OnClickStartButton(targetSceneIndex);
+            }
+        }
+        
+        /// <summary>
+        /// 현재 선택된 씬의 버튼 인덱스를 계산합니다 (0, 1, 2...)
+        /// </summary>
+        /// <returns>현재 씬 내에서의 버튼 인덱스</returns>
+        private int GetCurrentButtonIndex()
+        {
+            var currentSceneStageIndices = GetCurrentSceneStageIndices();
+            
+            for (int i = 0; i < currentSceneStageIndices.Count; i++)
+            {
+                if (currentSceneStageIndices[i] == _currentStageIndex)
+                {
+                    return i;
+                }
+            }
+            
+            return 0; // 기본값
+        }
+        
+        /// <summary>
+        /// 씬 이름과 버튼 인덱스를 기반으로 실제 씬 인덱스를 계산합니다
+        /// </summary>
+        /// <param name="sceneName">선택된 씬 이름</param>
+        /// <param name="buttonIndex">버튼 인덱스 (0, 1, 2)</param>
+        /// <returns>Build Settings의 실제 씬 인덱스</returns>
+        private int CalculateSceneIndex(SceneName sceneName, int buttonIndex)
+        {
+            switch (sceneName)
+            {
+                case SceneName.Stage1_1:
+                case SceneName.Stage1_2:
+                case SceneName.Stage1_3:
+                    // Stage1 시리즈: 4, 5, 6
+                    return 4 + buttonIndex;
+                    
+                case SceneName.Stage2_1:
+                case SceneName.Stage2_2:
+                case SceneName.Stage2_3:
+                    // Stage2 시리즈: 7, 8, 9
+                    return 7 + buttonIndex;
+                    
+                default:
+                    Debug.LogWarning($"Unknown scene name: {sceneName}");
+                    return 4; // 기본값으로 Stage1_1
+            }
         }
         public void Refresh()
         {
@@ -452,7 +513,7 @@ namespace UnityWeld
         /// 현재 선택된 씬에 해당하는 스테이지 인덱스들을 가져옵니다
         /// </summary>
         /// <returns>현재 씬의 스테이지 인덱스 리스트</returns>
-        private List<int> GetCurrentSceneStageIndices()
+        public List<int> GetCurrentSceneStageIndices()
         {
             var indices = new List<int>();
             for (int i = 0; i < sceneInfos.Count; i++)

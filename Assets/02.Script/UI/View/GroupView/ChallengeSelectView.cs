@@ -162,25 +162,55 @@ public class ChallengeSelectView : ViewModel
     }
     
     /// <summary>
-    /// 숨은 그림찾기 챌린지를 실행합니다 (Stage1~2, MapSelectView 인덱스 기반)
+    /// 숨은 그림찾기 챌린지를 실행합니다 (Stage1~2)
     /// </summary>
     private void ExecuteHiddenPictureChallenge()
     {
         if (mapSelectView == null) return;
         
-        int selectedStageIndex = mapSelectView.CurrentStageIndex;
         SceneName selectedSceneName = mapSelectView.CurrentSceneName;
+        int buttonIndex = GetCurrentButtonIndex();
+        
+        Debug.Log($"[ChallengeSelectView] HiddenPicture - Scene: {selectedSceneName}, ButtonIndex: {buttonIndex}");
         
         // Stage1_1~Stage1_3 또는 Stage2_1~Stage2_3만 허용
         if (IsStage1Scene(selectedSceneName) || IsStage2Scene(selectedSceneName))
         {
-            // MapSelectView의 기본 로직 사용 (stageIndex + 4)
+            // 일반 게임과 동일한 계산 (숨은 그림찾기는 원본 스테이지와 동일)
+            int targetSceneIndex = CalculateNormalSceneIndex(selectedSceneName, buttonIndex);
+            Debug.Log($"[ChallengeSelectView] Loading HiddenPicture scene: {targetSceneIndex}");
+            
             var main = Global.CurrentScene as OutGame.MainMenu;
-            main?.OnClickStartButton(selectedStageIndex);
+            main?.OnClickStartButton(targetSceneIndex);
         }
         else
         {
             Debug.LogWarning("숨은 그림찾기는 Stage1 또는 Stage2 시리즈에서만 가능합니다.");
+        }
+    }
+    
+    /// <summary>
+    /// 일반 게임과 동일한 씬 인덱스 계산 (숨은 그림찾기용)
+    /// </summary>
+    private int CalculateNormalSceneIndex(SceneName sceneName, int buttonIndex)
+    {
+        switch (sceneName)
+        {
+            case SceneName.Stage1_1:
+            case SceneName.Stage1_2:
+            case SceneName.Stage1_3:
+                // Stage1 시리즈: 4, 5, 6
+                return 4 + buttonIndex;
+                
+            case SceneName.Stage2_1:
+            case SceneName.Stage2_2:
+            case SceneName.Stage2_3:
+                // Stage2 시리즈: 7, 8, 9
+                return 7 + buttonIndex;
+                
+            default:
+                Debug.LogWarning($"Unknown scene name: {sceneName}");
+                return 4; // 기본값으로 Stage1_1
         }
     }
     
@@ -215,21 +245,45 @@ public class ChallengeSelectView : ViewModel
     {
         if (mapSelectView == null) return;
         
-        int selectedStageIndex = mapSelectView.CurrentStageIndex;
         SceneName selectedSceneName = mapSelectView.CurrentSceneName;
+        int buttonIndex = GetCurrentButtonIndex();
         
-        // TimeChallenge 시리즈에 따라 해당하는 TimeChallenge_STAGE 인덱스 계산
-        int timeChallengeStageIndex = GetTimeChallengeStageIndex(selectedSceneName, selectedStageIndex);
+        Debug.Log($"[ChallengeSelectView] TimeChallenge - Scene: {selectedSceneName}, ButtonIndex: {buttonIndex}");
+        
+        // 현재 선택된 씬과 버튼 인덱스로 타임 챌린지 씬 계산
+        int timeChallengeStageIndex = GetTimeChallengeStageIndex(selectedSceneName, buttonIndex);
         
         if (timeChallengeStageIndex != -1)
         {
-            // 직접 LoadingSceneManager 호출 (+4 로직 우회)
+            Debug.Log($"[ChallengeSelectView] Loading TimeChallenge scene: {timeChallengeStageIndex}");
             LoadingSceneManager.LoadScene(timeChallengeStageIndex);
         }
         else
         {
             Debug.LogWarning("타임 챌린지에 해당하는 스테이지를 찾을 수 없습니다.");
         }
+    }
+    
+    /// <summary>
+    /// MapSelectView에서 현재 선택된 버튼 인덱스를 가져옵니다
+    /// </summary>
+    /// <returns>현재 씬 내에서의 버튼 인덱스 (0, 1, 2...)</returns>
+    private int GetCurrentButtonIndex()
+    {
+        if (mapSelectView == null) return 0;
+        
+        var currentSceneStageIndices = mapSelectView.GetCurrentSceneStageIndices();
+        int currentStageIndex = mapSelectView.CurrentStageIndex;
+        
+        for (int i = 0; i < currentSceneStageIndices.Count; i++)
+        {
+            if (currentSceneStageIndices[i] == currentStageIndex)
+            {
+                return i;
+            }
+        }
+        
+        return 0; // 기본값
     }
     
     /// <summary>
@@ -241,67 +295,43 @@ public class ChallengeSelectView : ViewModel
         LoadingSceneManager.LoadScene(SceneNum.PUZZLE);
     }
     
-    private int GetTimeChallengeStageIndex(SceneName sceneName, int stageIndex)
+    private int GetTimeChallengeStageIndex(SceneName sceneName, int buttonIndex)
     {
-        // 챌린지 타입에 따른 매핑
-        switch (_selectedChallengeType)
+        // 현재 선택된 씬과 버튼 인덱스를 기반으로 타임 챌린지 씬 계산
+        switch (sceneName)
         {
-            case ChallengeType.TimeChallenge:
-                // Stage1, Stage2 씬에서 선택된 경우 해당하는 TimeChallenge 씬으로 매핑
-                switch (sceneName)
-                {
-                    // Stage1 시리즈 → TimeChallenge_STAGE1 시리즈
-                    case SceneName.Stage1_1:
-                        return SceneNum.TimeChallenge_STAGE1_1;
-                    case SceneName.Stage1_2:
-                        return SceneNum.TimeChallenge_STAGE1_2;
-                    case SceneName.Stage1_3:
-                        return SceneNum.TimeChallenge_STAGE1_3;
-                        
-                    // Stage2 시리즈 → TimeChallenge_STAGE2 시리즈
-                    case SceneName.Stage2_1:
-                        return SceneNum.TimeChallenge_STAGE2_1;
-                    case SceneName.Stage2_2:
-                        return SceneNum.TimeChallenge_STAGE2_2;
-                    case SceneName.Stage2_3:
-                        return SceneNum.TimeChallenge_STAGE2_3;
-                        
-                    // TimeChallenge 시리즈는 그대로 매핑
-                    case SceneName.TimeChallenge_STAGE1_1:
-                        return SceneNum.TimeChallenge_STAGE1_1;
-                    case SceneName.TimeChallenge_STAGE1_2:
-                        return SceneNum.TimeChallenge_STAGE1_2;
-                    case SceneName.TimeChallenge_STAGE1_3:
-                        return SceneNum.TimeChallenge_STAGE1_3;
-                    case SceneName.TimeChallenge_STAGE2_1:
-                        return SceneNum.TimeChallenge_STAGE2_1;
-                    case SceneName.TimeChallenge_STAGE2_2:
-                        return SceneNum.TimeChallenge_STAGE2_2;
-                    case SceneName.TimeChallenge_STAGE2_3:
-                        return SceneNum.TimeChallenge_STAGE2_3;
-                    case SceneName.TimeChallenge_STAGE3_1:
-                        return SceneNum.TimeChallenge_STAGE3_1;
-                    case SceneName.TimeChallenge_STAGE3_2:
-                        return SceneNum.TimeChallenge_STAGE3_2;
-                    case SceneName.TimeChallenge_STAGE3_3:
-                        return SceneNum.TimeChallenge_STAGE3_3;
-                }
-                break;
+            case SceneName.Stage1_1:
+            case SceneName.Stage1_2:
+            case SceneName.Stage1_3:
+                // Stage1 + 버튼 인덱스 → TimeChallenge_STAGE1 시리즈 (13, 14, 15)
+                return SceneNum.TimeChallenge_STAGE1_1 + buttonIndex;
                 
-            // 다른 챌린지 타입들도 필요에 따라 추가 가능
-            case ChallengeType.HiddenPicture:
-                // 숨은 그림찾기는 원본 스테이지 그대로 사용
-                Debug.LogWarning("숨은 그림찾기는 GetTimeChallengeStageIndex를 사용하지 않아야 합니다.");
-                break;
+            case SceneName.Stage2_1:
+            case SceneName.Stage2_2:
+            case SceneName.Stage2_3:
+                // Stage2 + 버튼 인덱스 → TimeChallenge_STAGE2 시리즈 (16, 17, 18)
+                return SceneNum.TimeChallenge_STAGE2_1 + buttonIndex;
                 
-            case ChallengeType.Puzzle:
-                // 퍼즐은 고정된 PUZZLE 씬 사용
-                Debug.LogWarning("퍼즐은 GetTimeChallengeStageIndex를 사용하지 않아야 합니다.");
-                break;
+            // TimeChallenge 시리즈에서 직접 선택된 경우 (향후 확장용)
+            case SceneName.TimeChallenge_STAGE1_1:
+            case SceneName.TimeChallenge_STAGE1_2:
+            case SceneName.TimeChallenge_STAGE1_3:
+                return SceneNum.TimeChallenge_STAGE1_1 + buttonIndex;
+                
+            case SceneName.TimeChallenge_STAGE2_1:
+            case SceneName.TimeChallenge_STAGE2_2:
+            case SceneName.TimeChallenge_STAGE2_3:
+                return SceneNum.TimeChallenge_STAGE2_1 + buttonIndex;
+                
+            case SceneName.TimeChallenge_STAGE3_1:
+            case SceneName.TimeChallenge_STAGE3_2:
+            case SceneName.TimeChallenge_STAGE3_3:
+                return SceneNum.TimeChallenge_STAGE3_1 + buttonIndex;
+                
+            default:
+                Debug.LogWarning($"타임 챌린지에서 지원하지 않는 씬: {sceneName}");
+                return -1;
         }
-        
-        Debug.LogWarning($"매핑되지 않은 조합: 씬={sceneName}, 챌린지={_selectedChallengeType}");
-        return -1;
     }
     
     /// <summary>

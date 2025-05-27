@@ -69,6 +69,10 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
     public Text FoundRabbitCountText;
     public TextMeshProUGUI StageCompleteText;
     public List<Transform> StarList = new List<Transform>();
+    
+    [Header("Ad Reward UI")]
+    public Button WatchAdButton;  // 광고 시청 버튼
+    public GameObject AdRewardUI; // 광고 보상 UI
 
     [Header("Level Settings")]
     public string CurrentLevelName;
@@ -85,6 +89,7 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
     private TimeChallengeViewModel viewModel;
     private DateTime startTime;
     private DateTime endTime;
+    private bool hasUsedAdReward = false; // 광고 보상 사용 여부
 
     // Events
     public EventHandler<HiddenObj> OnFoundRabbit;
@@ -115,6 +120,7 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
 
         foundRabbitCount = 0;
         isGameActive = true;
+        hasUsedAdReward = false; // 광고 보상 사용 여부 초기화
         startTime = DateTime.Now;
 
         viewModel = FindAnyObjectByType<TimeChallengeViewModel>();
@@ -130,6 +136,11 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
         if (GameEndBtn != null)
         {
             GameEndBtn.onClick.AddListener(() => { LoadNextLevel(); });
+        }
+        
+        if (WatchAdButton != null)
+        {
+            WatchAdButton.onClick.AddListener(WatchAdForTimeBonus);
         }
     }
 
@@ -599,6 +610,16 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
         {
             GameEndUI.SetActive(true);
         }
+        
+        // 게임 실패 시 광고 시청 버튼 표시
+        if (!isSuccess && WatchAdButton != null && !hasUsedAdReward)
+        {
+            WatchAdButton.gameObject.SetActive(true);
+        }
+        else if (WatchAdButton != null)
+        {
+            WatchAdButton.gameObject.SetActive(false);
+        }
 
         // 기존 ViewModel도 호출 (호환성 유지)
         if (viewModel != null)
@@ -791,5 +812,55 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
             }
         }
     }
+    
+    /// <summary>
+    /// 광고 시청으로 30초 시간 추가
+    /// </summary>
+    public void WatchAdForTimeBonus()
+    {
+        if (hasUsedAdReward || isGameActive)
+        {
+            Debug.Log("이미 광고 보상을 사용했거나 게임이 진행 중입니다.");
+            return;
+        }
+        
+        // 실제로는 광고 시스템과 연동해야 하지만, 여기서는 바로 시간 추가
+        // TODO: 광고 시스템 연동
+        Debug.Log("광고 시청 완료! 30초 시간 추가");
+        
+        // 30초 시간 추가
+        if (viewModel != null)
+        {
+            viewModel.AddTime(30f);
+        }
+        
+        // 게임 재시작
+        hasUsedAdReward = true;
+        isGameActive = true;
+        
+        // 게임 종료 UI 비활성화
+        if (GameEndUI != null)
+        {
+            GameEndUI.SetActive(false);
+        }
+        
+        // 광고 시청 버튼 비활성화
+        if (WatchAdButton != null)
+        {
+            WatchAdButton.gameObject.SetActive(false);
+        }
+        
+        Debug.Log("게임 재시작! 추가 30초로 계속 진행하세요.");
+    }
+    
+    /// <summary>
+    /// 광고 보상 사용 여부 확인
+    /// </summary>
+    public bool HasUsedAdReward() => hasUsedAdReward;
+    
+    /// <summary>
+    /// 광고 보상 사용 가능 여부 확인
+    /// </summary>
+    public bool CanUseAdReward() => !hasUsedAdReward && !isGameActive;
 }
 

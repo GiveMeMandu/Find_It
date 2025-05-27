@@ -323,12 +323,22 @@ namespace UI
         // 아이템 효과용 메서드
         public void AddTime(float seconds)
         {
-            if (isTimerActive && gameManager != null && gameManager.IsGameActive())
+            if (gameManager != null)
             {
                 currentTime += seconds;
                 // 최대 시간 제한 (원래 시간 제한의 2배까지)
                 currentTime = Mathf.Min(currentTime, timeLimit * 2f);
-                Debug.Log($"{seconds}초 시간 추가됨. 현재 시간: {currentTime:F1}초");
+                
+                // 게임이 비활성화된 상태에서 시간을 추가하는 경우 (광고 보상) 타이머 재시작
+                if (!gameManager.IsGameActive())
+                {
+                    isTimerActive = true;
+                    Debug.Log($"게임 재시작! {seconds}초 시간 추가됨. 현재 시간: {currentTime:F1}초");
+                }
+                else
+                {
+                    Debug.Log($"{seconds}초 시간 추가됨. 현재 시간: {currentTime:F1}초");
+                }
             }
         }
         
