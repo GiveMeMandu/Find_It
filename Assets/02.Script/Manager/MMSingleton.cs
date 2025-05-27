@@ -22,7 +22,7 @@ public class MMSingleton<T> : MonoBehaviour where T : Component
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<T>();
+                _instance = FindAnyObjectByType<T>();
                 Create(true);
             }
             return _instance;

@@ -10,12 +10,17 @@ namespace OutGame
 {
     public class InGameSceneBase : SceneBase
     {
+        public bool isTimeChallenge = false;
         public LevelManager _levelManager;
         
         protected override void Start()
         {
             base.Start();
-            Global.UIManager.OpenPage<InGameMainPage>();
+            if(isTimeChallenge) {
+                Global.UIManager.OpenPage<TimeChallengeMainPage>();
+            } else {
+                Global.UIManager.OpenPage<InGameMainPage>();
+            }
             // if(_levelManager == null) {
             //     _levelManager = FindObjectOfType<LevelManager>();
             //     _levelManager.OnEndEvnt.Add(ClearStageTask);
@@ -26,7 +31,9 @@ namespace OutGame
 
         protected virtual void StartStageBase()
         {
-            _levelManager.gameObject.SetActive(true);
+            if(_levelManager != null) {
+                _levelManager.gameObject.SetActive(true);
+            }
             Global.UIManager.OpenPage<InGameIntroPage>();
         }
 

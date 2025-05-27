@@ -43,7 +43,16 @@ namespace UI.Page
         {
             _cts = new CancellationTokenSource();
             _curStage = Global.CurrentScene.SceneName.ToString();
-            _stageName = I2.Loc.LocalizationManager.GetTranslation("SceneName/" + _curStage);
+            
+            // Stage1_1 -> Stage1로 변환 (언더스코어 이후 제거)
+            string stageKey = _curStage;
+            int underscoreIndex = _curStage.IndexOf('_');
+            if (underscoreIndex > 0)
+            {
+                stageKey = _curStage.Substring(0, underscoreIndex);
+            }
+            
+            _stageName = I2.Loc.LocalizationManager.GetTranslation("SceneName/" + stageKey);
             
             DisableInputAndDestroyAsync(_cts.Token).Forget();
         }

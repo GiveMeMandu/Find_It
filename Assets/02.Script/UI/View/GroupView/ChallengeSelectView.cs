@@ -25,7 +25,22 @@ public class ChallengeSelectView : ViewModel
     [SerializeField] private List<Button> challengeButtons = new List<Button>();
     
     // 현재 선택된 챌린지 타입
-    private ChallengeType _selectedChallengeType = ChallengeType.None;
+    [SerializeField] private ChallengeType _selectedChallengeTypeField = ChallengeType.None;
+    
+    /// <summary>
+    /// 현재 선택된 챌린지 타입 (Inspector에서 확인 가능)
+    /// </summary>
+    public ChallengeType _selectedChallengeType
+    {
+        get => _selectedChallengeTypeField;
+        set
+        {
+            if (_selectedChallengeTypeField != value)
+            {
+                _selectedChallengeTypeField = value;
+            }
+        }
+    }
     
     /// <summary>
     /// 현재 선택된 챌린지 타입
@@ -41,7 +56,7 @@ public class ChallengeSelectView : ViewModel
     public bool IsHiddenPictureSelected
     {
         get => _isHiddenPictureSelected;
-        set
+        private set
         {
             _isHiddenPictureSelected = value;
             OnPropertyChanged(nameof(IsHiddenPictureSelected));
@@ -52,7 +67,7 @@ public class ChallengeSelectView : ViewModel
     public bool IsTimeChallengeSelected
     {
         get => _isTimeChallengeSelected;
-        set
+        private set
         {
             _isTimeChallengeSelected = value;
             OnPropertyChanged(nameof(IsTimeChallengeSelected));
@@ -63,7 +78,7 @@ public class ChallengeSelectView : ViewModel
     public bool IsPuzzleSelected
     {
         get => _isPuzzleSelected;
-        set
+        private set
         {
             _isPuzzleSelected = value;
             OnPropertyChanged(nameof(IsPuzzleSelected));
@@ -74,8 +89,9 @@ public class ChallengeSelectView : ViewModel
     void Start()
     {
         SetupChallengeButtons();
+        // 기본값을 HiddenPicture로 설정
+        SelectChallenge(ChallengeType.HiddenPicture);
     }
-
     /// <summary>
     /// 챌린지 버튼들의 클릭 이벤트를 설정합니다
     /// </summary>
@@ -103,29 +119,17 @@ public class ChallengeSelectView : ViewModel
             challengeButtons[2].onClick.RemoveAllListeners();
             challengeButtons[2].onClick.AddListener(() => SelectChallenge(ChallengeType.Puzzle));
         }
-        SelectChallenge(ChallengeType.HiddenPicture);
+        
         UpdateChallengeSelectionProperties();
     }
     
-    /// <summary>
-    /// 챌린지 타입을 선택합니다
-    /// </summary>
-    /// <param name="challengeType">선택할 챌린지 타입</param>
-    [Binding]
     public void SelectChallenge(ChallengeType challengeType)
     {
         _selectedChallengeType = challengeType;
         
-        // 선택된 챌린지에 따른 UI 업데이트나 피드백 처리
-        Debug.Log($"챌린지 선택됨: {challengeType}");
-        
         // 바인딩 프로퍼티 업데이트
         UpdateChallengeSelectionProperties();
     }
-    
-    /// <summary>
-    /// 챌린지 선택 상태 프로퍼티들을 업데이트합니다
-    /// </summary>
     private void UpdateChallengeSelectionProperties()
     {
         IsHiddenPictureSelected = (_selectedChallengeType == ChallengeType.HiddenPicture);
@@ -133,20 +137,6 @@ public class ChallengeSelectView : ViewModel
         IsPuzzleSelected = (_selectedChallengeType == ChallengeType.Puzzle);
     }
     
-    /// <summary>
-    /// 챌린지 선택을 해제합니다
-    /// </summary>
-    [Binding]
-    public void ClearChallengeSelection()
-    {
-        _selectedChallengeType = ChallengeType.None;
-        UpdateChallengeSelectionProperties();
-        Debug.Log("챌린지 선택 해제됨");
-    }
-    
-    /// <summary>
-    /// 현재 선택된 챌린지를 실행합니다
-    /// </summary>
     public void ExecuteSelectedChallenge()
     {
         if (_selectedChallengeType == ChallengeType.None)
@@ -194,11 +184,6 @@ public class ChallengeSelectView : ViewModel
         }
     }
     
-    /// <summary>
-    /// Stage1 시리즈 씬인지 확인합니다
-    /// </summary>
-    /// <param name="sceneName">확인할 씬 이름</param>
-    /// <returns>Stage1 시리즈이면 true</returns>
     private bool IsStage1Scene(SceneName sceneName)
     {
         return sceneName == SceneName.Stage1_1 || 
@@ -206,11 +191,6 @@ public class ChallengeSelectView : ViewModel
                sceneName == SceneName.Stage1_3;
     }
     
-    /// <summary>
-    /// Stage2 시리즈 씬인지 확인합니다
-    /// </summary>
-    /// <param name="sceneName">확인할 씬 이름</param>
-    /// <returns>Stage2 시리즈이면 true</returns>
     private bool IsStage2Scene(SceneName sceneName)
     {
         return sceneName == SceneName.Stage2_1 || 
@@ -218,24 +198,19 @@ public class ChallengeSelectView : ViewModel
                sceneName == SceneName.Stage2_3;
     }
     
-    /// <summary>
-    /// CloudRabbitStage 시리즈 씬인지 확인합니다
-    /// </summary>
-    /// <param name="sceneName">확인할 씬 이름</param>
-    /// <returns>CloudRabbitStage 시리즈이면 true</returns>
-    private bool IsCloudRabbitStageScene(SceneName sceneName)
+    private bool IsTimeChallengeStageScene(SceneName sceneName)
     {
-        return sceneName == SceneName.CloudRabbitStage1_1 || 
-               sceneName == SceneName.CloudRabbitStage1_2 || 
-               sceneName == SceneName.CloudRabbitStage1_3 ||
-               sceneName == SceneName.CloudRabbitStage2_1 || 
-               sceneName == SceneName.CloudRabbitStage2_2 || 
-               sceneName == SceneName.CloudRabbitStage2_3;
+        return sceneName == SceneName.TimeChallenge_STAGE1_1 || 
+               sceneName == SceneName.TimeChallenge_STAGE1_2 || 
+               sceneName == SceneName.TimeChallenge_STAGE1_3 ||
+               sceneName == SceneName.TimeChallenge_STAGE2_1 || 
+               sceneName == SceneName.TimeChallenge_STAGE2_2 || 
+               sceneName == SceneName.TimeChallenge_STAGE2_3 ||
+               sceneName == SceneName.TimeChallenge_STAGE3_1 || 
+               sceneName == SceneName.TimeChallenge_STAGE3_2 || 
+               sceneName == SceneName.TimeChallenge_STAGE3_3;
     }
     
-    /// <summary>
-    /// 타임 챌린지를 실행합니다 (CLOUD_RABBIT_STAGE, MapSelectView 인덱스 기반)
-    /// </summary>
     private void ExecuteTimeChallenge()
     {
         if (mapSelectView == null) return;
@@ -243,13 +218,13 @@ public class ChallengeSelectView : ViewModel
         int selectedStageIndex = mapSelectView.CurrentStageIndex;
         SceneName selectedSceneName = mapSelectView.CurrentSceneName;
         
-        // CloudRabbitStage 시리즈에 따라 해당하는 CLOUD_RABBIT_STAGE 인덱스 계산
-        int cloudRabbitStageIndex = GetCloudRabbitStageIndex(selectedSceneName, selectedStageIndex);
+        // TimeChallenge 시리즈에 따라 해당하는 TimeChallenge_STAGE 인덱스 계산
+        int timeChallengeStageIndex = GetTimeChallengeStageIndex(selectedSceneName, selectedStageIndex);
         
-        if (cloudRabbitStageIndex != -1)
+        if (timeChallengeStageIndex != -1)
         {
             // 직접 LoadingSceneManager 호출 (+4 로직 우회)
-            LoadingSceneManager.LoadScene(cloudRabbitStageIndex);
+            LoadingSceneManager.LoadScene(timeChallengeStageIndex);
         }
         else
         {
@@ -262,42 +237,70 @@ public class ChallengeSelectView : ViewModel
     /// </summary>
     private void ExecutePuzzleChallenge()
     {
-        Debug.Log("=== ExecutePuzzleChallenge 실행 ===");
-        Debug.Log($"SceneNum.PUZZLE 값: {SceneNum.PUZZLE}");
-        
         // 직접 LoadingSceneManager 호출 (+4 로직 우회)
         LoadingSceneManager.LoadScene(SceneNum.PUZZLE);
-        Debug.Log($"LoadingSceneManager.LoadScene({SceneNum.PUZZLE}) 호출 완료");
     }
     
-    /// <summary>
-    /// 선택된 씬과 스테이지에 따라 해당하는 CLOUD_RABBIT_STAGE 인덱스를 반환합니다
-    /// </summary>
-    /// <param name="sceneName">선택된 씬 이름</param>
-    /// <param name="stageIndex">선택된 스테이지 인덱스</param>
-    /// <returns>CLOUD_RABBIT_STAGE 인덱스, 해당 없으면 -1</returns>
-    private int GetCloudRabbitStageIndex(SceneName sceneName, int stageIndex)
+    private int GetTimeChallengeStageIndex(SceneName sceneName, int stageIndex)
     {
-        // 새로운 SceneName enum에 맞게 직접 매핑
-        switch (sceneName)
+        // 챌린지 타입에 따른 매핑
+        switch (_selectedChallengeType)
         {
-            // CloudRabbitStage1 시리즈
-            case SceneName.CloudRabbitStage1_1:
-                return SceneNum.CLOUD_RABBIT_STAGE1_1;
-            case SceneName.CloudRabbitStage1_2:
-                return SceneNum.CLOUD_RABBIT_STAGE1_2;
-            case SceneName.CloudRabbitStage1_3:
-                return SceneNum.CLOUD_RABBIT_STAGE1_3;
+            case ChallengeType.TimeChallenge:
+                // Stage1, Stage2 씬에서 선택된 경우 해당하는 TimeChallenge 씬으로 매핑
+                switch (sceneName)
+                {
+                    // Stage1 시리즈 → TimeChallenge_STAGE1 시리즈
+                    case SceneName.Stage1_1:
+                        return SceneNum.TimeChallenge_STAGE1_1;
+                    case SceneName.Stage1_2:
+                        return SceneNum.TimeChallenge_STAGE1_2;
+                    case SceneName.Stage1_3:
+                        return SceneNum.TimeChallenge_STAGE1_3;
+                        
+                    // Stage2 시리즈 → TimeChallenge_STAGE2 시리즈
+                    case SceneName.Stage2_1:
+                        return SceneNum.TimeChallenge_STAGE2_1;
+                    case SceneName.Stage2_2:
+                        return SceneNum.TimeChallenge_STAGE2_2;
+                    case SceneName.Stage2_3:
+                        return SceneNum.TimeChallenge_STAGE2_3;
+                        
+                    // TimeChallenge 시리즈는 그대로 매핑
+                    case SceneName.TimeChallenge_STAGE1_1:
+                        return SceneNum.TimeChallenge_STAGE1_1;
+                    case SceneName.TimeChallenge_STAGE1_2:
+                        return SceneNum.TimeChallenge_STAGE1_2;
+                    case SceneName.TimeChallenge_STAGE1_3:
+                        return SceneNum.TimeChallenge_STAGE1_3;
+                    case SceneName.TimeChallenge_STAGE2_1:
+                        return SceneNum.TimeChallenge_STAGE2_1;
+                    case SceneName.TimeChallenge_STAGE2_2:
+                        return SceneNum.TimeChallenge_STAGE2_2;
+                    case SceneName.TimeChallenge_STAGE2_3:
+                        return SceneNum.TimeChallenge_STAGE2_3;
+                    case SceneName.TimeChallenge_STAGE3_1:
+                        return SceneNum.TimeChallenge_STAGE3_1;
+                    case SceneName.TimeChallenge_STAGE3_2:
+                        return SceneNum.TimeChallenge_STAGE3_2;
+                    case SceneName.TimeChallenge_STAGE3_3:
+                        return SceneNum.TimeChallenge_STAGE3_3;
+                }
+                break;
                 
-            // CloudRabbitStage2 시리즈
-            case SceneName.CloudRabbitStage2_1:
-                return SceneNum.CLOUD_RABBIT_STAGE2_1;
-            case SceneName.CloudRabbitStage2_2:
-                return SceneNum.CLOUD_RABBIT_STAGE2_2;
-            case SceneName.CloudRabbitStage2_3:
-                return SceneNum.CLOUD_RABBIT_STAGE2_3;
+            // 다른 챌린지 타입들도 필요에 따라 추가 가능
+            case ChallengeType.HiddenPicture:
+                // 숨은 그림찾기는 원본 스테이지 그대로 사용
+                Debug.LogWarning("숨은 그림찾기는 GetTimeChallengeStageIndex를 사용하지 않아야 합니다.");
+                break;
+                
+            case ChallengeType.Puzzle:
+                // 퍼즐은 고정된 PUZZLE 씬 사용
+                Debug.LogWarning("퍼즐은 GetTimeChallengeStageIndex를 사용하지 않아야 합니다.");
+                break;
         }
         
+        Debug.LogWarning($"매핑되지 않은 조합: 씬={sceneName}, 챌린지={_selectedChallengeType}");
         return -1;
     }
     
@@ -313,7 +316,7 @@ public class ChallengeSelectView : ViewModel
     /// <summary>
     /// 통합 게임 시작 메서드 - 챌린지 선택 여부에 따라 적절한 메서드 실행
     /// </summary>
-    
+    [Binding]
     public void StartGame()
     {
         if (_selectedChallengeType == ChallengeType.None)
@@ -333,11 +336,6 @@ public class ChallengeSelectView : ViewModel
             // 챌린지가 선택된 경우 - 선택된 챌린지 실행
             ExecuteSelectedChallenge();
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 }

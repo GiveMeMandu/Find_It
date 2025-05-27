@@ -416,7 +416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAutoConnection: 1
-  viewModelMethodName: UI.InGameViewModel.UseStopwatch
+  viewModelMethodName: UI.InGameItemViewModel.UseStopwatch
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &1032990942542741258
 GameObject:
@@ -2600,7 +2600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAutoConnection: 1
-  viewModelMethodName: UI.InGameViewModel.UseCompass
+  viewModelMethodName: UI.InGameItemViewModel.UseCompass
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &2725215144083023357
 GameObject:
@@ -3315,7 +3315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAutoConnection: 1
-  viewModelMethodName: UI.InGameViewModel.UseHint
+  viewModelMethodName: UI.InGameItemViewModel.UseHint
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &3685871422504956587
 GameObject:
@@ -4149,7 +4149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAutoConnection: 1
-  viewModelMethodName: UI.InGameViewModel.UseStopwatch
+  viewModelMethodName: UI.InGameItemViewModel.UseStopwatch
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &4454842916332210151
 GameObject:
@@ -4516,7 +4516,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAutoConnection: 1
-  viewModelMethodName: UI.InGameViewModel.UseHint
+  viewModelMethodName: UI.InGameItemViewModel.UseHint
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &4801819217931363321
 GameObject:
@@ -10575,6 +10575,7 @@ GameObject:
   - component: {fileID: 8233476207588720694}
   - component: {fileID: 8233476207588720697}
   - component: {fileID: 2879667802839436474}
+  - component: {fileID: 2706855082329677236}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -10683,6 +10684,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2e5370a199aba5488a340f82de3f21b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2706855082329677236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8233476207588720699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22fa032b9a5a00f44aaa050e4a5b6ec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8233476207608699567
@@ -11658,7 +11671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAutoConnection: 1
-  viewModelMethodName: UI.InGameViewModel.UseCompass
+  viewModelMethodName: UI.InGameItemViewModel.UseCompass
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &8689138523283914572
 GameObject:
@@ -12772,7 +12785,7 @@ MonoBehaviour:
   _isAutoConnection: 1
   viewAdapterId: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: UI.InGameViewModel.HintCountText
+  viewModelPropertyName: UI.InGameItemViewModel.HintCountText
   viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!1001 &1102276150646001402
 PrefabInstance:
@@ -12919,7 +12932,7 @@ MonoBehaviour:
   _isAutoConnection: 1
   viewAdapterId: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: UI.InGameViewModel.CompassCountText
+  viewModelPropertyName: UI.InGameItemViewModel.CompassCountText
   viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!1001 &1113421186085236453
 PrefabInstance:
@@ -13245,7 +13258,7 @@ MonoBehaviour:
   _isAutoConnection: 1
   viewAdapterId: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: UI.InGameViewModel.CompassCountText
+  viewModelPropertyName: UI.InGameItemViewModel.CompassCountText
   viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!1001 &4380644337046894274
 PrefabInstance:
@@ -13753,7 +13766,7 @@ MonoBehaviour:
   _isAutoConnection: 1
   viewAdapterId: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: UI.InGameViewModel.StopwatchCountText
+  viewModelPropertyName: UI.InGameItemViewModel.StopwatchCountText
   viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!224 &5047291597264274331 stripped
 RectTransform:
@@ -13905,7 +13918,7 @@ MonoBehaviour:
   _isAutoConnection: 1
   viewAdapterId: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: UI.InGameViewModel.StopwatchCountText
+  viewModelPropertyName: UI.InGameItemViewModel.StopwatchCountText
   viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!1001 &8233476206337039571
 PrefabInstance:
@@ -14782,5 +14795,5 @@ MonoBehaviour:
   _isAutoConnection: 1
   viewAdapterId: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: UI.InGameViewModel.HintCountText
+  viewModelPropertyName: UI.InGameItemViewModel.HintCountText
   viewPropertyName: TMPro.TextMeshProUGUI.text

@@ -19,15 +19,15 @@ namespace Data
         public const int PUZZLE = 10;
         public const int CLOUD_RABBIT = 11;
         public const int CREDIT = 12;
-        public const int CLOUD_RABBIT_STAGE1_1 = 13;
-        public const int CLOUD_RABBIT_STAGE1_2 = 14;
-        public const int CLOUD_RABBIT_STAGE1_3 = 15;
-        public const int CLOUD_RABBIT_STAGE2_1 = 16;
-        public const int CLOUD_RABBIT_STAGE2_2 = 17;
-        public const int CLOUD_RABBIT_STAGE2_3 = 18;
-        public const int CLOUD_RABBIT_STAGE3_1 = 19;
-        public const int CLOUD_RABBIT_STAGE3_2 = 20;
-        public const int CLOUD_RABBIT_STAGE3_3 = 21;
+        public const int TimeChallenge_STAGE1_1 = 13;
+        public const int TimeChallenge_STAGE1_2 = 14;
+        public const int TimeChallenge_STAGE1_3 = 15;
+        public const int TimeChallenge_STAGE2_1 = 16;
+        public const int TimeChallenge_STAGE2_2 = 17;
+        public const int TimeChallenge_STAGE2_3 = 18;
+        public const int TimeChallenge_STAGE3_1 = 19;
+        public const int TimeChallenge_STAGE3_2 = 20;
+        public const int TimeChallenge_STAGE3_3 = 21;
     
     }
     public enum SceneName{
@@ -44,12 +44,15 @@ namespace Data
         Puzzle,
         CloudRabbit,
         Credit,
-        CloudRabbitStage1_1,
-        CloudRabbitStage1_2,
-        CloudRabbitStage1_3,
-        CloudRabbitStage2_1,
-        CloudRabbitStage2_2,
-        CloudRabbitStage2_3,
+        TimeChallenge_STAGE1_1,
+        TimeChallenge_STAGE1_2,
+        TimeChallenge_STAGE1_3,
+        TimeChallenge_STAGE2_1,
+        TimeChallenge_STAGE2_2,
+        TimeChallenge_STAGE2_3,
+        TimeChallenge_STAGE3_1,
+        TimeChallenge_STAGE3_2,
+        TimeChallenge_STAGE3_3,
     }
     public class SceneData
     {
