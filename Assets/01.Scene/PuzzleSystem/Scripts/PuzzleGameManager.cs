@@ -8,6 +8,8 @@ using Data;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Manager;
+using UnityWeld;
+using UI.Page;
 
 public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
 {
@@ -28,6 +30,7 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
     private bool isAnimating = false;
     private bool isGameCompleted = false;
     private InputManager inputManager;
+    private DateTime startTime;
 
     public PuzzleData[] PuzzleDataList => puzzleDataList;
     public bool IsGamePaused => isGamePaused;
@@ -54,6 +57,50 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         {
             completionParticleEffect.SetActive(false);
         }
+        
+        // MainMenuSelectedManager에서 선택된 스테이지로 자동 시작
+        AutoStartSelectedStage();
+    }
+    
+    /// <summary>
+    /// MainMenuSelectedManager에서 선택된 스테이지로 자동 시작합니다
+    /// </summary>
+    private void AutoStartSelectedStage()
+    {
+        if (Global.MainMenuSelectedManager != null && Global.MainMenuSelectedManager.HasSelectedStage())
+        {
+            SceneName selectedScene = Global.MainMenuSelectedManager.SelectedSceneName;
+            SceneInfo selectedStageInfo = Global.MainMenuSelectedManager.SelectedStageInfo;
+            
+            if (selectedStageInfo == null)
+            {
+                Debug.LogWarning("[PuzzleGameManager] Selected stage info is null");
+                return;
+            }
+            
+            Debug.Log($"[PuzzleGameManager] Auto-starting selected stage - Scene: {selectedScene}, StageIndex: {selectedStageInfo.stageIndex}");
+            
+            // 선택된 씬과 스테이지 인덱스로 퍼즐 초기화
+            InitializePuzzle(selectedScene, selectedStageInfo.stageIndex);
+            
+            // UI 처리는 퍼즐 초기화 성공 후에만 실행
+            if (currentPuzzleData != null)
+            {
+                // 타이머 카운트 페이지 열기
+                var timerPage = Global.UIManager.OpenPage<TimerCountPage>();
+                PauseGame(); // 게임 일시정지
+
+                // 3초 타이머 설정 및 완료 후 게임 재개
+                timerPage.SetTimer(3, () => {
+                    ResumeGame();
+                    Global.UIManager.OpenPage<PuzzleInGamePage>();
+                });
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[PuzzleGameManager] No stage selected in MainMenuSelectedManager");
+        }
     }
 
     private void OnDestroy()
@@ -75,9 +122,20 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
             completionParticleEffect.SetActive(false);
         }
         
+        // puzzleDataList null 체크
+        if (puzzleDataList == null || puzzleDataList.Length == 0)
+        {
+            Debug.LogWarning("[PuzzleGameManager] puzzleDataList is null or empty");
+            return;
+        }
+        
         // sceneName과 stageIndex에 맞는 퍼즐 찾기
         currentPuzzleData = puzzleDataList.FirstOrDefault(p => p.sceneName == sceneName && p.stageIndex == stageIndex);
-        if (currentPuzzleData == null) return;
+        if (currentPuzzleData == null) 
+        {
+            Debug.LogWarning($"[PuzzleGameManager] No puzzle data found for Scene: {sceneName}, StageIndex: {stageIndex}");
+            return;
+        }
 
         // 기존 피스들 제거
         foreach (var piece in pieces)
@@ -89,6 +147,10 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         // 퍼즐 생성
         CreateGamePieces(currentPuzzleData, 0.01f);
         StartCoroutine(WaitShuffle(0.5f));
+        
+        // 게임 시작 시간 기록
+        startTime = DateTime.Now;
+        
         OnPuzzleStarted?.Invoke();
     }
 
@@ -219,6 +281,9 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         {
             completionParticleEffect.SetActive(true);
         }
+        
+        // 퍼즐 완성 시 GameEndPage 열기
+        ShowGameEndPage();
         
         OnPuzzleCompleted?.Invoke();
     }
@@ -353,5 +418,36 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
         uv[3] = new Vector2((width * (col + 1)) - gap/2, 1 - ((width * row) + gap/2));
         
         mesh.uv = uv;
+    }
+    
+    /// <summary>
+    /// 게임 종료 페이지를 표시합니다
+    /// </summary>
+    private void ShowGameEndPage()
+    {
+        // 게임 플레이 시간 계산
+        var endTime = DateTime.Now;
+        var gameTime = endTime.Subtract(startTime);
+        
+        // 스테이지 이름 생성
+        string stageName = "Puzzle";
+        if (currentPuzzleData != null && !string.IsNullOrEmpty(currentPuzzleData.puzzleName))
+        {
+            stageName = currentPuzzleData.puzzleName;
+        }
+        else if (Global.MainMenuSelectedManager != null && Global.MainMenuSelectedManager.HasSelectedStage())
+        {
+            var selectedStageInfo = Global.MainMenuSelectedManager.SelectedStageInfo;
+            stageName = $"Stage {selectedStageInfo.stageIndex + 1}";
+        }
+        
+        // GameEndPage 열기
+        var gameEndPage = Global.UIManager.OpenPage<GameEndPage>();
+        if (gameEndPage != null)
+        {
+            gameEndPage.SetPuzzleGameResult(gameTime, stageName);
+        }
+        
+        Debug.Log($"[PuzzleGameManager] Game completed in {gameTime:mm\\:ss} - {stageName}");
     }
 }

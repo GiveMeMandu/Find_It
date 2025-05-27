@@ -197,7 +197,9 @@ public class StretchVFXGroupSetting : MonoBehaviour
                 clickEvent.OnClickEvent = new UnityEvent();
                 
             // 계층구조 저장을 통해 이벤트가 유지되도록 보장
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(clickEvent);
+#endif
             
             Debug.Log($"ClickEvent의 모든 이벤트 필드가 초기화되었습니다.");
         }
@@ -268,7 +270,9 @@ public class StretchVFXGroupSetting : MonoBehaviour
             }
             
             // 계층구조 저장
+#if UNITY_EDITOR
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
+#endif
             
             Debug.Log("모든 이벤트 연결을 확인하고 수정했습니다.");
         }

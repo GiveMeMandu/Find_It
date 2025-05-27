@@ -24,7 +24,7 @@ namespace OutGame
 
         {
             base.Start();
-            puzzlePage = Global.UIManager.OpenPage<PuzzlePage>();
+            // puzzlePage = Global.UIManager.OpenPage<PuzzlePage>();
             if (puzzlePage != null)
             {
                 pageSlideEffect = puzzlePage.GetComponent<PageSlideEffect>();

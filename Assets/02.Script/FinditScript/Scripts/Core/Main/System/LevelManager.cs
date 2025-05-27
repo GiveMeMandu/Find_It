@@ -127,8 +127,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             CollectHiddenObjects();
             BuildDictionary();
             ScrollViewTrigger();
-            ToggleBtn.onClick.AddListener(ToggleScrollView);
-            GameEndBtn.onClick.AddListener(() => { SceneManager.LoadScene(NextLevelName); });
+            
+            // 버튼들 null 체크
+            if (ToggleBtn != null)
+                ToggleBtn.onClick.AddListener(ToggleScrollView);
+            if (GameEndBtn != null)
+                GameEndBtn.onClick.AddListener(() => { SceneManager.LoadScene(NextLevelName); });
+                
             StartTime = DateTime.Now;
 
             if (Canvas != null)
@@ -216,11 +221,27 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void ScrollViewTrigger()
         {
+            // ScrollView들이 null인지 체크
+            if (HorizontalScrollView == null || VerticalScrollView == null)
+            {
+                Debug.LogWarning("[LevelManager] HorizontalScrollView or VerticalScrollView is null");
+                return;
+            }
+            
             CurrentScrollView = UIScrollType == UIScrollType.Horizontal ? HorizontalScrollView : VerticalScrollView;
-            HorizontalScrollView.mainPanel.SetActive(false);
-            VerticalScrollView.mainPanel.SetActive(false);
-            CurrentScrollView.Initialize();
-            CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+            
+            // mainPanel null 체크
+            if (HorizontalScrollView.mainPanel != null)
+                HorizontalScrollView.mainPanel.SetActive(false);
+            if (VerticalScrollView.mainPanel != null)
+                VerticalScrollView.mainPanel.SetActive(false);
+                
+            // CurrentScrollView null 체크
+            if (CurrentScrollView != null)
+            {
+                CurrentScrollView.Initialize();
+                CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+            }
         }
 
         private void UIClick()
@@ -232,6 +253,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             TargetObjDic = new Dictionary<Guid, HiddenObjGroup>();
 
+            // TargetObjs null 체크 및 추가
             if (TargetObjs != null && TargetObjs.Length > 0)
             {
                 normalHiddenObjs.AddRange(TargetObjs);
@@ -269,19 +291,28 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             hiddenObjCount = TargetObjDic.Sum(x => x.Value.TotalCount);
 
             RabbitObjDic = new Dictionary<Guid, HiddenObj>();
-            foreach (var rabbit in RabbitObjs)
+            
+            // RabbitObjs null 체크
+            if (RabbitObjs != null)
             {
-                if (rabbit != null)
+                foreach (var rabbit in RabbitObjs)
                 {
-                    Guid guid = Guid.NewGuid();
-                    RabbitObjDic.Add(guid, rabbit);
+                    if (rabbit != null)
+                    {
+                        Guid guid = Guid.NewGuid();
+                        RabbitObjDic.Add(guid, rabbit);
 
-                    rabbit.TargetClickAction = () => { TargetClick(guid); };
+                        rabbit.TargetClickAction = () => { TargetClick(guid); };
+                    }
                 }
             }
+            
             maxRabbitObjCount = RabbitObjDic.Count;
             rabbitObjCount = 0;
-            RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
+            
+            // RabbitCountText null 체크
+            if (RabbitCountText != null)
+                RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
             if (!IsRandomItem) return;
 
             var randomIndex = new List<int>();
@@ -334,14 +365,18 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private void FoundObjAction(Guid guid)
         {
             var group = TargetObjDic[guid];
-            if (group.Representative.PlaySoundWhenFound)
+            if (group.Representative.PlaySoundWhenFound && FoundFx != null)
                 FoundFx.Play();
 
             var clickedObj = group.LastClickedObject;
             if (clickedObj != null && !group.IsObjectFound(clickedObj))
             {
                 group.MarkObjectAsFound(clickedObj);
-                CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+                
+                // CurrentScrollView null 체크
+                if (CurrentScrollView != null)
+                    CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+                    
                 hiddenObjCount--;
                 OnFoundObj?.Invoke(this, clickedObj);
 
@@ -352,12 +387,16 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         }
         private void FoundRabbitObjAction(Guid guid)
         {
-            if (RabbitObjDic[guid].PlaySoundWhenFound)
+            if (RabbitObjDic[guid].PlaySoundWhenFound && FoundFx != null)
                 FoundFx.Play();
 
             RabbitObjDic.Remove(guid);
             rabbitObjCount++;
-            RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
+            
+            // RabbitCountText null 체크
+            if (RabbitCountText != null)
+                RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
+                
             DetectGameEnd();
         }
 

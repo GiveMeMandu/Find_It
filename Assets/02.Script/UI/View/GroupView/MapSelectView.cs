@@ -218,6 +218,12 @@ namespace UnityWeld
         {
             var main = Global.CurrentScene as OutGame.MainMenu;
             
+            // MainMenuSelectedManager에 현재 선택된 스테이지 정보 저장
+            if (Global.MainMenuSelectedManager != null)
+            {
+                Global.MainMenuSelectedManager.SetSelectedStage(_currentSceneName, _currentStageIndex, CurrentStageInfo);
+            }
+            
             // ChallengeSelectView가 있는지 확인하고 챌린지가 선택되었는지 확인
             var challengeSelectView = FindAnyObjectByType<ChallengeSelectView>();
             if (challengeSelectView != null && challengeSelectView.SelectedChallengeType != ChallengeType.None)

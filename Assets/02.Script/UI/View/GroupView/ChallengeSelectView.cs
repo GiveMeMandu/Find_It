@@ -291,6 +291,19 @@ public class ChallengeSelectView : ViewModel
     /// </summary>
     private void ExecutePuzzleChallenge()
     {
+        if (mapSelectView == null) return;
+        
+        // MainMenuSelectedManager에 현재 선택된 스테이지 정보 저장
+        if (Global.MainMenuSelectedManager != null)
+        {
+            SceneName selectedSceneName = mapSelectView.CurrentSceneName;
+            int selectedStageIndex = mapSelectView.CurrentStageIndex;
+            SceneInfo selectedStageInfo = mapSelectView.CurrentStageInfo;
+            
+            Global.MainMenuSelectedManager.SetSelectedStage(selectedSceneName, selectedStageIndex, selectedStageInfo);
+            Debug.Log($"[ChallengeSelectView] Puzzle challenge - Stage info saved - Scene: {selectedSceneName}, StageIndex: {selectedStageIndex}");
+        }
+        
         // 직접 LoadingSceneManager 호출 (+4 로직 우회)
         LoadingSceneManager.LoadScene(SceneNum.PUZZLE);
     }

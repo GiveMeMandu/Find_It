@@ -22,6 +22,7 @@ namespace Manager
         public static CashManager CashManager { get; set; }
         public static SpinTicketManager SpinTicketManager { get; set; }
         public static ItemManager ItemManager { get; set; }
+        public static MainMenuSelectedManager MainMenuSelectedManager { get; set; }
         // public static GameStateManager GameStateManager { get; set; }
         public static InputManager InputManager { get; set; }
         // public static OptionManager OptionManager { get; private set; }
@@ -107,6 +108,11 @@ namespace Manager
             {
                 GoogleMobileAdsManager = Instantiate(Resources.Load<GoogleMobileAdsManager>(prefixManager + nameof(GoogleMobileAdsManager)), transform);
                 GoogleMobileAdsManager.name = nameof(GoogleMobileAdsManager);
+            }
+            if (MainMenuSelectedManager == null)
+            {
+                MainMenuSelectedManager = Instantiate(Resources.Load<MainMenuSelectedManager>(prefixManager + nameof(MainMenuSelectedManager)), transform);
+                MainMenuSelectedManager.name = nameof(MainMenuSelectedManager);
             }
         }
     }

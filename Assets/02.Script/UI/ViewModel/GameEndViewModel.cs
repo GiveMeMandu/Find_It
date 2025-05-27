@@ -14,12 +14,20 @@ namespace UI
         [Binding]
         public void OnClickHomeBtn()
         {
-            LoadingSceneManager.LoadScene((int)SceneName.Start);
+            LoadingSceneManager.LoadScene(SceneNum.START);
         }
         [Binding]
         public void OnClickRetryBtn()
         {
-            LoadingSceneManager.LoadScene((int)Global.CurrentScene.SceneName);
+            if (Global.CurrentScene != null)
+            {
+                LoadingSceneManager.LoadScene((int)Global.CurrentScene.SceneName);
+            }
+            else
+            {
+                // CurrentScene이 null인 경우 현재 씬 재로드
+                LoadingSceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+            }
         }
     }
 }

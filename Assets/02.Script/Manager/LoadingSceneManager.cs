@@ -61,18 +61,22 @@ namespace Manager
             float nextUpdateTime = Time.realtimeSinceStartup;
             const float updateInterval = 0.016f;
             
-            // 첫 80%까지 3초 동안 부드럽게 증가
-            while (elapsedTime < 3.0f)
+            // 첫 80%까지 1초 동안 부드럽게 증가
+            while (elapsedTime < 1.0f)
             {
                 await UniTask.DelayFrame(1, PlayerLoopTiming.LastPostLateUpdate);
                 elapsedTime += Time.unscaledDeltaTime;
                 
                 if (Time.realtimeSinceStartup >= nextUpdateTime)
                 {
-                    float progress = Mathf.Lerp(0f, 0.8f, elapsedTime / 3.0f);
+                    float progress = Mathf.Lerp(0f, 0.8f, elapsedTime / 1.0f);
                     await UniTask.SwitchToMainThread();
-                    progressBar.value = progress;
-                    percentText.text = $"{(progress * 100f):F0}%";
+                    
+                    if (progressBar != null)
+                        progressBar.value = progress;
+                    if (percentText != null)
+                        percentText.text = $"{(progress * 100f):F0}%";
+                    
                     nextUpdateTime = Time.realtimeSinceStartup + updateInterval;
                 }
             }
@@ -85,23 +89,29 @@ namespace Manager
                     await UniTask.DelayFrame(2, PlayerLoopTiming.LastUpdate);
                     await UniTask.SwitchToMainThread();
                     float progress = Mathf.Lerp(0.8f, 0.9f, op.progress / 0.9f);
-                    progressBar.value = progress;
-                    percentText.text = $"{(progress * 100f):F0}%";
+                    
+                    if (progressBar != null)
+                        progressBar.value = progress;
+                    if (percentText != null)
+                        percentText.text = $"{(progress * 100f):F0}%";
                 }
             });
 
-            // 마지막 90%에서 100%까지 2초 동안 부드럽게 증가
+            // 마지막 90%에서 100%까지 0.5초 동안 부드럽게 증가
             elapsedTime = 0f;
             await UniTask.Create(async () =>
             {
-                while (elapsedTime < 2.0f)
+                while (elapsedTime < 0.5f)
                 {
                     await UniTask.DelayFrame(1, PlayerLoopTiming.LastUpdate);
                     elapsedTime += Time.unscaledDeltaTime;
-                    float progress = Mathf.Lerp(0.9f, 1f, elapsedTime / 2.0f);
+                    float progress = Mathf.Lerp(0.9f, 1f, elapsedTime / 0.5f);
                     await UniTask.SwitchToMainThread();
-                    progressBar.value = progress;
-                    percentText.text = $"{(progress * 100f):F0}%";
+                    
+                    if (progressBar != null)
+                        progressBar.value = progress;
+                    if (percentText != null)
+                        percentText.text = $"{(progress * 100f):F0}%";
                     
                     if (progress > 0.99f)
                     {
@@ -111,13 +121,19 @@ namespace Manager
                             loadingTextCTS.Cancel();
                             loadingTextCTS.Dispose();
                         }
-                        progressBar.value = 1;
-                        percentText.text = "100%";
-                        loadingText.text = "Complete!";
-                        loadingText.transform.localScale = Vector3.one * 1.7f;
                         
-                        // 1초 더 대기
-                        await UniTask.Delay(1000);
+                        if (progressBar != null)
+                            progressBar.value = 1;
+                        if (percentText != null)
+                            percentText.text = "100%";
+                        if (loadingText != null)
+                        {
+                            loadingText.text = "Complete!";
+                            loadingText.transform.localScale = Vector3.one * 1.7f;
+                        }
+                        
+                        // 0.3초만 대기
+                        await UniTask.Delay(300);
                         op.allowSceneActivation = true;
                         break;
                     }
@@ -145,7 +161,8 @@ namespace Manager
             {
                 while (!token.IsCancellationRequested)
                 {
-                    loadingText.text = $"Now Loading{dots[dotIndex]}";
+                    if (loadingText != null)
+                        loadingText.text = $"Now Loading{dots[dotIndex]}";
                     dotIndex = (dotIndex + 1) % dots.Length;
                     await UniTask.Delay(500, cancellationToken: token); // 0.5초 대기
                 }

@@ -33,18 +33,26 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         // public 속성 추가
         public int FoundSetsCount => foundSets.Count;
-        public int TotalSetsCount => itemSetDataList.Count;
+        public int TotalSetsCount => itemSetDataList?.Count ?? 0;
         public bool AllSetsFoundAndWaitingForClicks => allSetsFoundAndWaitingForClicks;
 
         private void Start()
         {
-            if(itemSetDataList.Count != 0)
+            // itemSetDataList null 체크
+            if (itemSetDataList != null && itemSetDataList.Count != 0)
             {
                 // 각 세트별로 완료된 그룹을 추적하기 위한 초기화
                 foreach (var setData in itemSetDataList)
                 {
-                    completedGroups[setData.SetName] = new HashSet<string>();
+                    if (setData != null && !string.IsNullOrEmpty(setData.SetName))
+                    {
+                        completedGroups[setData.SetName] = new HashSet<string>();
+                    }
                 }
+            }
+            else
+            {
+                Debug.LogWarning("[ItemSetManager] itemSetDataList is null or empty");
             }
 
             // LevelManager의 OnFoundObj 이벤트 구독
@@ -52,16 +60,22 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 LevelManager.Instance.OnFoundObj += OnObjectFound;
             }
-
         }
 
         private void OnObjectFound(object sender, HiddenObj obj)
         {
+            // obj null 체크
+            if (obj == null) return;
+            
             string groupName = GetGroupName(obj);
+            if (string.IsNullOrEmpty(groupName)) return;
+            
+            // itemSetDataList null 체크
+            if (itemSetDataList == null) return;
             
             foreach (var setData in itemSetDataList)
             {
-                if (setData.RequiredGroups.Contains(groupName))
+                if (setData != null && setData.RequiredGroups != null && setData.RequiredGroups.Contains(groupName))
                 {
                     var (exists, isComplete, _) = LevelManager.Instance.GetGroupStatus(groupName);
                     if(exists)
@@ -71,8 +85,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     }
                     if (exists && isComplete)
                     {
-                        completedGroups[setData.SetName].Add(groupName);
-                        CheckSetCompletion(setData);
+                        if (completedGroups.ContainsKey(setData.SetName))
+                        {
+                            completedGroups[setData.SetName].Add(groupName);
+                            CheckSetCompletion(setData);
+                        }
                     }
                 }
             }
@@ -108,16 +125,22 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void CheckAllSetsFound()
         {
+            // itemSetDataList null 체크
+            if (itemSetDataList == null) return;
+            
             if (foundSets.Count == itemSetDataList.Count)
             {
                 OnAllSetsFound?.Invoke(null);
                 allSetsFoundAndWaitingForClicks = true;
                 
                 // LevelManager의 종료 이벤트에 등록 - 모든 SetCompletionObject가 클릭될 때까지 대기
-                LevelManager.Instance.OnEndEvnt.Add(async () => 
+                if (LevelManager.Instance != null)
                 {
-                    await WaitForAllCompletionObjectsClicked();
-                });
+                    LevelManager.Instance.OnEndEvnt.Add(async () => 
+                    {
+                        await WaitForAllCompletionObjectsClicked();
+                    });
+                }
             }
         }
 

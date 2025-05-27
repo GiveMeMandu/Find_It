@@ -301,14 +301,6 @@ namespace UI
 
         private async UniTaskVoid CompassEffectAsync()
         {
-            var timeChallengeManager = TimeChallengeManager.Instance;
-            if (timeChallengeManager == null)
-            {
-                Debug.LogError("TimeChallengeManager를 찾을 수 없습니다.");
-                IsCompassActive = false;
-                return;
-            }
-
             float elapsedTime = 0f;
             var hintedObjects = new System.Collections.Generic.HashSet<System.Guid>();
             HiddenObj currentTargetObject = null;
@@ -327,7 +319,7 @@ namespace UI
                         hintedObjects.Add(currentTargetGuid);
                     }
 
-                    var closestObject = FindClosestUnfoundObject(timeChallengeManager, hintedObjects);
+                    var closestObject = FindClosestUnfoundObject(hintedObjects);
                     
                     if (closestObject.HasValue)
                     {
@@ -361,7 +353,7 @@ namespace UI
             Debug.Log($"나침판 효과 종료. 총 {CompassHintCount}개 힌트 제공됨");
         }
 
-        private (System.Guid guid, HiddenObj rabbit)? FindClosestUnfoundObject(TimeChallengeManager manager, System.Collections.Generic.HashSet<System.Guid> excludeGuids)
+        private (System.Guid guid, HiddenObj rabbit)? FindClosestUnfoundObject(System.Collections.Generic.HashSet<System.Guid> excludeGuids)
         {
             Camera mainCamera = Camera.main;
             if (mainCamera == null) return null;
@@ -369,7 +361,7 @@ namespace UI
             // 카메라의 현재 위치를 기준으로 계산
             Vector3 cameraPosition = mainCamera.transform.position;
 
-            var rabbitDict = GetRabbitDictionary(manager);
+            var rabbitDict = GetHiddenObjectDictionary();
             if (rabbitDict == null) return null;
 
             float closestDistance = float.MaxValue;
@@ -421,15 +413,60 @@ namespace UI
             return Quaternion.Euler(0f, 0f, angle);
         }
 
-        private System.Collections.Generic.Dictionary<System.Guid, HiddenObj> GetRabbitDictionary(TimeChallengeManager manager)
+        private System.Collections.Generic.Dictionary<System.Guid, HiddenObj> GetHiddenObjectDictionary()
         {
-            // TimeChallengeManager의 private 필드에 접근하기 위해 리플렉션 사용
-            var fieldInfo = typeof(TimeChallengeManager).GetField("rabbitObjDic", 
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            
-            if (fieldInfo != null)
+            // TimeChallengeManager 먼저 확인 (자동 생성 없이)
+            var timeChallengeManager = TimeChallengeManager.TryGetInstance();
+            if (timeChallengeManager != null)
             {
-                return fieldInfo.GetValue(manager) as System.Collections.Generic.Dictionary<System.Guid, HiddenObj>;
+                // TimeChallengeManager의 private 필드에 접근하기 위해 리플렉션 사용
+                var fieldInfo = typeof(TimeChallengeManager).GetField("rabbitObjDic", 
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                
+                if (fieldInfo != null)
+                {
+                    var dict = fieldInfo.GetValue(timeChallengeManager) as System.Collections.Generic.Dictionary<System.Guid, HiddenObj>;
+                    if (dict != null && dict.Count > 0)
+                    {
+                        return dict;
+                    }
+                }
+            }
+
+            // LevelManager 확인 (자동 생성 없이)
+            var levelManager = LevelManager.TryGetInstance();
+            if (levelManager != null)
+            {
+                // LevelManager의 TargetObjDic에서 HiddenObj들을 추출
+                var result = new System.Collections.Generic.Dictionary<System.Guid, HiddenObj>();
+                
+                if (levelManager.TargetObjDic != null)
+                {
+                    foreach (var kvp in levelManager.TargetObjDic)
+                    {
+                        foreach (var hiddenObj in kvp.Value.Objects)
+                        {
+                            if (!hiddenObj.IsFound)
+                            {
+                                result.Add(System.Guid.NewGuid(), hiddenObj);
+                            }
+                        }
+                    }
+                }
+                
+                // RabbitObjDic도 추가 (있다면)
+                if (levelManager.RabbitObjDic != null)
+                {
+                    foreach (var kvp in levelManager.RabbitObjDic)
+                    {
+                        if (!kvp.Value.IsFound)
+                        {
+                            result.Add(kvp.Key, kvp.Value);
+                        }
+                    }
+                }
+                
+                return result;
             }
             
             return null;
@@ -451,16 +488,8 @@ namespace UI
 
         private async UniTaskVoid MagnifierEffectAsync()
         {
-            var timeChallengeManager = TimeChallengeManager.Instance;
-            if (timeChallengeManager == null)
-            {
-                Debug.LogError("TimeChallengeManager를 찾을 수 없습니다.");
-                ResetMagnifierState();
-                return;
-            }
-
             // 무작위 오브젝트 선택
-            var selectedObject = SelectRandomUnfoundObject(timeChallengeManager);
+            var selectedObject = SelectRandomUnfoundObject();
             if (selectedObject == null)
             {
                 Debug.Log("찾을 수 있는 오브젝트가 없습니다.");
@@ -501,9 +530,9 @@ namespace UI
             MagnifierUIPosition = Vector3.zero;
         }
 
-        private (System.Guid guid, HiddenObj rabbit)? SelectRandomUnfoundObject(TimeChallengeManager manager)
+        private (System.Guid guid, HiddenObj rabbit)? SelectRandomUnfoundObject()
         {
-            var rabbitDict = GetRabbitDictionary(manager);
+            var rabbitDict = GetHiddenObjectDictionary();
             if (rabbitDict == null) return null;
 
             var unfoundObjects = new System.Collections.Generic.List<(System.Guid, HiddenObj)>();
