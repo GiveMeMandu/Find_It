@@ -6,7 +6,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction
 {
     public class ClickEvent : MonoBehaviour, 
         IPointerDownHandler, 
-        IPointerUpHandler
+        IPointerUpHandler,
+        IInitializePotentialDragHandler,
+        IBeginDragHandler,
+        IDragHandler,
+        IEndDragHandler
     {
         public bool Enable = true;
         public UnityEvent OnMouseDownEvent;
@@ -34,6 +38,31 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction
             if (!Enable) return;
             
             OnMouseUpEvent?.Invoke();
+        }
+
+        // 드래그 방지를 위한 구현들
+        public void OnInitializePotentialDrag(PointerEventData eventData)
+        {
+            // 드래그 초기화를 차단하고 이벤트 전파 중지
+            eventData.useDragThreshold = false;
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            // 드래그 시작을 차단하고 이벤트 전파 중지
+            eventData.pointerDrag = null;
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            // 드래그 진행을 차단하고 이벤트 전파 중지
+            eventData.pointerDrag = null;
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            // 드래그 종료를 차단하고 이벤트 전파 중지
+            eventData.pointerDrag = null;
         }
 
         public void IsEnable(bool enable)

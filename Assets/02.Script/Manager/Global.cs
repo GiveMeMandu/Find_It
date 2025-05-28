@@ -47,73 +47,170 @@ namespace Manager
 
             LoadManagerPrefabs();
 
-            GoldManager = new();
-            GoldManager.Initial();
+            // GoldManager = new();
+            // GoldManager.Initial();
 
-            CashManager = new();
-            CashManager.Initial();
+            // CashManager = new();
+            // CashManager.Initial();
 
             SpinTicketManager = new();
             SpinTicketManager.Initial();
 
-            ItemManager = new();
-            ItemManager.Initial();
+            // ItemManager는 이제 LoadManagerPrefabs에서 로드됨
+            // ItemManager = new();
+            // ItemManager.Initial();
         }
 
         private void OnApplicationPause(bool pauseStatus) => OnApplicationPauseEvt?.Invoke(this, EventArgs.Empty);
         private void OnApplicationQuit()
         {
             OnApplicationPauseEvt?.Invoke(this, EventArgs.Empty);
-            ItemManager?.Dispose();
+            if (ItemManager != null)
+            {
+                ItemManager.Dispose();
+            }
         }
         private void LoadManagerPrefabs()
         {
             string prefixManager = "Prefabs/Manager/";
-            if (UIManager == null)
+            
+            // UIManager 로드
+            try
             {
-                UIManager = Instantiate(Resources.Load<UIManager>(prefixManager + nameof(UIManager)), transform);
-                UIManager.name = nameof(UIManager);
+                if (UIManager == null)
+                {
+                    UIManager = Instantiate(Resources.Load<UIManager>(prefixManager + nameof(UIManager)), transform);
+                    UIManager.name = nameof(UIManager);
+                    Debug.Log("UIManager loaded successfully");
+                }
             }
-            if (SoundManager == null)
+            catch (Exception e)
             {
-                SoundManager = Instantiate(Resources.Load<SoundManager>(prefixManager + nameof(SoundManager)), transform);
-                SoundManager.name = nameof(SoundManager);
+                Debug.LogError($"Failed to load UIManager: {e.Message}");
             }
-            // if (GoogleMobileAdsManager == null)
-            // {
-            //     GoogleMobileAdsManager = Instantiate(Resources.Load<GoogleMobileAdsManager>(prefixManager + nameof(GoogleMobileAdsManager)), transform);
-            //     GoogleMobileAdsManager.name = nameof(GoogleMobileAdsManager);
-            // }
-            if (DailyCheckManager == null)
+            
+            // SoundManager 로드
+            try
             {
-                DailyCheckManager = Instantiate(Resources.Load<DailyCheckManager>(prefixManager + nameof(DailyCheckManager)), transform);
-                DailyCheckManager.name = nameof(DailyCheckManager);
+                if (SoundManager == null)
+                {
+                    SoundManager = Instantiate(Resources.Load<SoundManager>(prefixManager + nameof(SoundManager)), transform);
+                    SoundManager.name = nameof(SoundManager);
+                    Debug.Log("SoundManager loaded successfully");
+                }
             }
-            if (RewardManager == null)
+            catch (Exception e)
             {
-                RewardManager = Instantiate(Resources.Load<RewardManager>(prefixManager + nameof(RewardManager)), transform);
-                RewardManager.name = nameof(RewardManager);
+                Debug.LogError($"Failed to load SoundManager: {e.Message}");
             }
-            if (InputManager == null)
+            
+            // DailyCheckManager 로드
+            try
             {
-                InputManager = Instantiate(Resources.Load<InputManager>(prefixManager + nameof(InputManager)), transform);
-                InputManager.name = nameof(InputManager);
+                if (DailyCheckManager == null)
+                {
+                    DailyCheckManager = Instantiate(Resources.Load<DailyCheckManager>(prefixManager + nameof(DailyCheckManager)), transform);
+                    DailyCheckManager.name = nameof(DailyCheckManager);
+                    Debug.Log("DailyCheckManager loaded successfully");
+                }
             }
-            if (QuestManager == null)
+            catch (Exception e)
             {
-                QuestManager = Instantiate(Resources.Load<QuestManager>(prefixManager + nameof(QuestManager)), transform);
-                QuestManager.name = nameof(QuestManager);
+                Debug.LogError($"Failed to load DailyCheckManager: {e.Message}");
             }
-            if (GoogleMobileAdsManager == null)
+            
+            // RewardManager 로드
+            try
             {
-                GoogleMobileAdsManager = Instantiate(Resources.Load<GoogleMobileAdsManager>(prefixManager + nameof(GoogleMobileAdsManager)), transform);
-                GoogleMobileAdsManager.name = nameof(GoogleMobileAdsManager);
+                if (RewardManager == null)
+                {
+                    RewardManager = Instantiate(Resources.Load<RewardManager>(prefixManager + nameof(RewardManager)), transform);
+                    RewardManager.name = nameof(RewardManager);
+                    Debug.Log("RewardManager loaded successfully");
+                }
             }
-            if (MainMenuSelectedManager == null)
+            catch (Exception e)
             {
-                MainMenuSelectedManager = Instantiate(Resources.Load<MainMenuSelectedManager>(prefixManager + nameof(MainMenuSelectedManager)), transform);
-                MainMenuSelectedManager.name = nameof(MainMenuSelectedManager);
+                Debug.LogError($"Failed to load RewardManager: {e.Message}");
             }
+            
+            // InputManager 로드
+            try
+            {
+                if (InputManager == null)
+                {
+                    InputManager = Instantiate(Resources.Load<InputManager>(prefixManager + nameof(InputManager)), transform);
+                    InputManager.name = nameof(InputManager);
+                    Debug.Log("InputManager loaded successfully");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load InputManager: {e.Message}");
+            }
+            
+            // QuestManager 로드
+            try
+            {
+                if (QuestManager == null)
+                {
+                    QuestManager = Instantiate(Resources.Load<QuestManager>(prefixManager + nameof(QuestManager)), transform);
+                    QuestManager.name = nameof(QuestManager);
+                    Debug.Log("QuestManager loaded successfully");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load QuestManager: {e.Message}");
+            }
+            
+            // GoogleMobileAdsManager 로드 (모바일에서 문제가 될 수 있음)
+            try
+            {
+                if (GoogleMobileAdsManager == null)
+                {
+                    GoogleMobileAdsManager = Instantiate(Resources.Load<GoogleMobileAdsManager>(prefixManager + nameof(GoogleMobileAdsManager)), transform);
+                    GoogleMobileAdsManager.name = nameof(GoogleMobileAdsManager);
+                    Debug.Log("GoogleMobileAdsManager loaded successfully");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load GoogleMobileAdsManager: {e.Message}");
+            }
+            
+            // ItemManager 로드
+            try
+            {
+                if (ItemManager == null)
+                {
+                    ItemManager = Instantiate(Resources.Load<ItemManager>(prefixManager + nameof(ItemManager)), transform);
+                    ItemManager.name = nameof(ItemManager);
+                    ItemManager.Initial();
+                    Debug.Log("ItemManager loaded successfully");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load ItemManager: {e.Message}");
+            }
+            
+            // MainMenuSelectedManager 로드
+            try
+            {
+                if (MainMenuSelectedManager == null)
+                {
+                    MainMenuSelectedManager = Instantiate(Resources.Load<MainMenuSelectedManager>(prefixManager + nameof(MainMenuSelectedManager)), transform);
+                    MainMenuSelectedManager.name = nameof(MainMenuSelectedManager);
+                    Debug.Log("MainMenuSelectedManager loaded successfully");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load MainMenuSelectedManager: {e.Message}");
+            }
+            
+            Debug.Log("LoadManagerPrefabs completed");
         }
     }
 }

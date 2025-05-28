@@ -113,22 +113,54 @@ namespace Manager
         {
             if (!isEnabled) return;
 
-            Vector2 screenPos = finger.currentTouch.screenPosition;
-            Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
-            
-            OnTouchPressEndAction?.Invoke(this, touchData);
+            try
+            {
+                // 터치가 유효한지 확인
+                if (!finger.currentTouch.valid) return;
+
+                Vector2 screenPos = finger.currentTouch.screenPosition;
+                Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+                var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
+                
+                OnTouchPressEndAction?.Invoke(this, touchData);
+            }
+            catch (InvalidOperationException)
+            {
+                Debug.LogWarning("터치 종료 입력이 유효하지 않습니다.");
+                return;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"OnFingerUp 오류: {e.Message}");
+                return;
+            }
         }
 
         private void OnFingerMove(Finger finger)
         {
             if (!isEnabled) return;
 
-            Vector2 screenPos = finger.currentTouch.screenPosition;
-            Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
-            
-            OnTouchMoveAction?.Invoke(this, touchData);
+            try
+            {
+                // 터치가 유효한지 확인
+                if (!finger.currentTouch.valid) return;
+
+                Vector2 screenPos = finger.currentTouch.screenPosition;
+                Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+                var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
+                
+                OnTouchMoveAction?.Invoke(this, touchData);
+            }
+            catch (InvalidOperationException)
+            {
+                Debug.LogWarning("터치 이동 입력이 유효하지 않습니다.");
+                return;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"OnFingerMove 오류: {e.Message}");
+                return;
+            }
         }
 
         private void Pause_Performed(UnityEngine.InputSystem.InputAction.CallbackContext context)

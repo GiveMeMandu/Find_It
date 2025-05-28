@@ -212,18 +212,29 @@ public class PuzzleGameManager : MMSingleton<PuzzleGameManager>
 
         if (targetPiece != null)
         {
-            Vector3 targetPosition = targetPiece.localPosition;
-            targetPiece.localPosition = originalPosition;
-            draggedPiece.localPosition = targetPosition;
-
             int draggedIndex = pieces.IndexOf(draggedPiece);
             int targetIndex = pieces.IndexOf(targetPiece);
-            pieces[draggedIndex] = targetPiece;
-            pieces[targetIndex] = draggedPiece;
-
-            if (CheckCompletion())
+            
+            // 인덱스 유효성 검사
+            if (draggedIndex >= 0 && draggedIndex < pieces.Count && 
+                targetIndex >= 0 && targetIndex < pieces.Count)
             {
-                OnPuzzleCompleted?.Invoke();
+                Vector3 targetPosition = targetPiece.localPosition;
+                targetPiece.localPosition = originalPosition;
+                draggedPiece.localPosition = targetPosition;
+
+                pieces[draggedIndex] = targetPiece;
+                pieces[targetIndex] = draggedPiece;
+
+                if (CheckCompletion())
+                {
+                    OnPuzzleCompleted?.Invoke();
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Invalid piece indices: dragged={draggedIndex}, target={targetIndex}, pieces.Count={pieces.Count}");
+                draggedPiece.localPosition = originalPosition;
             }
         }
         else

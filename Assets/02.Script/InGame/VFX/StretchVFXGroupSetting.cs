@@ -103,6 +103,14 @@ public class StretchVFXGroupSetting : MonoBehaviour
                 DestroyImmediate(existingClickEvent);
             }
             
+            // 기존 DragObj 제거 (드래그 방지)
+            var existingDragObj = targetObj.GetComponent<DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj.DragObj>();
+            if (existingDragObj != null)
+            {
+                DestroyImmediate(existingDragObj);
+                Debug.Log($"{targetObj.name}에서 DragObj 컴포넌트를 제거했습니다.");
+            }
+            
             // StretchVFX 컴포넌트 추가
             StretchVFX stretchVFX = targetObj.AddComponent<StretchVFX>();
             Debug.Log($"{targetObj.name}에 StretchVFX 컴포넌트가 추가되었습니다.");
@@ -468,6 +476,13 @@ public class StretchVFXGroupSetting : MonoBehaviour
                 if (clickEvent != null)
                 {
                     DestroyImmediate(clickEvent);
+                }
+                
+                // DragObj 컴포넌트도 제거
+                var dragObj = obj.GetComponent<DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj.DragObj>();
+                if (dragObj != null)
+                {
+                    DestroyImmediate(dragObj);
                 }
                 
                 BoxCollider2D collider = obj.GetComponent<BoxCollider2D>();
