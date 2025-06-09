@@ -7,6 +7,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction
     public class ClickEvent : MonoBehaviour, 
         IPointerDownHandler, 
         IPointerUpHandler,
+        IPointerClickHandler,
         IInitializePotentialDragHandler,
         IBeginDragHandler,
         IDragHandler,
@@ -24,13 +25,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction
         {
             if (!Enable) return;
             
-            // 최대 클릭 수 체크
-            if (_maxClickCount != -1 && _clickCount >= _maxClickCount) return;
-            
+            // OnPointerDown에서는 OnMouseDownEvent만 실행
             OnMouseDownEvent?.Invoke();
-            OnClickEvent?.Invoke();
-            
-            _clickCount++;
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -38,6 +34,22 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction
             if (!Enable) return;
             
             OnMouseUpEvent?.Invoke();
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (!Enable) return;
+            
+            // 드래그 중이면 클릭 이벤트 실행하지 않음
+            if (eventData.dragging) return;
+            
+            // 최대 클릭 수 체크
+            if (_maxClickCount != -1 && _clickCount >= _maxClickCount) return;
+            
+            // 클릭 이벤트 실행
+            OnClickEvent?.Invoke();
+            
+            _clickCount++;
         }
 
         // 드래그 방지를 위한 구현들

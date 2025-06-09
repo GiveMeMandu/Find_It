@@ -167,6 +167,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                         {
                             boxCollider = child.gameObject.AddComponent<BoxCollider2D>();
                         }
+                        
+                        // 터치 영역을 넓히기 위해 콜라이더 사이즈 조정
+                        boxCollider.size = new Vector2(boxCollider.size.x * 1.5f, boxCollider.size.y * 1.5f);
 
                         // 배경 애니메이션 설정
 

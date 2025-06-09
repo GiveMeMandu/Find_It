@@ -54,25 +54,7 @@ namespace Util.CameraSetting
             }
         }
 
-        private void OnDestroy()
-        {
-            // PlayerAction 관련 코드 제거
-        }
-
-        private void OnMouseWheel(InputAction.CallbackContext context)
-        {
-            if (!_enableZoom) return;
-            
-            var scrollValue = context.ReadValue<Vector2>();
-            var scrollDelta = scrollValue.y * mouseWheelZoomSpeed;
-            
-            if (!Mathf.Approximately(scrollDelta, 0f))
-            {
-                Debug.Log($"Mouse Wheel Delta from Action: {scrollDelta}");
-                HandleZoom(scrollDelta, Mouse.current.position.ReadValue());
-            }
-        }
-
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         private void HandleMouseInput()
         {
             if (Mouse.current == null) return;
@@ -89,13 +71,13 @@ namespace Util.CameraSetting
             if (_enableZoom)
             {
                 var scroll = Mouse.current.scroll.ReadValue();
-                if (Mathf.Abs(scroll.y) > 0.01f)  // 작은 임계값 추가
+                if (Mathf.Abs(scroll.y) > 0.01f)
                 {
-                    Debug.Log($"Mouse wheel scroll value: {scroll.y}");
-                    HandleZoom(-scroll.y * mouseWheelZoomSpeed * 0.1f, Mouse.current.position.ReadValue());
+                    HandleZoom(Mathf.Sign(scroll.y) * mouseWheelZoomSpeed * 0.1f, Mouse.current.position.ReadValue());
                 }
             }
         }
+#endif
 
         private void Update()
         {
@@ -105,8 +87,10 @@ namespace Util.CameraSetting
             // 카메라가 자동 이동 중일 때는 사용자 입력 무시
             if (_isMovingCamera) return;
 
-            HandleTouchInput();
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
             HandleMouseInput();
+            HandleTouchInput();
+#endif
         }
 
         private void HandleTouchInput()
@@ -170,7 +154,7 @@ namespace Util.CameraSetting
 
             // 줌 포인트를 두 터치의 중간점으로 설정
             var zoomCenter = (touch1.screenPosition + touch2.screenPosition) * 0.5f;
-            HandleZoom(-zoomDelta, zoomCenter);
+            HandleZoom(zoomDelta, zoomCenter);
 
             _previousTouchDistance = currentTouchDistance;
         }
@@ -181,15 +165,16 @@ namespace Util.CameraSetting
 
             Debug.Log($"Zooming with delta: {zoomDelta}, current size: {_camera.orthographicSize}");
             
+            var worldPointBeforeZoom = _camera.ScreenToWorldPoint(new Vector3(screenZoomCenter.x, screenZoomCenter.y, 0));
+
             var prevSize = _camera.orthographicSize;
             _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize - zoomDelta, zoomMin, zoomMax);
 
             if (!Mathf.Approximately(prevSize, _camera.orthographicSize))
             {
                 // 줌 포인트를 기준으로 카메라 위치 조정
-                var worldZoomCenter = _camera.ScreenToWorldPoint(new Vector3(screenZoomCenter.x, screenZoomCenter.y, 0));
-                var newWorldZoomCenter = _camera.ScreenToWorldPoint(new Vector3(screenZoomCenter.x, screenZoomCenter.y, 0));
-                var offset = worldZoomCenter - newWorldZoomCenter;
+                var worldPointAfterZoom = _camera.ScreenToWorldPoint(new Vector3(screenZoomCenter.x, screenZoomCenter.y, 0));
+                var offset = worldPointBeforeZoom - worldPointAfterZoom;
 
                 var newPosition = _camera.transform.position + offset;
                 _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
