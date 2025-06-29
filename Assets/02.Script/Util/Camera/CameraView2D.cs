@@ -38,7 +38,14 @@ namespace Util.CameraSetting
         {
             base.Awake();
             _camera = UnityEngine.Camera.main;
-            EnhancedTouchSupport.Enable();
+            
+            // EnhancedTouchSupport 초기화
+            if (!EnhancedTouchSupport.enabled)
+            {
+                EnhancedTouchSupport.Enable();
+            }
+            
+            Debug.Log("CameraView2D 초기화 완료 - EnhancedTouchSupport 활성화됨");
         }
 
         private void OnEnable()
@@ -89,14 +96,31 @@ namespace Util.CameraSetting
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
             HandleMouseInput();
-            HandleTouchInput();
 #endif
+
+            // 모든 플랫폼에서 터치 입력 처리
+            HandleTouchInput();
         }
 
         private void HandleTouchInput()
         {
+            // EnhancedTouchSupport가 활성화되어 있는지 확인
+            if (!EnhancedTouchSupport.enabled)
+            {
+                EnhancedTouchSupport.Enable();
+                return;
+            }
+
             var touches = Touch.activeTouches;
             if (touches.Count == 0) return;
+
+            // 안드로이드에서 터치 입력 디버깅
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (touches.Count > 0)
+            {
+                Debug.Log($"터치 감지: {touches.Count}개, 첫 번째 터치 위치: {touches[0].screenPosition}");
+            }
+#endif
 
             if (touches.Count == 1 && _enablePan)
             {
@@ -110,53 +134,71 @@ namespace Util.CameraSetting
 
         private void HandleSingleTouch(Touch touch)
         {
-            switch (touch.phase)
+            try
             {
-                case UnityEngine.InputSystem.TouchPhase.Began:
-                    _isDragging = true;
-                    _previousTouchPosition = touch.screenPosition;
-                    break;
+                switch (touch.phase)
+                {
+                    case UnityEngine.InputSystem.TouchPhase.Began:
+                        _isDragging = true;
+                        _previousTouchPosition = touch.screenPosition;
+                        Debug.Log($"터치 시작: {touch.screenPosition}");
+                        break;
 
-                case UnityEngine.InputSystem.TouchPhase.Moved:
-                    if (!_isDragging) return;
-                    
-                    var touchDelta = (Vector2)touch.screenPosition - _previousTouchPosition;
-                    var scaledDelta = touchDelta * (_camera.orthographicSize / _camera.pixelHeight);
-                    
-                    var newPosition = _camera.transform.position - new Vector3(scaledDelta.x, scaledDelta.y, 0);
-                    _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
-                    
-                    _previousTouchPosition = touch.screenPosition;
-                    break;
+                    case UnityEngine.InputSystem.TouchPhase.Moved:
+                        if (!_isDragging) return;
+                        
+                        var touchDelta = (Vector2)touch.screenPosition - _previousTouchPosition;
+                        var scaledDelta = touchDelta * (_camera.orthographicSize / _camera.pixelHeight);
+                        
+                        var newPosition = _camera.transform.position - new Vector3(scaledDelta.x, scaledDelta.y, 0);
+                        _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
+                        
+                        _previousTouchPosition = touch.screenPosition;
+                        break;
 
-                case UnityEngine.InputSystem.TouchPhase.Ended:
-                case UnityEngine.InputSystem.TouchPhase.Canceled:
-                    _isDragging = false;
-                    break;
+                    case UnityEngine.InputSystem.TouchPhase.Ended:
+                    case UnityEngine.InputSystem.TouchPhase.Canceled:
+                        _isDragging = false;
+                        Debug.Log("터치 종료");
+                        break;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"터치 처리 중 오류: {e.Message}");
+                _isDragging = false;
             }
         }
 
         private void HandlePinchToZoom(Touch touch1, Touch touch2)
         {
-            var currentTouchDistance = Vector2.Distance(touch1.screenPosition, touch2.screenPosition);
-            
-            if (currentTouchDistance < MIN_PINCH_DISTANCE) return;
-
-            if (touch1.phase == UnityEngine.InputSystem.TouchPhase.Began || 
-                touch2.phase == UnityEngine.InputSystem.TouchPhase.Began)
+            try
             {
+                var currentTouchDistance = Vector2.Distance(touch1.screenPosition, touch2.screenPosition);
+                
+                if (currentTouchDistance < MIN_PINCH_DISTANCE) return;
+
+                if (touch1.phase == UnityEngine.InputSystem.TouchPhase.Began || 
+                    touch2.phase == UnityEngine.InputSystem.TouchPhase.Began)
+                {
+                    _previousTouchDistance = currentTouchDistance;
+                    Debug.Log($"핀치 줌 시작: 거리 {currentTouchDistance}");
+                    return;
+                }
+
+                var touchDelta = currentTouchDistance - _previousTouchDistance;
+                var zoomDelta = touchDelta * zoomSpeed;
+
+                // 줌 포인트를 두 터치의 중간점으로 설정
+                var zoomCenter = (touch1.screenPosition + touch2.screenPosition) * 0.5f;
+                HandleZoom(zoomDelta, zoomCenter);
+
                 _previousTouchDistance = currentTouchDistance;
-                return;
             }
-
-            var touchDelta = currentTouchDistance - _previousTouchDistance;
-            var zoomDelta = touchDelta * zoomSpeed;
-
-            // 줌 포인트를 두 터치의 중간점으로 설정
-            var zoomCenter = (touch1.screenPosition + touch2.screenPosition) * 0.5f;
-            HandleZoom(zoomDelta, zoomCenter);
-
-            _previousTouchDistance = currentTouchDistance;
+            catch (System.Exception e)
+            {
+                Debug.LogError($"핀치 줌 처리 중 오류: {e.Message}");
+            }
         }
 
         private void HandleZoom(float zoomDelta, Vector2 screenZoomCenter)
