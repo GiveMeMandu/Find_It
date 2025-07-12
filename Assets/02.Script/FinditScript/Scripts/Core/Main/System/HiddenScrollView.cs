@@ -51,7 +51,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 var obj = pair.Value.Representative;
                 GameObject img = Instantiate(prefab, contentContainer.transform);
                 var imgObj = img.GetComponent<HiddenObjUI>();
-                imgObj.Initialize(obj.UISprite);
+                // UIChangeHelper의 스프라이트를 우선적으로 사용
+                imgObj.Initialize(obj.GetUISprite());
                 
                 // 남은 개수 설정 (전체 개수 - 찾은 개수)
                 imgObj.SetCount(pair.Value.TotalCount, pair.Value.FoundCount);

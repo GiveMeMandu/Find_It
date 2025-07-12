@@ -485,6 +485,12 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
 
     private void AddRabbitToDictionary(HiddenObj rabbit)
     {
+        // UIChangeHelper 컴포넌트가 있다면 HiddenObj에 연결
+        if (rabbit.uiChangeHelper == null)
+        {
+            rabbit.uiChangeHelper = rabbit.GetComponent<UIChangeHelper>();
+        }
+        
         Guid guid = Guid.NewGuid();
         rabbitObjDic.Add(guid, rabbit);
 
@@ -680,7 +686,7 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
         CurrentScrollView.Initialize();
 
         var rabbitGroups = ConvertRabbitDictToGroups();
-        // CurrentScrollView.UpdateScrollView(rabbitGroups, TargetImagePrefab, RabbitClick, RabbitRegionToggle, UIClick);
+        CurrentScrollView.UpdateScrollView(rabbitGroups, TargetImagePrefab, RabbitClick, RabbitRegionToggle, UIClick);
     }
 
     private Dictionary<Guid, HiddenObjGroup> ConvertRabbitDictToGroups()

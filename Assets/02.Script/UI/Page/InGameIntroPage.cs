@@ -44,15 +44,12 @@ namespace UI.Page
             _cts = new CancellationTokenSource();
             _curStage = Global.CurrentScene.SceneName.ToString();
             
-            // Stage1_1 -> Stage1로 변환 (언더스코어 이후 제거)
+            // 전체 스테이지 이름 사용
             string stageKey = _curStage;
-            int underscoreIndex = _curStage.IndexOf('_');
-            if (underscoreIndex > 0)
-            {
-                stageKey = _curStage.Substring(0, underscoreIndex);
-            }
-            
             _stageName = I2.Loc.LocalizationManager.GetTranslation("SceneName/" + stageKey);
+
+            // 위에 표기를 위해 _ 대신 - 쓰기
+            _curStage = _curStage.Replace('_', '-');
             
             DisableInputAndDestroyAsync(_cts.Token).Forget();
         }

@@ -14,12 +14,20 @@ namespace Util.CameraSetting
         public bool _enableZoom;
         public float zoomMin = 2f;
         public float zoomMax = 5.4f;
-        public float zoomSpeed = 0.005f;
+        [Header("Zoom Speed")]
+        [Tooltip("터치 핀치 줌 속도")]
+        public float touchPinchZoomSpeed = 0.005f;
+        [Tooltip("마우스 휠 줌 속도")]
         public float mouseWheelZoomSpeed = 2f;
         public float zoomPan = 0f;
 
         [Header("---Pan---")]
         public bool _enablePan;
+        [Header("Pan Speed")]
+        [Tooltip("PC 마우스 드래그 이동 속도")]
+        public float pcPanSpeed = 1.0f;
+        [Tooltip("모바일 터치 드래그 이동 속도")]
+        public float mobilePanSpeed = 1.5f;
         public bool _infinitePan = false;
         public bool _autoPanBoundary = true;
         public float _panMinX, _panMinY;
@@ -45,7 +53,6 @@ namespace Util.CameraSetting
                 EnhancedTouchSupport.Enable();
             }
             
-            Debug.Log("CameraView2D 초기화 완료 - EnhancedTouchSupport 활성화됨");
         }
 
         private void OnEnable()
@@ -69,19 +76,24 @@ namespace Util.CameraSetting
             // 마우스 드래그로 이동
             if (_enablePan && Mouse.current.leftButton.isPressed)
             {
-                var mouseDelta = Mouse.current.delta.ReadValue() * (_camera.orthographicSize / _camera.pixelHeight);
+                var mouseDelta = Mouse.current.delta.ReadValue() * (_camera.orthographicSize / _camera.pixelHeight) * pcPanSpeed;
                 var newPosition = _camera.transform.position - new Vector3(mouseDelta.x, mouseDelta.y, 0);
                 _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
             }
+        }
 
-            // 마우스 휠로 줌
-            if (_enableZoom)
+        private void HandleMouseWheelInput()
+        {
+            if (!_enableZoom) return;
+
+            // 전통적인 Input 시스템 사용
+            var scroll = Input.GetAxis("Mouse ScrollWheel");
+            if (Mathf.Abs(scroll) > 0.01f)
             {
-                var scroll = Mouse.current.scroll.ReadValue();
-                if (Mathf.Abs(scroll.y) > 0.01f)
-                {
-                    HandleZoom(Mathf.Sign(scroll.y) * mouseWheelZoomSpeed * 0.1f, Mouse.current.position.ReadValue());
-                }
+                var zoomDelta = scroll * mouseWheelZoomSpeed;
+                var mousePosition = Input.mousePosition;
+                HandleZoom(zoomDelta, mousePosition);
+                // Debug.Log($"마우스 휠 줌: delta={zoomDelta}, position={mousePosition}, scroll={scroll}");
             }
         }
 #endif
@@ -102,6 +114,14 @@ namespace Util.CameraSetting
             HandleTouchInput();
         }
 
+        private void LateUpdate()
+        {
+            // 마우스 휠 입력을 LateUpdate에서 별도로 처리
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
+            HandleMouseWheelInput();
+#endif
+        }
+
         private void HandleTouchInput()
         {
             // EnhancedTouchSupport가 활성화되어 있는지 확인
@@ -118,7 +138,7 @@ namespace Util.CameraSetting
 #if UNITY_ANDROID && !UNITY_EDITOR
             if (touches.Count > 0)
             {
-                Debug.Log($"터치 감지: {touches.Count}개, 첫 번째 터치 위치: {touches[0].screenPosition}");
+                // Debug.Log($"터치 감지: {touches.Count}개, 첫 번째 터치 위치: {touches[0].screenPosition}");
             }
 #endif
 
@@ -141,14 +161,14 @@ namespace Util.CameraSetting
                     case UnityEngine.InputSystem.TouchPhase.Began:
                         _isDragging = true;
                         _previousTouchPosition = touch.screenPosition;
-                        Debug.Log($"터치 시작: {touch.screenPosition}");
+                        // Debug.Log($"터치 시작: {touch.screenPosition}");
                         break;
 
                     case UnityEngine.InputSystem.TouchPhase.Moved:
                         if (!_isDragging) return;
                         
                         var touchDelta = (Vector2)touch.screenPosition - _previousTouchPosition;
-                        var scaledDelta = touchDelta * (_camera.orthographicSize / _camera.pixelHeight);
+                        var scaledDelta = touchDelta * (_camera.orthographicSize / _camera.pixelHeight) * mobilePanSpeed;
                         
                         var newPosition = _camera.transform.position - new Vector3(scaledDelta.x, scaledDelta.y, 0);
                         _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
@@ -159,7 +179,7 @@ namespace Util.CameraSetting
                     case UnityEngine.InputSystem.TouchPhase.Ended:
                     case UnityEngine.InputSystem.TouchPhase.Canceled:
                         _isDragging = false;
-                        Debug.Log("터치 종료");
+                        // Debug.Log("터치 종료");
                         break;
                 }
             }
@@ -182,12 +202,12 @@ namespace Util.CameraSetting
                     touch2.phase == UnityEngine.InputSystem.TouchPhase.Began)
                 {
                     _previousTouchDistance = currentTouchDistance;
-                    Debug.Log($"핀치 줌 시작: 거리 {currentTouchDistance}");
+                    // Debug.Log($"핀치 줌 시작: 거리 {currentTouchDistance}");
                     return;
                 }
 
                 var touchDelta = currentTouchDistance - _previousTouchDistance;
-                var zoomDelta = touchDelta * zoomSpeed;
+                var zoomDelta = touchDelta * touchPinchZoomSpeed;
 
                 // 줌 포인트를 두 터치의 중간점으로 설정
                 var zoomCenter = (touch1.screenPosition + touch2.screenPosition) * 0.5f;
@@ -205,7 +225,7 @@ namespace Util.CameraSetting
         {
             if (Mathf.Approximately(zoomDelta, 0f)) return;
 
-            Debug.Log($"Zooming with delta: {zoomDelta}, current size: {_camera.orthographicSize}");
+            // Debug.Log($"Zooming with delta: {zoomDelta}, current size: {_camera.orthographicSize}");
             
             var worldPointBeforeZoom = _camera.ScreenToWorldPoint(new Vector3(screenZoomCenter.x, screenZoomCenter.y, 0));
 
@@ -221,7 +241,7 @@ namespace Util.CameraSetting
                 var newPosition = _camera.transform.position + offset;
                 _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
                 
-                Debug.Log($"New camera size: {_camera.orthographicSize}");
+                // Debug.Log($"New camera size: {_camera.orthographicSize}");
             }
         }
 
@@ -286,7 +306,7 @@ namespace Util.CameraSetting
             
             float elapsedTime = 0f;
             
-            Debug.Log($"카메라 이동 시작: {startPosition} -> {clampedTargetPosition}");
+            // Debug.Log($"카메라 이동 시작: {startPosition} -> {clampedTargetPosition}");
             
             while (elapsedTime < duration)
             {
@@ -306,7 +326,7 @@ namespace Util.CameraSetting
             _camera.transform.position = clampedTargetPosition;
             _isMovingCamera = false;
             
-            Debug.Log($"카메라 이동 완료: {clampedTargetPosition}");
+            // Debug.Log($"카메라 이동 완료: {clampedTargetPosition}");
         }
         
         /// <summary>

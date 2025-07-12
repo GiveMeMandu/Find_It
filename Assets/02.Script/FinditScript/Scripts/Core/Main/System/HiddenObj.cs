@@ -15,6 +15,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         [Tooltip("Sprite To Display In UI Panel, Leave Empty To Use The Current Game Object Sprite")]
         public Sprite UISprite;
 
+        [Tooltip("UIChangeHelper component for custom UI sprite")]
+        public UIChangeHelper uiChangeHelper;
+
         [Tooltip("Game Object Will Be Invisible When Start Scene")]
         public bool HideOnStart;
 
@@ -55,6 +58,17 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public SpriteRenderer spriteRenderer;
 
+        /// <summary>
+        /// UI에 표시할 스프라이트를 반환합니다. UIChangeHelper가 있으면 그 스프라이트를, 없으면 UISprite를 반환합니다.
+        /// </summary>
+        public Sprite GetUISprite()
+        {
+            if (uiChangeHelper != null && uiChangeHelper.sprite != null)
+            {
+                return uiChangeHelper.sprite;
+            }
+            return UISprite;
+        }
 
         private void Awake()
         {
@@ -64,6 +78,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 {
                     UISprite = spriteRenderer.sprite;
                 }
+            }
+
+            // UIChangeHelper 컴포넌트 자동 찾기
+            if (uiChangeHelper == null)
+            {
+                uiChangeHelper = GetComponent<UIChangeHelper>();
             }
 
             if (HideOnStart)

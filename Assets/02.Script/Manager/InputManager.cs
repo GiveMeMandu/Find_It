@@ -46,6 +46,9 @@ namespace Manager
             playerAction = new PlayerAction();
             EnhancedTouchSupport.Enable();
             
+            // 마우스 입력 시스템 활성화
+            InputSystem.EnableDevice(Mouse.current);
+            
             // 터치 이벤트 바인딩
             Touch.onFingerDown += OnFingerDown;
             Touch.onFingerUp += OnFingerUp;
@@ -75,6 +78,13 @@ namespace Manager
             playerAction.playerControl.Pause.performed -= Pause_Performed;
             playerAction.playerControl.Disable();
             playerAction.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            Touch.onFingerDown -= OnFingerDown;
+            Touch.onFingerUp -= OnFingerUp;
+            Touch.onFingerMove -= OnFingerMove;
         }
 
         private void OnFingerDown(Finger finger)

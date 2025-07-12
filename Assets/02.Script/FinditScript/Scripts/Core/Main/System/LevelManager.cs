@@ -162,6 +162,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                         {
                             hiddenObj = child.gameObject.AddComponent<HiddenObj>();
                         }
+                        
+                        // UIChangeHelper 컴포넌트가 있다면 HiddenObj에 연결
+                        if (hiddenObj.uiChangeHelper == null)
+                        {
+                            hiddenObj.uiChangeHelper = child.GetComponent<UIChangeHelper>();
+                        }
+                        
                         // BoxCollider2D 추가 또는 리셋
                         if (!child.TryGetComponent<BoxCollider2D>(out var boxCollider))
                         {
@@ -198,6 +205,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                         hiddenObj = obj.AddComponent<HiddenObj>();
                         // Debug.Log($"Added HiddenObj component to {obj.name}");
                     }
+                    
+                    // UIChangeHelper 컴포넌트가 있다면 HiddenObj에 연결
+                    if (hiddenObj.uiChangeHelper == null)
+                    {
+                        hiddenObj.uiChangeHelper = obj.GetComponent<UIChangeHelper>();
+                    }
+                    
                     normalHiddenObjs.Add(hiddenObj);
                 }
                 // Debug.Log($"Found and processed {normalHiddenObjs.Count} hidden objects in scene with tag");

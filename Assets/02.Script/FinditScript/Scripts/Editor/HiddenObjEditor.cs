@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
+using UI;
 
 namespace DeskCat.FindIt.Scripts.Editor
 {
@@ -77,6 +78,10 @@ namespace DeskCat.FindIt.Scripts.Editor
 
                     HiddenObjTarget.UISprite = (Sprite)EditorGUILayout.ObjectField("UI Sprite",
                         HiddenObjTarget.UISprite, typeof(Sprite), true);
+
+                    // UIChangeHelper 필드 추가
+                    HiddenObjTarget.uiChangeHelper = (UIChangeHelper)EditorGUILayout.ObjectField("UI Change Helper",
+                        HiddenObjTarget.uiChangeHelper, typeof(UIChangeHelper), true);
 
                     HiddenObjTarget.HideOnStart =
                         EditorGUILayout.ToggleLeft("Hide Object On Start", HiddenObjTarget.HideOnStart);

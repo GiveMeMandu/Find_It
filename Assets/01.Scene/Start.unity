@@ -384,10 +384,12 @@ MonoBehaviour:
   _enableZoom: 0
   zoomMin: 2
   zoomMax: 5.4
-  zoomSpeed: 0.005
+  touchPinchZoomSpeed: 0.005
   mouseWheelZoomSpeed: 2
   zoomPan: 0
   _enablePan: 0
+  pcPanSpeed: 1
+  mobilePanSpeed: 1.5
   _infinitePan: 0
   _autoPanBoundary: 1
   _panMinX: 0
@@ -2452,7 +2454,7 @@ GameObject:
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &960441036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3177,7 +3179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAutoConnection: 1
-  viewModelMethodName: UnityWeld.MapSelectView.NextStageGroup
+  viewModelMethodName: UnityWeld.MapSelectView.PrevStageGroup
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!114 &1054371446
 MonoBehaviour:
@@ -3194,7 +3196,7 @@ MonoBehaviour:
   _isAutoConnection: 1
   viewAdapterId: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: UnityWeld.MapSelectView.IsNextButtonActive
+  viewModelPropertyName: UnityWeld.MapSelectView.IsPrevButtonActive
   viewPropertyName: UnityEngine.UI.Button.interactable
 --- !u!114 &1054371447
 MonoBehaviour:
