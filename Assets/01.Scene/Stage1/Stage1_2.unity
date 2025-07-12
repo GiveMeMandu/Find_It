@@ -1973,6 +1973,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hiddenObjFoundType: 0
   UISprite: {fileID: 21300000, guid: ac9079b4a12ba7143a9c2ad7dfa34ba0, type: 3}
+  uiChangeHelper: {fileID: 0}
   HideOnStart: 0
   EnableTooltip: 0
   TooltipsType: 0
@@ -4202,6 +4203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hiddenObjFoundType: 0
   UISprite: {fileID: -1493141598284323564, guid: 8995bcbd3d3ae8e44a2af9936b55e3f7, type: 3}
+  uiChangeHelper: {fileID: 0}
   HideOnStart: 0
   EnableTooltip: 1
   TooltipsType: 0
@@ -10577,6 +10579,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hiddenObjFoundType: 0
   UISprite: {fileID: 21300000, guid: ac9079b4a12ba7143a9c2ad7dfa34ba0, type: 3}
+  uiChangeHelper: {fileID: 0}
   HideOnStart: 0
   EnableTooltip: 0
   TooltipsType: 0
@@ -12824,7 +12827,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 108
-  m_Sprite: {fileID: 4615368112112728552, guid: edc543c3d02e36d4b8eeebcf13df39a9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d7e90b671af97714985651775aa640f2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -13295,6 +13298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5419759664509338493}
   - component: {fileID: 8777226738881953246}
+  - component: {fileID: 8777226738881953247}
   m_Layer: 0
   m_Name: hide_potion
   m_TagString: Hidden
@@ -13370,13 +13374,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089366163408893312}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.13736278, w: 0.99052083}
   m_LocalPosition: {x: 5.579998, y: 2.4900002, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1879679099}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -15.791}
 --- !u!212 &1832502216517940227
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13960,7 +13964,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 107
-  m_Sprite: {fileID: -5112593265026582904, guid: edc543c3d02e36d4b8eeebcf13df39a9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d7e90b671af97714985651775aa640f2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -15490,8 +15494,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.5299988, y: -2.855, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1879679099}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16332,6 +16336,7 @@ GameObject:
   m_Component:
   - component: {fileID: 673529695488958023}
   - component: {fileID: 2353621648948546180}
+  - component: {fileID: 3962798401208126721}
   m_Layer: 0
   m_Name: hide_tomato
   m_TagString: Hidden
@@ -16339,6 +16344,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &3962798401208126721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3962798401208126720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 1e367b821b4c56846b409efffd78c260, type: 3}
 --- !u!4 &3968490182120320678
 Transform:
   m_ObjectHideFlags: 0
@@ -17506,6 +17524,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1196628983938980656}
   - component: {fileID: 8835225087031661249}
+  - component: {fileID: 8835225087031661250}
   m_Layer: 0
   m_Name: hide_knife
   m_TagString: Hidden
@@ -19463,6 +19482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6289918101293066413}
   - component: {fileID: 5512926043419058398}
+  - component: {fileID: 6289918101293066414}
   m_Layer: 0
   m_Name: hide_tomato3
   m_TagString: Hidden
@@ -20081,6 +20101,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1879679099}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6289918101293066414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5962527993825508732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
 --- !u!1 &6332494340367774431
 GameObject:
   m_ObjectHideFlags: 0
@@ -22372,6 +22405,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4152391064004344524}
   - component: {fileID: 8357541148681386151}
+  - component: {fileID: 8357541148681386152}
   m_Layer: 0
   m_Name: hide_yellow shovel
   m_TagString: Hidden
@@ -24928,6 +24962,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8357541148681386152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7017377872351085102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: aeb39e3f915bfa348bb7570321812b92, type: 3}
 --- !u!1 &8367929667446569783
 GameObject:
   m_ObjectHideFlags: 0
@@ -25430,6 +25477,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8777226738881953247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637782719338055143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 9b615900346d0874ca9585f31d2c4e31, type: 3}
 --- !u!212 &8780280693881555611
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -25822,6 +25882,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8835225087031661250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4757499603861110590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -8151489348328357385, guid: 8995bcbd3d3ae8e44a2af9936b55e3f7, type: 3}
 --- !u!4 &8835326528951378103
 Transform:
   m_ObjectHideFlags: 0
@@ -26104,6 +26177,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6586012084494674279}
   - component: {fileID: 5606398100494085377}
+  - component: {fileID: 9085681799477453467}
   m_Layer: 0
   m_Name: hide_green_dessert
   m_TagString: Hidden
@@ -26111,6 +26185,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &9085681799477453467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9085681799477453466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -4534009773195459740, guid: bb4d58b29c73b52449514e1de446991a, type: 3}
 --- !u!4 &9090819521411876256
 Transform:
   m_ObjectHideFlags: 0
@@ -26206,6 +26293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5942409975770493358}
   - component: {fileID: 6573402023243722989}
+  - component: {fileID: 9187807505323882589}
   m_Layer: 0
   m_Name: hide_fork
   m_TagString: Hidden
@@ -26213,6 +26301,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &9187807505323882589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9187807505323882588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 205253064421396654, guid: 8995bcbd3d3ae8e44a2af9936b55e3f7, type: 3}
 --- !u!114 &9190028077064741559
 MonoBehaviour:
   m_ObjectHideFlags: 0
