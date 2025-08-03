@@ -42,6 +42,10 @@ public class 위치보정클립 : PlayableAsset, ITimelineClipAsset
     public bool restoreOriginalPosition = false;
     public bool onlyCorrectXY = true;
     
+    [Header("에디터 모드 설정")]
+    [Tooltip("에디터에서 Timeline 재생 시 원위치 복귀 여부")]
+    public bool restoreOriginalPositionInEditor = true;
+    
     public ClipCaps clipCaps
     {
         get { return ClipCaps.None; }
@@ -59,14 +63,15 @@ public class 위치보정클립 : PlayableAsset, ITimelineClipAsset
         clone.correctionMode = correctionMode;
         clone.referencePosition = referencePosition;
         
-        // 직접 참조가 있으면 우선 사용, 없으면 ExposedReference 사용
-        if (directReferenceTransform != null)
+        // ExposedReference를 우선 사용, 없으면 직접 참조 사용
+        Transform resolvedReference = referenceTransform.Resolve(graph.GetResolver());
+        if (resolvedReference != null)
         {
-            clone.referenceTransform = directReferenceTransform;
+            clone.referenceTransform = resolvedReference;
         }
         else
         {
-            clone.referenceTransform = referenceTransform.Resolve(graph.GetResolver());
+            clone.referenceTransform = directReferenceTransform;
         }
         
         clone.customOffset = customOffset;
@@ -78,6 +83,7 @@ public class 위치보정클립 : PlayableAsset, ITimelineClipAsset
         clone.targetAnimationClips = targetAnimationClips;
         clone.useLocalPosition = useLocalPosition;
         clone.restoreOriginalPosition = restoreOriginalPosition;
+        clone.restoreOriginalPositionInEditor = restoreOriginalPositionInEditor;
         clone.onlyCorrectXY = onlyCorrectXY;
         
         return playable;

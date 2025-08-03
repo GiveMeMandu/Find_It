@@ -31,6 +31,10 @@ public class IngameRotateTargetBehaviour : PlayableBehaviour
     public bool restoreOriginalRotation = true;
     public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     
+    [Header("애니메이션 오버라이드 설정")]
+    [Tooltip("애니메이션 클립이 재생 중에도 회전 수정을 강제로 적용")]
+    public bool overrideAnimationRotation = true;
+    
     private Vector3 originalRotation;
     private bool isInitialized = false;
     private float currentRotationTime = 0f;
@@ -57,6 +61,8 @@ public class IngameRotateTargetBehaviour : PlayableBehaviour
         {
             originalRotation = useLocalRotation ? rotateTarget.localEulerAngles : rotateTarget.eulerAngles;
             isInitialized = true;
+            
+            Debug.Log($"[RotateTarget] 초기화 완료 - 원본 회전: {originalRotation}, 모드: {rotationMode}");
         }
     }
     
@@ -77,7 +83,8 @@ public class IngameRotateTargetBehaviour : PlayableBehaviour
         float deltaTime = (float)info.deltaTime;
         currentRotationTime += deltaTime;
         
-        Vector3 targetRotation = useLocalRotation ? rotateTarget.localEulerAngles : rotateTarget.eulerAngles;
+        // 원본 회전값을 기준으로 계산 (매 프레임마다 현재값을 가져오지 않음)
+        Vector3 targetRotation = originalRotation;
         
         switch (rotationMode)
         {
@@ -117,39 +124,82 @@ public class IngameRotateTargetBehaviour : PlayableBehaviour
                         float additionalAngle = flipCurveValue * 180f;
                         
                         targetRotation.y = baseAngle + additionalAngle;
+                        
+                        Debug.Log($"[Flip] 시간: {currentRotationTime:F2}, 단계: {currentFlipIndex}, 진행도: {flipProgress:F2}, 각도: {targetRotation.y:F1}");
                     }
                     else
                     {
                         // 모든 반전 완료 - 최종 각도로 설정
                         targetRotation.y = originalRotation.y + (flipCount * 180f);
+                        Debug.Log($"[Flip] 완료 - 최종 각도: {targetRotation.y:F1}");
                     }
                 }
                 break;
                 
             case RotationMode2D.InstantFlip:
-                // 클립 길이 기반 즉시 반전 (Y축 180도씩) - 특정 타이밍에 즉시 점프
+                // 즉시 반전 (Y축 180도씩) - 첫 번째, 중간, 마지막 반전 모두 적용
                 double clipDuration = playable.GetDuration();
                 
-                if (clipDuration > 0 && instantFlipCount > 0)
+                if (clipDuration > 0 && instantFlipCount >= 0)
                 {
-                    // 클립 길이를 반전 횟수로 나누어 각 반전 타이밍 계산
-                    float flipInterval = (float)clipDuration / instantFlipCount;
-                    
-                    // 현재 몇 번째 반전까지 완료되었는지 계산
-                    int completedFlips = Mathf.FloorToInt(currentRotationTime / flipInterval);
-                    completedFlips = Mathf.Clamp(completedFlips, 0, instantFlipCount);
-                    
-                    // 완료된 반전 횟수에 따라 즉시 각도 설정
-                    targetRotation.y = originalRotation.y + (completedFlips * 180f);
+                    if (instantFlipCount == 0)
+                    {
+                        // 0번 반전이면 원래 상태로 설정
+                        targetRotation.y = originalRotation.y;
+                        Debug.Log($"[InstantFlip] 0번 반전 - 원래 상태로 설정: {targetRotation.y:F1}");
+                    }
+                    else
+                    {
+                        // 클립 길이를 반전 횟수로 나누어 각 반전 타이밍 계산
+                        float flipInterval = (float)clipDuration / instantFlipCount;
+                        
+                        // 현재 몇 번째 반전까지 완료되었는지 계산
+                        int completedFlips = 0;
+                        
+                        // 첫 번째 반전은 0초에 즉시 적용
+                        if (currentRotationTime <= 0.01f)
+                        {
+                            completedFlips = 1;
+                        }
+                        else
+                        {
+                            // 시간에 따른 추가 반전 계산
+                            // flipInterval로 나누어 각 반전 타이밍 계산
+                            completedFlips = Mathf.FloorToInt(currentRotationTime / flipInterval);
+                            completedFlips = Mathf.Clamp(completedFlips, 0, instantFlipCount);
+                            
+                            // 첫 번째 반전은 이미 적용되었으므로 최소 1로 설정
+                            completedFlips = Mathf.Max(1, completedFlips);
+                        }
+                        
+                        // 완료된 반전 횟수에 따라 즉시 각도 설정
+                        targetRotation.y = originalRotation.y + (completedFlips * 180f);
+                        
+                        // 반전이 발생했을 때만 로그 출력
+                        if (currentRotationTime <= 0.01f || (completedFlips > 1 && completedFlips <= instantFlipCount))
+                        {
+                            Debug.Log($"[InstantFlip] 시간: {currentRotationTime:F2}, 완료된 반전: {completedFlips}, 각도: {targetRotation.y:F1}");
+                        }
+                    }
                 }
                 break;
         }
         
-        // 회전 적용
+        // 회전 적용 (매 프레임마다 강제로 재설정)
+        SetRotation(targetRotation);
+    }
+    
+    private void SetRotation(Vector3 rotation)
+    {
+        // 애니메이션을 오버라이드하여 회전 강제 설정
         if (useLocalRotation)
-            rotateTarget.localEulerAngles = targetRotation;
+        {
+            rotateTarget.localEulerAngles = rotation;
+        }
         else
-            rotateTarget.eulerAngles = targetRotation;
+        {
+            rotateTarget.eulerAngles = rotation;
+        }
     }
     
     public override void OnGraphStop(Playable playable)

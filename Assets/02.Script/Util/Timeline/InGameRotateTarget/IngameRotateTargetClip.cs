@@ -33,13 +33,17 @@ public class 회전클립 : PlayableAsset, ITimelineClipAsset
     public float flipDuration = 0.5f;
     
     [Header("즉시 반전 설정")]
-    [Range(1, 10)]
+    [Range(0, 10)]
     public int instantFlipCount = 1;
     
     [Header("기타 설정")]
     public bool useLocalRotation = true;
     public bool restoreOriginalRotation = true;
     public AnimationCurve rotationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    
+    [Header("애니메이션 오버라이드 설정")]
+    [Tooltip("애니메이션 클립이 재생 중에도 회전 수정을 강제로 적용")]
+    public bool overrideAnimationRotation = true;
 
     public ClipCaps clipCaps
     {
@@ -65,6 +69,7 @@ public class 회전클립 : PlayableAsset, ITimelineClipAsset
         clone.useLocalRotation = useLocalRotation;
         clone.restoreOriginalRotation = restoreOriginalRotation;
         clone.rotationCurve = rotationCurve;
+        clone.overrideAnimationRotation = overrideAnimationRotation;
         
         return playable;
     }

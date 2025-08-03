@@ -34,6 +34,10 @@ public class IngamePositionCorrectionBehaviour : PlayableBehaviour
     public bool restoreOriginalPosition = true;
     public bool onlyCorrectXY = true; // 2D용: Z축 제외
     
+    [Header("에디터 모드 설정")]
+    [Tooltip("에디터에서 Timeline 재생 시 원위치 복귀 여부")]
+    public bool restoreOriginalPositionInEditor = true;
+    
     private Vector3 originalPosition;
     private Vector3 animationStartPosition;
     private Vector3 correctionOffset;
@@ -258,10 +262,30 @@ public class IngamePositionCorrectionBehaviour : PlayableBehaviour
     
     public override void OnGraphStop(Playable playable)
     {
-        // 옵션에 따라 클립이 끝나면 원래 위치로 복원
-        if (restoreOriginalPosition && targetTransform != null && isInitialized)
+        // 에디터에서 플레이 중이 아닐 때와 런타임/플레이 중을 구분해서 원위치 복원 처리
+        bool shouldRestore = false;
+        
+        #if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            // 에디터에서 플레이 중이 아닐 때만 에디터 전용 설정 사용
+            shouldRestore = restoreOriginalPositionInEditor;
+        }
+        else
+        {
+            // 에디터에서 플레이 중일 때는 런타임 설정 사용
+            shouldRestore = restoreOriginalPosition;
+        }
+        #else
+        // 빌드된 게임에서는 런타임 설정 사용
+        shouldRestore = restoreOriginalPosition;
+        #endif
+        
+        if (shouldRestore && targetTransform != null && isInitialized)
         {
             SetPosition(originalPosition);
+            string mode = Application.isPlaying ? "플레이 중" : "에디터 모드";
+            Debug.Log($"[위치보정] 원위치 복원 완료: {originalPosition} ({mode})");
         }
     }
 } 

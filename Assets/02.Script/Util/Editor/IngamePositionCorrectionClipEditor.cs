@@ -19,6 +19,7 @@ public class IngamePositionCorrectionClipEditor : Editor
     private SerializedProperty targetAnimationClipsProp;
     private SerializedProperty useLocalPositionProp;
     private SerializedProperty restoreOriginalPositionProp;
+    private SerializedProperty restoreOriginalPositionInEditorProp;
     private SerializedProperty onlyCorrectXYProp;
 
     private void OnEnable()
@@ -37,6 +38,7 @@ public class IngamePositionCorrectionClipEditor : Editor
         targetAnimationClipsProp = serializedObject.FindProperty("targetAnimationClips");
         useLocalPositionProp = serializedObject.FindProperty("useLocalPosition");
         restoreOriginalPositionProp = serializedObject.FindProperty("restoreOriginalPosition");
+        restoreOriginalPositionInEditorProp = serializedObject.FindProperty("restoreOriginalPositionInEditor");
         onlyCorrectXYProp = serializedObject.FindProperty("onlyCorrectXY");
     }
 
@@ -70,15 +72,15 @@ public class IngamePositionCorrectionClipEditor : Editor
             EditorGUILayout.LabelField("🎯 기준 위치 설정 (우선순위 순)", EditorStyles.boldLabel);
             
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(directReferenceTransformProp, new GUIContent("1. 직접 참조 Transform (권장)"));
-            EditorGUILayout.PropertyField(referenceTransformProp, new GUIContent("2. ExposedReference Transform"));
+            EditorGUILayout.PropertyField(referenceTransformProp, new GUIContent("1. ExposedReference Transform"));
+            EditorGUILayout.PropertyField(directReferenceTransformProp, new GUIContent("2. 직접 참조 Transform"));
             EditorGUILayout.PropertyField(referencePositionProp, new GUIContent("3. Vector3 백업값"));
             EditorGUI.indentLevel--;
             
             EditorGUILayout.HelpBox(
                 "📌 사용 우선순위:\n" +
-                "1. 직접 참조 → 2. ExposedReference → 3. Vector3 백업\n\n" +
-                "💡 직접 참조가 가장 안정적입니다!", 
+                "1. ExposedReference → 2. 직접 참조 → 3. Vector3 백업\n\n" +
+                "💡 ExposedReference가 Timeline에서 권장되는 방식입니다!", 
                 MessageType.Info);
         }
         else if (correctionMode == IngamePositionCorrectionBehaviour.CorrectionMode.CustomOffset)
@@ -126,7 +128,19 @@ public class IngamePositionCorrectionClipEditor : Editor
         EditorGUI.indentLevel++;
         EditorGUILayout.PropertyField(useLocalPositionProp, new GUIContent("로컬 위치 사용"));
         EditorGUILayout.PropertyField(onlyCorrectXYProp, new GUIContent("X,Y만 보정 (2D용)"));
-        EditorGUILayout.PropertyField(restoreOriginalPositionProp, new GUIContent("종료 시 원위치 복원"));
+        EditorGUILayout.PropertyField(restoreOriginalPositionProp, new GUIContent("런타임 종료 시 원위치 복원"));
+        EditorGUI.indentLevel--;
+
+        EditorGUILayout.Space();
+
+        // 에디터 모드 설정
+        EditorGUILayout.LabelField("■ 에디터 모드 설정", EditorStyles.boldLabel);
+        EditorGUI.indentLevel++;
+        EditorGUILayout.PropertyField(restoreOriginalPositionInEditorProp, new GUIContent("에디터 종료 시 원위치 복원"));
+        EditorGUILayout.HelpBox(
+            "💡 에디터에서 플레이 중이 아닐 때 Timeline 재생 시에만 적용됩니다.\n" +
+            "플레이 중이나 빌드된 게임에서는 위의 '런타임 종료 시 원위치 복원' 설정이 사용됩니다.", 
+            MessageType.Info);
         EditorGUI.indentLevel--;
 
                  EditorGUILayout.Space();
@@ -172,88 +186,76 @@ public class IngamePositionCorrectionClipEditor : Editor
                  serializedObject.ApplyModifiedProperties();
      }
 
-     private void CopyCorrectedPosition()
-     {
-         var correctionMode = (IngamePositionCorrectionBehaviour.CorrectionMode)correctionModeProp.enumValueIndex;
-         Vector3 correctedPosition = Vector3.zero;
-         string positionText = "";
-         bool calculationSuccess = true;
-
-         switch (correctionMode)
+         private void CopyCorrectedPosition()
+    {
+        Transform targetTransform = null;
+        
+        // 1. ExposedReference Transform 확인 (우선순위)
+        var clipAsset = target as 위치보정클립;
+        if (clipAsset != null && clipAsset.referenceTransform.exposedName != null)
+        {
+            // ExposedReference가 설정되어 있지만 실제로는 Scene에서 찾아야 함
+            // Scene에서 "Ani_potion" 이름으로 찾기
+            var aniPotion = GameObject.Find("Ani_potion");
+            if (aniPotion != null)
+            {
+                targetTransform = aniPotion.transform;
+                Debug.Log($"[위치보정] ExposedReference 대상 찾음: {targetTransform.name}");
+            }
+        }
+        // 2. 직접 참조 Transform 확인 (백업)
+        else if (clipAsset != null && clipAsset.directReferenceTransform != null)
+        {
+            targetTransform = clipAsset.directReferenceTransform;
+        }
+         
+                 // 3. Scene에서 "Ani_potion" 이름으로 찾기 (사진에서 보인 이름)
+        if (targetTransform == null)
+        {
+            var aniPotion = GameObject.Find("Ani_potion");
+            if (aniPotion != null)
+            {
+                targetTransform = aniPotion.transform;
+                Debug.Log($"[위치보정] Ani_potion 찾음: {targetTransform.name}");
+            }
+        }
+        
+        // 4. 현재 선택된 GameObject 확인
+        if (targetTransform == null && Selection.activeGameObject != null)
+        {
+            targetTransform = Selection.activeGameObject.transform;
+            Debug.Log($"[위치보정] 선택된 GameObject 사용: {targetTransform.name}");
+        }
+         
+         if (targetTransform == null)
          {
-             case IngamePositionCorrectionBehaviour.CorrectionMode.ToZero:
-                 correctedPosition = Vector3.zero;
-                 if (onlyCorrectXYProp.boolValue)
-                 {
-                     positionText = "Vector3(0, 0, [현재 Z축 유지])";
-                 }
-                 else
-                 {
-                     positionText = "Vector3(0, 0, 0)";
-                 }
-                 break;
-
-                           case IngamePositionCorrectionBehaviour.CorrectionMode.ToReference:
-                  // 직접 참조 Transform이 있는지 확인
-                  Transform directRef = directReferenceTransformProp.objectReferenceValue as Transform;
-                  if (directRef != null)
-                  {
-                      bool useLocal = useLocalPositionProp.boolValue;
-                      correctedPosition = useLocal ? directRef.localPosition : directRef.position;
-                      positionText = $"{directRef.name}의 {(useLocal ? "로컬" : "월드")} 위치";
-                  }
-                  else
-                  {
-                      // Vector3 백업값 사용
-                      correctedPosition = referencePositionProp.vector3Value;
-                      positionText = "백업 Vector3 값";
-                  }
-
-                  if (onlyCorrectXYProp.boolValue)
-                  {
-                      positionText += " (Z축 제외)";
-                  }
-                  break;
-
-             case IngamePositionCorrectionBehaviour.CorrectionMode.CustomOffset:
-                 Vector3 customOffset = customOffsetProp.vector3Value;
-                 positionText = $"원본위치 + Vector3({customOffset.x:F2}, {customOffset.y:F2}, {customOffset.z:F2})";
-                 if (onlyCorrectXYProp.boolValue)
-                 {
-                     positionText += " (Z축 제외)";
-                 }
-                 break;
-
-             case IngamePositionCorrectionBehaviour.CorrectionMode.KeepCurrent:
-                 positionText = "현재 위치 유지 (런타임에서만 계산 가능)";
-                 calculationSuccess = false;
-                 break;
-
-             default:
-                 positionText = "알 수 없는 보정 모드";
-                 calculationSuccess = false;
-                 break;
+             EditorUtility.DisplayDialog("❌ 오류", 
+                 "보정 대상 Transform을 찾을 수 없습니다!\n\n" +
+                 "💡 해결 방법:\n" +
+                 "1. Scene에서 'Ani_potion' GameObject가 있는지 확인\n" +
+                 "2. 해당 GameObject를 선택한 상태에서 다시 시도\n" +
+                 "3. 또는 'ExposedReference Transform' 필드에 할당", 
+                 "확인");
+             return;
          }
-
-                   // 클립보드에 복사
-          if (calculationSuccess && correctionMode != IngamePositionCorrectionBehaviour.CorrectionMode.CustomOffset)
-          {
-              string clipboardText = $"Vector3({correctedPosition.x},{correctedPosition.y},{correctedPosition.z})";
-              GUIUtility.systemCopyBuffer = clipboardText;
-          }
-          else
-          {
-              GUIUtility.systemCopyBuffer = positionText;
-          }
-
+         
+         // 현재 위치 가져오기 (로컬/월드 위치 설정에 따라)
+         bool useLocal = useLocalPositionProp.boolValue;
+         Vector3 currentPosition = useLocal ? targetTransform.localPosition : targetTransform.position;
+         
+         // 클립보드에 복사
+         string clipboardText = $"Vector3({currentPosition.x},{currentPosition.y},{currentPosition.z})";
+         GUIUtility.systemCopyBuffer = clipboardText;
+         
          // 사용자에게 알림
-         string logMessage = $"[위치보정] 📋 복사 완료!\n보정 모드: {correctionMode}\n계산된 위치: {positionText}";
+         string positionType = useLocal ? "로컬" : "월드";
+         string logMessage = $"[위치보정] 📋 복사 완료!\n대상: {targetTransform.name}\n위치 타입: {positionType}\n현재 위치: {clipboardText}";
          Debug.Log(logMessage);
-
+         
          // Unity Inspector에서도 확인할 수 있도록 일시적 팝업
          EditorUtility.DisplayDialog(
-             "📋 보정된 위치 복사 완료", 
-             $"보정 모드: {correctionMode}\n\n계산된 위치:\n{positionText}\n\n클립보드에 복사되었습니다!", 
+             "📋 현재 위치 복사 완료", 
+             $"대상: {targetTransform.name}\n위치 타입: {positionType}\n\n현재 위치:\n{clipboardText}\n\n클립보드에 복사되었습니다!", 
              "확인"
          );
      }
