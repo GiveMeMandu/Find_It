@@ -25,6 +25,9 @@ public class IngameParticlePlayClipEditor : Editor
     private SerializedProperty restoreOriginalSettingsProp;
     private SerializedProperty onlyPlayOnceProp;
     private SerializedProperty restoreOriginalSettingsInEditorProp;
+    
+    // 미리보기 콜백 추적을 위한 필드
+    private UnityEditor.EditorApplication.CallbackFunction delayedStopCallback;
 
     private void OnEnable()
     {
@@ -57,7 +60,7 @@ public class IngameParticlePlayClipEditor : Editor
         // 헤더 스타일
         GUIStyle headerStyle = new GUIStyle(EditorStyles.boldLabel);
         headerStyle.fontSize = 12;
-        headerStyle.normal.textColor = new Color(0.8f, 0.4f, 0.8f);
+        headerStyle.normal.textColor = new Color(0.8f, 0.4f, 0.8f); // 보라색
 
         // 타이틀
         EditorGUILayout.Space();
@@ -145,12 +148,11 @@ public class IngameParticlePlayClipEditor : Editor
         EditorGUILayout.LabelField("■ 애니메이션 감지", EditorStyles.boldLabel);
         EditorGUI.indentLevel++;
         EditorGUILayout.PropertyField(detectAnimationStartProp, new GUIContent("애니메이션 시작 감지"));
+        
         if (detectAnimationStartProp.boolValue)
         {
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(targetAnimationClipsProp, new GUIContent("대상 애니메이션 클립"));
-            EditorGUILayout.HelpBox("특정 애니메이션 클립 이름을 포함하는 경우에만 파티클을 재생합니다.", MessageType.Info);
-            EditorGUI.indentLevel--;
+            EditorGUILayout.PropertyField(targetAnimationClipsProp, new GUIContent("대상 애니메이션 클립"), true);
+            EditorGUILayout.HelpBox("비워두면 모든 애니메이션을 감지합니다.\n특정 애니메이션만 재생하려면 클립 이름을 입력하세요.", MessageType.Info);
         }
         EditorGUI.indentLevel--;
 
@@ -159,32 +161,61 @@ public class IngameParticlePlayClipEditor : Editor
         // 기타 설정
         EditorGUILayout.LabelField("■ 기타 설정", EditorStyles.boldLabel);
         EditorGUI.indentLevel++;
-        EditorGUILayout.PropertyField(restoreOriginalSettingsProp, new GUIContent("원래 설정 복원"));
-        EditorGUILayout.PropertyField(restoreOriginalSettingsInEditorProp, new GUIContent("에디터에서 원래 설정 복원"));
+        EditorGUILayout.PropertyField(restoreOriginalSettingsProp, new GUIContent("런타임 종료 시 원래 설정 복원"));
         EditorGUI.indentLevel--;
 
         EditorGUILayout.Space();
 
-        // 도움말
-        EditorGUILayout.LabelField("■ 사용법", EditorStyles.boldLabel);
+        // 에디터 모드 설정
+        EditorGUILayout.LabelField("■ 에디터 모드 설정", EditorStyles.boldLabel);
+        EditorGUI.indentLevel++;
+        EditorGUILayout.PropertyField(restoreOriginalSettingsInEditorProp, new GUIContent("에디터 종료 시 원래 설정 복원"));
         EditorGUILayout.HelpBox(
-            "🎮 파티클 재생 모드:\n" +
-            "• PlayOnStart: 클립 시작 시 즉시 재생\n" +
-            "• PlayOnAnimationStart: 애니메이션 시작 감지 시 재생\n" +
-            "• PlayOnCustomTime: 지연 시간 후 재생\n\n" +
-            "💡 팁:\n" +
-            "• 자동 정지가 활성화되면 재생 시간 후 자동으로 정지됩니다\n" +
-            "• 지연 시간은 PlayOnCustomTime 모드에서만 사용됩니다\n" +
-            "• 루프가 활성화되면 계속 재생됩니다\n" +
-            "• 한 번만 재생이 활성화되면 클립이 다시 시작되어도 재생되지 않습니다", 
+            "💡 에디터에서 플레이 중이 아닐 때 Timeline 재생 시에만 적용됩니다.\n" +
+            "플레이 중이나 빌드된 게임에서는 위의 '런타임 종료 시 원래 설정 복원' 설정이 사용됩니다.", 
             MessageType.Info);
+        EditorGUI.indentLevel--;
+
+        EditorGUILayout.Space();
 
         // 미리보기 버튼
-        EditorGUILayout.Space();
-        if (GUILayout.Button("🎬 파티클 미리보기", GUILayout.Height(30)))
+        EditorGUILayout.LabelField("■ 유틸리티", EditorStyles.boldLabel);
+        EditorGUI.indentLevel++;
+        
+        GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+        buttonStyle.normal.textColor = Color.white;
+        buttonStyle.fontStyle = FontStyle.Bold;
+        
+        if (GUILayout.Button("🎬 파티클 미리보기", buttonStyle, GUILayout.Height(30)))
         {
             PreviewParticle();
         }
+        
+        EditorGUILayout.HelpBox(
+            "💡 현재 설정된 파티클 시스템을 미리보기로 재생합니다.\n" +
+            "3초 후 자동으로 정지됩니다.", 
+            MessageType.Info);
+        
+        EditorGUI.indentLevel--;
+        EditorGUILayout.Space();
+
+        // 사용법 안내
+        EditorGUILayout.HelpBox(
+            "🎮 사용법:\n" +
+            "1. Timeline에서 파티클재생트랙을 추가합니다.\n" +
+            "2. 파티클 시스템을 할당합니다.\n" +
+            "3. 재생 모드와 설정을 구성합니다.\n\n" +
+            "💡 재생 모드:\n" +
+            "• PlayOnStart: 클립 시작 시 즉시 재생\n" +
+            "• PlayOnAnimationStart: 애니메이션 시작 감지 시 재생\n" +
+            "• PlayOnCustomTime: 지연 시간 후 재생\n\n" +
+            "⏰ 재생 설정:\n" +
+            "• 자동 정지: 재생 시간 후 자동 정지\n" +
+            "• 지연 시간: PlayOnCustomTime 모드에서만 사용\n" +
+            "• 루프: 반복 재생 여부\n" +
+            "• 한 번만 재생: 클립 재시작 시 재생 방지",
+            MessageType.Info
+        );
 
         serializedObject.ApplyModifiedProperties();
     }
@@ -192,7 +223,7 @@ public class IngameParticlePlayClipEditor : Editor
     private void PreviewParticle()
     {
         var clip = target as 파티클재생클립;
-        if (clip != null && clip.targetParticleSystem != null)
+        if (clip != null)
         {
             var particleSystem = clip.targetParticleSystem.Resolve(UnityEditor.Timeline.TimelineEditor.inspectedDirector);
             if (particleSystem != null)
@@ -201,16 +232,59 @@ public class IngameParticlePlayClipEditor : Editor
                 particleSystem.Play();
                 Debug.Log($"[파티클미리보기] {particleSystem.name} 미리보기 재생");
                 
-                // 3초 후 자동 정지
-                EditorApplication.delayCall += () =>
-                {
-                    if (particleSystem != null)
-                    {
-                        particleSystem.Stop();
-                        Debug.Log($"[파티클미리보기] {particleSystem.name} 미리보기 정지");
-                    }
-                };
+                                 // 3초 후 자동 정지
+                 delayedStopCallback = () =>
+                 {
+                     if (particleSystem != null)
+                     {
+                         particleSystem.Stop();
+                         Debug.Log($"[파티클미리보기] {particleSystem.name} 미리보기 정지");
+                     }
+                     // 콜백 제거
+                     if (delayedStopCallback != null)
+                     {
+                         EditorApplication.delayCall -= delayedStopCallback;
+                         delayedStopCallback = null;
+                     }
+                 };
+                 
+                 EditorApplication.delayCall += delayedStopCallback;
+                
+                // 사용자에게 알림
+                EditorUtility.DisplayDialog(
+                    "🎬 파티클 미리보기 시작", 
+                    $"파티클 시스템: {particleSystem.name}\n\n3초 후 자동으로 정지됩니다.", 
+                    "확인"
+                );
             }
+            else
+            {
+                EditorUtility.DisplayDialog("❌ 오류", 
+                    "파티클 시스템을 찾을 수 없습니다!\n\n" +
+                    "💡 해결 방법:\n" +
+                    "1. '파티클 시스템' 필드에 ParticleSystem을 할당하세요\n" +
+                    "2. Timeline에서 ExposedReference가 올바르게 설정되었는지 확인하세요", 
+                    "확인");
+            }
+        }
+        else
+        {
+            EditorUtility.DisplayDialog("❌ 오류", 
+                "파티클 시스템이 할당되지 않았습니다!\n\n" +
+                "💡 해결 방법:\n" +
+                "1. '파티클 시스템' 필드에 ParticleSystem을 할당하세요\n" +
+                "2. Timeline에서 ExposedReference가 올바르게 설정되었는지 확인하세요", 
+                "확인");
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        // 등록된 콜백 제거
+        if (delayedStopCallback != null)
+        {
+            EditorApplication.delayCall -= delayedStopCallback;
+            delayedStopCallback = null;
         }
     }
 } 

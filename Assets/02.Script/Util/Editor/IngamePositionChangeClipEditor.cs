@@ -15,6 +15,8 @@ public class IngamePositionChangeClipEditor : Editor
     private SerializedProperty smoothChangeProp;
     private SerializedProperty changeDurationProp;
     private SerializedProperty changeCurveProp;
+    private SerializedProperty customCurveProp;  // 추가
+    private SerializedProperty movementTypeProp;  // 추가
     private SerializedProperty detectAnimationStartProp;
     private SerializedProperty targetAnimationClipsProp;
     private SerializedProperty useLocalPositionProp;
@@ -34,6 +36,8 @@ public class IngamePositionChangeClipEditor : Editor
         smoothChangeProp = serializedObject.FindProperty("smoothChange");
         changeDurationProp = serializedObject.FindProperty("changeDuration");
         changeCurveProp = serializedObject.FindProperty("changeCurve");
+        customCurveProp = serializedObject.FindProperty("customCurve");  // 추가
+        movementTypeProp = serializedObject.FindProperty("movementType");  // 추가
         detectAnimationStartProp = serializedObject.FindProperty("detectAnimationStart");
         targetAnimationClipsProp = serializedObject.FindProperty("targetAnimationClips");
         useLocalPositionProp = serializedObject.FindProperty("useLocalPosition");
@@ -115,6 +119,20 @@ public class IngamePositionChangeClipEditor : Editor
             EditorGUILayout.PropertyField(changeCurveProp, new GUIContent("변경 커브"));
             EditorGUI.indentLevel--;
         }
+        
+        // 이동 방식 설정 추가
+        EditorGUILayout.PropertyField(movementTypeProp, new GUIContent("이동 방식"));
+        
+        // AnimationCurve 설정 추가
+        var movementType = (IngamePositionChangeBehaviour.MovementType)movementTypeProp.enumValueIndex;
+        if (movementType == IngamePositionChangeBehaviour.MovementType.AnimationCurve)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(customCurveProp, new GUIContent("커스텀 커브"));
+            EditorGUILayout.HelpBox("클립 길이에 따른 위치 변경 커브를 설정합니다.", MessageType.Info);
+            EditorGUI.indentLevel--;
+        }
+        
         EditorGUI.indentLevel--;
 
         EditorGUILayout.Space();

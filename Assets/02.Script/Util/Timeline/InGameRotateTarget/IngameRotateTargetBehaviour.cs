@@ -146,7 +146,7 @@ public class IngameRotateTargetBehaviour : PlayableBehaviour
                     {
                         // 0번 반전이면 원래 상태로 설정
                         targetRotation.y = originalRotation.y;
-                        Debug.Log($"[InstantFlip] 0번 반전 - 원래 상태로 설정: {targetRotation.y:F1}");
+                        // Debug.Log($"[InstantFlip] 0번 반전 - 원래 상태로 설정: {targetRotation.y:F1}");
                     }
                     else
                     {

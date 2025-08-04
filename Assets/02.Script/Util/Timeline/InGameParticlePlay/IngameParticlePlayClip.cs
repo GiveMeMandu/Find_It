@@ -49,7 +49,7 @@ public class 파티클재생클립 : PlayableAsset, ITimelineClipAsset
     
     public ClipCaps clipCaps
     {
-        get { return ClipCaps.None; }
+        get { return ClipCaps.Blending | ClipCaps.Extrapolation | ClipCaps.ClipIn | ClipCaps.SpeedMultiplier; }
     }
 
     public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
