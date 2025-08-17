@@ -21,12 +21,13 @@ namespace OutGame
             } else {
                 Global.UIManager.OpenPage<InGameMainPage>();
             }
-            // if(_levelManager == null) {
-            //     _levelManager = FindObjectOfType<LevelManager>();
-            //     _levelManager.OnEndEvnt.Add(ClearStageTask);
-            // } else {
-            //     _levelManager.OnEndEvnt.Add(ClearStageTask);
-            // }
+            if(_levelManager == null) {
+                _levelManager = FindAnyObjectByType<LevelManager>();
+                if(_levelManager != null)
+                    _levelManager.OnEndEvent.Add(ClearStageTask);
+            } else {
+                _levelManager.OnEndEvent.Add(ClearStageTask);
+            }
         }
 
         protected virtual void StartStageBase()

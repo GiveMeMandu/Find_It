@@ -86,14 +86,17 @@ namespace Util.CameraSetting
         {
             if (!_enableZoom) return;
 
-            // 전통적인 Input 시스템 사용
-            var scroll = Input.GetAxis("Mouse ScrollWheel");
-            if (Mathf.Abs(scroll) > 0.01f)
+            // 새로운 Input System 사용
+            if (Mouse.current != null)
             {
-                var zoomDelta = scroll * mouseWheelZoomSpeed;
-                var mousePosition = Input.mousePosition;
-                HandleZoom(zoomDelta, mousePosition);
-                // Debug.Log($"마우스 휠 줌: delta={zoomDelta}, position={mousePosition}, scroll={scroll}");
+                var scroll = Mouse.current.scroll.ReadValue().y;
+                if (Mathf.Abs(scroll) > 0.01f)
+                {
+                    var zoomDelta = scroll * mouseWheelZoomSpeed;
+                    var mousePosition = Mouse.current.position.ReadValue();
+                    HandleZoom(zoomDelta, mousePosition);
+                    // Debug.Log($"마우스 휠 줌: delta={zoomDelta}, position={mousePosition}, scroll={scroll}");
+                }
             }
         }
 #endif

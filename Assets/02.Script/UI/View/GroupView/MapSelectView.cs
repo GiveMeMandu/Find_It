@@ -173,12 +173,12 @@ namespace UnityWeld
         /// </summary>
         private void PlayInitialStageEffect()
         {
-            // 현재 씬의 첫 번째 스테이지 인덱스 찾기 (버튼 인덱스 0번에 해당하는 실제 스테이지 인덱스)
-            var currentSceneStageIndices = GetCurrentSceneStageIndices();
+            // 현재 월드의 첫 번째 스테이지 인덱스 찾기 (버튼 인덱스 0번에 해당하는 실제 스테이지 인덱스)
+            var currentWorldStageIndices = GetCurrentSceneStageIndices();
             
-            if (currentSceneStageIndices.Count > 0 && clickToMoveEffects != null)
+            if (currentWorldStageIndices.Count > 0 && clickToMoveEffects != null)
             {
-                int firstStageIndex = currentSceneStageIndices[0]; // 현재 씬의 첫 번째 스테이지
+                int firstStageIndex = currentWorldStageIndices[0]; // 현재 월드의 첫 번째 스테이지
                 
                 // 해당 인덱스가 유효한 범위인지 확인 후 이펙트 실행
                 if (firstStageIndex >= 0 && firstStageIndex < clickToMoveEffects.Count)
@@ -233,7 +233,7 @@ namespace UnityWeld
             }
             else
             {
-                // 일반 게임 시작 - 현재 선택된 씬과 버튼 인덱스로 계산
+                // 일반 게임 시작 - 현재 선택된 월드와 버튼 인덱스로 계산
                 int targetSceneIndex = CalculateSceneIndex(_currentSceneName, GetCurrentButtonIndex());
                 Debug.Log($"[MapSelectView] Normal game start - Scene: {_currentSceneName}, ButtonIndex: {GetCurrentButtonIndex()}, TargetScene: {targetSceneIndex}");
                 main.OnClickStartButton(targetSceneIndex);
@@ -241,16 +241,16 @@ namespace UnityWeld
         }
         
         /// <summary>
-        /// 현재 선택된 씬의 버튼 인덱스를 계산합니다 (0, 1, 2...)
+        /// 현재 선택된 월드의 버튼 인덱스를 계산합니다 (0, 1, 2...)
         /// </summary>
-        /// <returns>현재 씬 내에서의 버튼 인덱스</returns>
+        /// <returns>현재 월드 내에서의 버튼 인덱스</returns>
         private int GetCurrentButtonIndex()
         {
-            var currentSceneStageIndices = GetCurrentSceneStageIndices();
+            var currentWorldStageIndices = GetCurrentSceneStageIndices();
             
-            for (int i = 0; i < currentSceneStageIndices.Count; i++)
+            for (int i = 0; i < currentWorldStageIndices.Count; i++)
             {
-                if (currentSceneStageIndices[i] == _currentStageIndex)
+                if (currentWorldStageIndices[i] == _currentStageIndex)
                 {
                     return i;
                 }
@@ -292,36 +292,50 @@ namespace UnityWeld
         }
 
         /// <summary>
-        /// 다음 씬으로 이동 (sceneName 단위)
+        /// 다음 월드로 이동 (월드 단위)
         /// </summary>
         [Binding]
         public void NextStage()
         {
-            // 현재 SceneName의 다음 SceneName으로 이동
-            var uniqueSceneNames = GetUniqueSceneNames();
-            int currentIndex = uniqueSceneNames.IndexOf(_currentSceneName);
-
-            if (currentIndex < uniqueSceneNames.Count - 1)
+            // 현재 월드 번호 가져오기
+            int currentWorld = SceneHelper.GetWorldNumber(_currentSceneName);
+            
+            // 다음 월드가 존재하는지 확인
+            if (currentWorld < 3) // 최대 월드 3까지
             {
-                SceneName nextSceneName = uniqueSceneNames[currentIndex + 1];
-                SelectStageBySceneName(nextSceneName);
+                int nextWorld = currentWorld + 1;
+                
+                // 다음 월드의 첫 번째 스테이지 찾기
+                var nextWorldScenes = SceneHelper.GetScenesInWorld(nextWorld);
+                if (nextWorldScenes.Count > 0)
+                {
+                    // 다음 월드의 첫 번째 스테이지로 이동
+                    SelectStageBySceneName(nextWorldScenes[0]);
+                }
             }
         }
 
         /// <summary>
-        /// 이전 씬으로 이동 (sceneName 단위)
+        /// 이전 월드로 이동 (월드 단위)
         /// </summary>
         [Binding]
         public void PrevStage()
         {
-            // 현재 SceneName의 이전 SceneName으로 이동
-            var uniqueSceneNames = GetUniqueSceneNames();
-            int currentIndex = uniqueSceneNames.IndexOf(_currentSceneName);
-
-            if (currentIndex > 0)
+            // 현재 월드 번호 가져오기
+            int currentWorld = SceneHelper.GetWorldNumber(_currentSceneName);
+            
+            // 이전 월드가 존재하는지 확인
+            if (currentWorld > 1) // 최소 월드 1부터
             {
-                SceneName prevSceneName = uniqueSceneNames[currentIndex - 1];
-                SelectStageBySceneName(prevSceneName);
+                int prevWorld = currentWorld - 1;
+                
+                // 이전 월드의 첫 번째 스테이지 찾기
+                var prevWorldScenes = SceneHelper.GetScenesInWorld(prevWorld);
+                if (prevWorldScenes.Count > 0)
+                {
+                    // 이전 월드의 첫 번째 스테이지로 이동
+                    SelectStageBySceneName(prevWorldScenes[0]);
+                }
             }
         }
 
@@ -458,15 +472,19 @@ namespace UnityWeld
         }
         
         /// <summary>
-        /// 현재 선택된 씬 이름에 해당하는 스테이지 수를 가져옵니다
+        /// 현재 선택된 월드에 해당하는 스테이지 수를 가져옵니다
         /// </summary>
-        /// <returns>현재 씬의 스테이지 수</returns>
+        /// <returns>현재 월드의 스테이지 수</returns>
         private int GetCurrentSceneStageCount()
         {
+            // 현재 월드 번호 가져오기
+            int currentWorld = SceneHelper.GetWorldNumber(_currentSceneName);
+            
+            // 해당 월드의 스테이지들 중 실제 sceneInfos에 존재하는 것만 카운트
             int count = 0;
-            foreach (var sceneInfo in sceneInfos)
+            for (int i = 0; i < sceneInfos.Count; i++)
             {
-                if (sceneInfo.sceneName == _currentSceneName)
+                if (SceneHelper.GetWorldNumber(sceneInfos[i].sceneName) == currentWorld)
                 {
                     count++;
                 }
@@ -475,19 +493,19 @@ namespace UnityWeld
         }
         
         /// <summary>
-        /// 현재 씬의 스테이지 수에 따라 clickToChangeStageBtns의 활성화 상태를 업데이트합니다
+        /// 현재 월드의 스테이지 수에 따라 clickToChangeStageBtns의 활성화 상태를 업데이트합니다
         /// </summary>
         private void UpdateStageButtons()
         {
             if (clickToChangeStageBtns == null) return;
             
-            int currentSceneStageCount = GetCurrentSceneStageCount();
+            int currentWorldStageCount = GetCurrentSceneStageCount();
             
             for (int i = 0; i < clickToChangeStageBtns.Count; i++)
             {
                 if (clickToChangeStageBtns[i] != null)
                 {
-                    bool shouldBeActive = i < currentSceneStageCount;
+                    bool shouldBeActive = i < currentWorldStageCount;
                     
                     // 버튼 활성화/비활성화
                     if(!shouldBeActive)
@@ -516,15 +534,17 @@ namespace UnityWeld
         }
         
         /// <summary>
-        /// 현재 선택된 씬에 해당하는 스테이지 인덱스들을 가져옵니다
+        /// 현재 선택된 월드에 해당하는 스테이지 인덱스들을 가져옵니다
         /// </summary>
-        /// <returns>현재 씬의 스테이지 인덱스 리스트</returns>
+        /// <returns>현재 월드의 스테이지 인덱스 리스트 (실제 sceneInfos에 존재하는 것만)</returns>
         public List<int> GetCurrentSceneStageIndices()
         {
             var indices = new List<int>();
+            int currentWorld = SceneHelper.GetWorldNumber(_currentSceneName);
+            
             for (int i = 0; i < sceneInfos.Count; i++)
             {
-                if (sceneInfos[i].sceneName == _currentSceneName)
+                if (SceneHelper.GetWorldNumber(sceneInfos[i].sceneName) == currentWorld)
                 {
                     indices.Add(i);
                 }
@@ -548,17 +568,17 @@ namespace UnityWeld
         {
             if (clickToChangeStageBtns == null) return;
             
-            var currentSceneStageIndices = GetCurrentSceneStageIndices();
+            var currentWorldStageIndices = GetCurrentSceneStageIndices();
             
             for (int i = 0; i < clickToChangeStageBtns.Count; i++)
             {
-                if (clickToChangeStageBtns[i] != null && i < currentSceneStageIndices.Count)
+                if (clickToChangeStageBtns[i] != null && i < currentWorldStageIndices.Count)
                 {
                     // 기존 이벤트 제거
                     clickToChangeStageBtns[i].onClick.RemoveAllListeners();
                     
-                    // 현재 씬의 해당 스테이지 인덱스로 SelectStage 호출하도록 설정
-                    int stageIndex = currentSceneStageIndices[i];
+                    // 현재 월드의 해당 스테이지 인덱스로 SelectStage 호출하도록 설정
+                    int stageIndex = currentWorldStageIndices[i];
                     clickToChangeStageBtns[i].onClick.AddListener(() => SelectStage(stageIndex));
                 }
             }
@@ -571,12 +591,12 @@ namespace UnityWeld
         {
             if (clickToChangeStageBtns == null || selectedButtonSprite == null || unselectedButtonSprite == null) return;
             
-            var currentSceneStageIndices = GetCurrentSceneStageIndices();
+            var currentWorldStageIndices = GetCurrentSceneStageIndices();
             int selectedButtonIndex = GetSelectedButtonIndex();
             
             for (int i = 0; i < clickToChangeStageBtns.Count; i++)
             {
-                if (clickToChangeStageBtns[i] != null && i < currentSceneStageIndices.Count)
+                if (clickToChangeStageBtns[i] != null && i < currentWorldStageIndices.Count)
                 {
                     var buttonImage = clickToChangeStageBtns[i].GetComponent<UnityEngine.UI.Image>();
                     if (buttonImage != null)
@@ -595,11 +615,11 @@ namespace UnityWeld
         /// <returns>선택된 버튼 인덱스, 찾지 못하면 -1</returns>
         private int GetSelectedButtonIndex()
         {
-            var currentSceneStageIndices = GetCurrentSceneStageIndices();
+            var currentWorldStageIndices = GetCurrentSceneStageIndices();
             
-            for (int i = 0; i < currentSceneStageIndices.Count; i++)
+            for (int i = 0; i < currentWorldStageIndices.Count; i++)
             {
-                if (currentSceneStageIndices[i] == _currentStageIndex)
+                if (currentWorldStageIndices[i] == _currentStageIndex)
                 {
                     return i;
                 }

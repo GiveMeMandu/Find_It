@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DeskCat.FindIt.Scripts.Core.Model;
+using NaughtyAttributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -55,7 +56,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
     public class LevelManager : MMSingleton<LevelManager>
     {
         //* 김일 추가 : 종료 조건에 등록된 함수들 먼저 실행
-        public List<Func<UniTask>> OnEndEvnt = new List<Func<UniTask>>();  // 비동기 메서드 참조
+        public List<Func<UniTask>> OnEndEvent = new List<Func<UniTask>>();  // 비동기 메서드 참조
         //* 김일 추가 : 옵젝 찾으면 전역에 알릴려고 추가함
         public EventHandler<HiddenObj> OnFoundObj;
         public EventHandler OnFoundObjCountChanged;
@@ -107,7 +108,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private DateTime StartTime;
         private DateTime EndTime;
 
-        private int hiddenObjCount = 0;
         private int rabbitObjCount = 0;
         private int maxRabbitObjCount = 0;
 
@@ -305,8 +305,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 }
             }
 
-            hiddenObjCount = TargetObjDic.Sum(x => x.Value.TotalCount);
-
             RabbitObjDic = new Dictionary<Guid, HiddenObj>();
             
             // RabbitObjs null 체크
@@ -394,7 +392,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 if (CurrentScrollView != null)
                     CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
                     
-                hiddenObjCount--;
                 OnFoundObj?.Invoke(this, clickedObj);
 
                 // Debug.Log($"Found {clickedObj.name} from group {group.BaseGroupName} ({group.FoundCount}/{group.TotalCount})");
@@ -420,15 +417,26 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         //* 김일 수정 : 게임 종료 조건 = 숨긴 물건만 찾고 추가 조건은 태스크로 관리
         private async void DetectGameEnd()
         {
+            // 실제 남은 오브젝트 수 계산
+            int remainingObjects = GetLeftHiddenObjCount();
+            int totalObjects = GetTotalHiddenObjCount();
+            int foundObjects = totalObjects - remainingObjects;
+            
+            // 디버그 로그 추가
+            Debug.Log($"[LevelManager] DetectGameEnd - Remaining: {remainingObjects}, Total: {totalObjects}, Found: {foundObjects}");
+            Debug.Log($"[LevelManager] ItemSetManager - Found: {ItemSetManager.Instance?.FoundSetsCount}, Total: {ItemSetManager.Instance?.TotalSetsCount}");
+            
             // 모든 숨겨진 오브젝트를 찾았고, ItemSetManager의 모든 세트도 찾았을 때만 게임 종료
-            if (hiddenObjCount <= 0 && ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount)
+            if (remainingObjects <= 0 && ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount)
             {
+                Debug.Log("[LevelManager] Game End condition met! Starting end sequence...");
+                
                 if (IsOverwriteGameEnd)
                 {
                     // UnityEvent의 모든 리스너가 실행 완료될 때까지 대기
-                    if (OnEndEvnt.Count > 0)
+                    if (OnEndEvent.Count > 0)
                     {
-                        foreach (var func in OnEndEvnt)
+                        foreach (var func in OnEndEvent)
                         {
                             await func();
                         }
@@ -438,15 +446,20 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     return;
                 }
                 // UnityEvent의 모든 리스너가 실행 완료될 때까지 대기
-                if (OnEndEvnt.Count > 0)
+                if (OnEndEvent.Count > 0)
                 {
-                    foreach (var func in OnEndEvnt)
+                    foreach (var func in OnEndEvent)
                     {
                         await func();
                     }
                 }
+                GameEndEvent?.Invoke();  // 모든 UnityEvent 호출이 완료된 뒤에 종료 이벤트 호출
 
                 DefaultGameEndFunc();
+            }
+            else
+            {
+                Debug.Log($"[LevelManager] Game End condition not met - Remaining objects: {remainingObjects}, ItemSet condition: {ItemSetManager.Instance?.FoundSetsCount == ItemSetManager.Instance?.TotalSetsCount}");
             }
         }
 
@@ -538,6 +551,38 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public string GetBaseGroupName(string objName)
         {
             return InGameObjectNameFilter.GetBaseGroupName(objName);
+        }
+
+        // 디버깅을 위한 게임 상태 확인 메서드
+        public void DebugGameState()
+        {
+            int remainingObjects = GetLeftHiddenObjCount();
+            int totalObjects = GetTotalHiddenObjCount();
+            int foundObjects = totalObjects - remainingObjects;
+            
+            Debug.Log($"[LevelManager] === GAME STATE DEBUG ===");
+            Debug.Log($"[LevelManager] Total Objects: {totalObjects}");
+            Debug.Log($"[LevelManager] Found Objects: {foundObjects}");
+            Debug.Log($"[LevelManager] Remaining Objects: {remainingObjects}");
+            Debug.Log($"[LevelManager] Rabbit Count: {rabbitObjCount}/{maxRabbitObjCount}");
+            
+            if (ItemSetManager.Instance != null)
+            {
+                Debug.Log($"[LevelManager] ItemSet - Found: {ItemSetManager.Instance.FoundSetsCount}, Total: {ItemSetManager.Instance.TotalSetsCount}");
+            }
+            else
+            {
+                Debug.Log("[LevelManager] ItemSetManager.Instance is null!");
+            }
+            
+            // 각 그룹별 상태 출력
+            foreach (var kvp in TargetObjDic)
+            {
+                var group = kvp.Value;
+                Debug.Log($"[LevelManager] Group '{group.BaseGroupName}': {group.FoundCount}/{group.TotalCount}");
+            }
+            
+            Debug.Log($"[LevelManager] =========================");
         }
     }
 }

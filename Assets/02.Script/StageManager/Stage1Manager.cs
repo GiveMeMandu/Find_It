@@ -29,14 +29,22 @@ namespace InGame
         }
         public override void SkipIntro()
         {
-            if(Global.UIManager.GetCurrentPage() is InGameMainPage currentPage)
+            if (Global.UIManager.GetCurrentPage() is InGameMainPage currentPage)
             {
+                // 인트로가 할당되지 않았으면 스킵 불가
+                if (_introDirector == null)
+                {
+                    currentPage.ShowSkipButton = false;
+                    base.SkipIntro();
+                    return;
+                }
+
                 // 타임라인 완전 초기화 후 마지막으로 이동
                 _introDirector.Stop();
                 _introDirector.time = 0;
                 _introDirector.Evaluate();
                 _introDirector.playableGraph.Evaluate(0f);
-                
+
                 // 타임라인 재생 후 즉시 마지막으로 이동
                 _introDirector.enabled = true;
                 _introDirector.Play();
@@ -44,7 +52,7 @@ namespace InGame
                 _introDirector.Evaluate();
                 _introDirector.Stop();
                 _introDirector.enabled = false;
-                
+
                 currentPage.ShowSkipButton = false;
             }
             base.SkipIntro();
@@ -53,17 +61,17 @@ namespace InGame
         public void StartStage()
         {
             bool isIntro = PlayerPrefs.GetInt("IsIntro1") == 1;
-            if (isIntro)
+            if (isIntro && _introDirector != null)
             {
                 PlayerPrefs.SetInt("IsIntro1", 0);
                 PlayerPrefs.Save();
                 _levelManager.gameObject.SetActive(false);
                 _introDirector.initialTime = 0;
                 _introDirector.enabled = true;
-                
+
                 // StartStageBase();
                 // 스킵 버튼 2초 후 활성화
-                if(Global.UIManager.GetCurrentPage() is InGameMainPage currentPage)
+                if (Global.UIManager.GetCurrentPage() is InGameMainPage currentPage)
                 {
                     ShowSkipButtonDelayed(currentPage).Forget();
                 }
@@ -73,23 +81,18 @@ namespace InGame
                 StartStageBase();
             }
         }
-
         protected override async UniTask ClearStageTask()
         {
             await base.ClearStageTask();
-            // _outroDirector.initialTime = 0;
-            // _outroDirector.enabled = true;
-            // _outroDirector.Play();
-            // _outroDirector2.initialTime = 0;
-            // _outroDirector2.enabled = true;
-            // _outroDirector2.Play();
-            // await UniTask.WaitUntil(() => _outroDirector.state != PlayState.Playing);
-            // await UniTask.WaitUntil(() => _outroDirector2.state != PlayState.Playing);
-            // await UniTask.WaitForSeconds(5.5f);
-            // _outroDirector3.initialTime = 0;
-            // _outroDirector3.enabled = true;
-            // _outroDirector3.Play();
-            // await UniTask.WaitUntil(() => _outroDirector3.state != PlayState.Playing);
+
+            // 아웃트로를 LevelManager의 OnEndEvent에 등록
+            if (_outroDirector != null)
+            {
+                _outroDirector.initialTime = 0;
+                _outroDirector.enabled = true;
+                _outroDirector.Play();
+                await UniTask.WaitUntil(() => _outroDirector.state != PlayState.Playing);
+            }
 
             // PlayerPrefs.Save();
         }

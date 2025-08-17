@@ -136,7 +136,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 // LevelManager의 종료 이벤트에 등록 - 모든 SetCompletionObject가 클릭될 때까지 대기
                 if (LevelManager.Instance != null)
                 {
-                    LevelManager.Instance.OnEndEvnt.Add(async () => 
+                    LevelManager.Instance.OnEndEvent.Add(async () => 
                     {
                         await WaitForAllCompletionObjectsClicked();
                     });
