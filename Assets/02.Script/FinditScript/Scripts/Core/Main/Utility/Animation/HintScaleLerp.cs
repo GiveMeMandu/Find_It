@@ -172,7 +172,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
             pauseTimer = 0f;
             transform.localScale = MinScale;
             
-            Debug.Log($"HintScaleLerp 애니메이션 시작 - MinScale: {MinScale}, MaxScale: {MaxScale}, AutoRestart: {AutoRestart}");
+            // Debug.Log($"HintScaleLerp 애니메이션 시작 - MinScale: {MinScale}, MaxScale: {MaxScale}, AutoRestart: {AutoRestart}");
         }
         
         // 힌트 효과를 중지하는 메서드
@@ -182,7 +182,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
             AutoRestart = false;
             // 원래 크기로 복원
             transform.localScale = Vector3.one;
-            Debug.Log("HintScaleLerp 애니메이션 중지");
+            // Debug.Log("HintScaleLerp 애니메이션 중지");
         }
     }
 }

@@ -96,7 +96,7 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""b9eef512-9a4d-4963-b630-a9133d290ed3"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -109,6 +109,15 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""45c8831b-3715-4320-a469-c8ea89e624b4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -153,6 +162,17 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MouseWheel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b56ec440-61bb-419b-983c-a4215b5bc005"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -213,6 +233,7 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
         m_playerControl = asset.FindActionMap("playerControl", throwIfNotFound: true);
         m_playerControl_Pause = m_playerControl.FindAction("Pause", throwIfNotFound: true);
         m_playerControl_MouseWheel = m_playerControl.FindAction("MouseWheel", throwIfNotFound: true);
+        m_playerControl_Click = m_playerControl.FindAction("Click", throwIfNotFound: true);
         // Touch
         m_Touch = asset.FindActionMap("Touch", throwIfNotFound: true);
         m_Touch_TouchPosition = m_Touch.FindAction("TouchPosition", throwIfNotFound: true);
@@ -300,6 +321,7 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
     private List<IPlayerControlActions> m_PlayerControlActionsCallbackInterfaces = new List<IPlayerControlActions>();
     private readonly InputAction m_playerControl_Pause;
     private readonly InputAction m_playerControl_MouseWheel;
+    private readonly InputAction m_playerControl_Click;
     /// <summary>
     /// Provides access to input actions defined in input action map "playerControl".
     /// </summary>
@@ -319,6 +341,10 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "playerControl/MouseWheel".
         /// </summary>
         public InputAction @MouseWheel => m_Wrapper.m_playerControl_MouseWheel;
+        /// <summary>
+        /// Provides access to the underlying input action "playerControl/Click".
+        /// </summary>
+        public InputAction @Click => m_Wrapper.m_playerControl_Click;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -351,6 +377,9 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
             @MouseWheel.started += instance.OnMouseWheel;
             @MouseWheel.performed += instance.OnMouseWheel;
             @MouseWheel.canceled += instance.OnMouseWheel;
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
         }
 
         /// <summary>
@@ -368,6 +397,9 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
             @MouseWheel.started -= instance.OnMouseWheel;
             @MouseWheel.performed -= instance.OnMouseWheel;
             @MouseWheel.canceled -= instance.OnMouseWheel;
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
         }
 
         /// <summary>
@@ -529,6 +561,13 @@ public partial class @PlayerAction: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMouseWheel(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnClick(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Touch" which allows adding and removing callbacks.

@@ -30,11 +30,14 @@ namespace UI
         private HiddenObj _currentMagnifierTarget;
         private bool _isMagnifierEffectActive;
         private System.Guid _magnifierTargetGuid;
-        private Vector3 _magnifierUIPosition;
         
         // Background Animation 프리팹 (인스펙터에서 할당)
         [SerializeField] private GameObject magnifierBackgroundAnimationPrefab;
         private GameObject _currentMagnifierBgAnimation;
+        
+        // 돋보기 UI 이미지 프리팹 (인스펙터에서 할당)
+        [SerializeField] private GameObject magnifierUIPrefab;
+        private GameObject _currentMagnifierUI;
         
         // 아이템 수량 텍스트 프로퍼티들
         [Binding]
@@ -140,25 +143,18 @@ namespace UI
             }
         }
 
-        // 돋보기 UI 위치 바인딩 (스크린 좌표)
-        [Binding]
-        public Vector3 MagnifierUIPosition
-        {
-            get => _magnifierUIPosition;
-            set
-            {
-                _magnifierUIPosition = value;
-                OnPropertyChanged(nameof(MagnifierUIPosition));
-            }
-        }
-
         private void Start()
         {
             // 아이템 관련 이벤트 구독
             if (Global.ItemManager != null)
             {
                 Global.ItemManager.OnItemCountChanged += OnItemCountChanged;
-                UpdateAllItemCounts();
+                
+                // 부스 운영을 위해 각 아이템 3개씩 지급 (나중에 데이터 저장/로드 기능으로 교체 예정)
+                // TODO: 나중에 저장된 데이터를 불러오는 로직으로 교체
+                InitializeItemsForDemo();
+                
+                // UpdateAllItemCounts();
             }
             
             // 초기 상태 설정
@@ -183,6 +179,16 @@ namespace UI
             
             // 돋보기 상태 초기화
             ResetMagnifierState();
+        }
+        
+        private void InitializeItemsForDemo()
+        {
+            // 부스 운영을 위해 각 아이템 3개씩 지급
+            Global.ItemManager.AddItem(ItemType.Compass, 3);
+            Global.ItemManager.AddItem(ItemType.Stopwatch, 3);
+            Global.ItemManager.AddItem(ItemType.Hint, 3);
+            
+            Debug.Log("부스 데모용 아이템 지급 완료: 각 아이템 3개씩");
         }
 
         // 아이템 관련 메서드들
@@ -511,6 +517,9 @@ namespace UI
 
             // Background Animation 생성 및 설정
             CreateMagnifierBackgroundAnimation();
+            
+            // 돋보기 UI 생성 및 설정
+            CreateMagnifierUI();
 
             // 오브젝트가 화면에 보이는지 확인
             if (!IsObjectVisibleOnScreen(_currentMagnifierTarget))
@@ -518,9 +527,6 @@ namespace UI
                 Debug.Log($"오브젝트가 화면 밖에 있음. 카메라 이동 시작: {_currentMagnifierTarget.name}");
                 await MoveCameraToObjectAsync(_currentMagnifierTarget);
             }
-
-            // 초기 UI 위치 설정
-            UpdateMagnifierUIPosition();
 
             // 오브젝트가 찾아질 때까지 대기하면서 UI 위치 업데이트
             await WaitForTargetObjectFoundAsync();
@@ -535,11 +541,13 @@ namespace UI
             // Background Animation 비활성화 및 정리
             DestroyMagnifierBackgroundAnimation();
             
+            // 돋보기 UI 비활성화 및 정리
+            DestroyMagnifierUI();
+            
             IsMagnifierEffectActive = false;
             IsHintActive = false;
             _currentMagnifierTarget = null;
             _magnifierTargetGuid = System.Guid.Empty;
-            MagnifierUIPosition = Vector3.zero;
         }
 
         private void CreateMagnifierBackgroundAnimation()
@@ -580,6 +588,34 @@ namespace UI
                 Destroy(_currentMagnifierBgAnimation);
                 _currentMagnifierBgAnimation = null;
                 Debug.Log("돋보기 Background Animation 제거");
+            }
+        }
+
+        private void CreateMagnifierUI()
+        {
+            if (magnifierUIPrefab == null || _currentMagnifierTarget == null)
+            {
+                Debug.LogWarning("돋보기 UI 프리팹이 설정되지 않았거나 타겟이 없습니다.");
+                return;
+            }
+
+            // 기존 돋보기 UI가 있다면 제거
+            DestroyMagnifierUI();
+
+            // 새로운 돋보기 UI 생성 및 타겟의 자식으로 설정
+            _currentMagnifierUI = Instantiate(magnifierUIPrefab, _currentMagnifierTarget.transform);
+            
+            Debug.Log($"돋보기 UI 생성: {_currentMagnifierTarget.name}");
+            _currentMagnifierUI.SetActive(true);
+        }
+
+        private void DestroyMagnifierUI()
+        {
+            if (_currentMagnifierUI != null)
+            {
+                Destroy(_currentMagnifierUI);
+                _currentMagnifierUI = null;
+                Debug.Log("돋보기 UI 제거");
             }
         }
 
@@ -630,9 +666,6 @@ namespace UI
         {
             while (_currentMagnifierTarget != null && !_currentMagnifierTarget.IsFound && IsMagnifierEffectActive)
             {
-                // UI 위치 업데이트 (실시간으로 오브젝트 따라가기)
-                UpdateMagnifierUIPosition();
-                
                 await UniTask.Delay(100); // 0.1초마다 확인
             }
 
@@ -640,20 +673,6 @@ namespace UI
             {
                 Debug.Log($"돋보기 타겟 오브젝트가 발견됨: {_currentMagnifierTarget.name}");
             }
-        }
-
-        private void UpdateMagnifierUIPosition()
-        {
-            if (_currentMagnifierTarget == null) return;
-
-            Camera mainCamera = Camera.main;
-            if (mainCamera == null) return;
-
-            // 월드 좌표를 스크린 좌표로 변환
-            Vector3 screenPosition = mainCamera.WorldToScreenPoint(_currentMagnifierTarget.transform.position);
-            
-            // UI 위치 업데이트
-            MagnifierUIPosition = screenPosition;
         }
 
         private async UniTaskVoid DeactivateHintAsync(float delay)

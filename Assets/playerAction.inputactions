@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "playerAction",
     "maps": [
         {
@@ -9,7 +10,7 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "b9eef512-9a4d-4963-b630-a9133d290ed3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -22,6 +23,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "45c8831b-3715-4320-a469-c8ea89e624b4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -66,6 +76,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "MouseWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b56ec440-61bb-419b-983c-a4215b5bc005",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

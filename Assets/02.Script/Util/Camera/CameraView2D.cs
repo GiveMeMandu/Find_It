@@ -202,15 +202,12 @@ namespace Util.CameraSetting
                 var scrollValue = _mouseWheelAction.ReadValue<Vector2>();
                 var scroll = scrollValue.y;
                 
-                if (Time.frameCount % 60 == 0) // 1초마다 한 번씩
-                {
-                    Debug.Log($"[PlayerAction Debug] 현재 스크롤 값: {scroll:F6}, 전체 벡터: {scrollValue}");
-                }
-                
                 // 0이 아닌 모든 값 감지
                 if (scroll != 0f)
                 {
-                    Debug.LogWarning($"[PLAYERACTION SCROLL!] 마우스 휠 감지: scroll={scroll}, vector={scrollValue}");
+                    if (_showDebugInfo)
+                        Debug.Log($"[PlayerAction] 마우스 휠 감지: scroll={scroll}");
+                    
                     finalScroll = scroll;
                     finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
                     inputDetected = true;
@@ -226,7 +223,9 @@ namespace Util.CameraSetting
                 
                 if (scroll != 0f)
                 {
-                    Debug.LogWarning($"[MOUSE.CURRENT SCROLL!] 마우스 휠 감지: scroll={scroll}, vector={scrollVector}");
+                    if (_showDebugInfo)
+                        Debug.Log($"[Mouse.current] 마우스 휠 감지: scroll={scroll}");
+                    
                     finalScroll = scroll;
                     finalMousePos = Mouse.current.position.ReadValue();
                     inputDetected = true;
@@ -241,7 +240,9 @@ namespace Util.CameraSetting
                     Keyboard.current.equalsKey.wasPressedThisFrame ||
                     Keyboard.current.spaceKey.wasPressedThisFrame)
                 {
-                    Debug.Log("[Keyboard Input] 키보드로 줌인");
+                    if (_showDebugInfo)
+                        Debug.Log("[Keyboard Input] 키보드로 줌인");
+                    
                     finalScroll = 120f; // 일반적인 마우스 휠 값
                     finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
                     inputDetected = true;
@@ -250,7 +251,9 @@ namespace Util.CameraSetting
                 else if (Keyboard.current.numpadMinusKey.wasPressedThisFrame || 
                          Keyboard.current.minusKey.wasPressedThisFrame)
                 {
-                    Debug.Log("[Keyboard Input] 키보드로 줌아웃");
+                    if (_showDebugInfo)
+                        Debug.Log("[Keyboard Input] 키보드로 줌아웃");
+                    
                     finalScroll = -120f;
                     finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
                     inputDetected = true;
@@ -267,7 +270,8 @@ namespace Util.CameraSetting
                 // 디버그 정보 업데이트
                 _lastScrollValue = finalScroll;
                 
-                Debug.Log($"[Zoom Execute] delta={zoomDelta}, mousePos={finalMousePos}, method={_lastInputMethod}");
+                if (_showDebugInfo)
+                    Debug.Log($"[Zoom Execute] delta={zoomDelta}, method={_lastInputMethod}");
             }
         }
 #endif
@@ -285,32 +289,12 @@ namespace Util.CameraSetting
             {
                 _mouseCurrentAvailable = Mouse.current != null;
                 
-                // 입력 시스템 상태를 더 자주 확인 (디버그용)
-                if (Time.frameCount % 30 == 0) // 0.5초마다 한 번씩 로그
+                // 입력 시스템 상태 확인 (필요시에만)
+                if (Time.frameCount % 120 == 0) // 2초마다 한 번씩만
                 {
-                    Debug.Log($"[Update Debug] Mouse.current: {(Mouse.current != null ? "OK" : "NULL")}, " +
+                    Debug.Log($"[Input Status] Mouse: {(Mouse.current != null ? "OK" : "NULL")}, " +
                              $"PlayerAction: {(_playerInputActions != null ? "OK" : "NULL")}, " +
-                             $"_enableZoom: {_enableZoom}, _enablePan: {_enablePan}, LastInput: {_lastInputMethod}");
-                    
-                    // PlayerAction 스크롤 값 실시간 확인
-                    if (_mouseWheelAction != null)
-                    {
-                        var actionScroll = _mouseWheelAction.ReadValue<Vector2>();
-                        Debug.Log($"[PlayerAction Real-time] scroll: {actionScroll}");
-                    }
-                    
-                    // New Input System 스크롤 값 실시간 확인
-                    if (Mouse.current != null)
-                    {
-                        var currentScroll = Mouse.current.scroll.ReadValue();
-                        Debug.Log($"[Mouse.current Real-time] x: {currentScroll.x:F6}, y: {currentScroll.y:F6}, magnitude: {currentScroll.magnitude:F6}");
-                        
-                        // 마우스 다른 버튼들도 확인
-                        bool leftButton = Mouse.current.leftButton.isPressed;
-                        bool rightButton = Mouse.current.rightButton.isPressed;
-                        bool middleButton = Mouse.current.middleButton.isPressed;
-                        Debug.Log($"[Mouse Buttons] Left: {leftButton}, Right: {rightButton}, Middle: {middleButton}");
-                    }
+                             $"Zoom: {_enableZoom}, Pan: {_enablePan}, LastInput: {_lastInputMethod}");
                 }
             }
 
