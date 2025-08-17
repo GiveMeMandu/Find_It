@@ -6,31 +6,31 @@ namespace Data
 {
     public static class SceneNum
     {
-        public const int BOOTSTRAP;
-        public const int LOADING;
-        public const int START;
-        public const int SELECT;
-        public const int STAGE1_1;
-        public const int STAGE1_2;
-        public const int STAGE1_3;
-        public const int STAGE2_1;
-        public const int STAGE2_2;
-        public const int STAGE2_3;
-        public const int STAGE3_1;
-        public const int STAGE3_2;
-        public const int STAGE3_3;
-        public const int PUZZLE;
-        public const int CLOUD_RABBIT;
-        public const int CREDIT;
-        public const int TimeChallenge_STAGE1_1;
-        public const int TimeChallenge_STAGE1_2;
-        public const int TimeChallenge_STAGE1_3;
-        public const int TimeChallenge_STAGE2_1;
-        public const int TimeChallenge_STAGE2_2;
-        public const int TimeChallenge_STAGE2_3;
-        public const int TimeChallenge_STAGE3_1;
-        public const int TimeChallenge_STAGE3_2;
-        public const int TimeChallenge_STAGE3_3;
+        public const int BOOTSTRAP = 0;
+        public const int LOADING = 1;
+        public const int START = 2;
+        public const int SELECT = 3;
+        public const int STAGE1_1 = 4;
+        public const int STAGE1_2 = 5;
+        public const int STAGE1_3 = 6;
+        public const int STAGE2_1 = 7;
+        public const int STAGE2_2 = 8;
+        public const int STAGE2_3 = 9;
+        public const int STAGE3_1 = 10;
+        public const int STAGE3_2 = 11;
+        public const int STAGE3_3 = 12;
+        public const int PUZZLE = 11;
+        public const int CLOUD_RABBIT = 12;
+        public const int CREDIT = 13;
+        public const int TimeChallenge_STAGE1_1 = 14;
+        public const int TimeChallenge_STAGE1_2 = 15;
+        public const int TimeChallenge_STAGE1_3 = 15;
+        public const int TimeChallenge_STAGE2_1 = 16;
+        public const int TimeChallenge_STAGE2_2 = 17;
+        public const int TimeChallenge_STAGE2_3 = 18;
+        public const int TimeChallenge_STAGE3_1 = 19;
+        public const int TimeChallenge_STAGE3_2 = 20;
+        public const int TimeChallenge_STAGE3_3 = 21;
     
     }
     public enum SceneName{
@@ -44,9 +44,6 @@ namespace Data
         Stage2_1,
         Stage2_2,
         Stage2_3,
-        Stage3_1,
-        Stage3_2,
-        Stage3_3,
         Puzzle,
         CloudRabbit,
         Credit,
