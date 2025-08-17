@@ -10,6 +10,12 @@ namespace Util.CameraSetting
     {
         public SpriteRenderer backgroundSprite;
 
+        [Header("---Debug Info---")]
+        [SerializeField] private bool _showDebugInfo = true;
+        [SerializeField] private bool _mouseCurrentAvailable = false;
+        [SerializeField] private float _lastScrollValue = 0f;
+        [SerializeField] private string _lastInputMethod = "None";
+
         [Header("---Zoom---")]
         public bool _enableZoom;
         public float zoomMin = 2f;
@@ -41,23 +47,84 @@ namespace Util.CameraSetting
         
         // 카메라 이동 관련 변수들
         private bool _isMovingCamera = false;
+        
+        // Input Action 관련 변수들
+        private PlayerAction _playerInputActions;
+        private InputAction _mouseWheelAction;
 
         protected override void Awake()
         {
             base.Awake();
             _camera = UnityEngine.Camera.main;
             
+            // PlayerAction 초기화
+            _playerInputActions = new PlayerAction();
+            _mouseWheelAction = _playerInputActions.playerControl.MouseWheel;
+            
+            // New Input System 강제 초기화
+            InitializeInputSystem();
+            
+        }
+
+        private void InitializeInputSystem()
+        {
             // EnhancedTouchSupport 초기화
             if (!EnhancedTouchSupport.enabled)
             {
                 EnhancedTouchSupport.Enable();
             }
             
+            // Mouse 디바이스 강제 초기화
+            try
+            {
+                Debug.Log($"[Input System Debug] 초기화 시작");
+                Debug.Log($"[Input System Debug] InputSystem.settings: {InputSystem.settings}");
+                Debug.Log($"[Input System Debug] 현재 활성화된 디바이스 수: {InputSystem.devices.Count}");
+                
+                foreach (var device in InputSystem.devices)
+                {
+                    Debug.Log($"[Input System Debug] 디바이스: {device.name} (타입: {device.GetType().Name})");
+                }
+                
+                if (Mouse.current == null)
+                {
+                    Debug.LogWarning("Mouse.current가 null입니다. 마우스 디바이스를 강제로 추가합니다.");
+                    
+                    // 기존 마우스 디바이스가 있는지 확인
+                    var existingMouse = InputSystem.GetDevice<Mouse>();
+                    if (existingMouse == null)
+                    {
+                        // 마우스 디바이스 추가
+                        var mouse = InputSystem.AddDevice<Mouse>();
+                        Debug.Log($"마우스 디바이스 추가됨: {mouse != null}");
+                    }
+                    else
+                    {
+                        Debug.Log($"기존 마우스 디바이스 발견: {existingMouse.name}");
+                    }
+                }
+                else
+                {
+                    Debug.Log($"Mouse.current 정상 작동: {Mouse.current.name}");
+                    Debug.Log($"Mouse.current.scroll: {Mouse.current.scroll}");
+                    Debug.Log($"Mouse.current.scroll.ReadValue(): {Mouse.current.scroll.ReadValue()}");
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Input System 초기화 실패: {e.Message}");
+            }
         }
 
         private void OnEnable()
         {
             EnhancedTouchSupport.Enable();
+            
+            // PlayerAction 활성화
+            if (_playerInputActions != null)
+            {
+                _playerInputActions.Enable();
+            }
         }
 
         private void OnDisable()
@@ -66,12 +133,48 @@ namespace Util.CameraSetting
             {
                 EnhancedTouchSupport.Disable();
             }
+            
+            // PlayerAction 비활성화
+            if (_playerInputActions != null)
+            {
+                _playerInputActions.Disable();
+            }
+        }
+        
+        private void OnDestroy()
+        {
+            // PlayerAction 정리
+            if (_playerInputActions != null)
+            {
+                _playerInputActions.Dispose();
+                _playerInputActions = null;
+            }
         }
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         private void HandleMouseInput()
         {
-            if (Mouse.current == null) return;
+            if (Mouse.current == null) 
+            {
+                // Debug.LogWarning("Mouse.current is null in HandleMouseInput!");
+                // Legacy Input 사용 불가능하므로 키보드로 대체
+                if (_enablePan && Keyboard.current != null)
+                {
+                    Vector2 movement = Vector2.zero;
+                    if (Keyboard.current.wKey.isPressed) movement.y += 1;
+                    if (Keyboard.current.sKey.isPressed) movement.y -= 1;
+                    if (Keyboard.current.aKey.isPressed) movement.x -= 1;
+                    if (Keyboard.current.dKey.isPressed) movement.x += 1;
+                    
+                    if (movement != Vector2.zero)
+                    {
+                        var panDelta = movement * pcPanSpeed * Time.deltaTime * _camera.orthographicSize;
+                        var newPosition = _camera.transform.position + new Vector3(panDelta.x, panDelta.y, 0);
+                        _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
+                    }
+                }
+                return;
+            }
 
             // 마우스 드래그로 이동
             if (_enablePan && Mouse.current.leftButton.isPressed)
@@ -84,19 +187,87 @@ namespace Util.CameraSetting
 
         private void HandleMouseWheelInput()
         {
-            if (!_enableZoom) return;
-
-            // 새로운 Input System 사용
-            if (Mouse.current != null)
+            if (!_enableZoom) 
             {
-                var scroll = Mouse.current.scroll.ReadValue().y;
-                if (Mathf.Abs(scroll) > 0.01f)
+                return;
+            }
+
+            bool inputDetected = false;
+            float finalScroll = 0f;
+            Vector2 finalMousePos = Vector2.zero;
+
+            // Method 1: PlayerAction을 이용한 마우스 휠 입력 (가장 안정적)
+            if (_mouseWheelAction != null)
+            {
+                var scrollValue = _mouseWheelAction.ReadValue<Vector2>();
+                var scroll = scrollValue.y;
+                
+                if (Time.frameCount % 60 == 0) // 1초마다 한 번씩
                 {
-                    var zoomDelta = scroll * mouseWheelZoomSpeed;
-                    var mousePosition = Mouse.current.position.ReadValue();
-                    HandleZoom(zoomDelta, mousePosition);
-                    // Debug.Log($"마우스 휠 줌: delta={zoomDelta}, position={mousePosition}, scroll={scroll}");
+                    Debug.Log($"[PlayerAction Debug] 현재 스크롤 값: {scroll:F6}, 전체 벡터: {scrollValue}");
                 }
+                
+                // 0이 아닌 모든 값 감지
+                if (scroll != 0f)
+                {
+                    Debug.LogWarning($"[PLAYERACTION SCROLL!] 마우스 휠 감지: scroll={scroll}, vector={scrollValue}");
+                    finalScroll = scroll;
+                    finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
+                    inputDetected = true;
+                    _lastInputMethod = "PlayerAction";
+                }
+            }
+
+            // Method 2: 기존 New Input System (백업)
+            if (!inputDetected && Mouse.current != null)
+            {
+                var scrollVector = Mouse.current.scroll.ReadValue();
+                var scroll = scrollVector.y;
+                
+                if (scroll != 0f)
+                {
+                    Debug.LogWarning($"[MOUSE.CURRENT SCROLL!] 마우스 휠 감지: scroll={scroll}, vector={scrollVector}");
+                    finalScroll = scroll;
+                    finalMousePos = Mouse.current.position.ReadValue();
+                    inputDetected = true;
+                    _lastInputMethod = "Mouse.current";
+                }
+            }
+
+            // Method 3: 키보드 백업 (테스트용)
+            if (!inputDetected && Keyboard.current != null)
+            {
+                if (Keyboard.current.numpadPlusKey.wasPressedThisFrame || 
+                    Keyboard.current.equalsKey.wasPressedThisFrame ||
+                    Keyboard.current.spaceKey.wasPressedThisFrame)
+                {
+                    Debug.Log("[Keyboard Input] 키보드로 줌인");
+                    finalScroll = 120f; // 일반적인 마우스 휠 값
+                    finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
+                    inputDetected = true;
+                    _lastInputMethod = "Keyboard Input";
+                }
+                else if (Keyboard.current.numpadMinusKey.wasPressedThisFrame || 
+                         Keyboard.current.minusKey.wasPressedThisFrame)
+                {
+                    Debug.Log("[Keyboard Input] 키보드로 줌아웃");
+                    finalScroll = -120f;
+                    finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
+                    inputDetected = true;
+                    _lastInputMethod = "Keyboard Input";
+                }
+            }
+
+            // 실제 줌 실행
+            if (inputDetected)
+            {
+                var zoomDelta = finalScroll * mouseWheelZoomSpeed;
+                HandleZoom(zoomDelta, finalMousePos);
+                
+                // 디버그 정보 업데이트
+                _lastScrollValue = finalScroll;
+                
+                Debug.Log($"[Zoom Execute] delta={zoomDelta}, mousePos={finalMousePos}, method={_lastInputMethod}");
             }
         }
 #endif
@@ -108,6 +279,40 @@ namespace Util.CameraSetting
             
             // 카메라가 자동 이동 중일 때는 사용자 입력 무시
             if (_isMovingCamera) return;
+
+            // 디버그 정보 업데이트
+            if (_showDebugInfo)
+            {
+                _mouseCurrentAvailable = Mouse.current != null;
+                
+                // 입력 시스템 상태를 더 자주 확인 (디버그용)
+                if (Time.frameCount % 30 == 0) // 0.5초마다 한 번씩 로그
+                {
+                    Debug.Log($"[Update Debug] Mouse.current: {(Mouse.current != null ? "OK" : "NULL")}, " +
+                             $"PlayerAction: {(_playerInputActions != null ? "OK" : "NULL")}, " +
+                             $"_enableZoom: {_enableZoom}, _enablePan: {_enablePan}, LastInput: {_lastInputMethod}");
+                    
+                    // PlayerAction 스크롤 값 실시간 확인
+                    if (_mouseWheelAction != null)
+                    {
+                        var actionScroll = _mouseWheelAction.ReadValue<Vector2>();
+                        Debug.Log($"[PlayerAction Real-time] scroll: {actionScroll}");
+                    }
+                    
+                    // New Input System 스크롤 값 실시간 확인
+                    if (Mouse.current != null)
+                    {
+                        var currentScroll = Mouse.current.scroll.ReadValue();
+                        Debug.Log($"[Mouse.current Real-time] x: {currentScroll.x:F6}, y: {currentScroll.y:F6}, magnitude: {currentScroll.magnitude:F6}");
+                        
+                        // 마우스 다른 버튼들도 확인
+                        bool leftButton = Mouse.current.leftButton.isPressed;
+                        bool rightButton = Mouse.current.rightButton.isPressed;
+                        bool middleButton = Mouse.current.middleButton.isPressed;
+                        Debug.Log($"[Mouse Buttons] Left: {leftButton}, Right: {rightButton}, Middle: {middleButton}");
+                    }
+                }
+            }
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
             HandleMouseInput();
@@ -122,8 +327,47 @@ namespace Util.CameraSetting
             // 마우스 휠 입력을 LateUpdate에서 별도로 처리
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
             HandleMouseWheelInput();
+            
+            // Unity 에디터에서 추가 입력 처리
+#if UNITY_EDITOR
+            HandleEditorSpecificInput();
+#endif
 #endif
         }
+
+#if UNITY_EDITOR
+        private void HandleEditorSpecificInput()
+        {
+            // Unity 에디터에서만 작동하는 추가 입력 처리
+            if (!_enableZoom) return;
+            
+            if (Keyboard.current != null)
+            {
+                bool ctrlPressed = Keyboard.current.leftCtrlKey.isPressed || Keyboard.current.rightCtrlKey.isPressed;
+                
+                // Ctrl + 마우스 휠 대체: Ctrl + Plus/Minus
+                if (ctrlPressed)
+                {
+                    if (Keyboard.current.equalsKey.wasPressedThisFrame)
+                    {
+                        Debug.Log("[Editor Shortcut] Ctrl + = 로 줌인");
+                        var mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
+                        HandleZoom(1f * mouseWheelZoomSpeed, mousePos);
+                        _lastScrollValue = 1f;
+                        _lastInputMethod = "Editor Shortcut";
+                    }
+                    else if (Keyboard.current.minusKey.wasPressedThisFrame)
+                    {
+                        Debug.Log("[Editor Shortcut] Ctrl + - 로 줌아웃");
+                        var mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
+                        HandleZoom(-1f * mouseWheelZoomSpeed, mousePos);
+                        _lastScrollValue = -1f;
+                        _lastInputMethod = "Editor Shortcut";
+                    }
+                }
+            }
+        }
+#endif
 
         private void HandleTouchInput()
         {

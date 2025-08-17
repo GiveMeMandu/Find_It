@@ -91,11 +91,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
             }
             
             gameObject.SetActive(false);
-        }
-
-        private void OnEnable()
-        {
-            transform.localScale = FromScale;
+            currentTime = 0f;
         }
 
         private void Update()

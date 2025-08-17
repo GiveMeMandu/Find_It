@@ -46,8 +46,30 @@ namespace Manager
             playerAction = new PlayerAction();
             EnhancedTouchSupport.Enable();
             
-            // 마우스 입력 시스템 활성화
-            InputSystem.EnableDevice(Mouse.current);
+            // 마우스 입력 시스템 강제 초기화
+            try
+            {
+                if (Mouse.current != null)
+                {
+                    InputSystem.EnableDevice(Mouse.current);
+                    Debug.Log("Mouse.current 활성화 성공");
+                }
+                else
+                {
+                    Debug.LogWarning("Mouse.current가 null입니다. New Input System이 제대로 초기화되지 않았을 수 있습니다.");
+                    
+                    // 마우스 디바이스를 수동으로 추가 시도
+                    var mouse = InputSystem.AddDevice<Mouse>();
+                    if (mouse != null)
+                    {
+                        Debug.Log("마우스 디바이스를 수동으로 추가했습니다.");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"마우스 입력 시스템 초기화 실패: {e.Message}");
+            }
             
             // 터치 이벤트 바인딩
             Touch.onFingerDown += OnFingerDown;

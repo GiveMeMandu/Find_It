@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityWeld.Binding;
 using Cysharp.Threading.Tasks;
 using DeskCat.FindIt.Scripts.Core.Main.System;
+using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
+using UnityWeld;
 
 namespace UI
 {
     [Binding]
-    public class InGameItemViewModel : BaseViewModel
+    public class InGameItemViewModel : ViewModel
     {
         // 아이템 관련 필드들
         private string _compassCountText;
@@ -29,6 +31,10 @@ namespace UI
         private bool _isMagnifierEffectActive;
         private System.Guid _magnifierTargetGuid;
         private Vector3 _magnifierUIPosition;
+        
+        // Background Animation 프리팹 (인스펙터에서 할당)
+        [SerializeField] private GameObject magnifierBackgroundAnimationPrefab;
+        private GameObject _currentMagnifierBgAnimation;
         
         // 아이템 수량 텍스트 프로퍼티들
         [Binding]
@@ -216,6 +222,13 @@ namespace UI
         [Binding]
         public void UseCompass()
         {
+            // 이미 나침반 효과가 활성화되어 있으면 아이템 사용하지 않음
+            if (IsCompassActive)
+            {
+                Debug.Log("나침반 효과가 이미 활성화되어 있습니다. 아이템을 사용하지 않습니다.");
+                return;
+            }
+            
             if (Global.ItemManager != null && Global.ItemManager.UseItem(ItemType.Compass))
             {
                 ActivateCompass();
@@ -225,6 +238,13 @@ namespace UI
         [Binding]
         public void UseStopwatch()
         {
+            // 이미 초시계 효과가 활성화되어 있으면 아이템 사용하지 않음
+            if (IsStopwatchActive)
+            {
+                Debug.Log("초시계 효과가 이미 활성화되어 있습니다. 아이템을 사용하지 않습니다.");
+                return;
+            }
+            
             if (Global.ItemManager != null && Global.ItemManager.UseItem(ItemType.Stopwatch))
             {
                 ActivateStopwatch();
@@ -234,6 +254,13 @@ namespace UI
         [Binding]
         public void UseHint()
         {
+            // 이미 돋보기 효과가 활성화되어 있으면 아이템 사용하지 않음
+            if (IsHintActive || IsMagnifierEffectActive)
+            {
+                Debug.Log("돋보기 효과가 이미 활성화되어 있습니다. 아이템을 사용하지 않습니다.");
+                return;
+            }
+            
             if (Global.ItemManager != null && Global.ItemManager.UseItem(ItemType.Hint))
             {
                 ActivateHint();
@@ -243,13 +270,6 @@ namespace UI
         // 아이템 효과 활성화 메서드들
         private void ActivateCompass()
         {
-            // 이미 나침반 효과가 활성화되어 있으면 무시
-            if (IsCompassActive)
-            {
-                Debug.Log("나침반 효과가 이미 활성화되어 있습니다.");
-                return;
-            }
-            
             IsCompassActive = true;
             CompassHintCount = 0;
             Debug.Log("나침반 활성화: 가장 가까운 오브젝트 방향 안내 시작");
@@ -260,13 +280,6 @@ namespace UI
 
         private void ActivateStopwatch()
         {
-            // 이미 초시계 효과가 활성화되어 있으면 무시
-            if (IsStopwatchActive)
-            {
-                Debug.Log("초시계 효과가 이미 활성화되어 있습니다.");
-                return;
-            }
-            
             IsStopwatchActive = true;
             Debug.Log("초시계 활성화: 시간 추가");
             
@@ -285,13 +298,6 @@ namespace UI
 
         private void ActivateHint()
         {
-            // 이미 돋보기 효과가 활성화되어 있으면 무시
-            if (IsHintActive || IsMagnifierEffectActive)
-            {
-                Debug.Log("돋보기 효과가 이미 활성화되어 있습니다.");
-                return;
-            }
-            
             IsHintActive = true;
             Debug.Log("돋보기 활성화: 무작위 오브젝트 힌트 시작");
             
@@ -503,6 +509,9 @@ namespace UI
 
             Debug.Log($"돋보기 타겟 선택: {_currentMagnifierTarget.name}");
 
+            // Background Animation 생성 및 설정
+            CreateMagnifierBackgroundAnimation();
+
             // 오브젝트가 화면에 보이는지 확인
             if (!IsObjectVisibleOnScreen(_currentMagnifierTarget))
             {
@@ -523,11 +532,55 @@ namespace UI
 
         private void ResetMagnifierState()
         {
+            // Background Animation 비활성화 및 정리
+            DestroyMagnifierBackgroundAnimation();
+            
             IsMagnifierEffectActive = false;
             IsHintActive = false;
             _currentMagnifierTarget = null;
             _magnifierTargetGuid = System.Guid.Empty;
             MagnifierUIPosition = Vector3.zero;
+        }
+
+        private void CreateMagnifierBackgroundAnimation()
+        {
+            if (magnifierBackgroundAnimationPrefab == null || _currentMagnifierTarget == null)
+            {
+                Debug.LogWarning("Background Animation 프리팹이 설정되지 않았거나 타겟이 없습니다.");
+                return;
+            }
+
+            // 기존 Background Animation이 있다면 제거
+            DestroyMagnifierBackgroundAnimation();
+
+            // 새로운 Background Animation 생성 및 타겟의 자식으로 설정
+            _currentMagnifierBgAnimation = Instantiate(magnifierBackgroundAnimationPrefab, _currentMagnifierTarget.transform);
+            
+            Debug.Log($"돋보기 Background Animation 생성: {_currentMagnifierTarget.name}");
+            
+            // HintScaleLerp 컴포넌트가 있는지 확인하고 애니메이션 시작
+            var hintScaleLerp = _currentMagnifierBgAnimation.GetComponent<HintScaleLerp>();
+            if (hintScaleLerp != null)
+            {
+                Debug.Log($"HintScaleLerp 컴포넌트 발견. AutoRestart: {hintScaleLerp.AutoRestart}");
+                // StartHintEffect 메서드로 애니메이션 시작
+                hintScaleLerp.StartHintEffect();
+                Debug.Log("HintScaleLerp 애니메이션 시작 완료");
+            }
+            else
+            {
+                Debug.LogWarning("HintScaleLerp 컴포넌트를 찾을 수 없습니다!");
+            }
+        }
+
+        private void DestroyMagnifierBackgroundAnimation()
+        {
+            if (_currentMagnifierBgAnimation != null)
+            {
+                Destroy(_currentMagnifierBgAnimation);
+                _currentMagnifierBgAnimation = null;
+                Debug.Log("돋보기 Background Animation 제거");
+            }
         }
 
         private (System.Guid guid, HiddenObj rabbit)? SelectRandomUnfoundObject()
