@@ -217,10 +217,64 @@ namespace Data
             if (world > 0 && stage > 0)
             {
                 string prefix = IsTimeChallengeStage(sceneName) ? "Time Challenge " : "";
-                return $"{prefix}World {world}-{stage}";
+                return $"{prefix}Stage {world}-{stage}";
             }
             
             return sceneName.ToString();
+        }
+        
+        /// <summary>
+        /// 다음 스테이지 씬을 찾습니다 (Stage로 시작하는 씬만)
+        /// </summary>
+        /// <param name="currentScene">현재 씬</param>
+        /// <returns>다음 스테이지 씬, 없으면 null</returns>
+        public static SceneName? GetNextStageScene(SceneName currentScene)
+        {
+            string currentSceneName = currentScene.ToString();
+            
+            // Stage로 시작하지 않으면 다음 스테이지 없음
+            if (!currentSceneName.StartsWith("Stage") && !currentSceneName.Contains("STAGE"))
+                return null;
+                
+            int currentWorld = GetWorldNumber(currentScene);
+            int currentStage = GetStageNumber(currentScene);
+            bool isTimeChallenge = IsTimeChallengeStage(currentScene);
+            
+            if (currentWorld <= 0 || currentStage <= 0)
+                return null;
+            
+            // 다음 스테이지 찾기 (같은 월드 내에서 다음 스테이지)
+            SceneName? nextStage = null;
+            
+            if (isTimeChallenge)
+            {
+                // 타임챌린지인 경우
+                string nextStageName = $"TimeChallenge_STAGE{currentWorld}_{currentStage + 1}";
+                if (System.Enum.TryParse<SceneName>(nextStageName, out SceneName nextTimeChallengeStage))
+                {
+                    nextStage = nextTimeChallengeStage;
+                }
+            }
+            else
+            {
+                // 일반 스테이지인 경우
+                string nextStageName = $"Stage{currentWorld}_{currentStage + 1}";
+                if (System.Enum.TryParse<SceneName>(nextStageName, out SceneName nextNormalStage))
+                {
+                    nextStage = nextNormalStage;
+                }
+                else
+                {
+                    // 현재 월드에 다음 스테이지가 없으면 다음 월드 첫 번째 스테이지
+                    nextStageName = $"Stage{currentWorld + 1}_1";
+                    if (System.Enum.TryParse<SceneName>(nextStageName, out SceneName nextWorldStage))
+                    {
+                        nextStage = nextWorldStage;
+                    }
+                }
+            }
+            
+            return nextStage;
         }
     }
 }

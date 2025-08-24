@@ -4567,9 +4567,7 @@ MonoBehaviour:
   isTimeChallenge: 0
   _levelManager: {fileID: 991907604}
   _introDirector: {fileID: 20854558}
-  _outroDirector: {fileID: 2039485039}
-  _outroDirector2: {fileID: 1513356326}
-  _outroDirector3: {fileID: 1915792284}
+  _outroDirector: {fileID: 0}
 --- !u!114 &874517317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8087,113 +8085,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1513356324
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1513356327}
-  - component: {fileID: 1513356326}
-  - component: {fileID: 1513356325}
-  m_Layer: 0
-  m_Name: Outro2
-  m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1513356325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513356324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: 8ee3da86ffd05bd468c3fdb4011aa64f, type: 2}
-    - {fileID: 11400000, guid: 4a046a208af67024b9ab3a1d814cc800, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: InGame.BigCarrot, Assembly-CSharp
-          m_MethodName: StartBunniesRun
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: InGame.BigCarrot, Assembly-CSharp
-          m_MethodName: EndBunniesRun
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
---- !u!320 &1513356326
-PlayableDirector:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513356324}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 3c024f4e9e41f1f47b46afb1a97b4f1b, type: 2}
-  m_InitialState: 0
-  m_WrapMode: 2
-  m_DirectorUpdateMode: 1
-  m_InitialTime: 0
-  m_SceneBindings:
-  - key: {fileID: 1750520471402685845, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 1766903440731567175, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 405401055674020619, guid: 3c024f4e9e41f1f47b46afb1a97b4f1b, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: -7885463949487129129, guid: 3c024f4e9e41f1f47b46afb1a97b4f1b, type: 2}
-    value: {fileID: 0}
-  m_ExposedReferences:
-    m_References: []
---- !u!4 &1513356327
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513356324}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1664927709}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1529308196
 GameObject:
   m_ObjectHideFlags: 0
@@ -8592,8 +8483,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2039485040}
-  - {fileID: 1513356327}
-  - {fileID: 1915792285}
   - {fileID: 20854559}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9571,7 +9460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8233476207433535642, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000030517578
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8233476207477577881, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -9997,123 +9886,6 @@ Transform:
   - {fileID: 1819379049}
   - {fileID: 58272308}
   m_Father: {fileID: 504923429}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1915792282
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1915792285}
-  - component: {fileID: 1915792284}
-  - component: {fileID: 1915792283}
-  m_Layer: 0
-  m_Name: Outro3
-  m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1915792283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1915792282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: 8ee3da86ffd05bd468c3fdb4011aa64f, type: 2}
-    - {fileID: 11400000, guid: 4a046a208af67024b9ab3a1d814cc800, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: InGame.BigCarrot, Assembly-CSharp
-          m_MethodName: StartBunniesRun
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: InGame.BigCarrot, Assembly-CSharp
-          m_MethodName: EndBunniesRun
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
---- !u!320 &1915792284
-PlayableDirector:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1915792282}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: ae1d4a2d97d8adb479a0f66f48a19cb6, type: 2}
-  m_InitialState: 0
-  m_WrapMode: 2
-  m_DirectorUpdateMode: 1
-  m_InitialTime: 0
-  m_SceneBindings:
-  - key: {fileID: 1750520471402685845, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 1766903440731567175, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 0}
-    value: {fileID: 0}
-  - key: {fileID: 405401055674020619, guid: 3c024f4e9e41f1f47b46afb1a97b4f1b, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: -7885463949487129129, guid: 3c024f4e9e41f1f47b46afb1a97b4f1b, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 7010301243298489184, guid: 3c024f4e9e41f1f47b46afb1a97b4f1b, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 4136655565184837330, guid: ae1d4a2d97d8adb479a0f66f48a19cb6, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: -4979879230535093042, guid: ae1d4a2d97d8adb479a0f66f48a19cb6, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 273034283048788385, guid: ae1d4a2d97d8adb479a0f66f48a19cb6, type: 2}
-    value: {fileID: 0}
-  - key: {fileID: 3848946312016982760, guid: ae1d4a2d97d8adb479a0f66f48a19cb6, type: 2}
-    value: {fileID: 0}
-  m_ExposedReferences:
-    m_References: []
---- !u!4 &1915792285
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1915792282}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1664927709}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1922989310
 GameObject:
@@ -10645,6 +10417,16 @@ PlayableDirector:
   - key: {fileID: 1750520471402685845, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
     value: {fileID: 0}
   - key: {fileID: 1766903440731567175, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -7723150520952732700, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -6887686561304063314, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 3931336063167102332, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 5033581494994397518, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 7490304530964003260, guid: ff5bccac344b4ba4ea585036d69f1464, type: 2}
     value: {fileID: 0}
   m_ExposedReferences:
     m_References: []
