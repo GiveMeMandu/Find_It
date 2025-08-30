@@ -44,7 +44,7 @@ namespace UI.Page
         private void OnEnable()
         {
             _cts = new CancellationTokenSource();
-            CurStage = Global.CurrentScene.SceneName.ToString();
+            CurStage = Global.CurrentScene.SceneName.ToString().Replace('_', '-');
             StageName = string.Format("{0} 클리어!", 
             I2.Loc.LocalizationManager.GetTranslation("SceneName/" + CurStage));
             

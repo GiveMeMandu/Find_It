@@ -18,8 +18,6 @@ namespace InGame
         [SerializeField] private PlayableDirector _introDirector;
         [LabelText("아웃트로")]
         [SerializeField] private PlayableDirector _outroDirector;
-        [SerializeField] private PlayableDirector _outroDirector2;
-        [SerializeField] private PlayableDirector _outroDirector3;
 
         protected override void Start()
         {

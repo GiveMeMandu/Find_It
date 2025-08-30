@@ -1,15 +1,18 @@
 ﻿using DeskCat.FindIt.Scripts.Core.Main.System;
 using UnityEditor;
 using UnityEngine;
+using NaughtyAttributes.Editor;
 
 namespace DeskCat.FindIt.Scripts.Editor
 {
     [CustomEditor(typeof(LevelManager))]
-    public class LevelManagerEditor : UnityEditor.Editor
+    public class LevelManagerEditor : NaughtyInspector
     {
         private LevelManager LevelManagerTarget;
-        private void OnEnable()
+        
+        protected override void OnEnable()
         {
+            base.OnEnable();
             LevelManagerTarget = (LevelManager)target;
         }
 

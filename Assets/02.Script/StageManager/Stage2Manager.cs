@@ -36,7 +36,7 @@ public class Stage2Manager : InGameSceneBase
     {
         base.Start();
         _endingSequenceStage2 = GetComponent<EndingSequenceStage2>();
-        nightObjs = FindObjectsOfType<NightObj>().ToList();
+        nightObjs = FindObjectsByType<NightObj>(FindObjectsSortMode.None).ToList();
         foreach (var n in nightObjs)
         {
             if (n.isDisableOnStart) n.gameObject.SetActive(false);

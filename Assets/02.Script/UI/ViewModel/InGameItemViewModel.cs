@@ -179,11 +179,20 @@ namespace UI
             
             // 돋보기 상태 초기화
             ResetMagnifierState();
+            UpdateAllItemCounts();
         }
         
         private void InitializeItemsForDemo()
         {
             // 부스 운영을 위해 각 아이템 3개씩 지급
+            if(Global.ItemManager.GetItemCount(ItemType.Compass) > 0 ||
+               Global.ItemManager.GetItemCount(ItemType.Stopwatch) > 0 ||
+               Global.ItemManager.GetItemCount(ItemType.Hint) > 0)
+            {
+                // 이미 아이템이 있으면 지급하지 않음
+                Debug.Log("아이템이 이미 존재하여 추가 지급하지 않습니다.");
+                return;
+            }
             Global.ItemManager.AddItem(ItemType.Compass, 3);
             Global.ItemManager.AddItem(ItemType.Stopwatch, 3);
             Global.ItemManager.AddItem(ItemType.Hint, 3);
