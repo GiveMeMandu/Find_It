@@ -14,6 +14,7 @@ using Random = UnityEngine.Random;
 using Data;
 using OutGame;
 using Manager;
+using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
@@ -196,9 +197,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                         }
 
                         // hideWhenFound 클래스가 있다면 여기의 설정을 HiddenObj 에 덮어쓰기
-                        if(child.TryGetComponent<HideWhenFoundHelper>(out var hideWhenFound))
+                        HideWhenFoundHelper hideWhenFoundHelper = null;
+                        if(child.TryGetComponent(out hideWhenFoundHelper))
                         {
-                            hiddenObj.HideWhenFound = hideWhenFound.hideWhenFound;
+                            hiddenObj.HideWhenFound = hideWhenFoundHelper.hideWhenFound;
                         }
                         
                         // UIChangeHelper 컴포넌트가 있다면 HiddenObj에 연결
@@ -224,6 +226,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                             var bgObj = Instantiate(DefaultBgAnimation, hiddenObj.transform);
                             hiddenObj.BgAnimationTransform = bgObj.transform;
                             hiddenObj.SetBgAnimation(bgObj);
+                            BGScaleLerp bGScaleLerp = bgObj.GetComponent<BGScaleLerp>();
+                            if (bGScaleLerp != null)
+                                if(hideWhenFoundHelper != null)
+                                    hiddenObj.HideWhenFound = hideWhenFoundHelper.hideWhenFound;
                         }
 
                         // Debug.Log($"Added HiddenObj component and BoxCollider2D to {child.name}");
