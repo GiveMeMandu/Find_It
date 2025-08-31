@@ -21,11 +21,11 @@ namespace UI.Effect
             OnClick,
             OnFuntionCall,
         }
-        [BoxGroup("체인 이펙트 설정")][LabelText("다른 이펙트를 실행시키는 시기")][SerializeField] private ChainType chainType;
-        [BoxGroup("체인 이펙트 설정")][LabelText("해당 방식일 때 다른 이펙트 실행")][SerializeField] private ChainFireType chainFireType;
-        [BoxGroup("체인 이펙트 설정")][LabelText("다른 이펙트를 실행시키는 오브젝트")][SerializeField] private List<VFXObject> otherVFXs = new List<VFXObject>();
-        [BoxGroup("체인 이펙트 설정")][LabelText("다른 이펙트를 실행시킬 때 딜레이")][SerializeField] private float chainStartDelay = 0;
-        [BoxGroup("체인 이펙트 설정")][LabelText("다른 이펙트들 체인 딜레이")][SerializeField] private float chainDelay = 0;
+        [FoldoutGroup("체인 이펙트 설정")][LabelText("다른 이펙트를 실행시키는 시기")][SerializeField] private ChainType chainType;
+        [FoldoutGroup("체인 이펙트 설정")][LabelText("해당 방식일 때 다른 이펙트 실행")][SerializeField] private ChainFireType chainFireType;
+        [FoldoutGroup("체인 이펙트 설정")][LabelText("다른 이펙트를 실행시키는 오브젝트")][SerializeField] private List<VFXObject> otherVFXs = new List<VFXObject>();
+        [FoldoutGroup("체인 이펙트 설정")][LabelText("다른 이펙트를 실행시킬 때 딜레이")][SerializeField] private float chainStartDelay = 0;
+        [FoldoutGroup("체인 이펙트 설정")][LabelText("다른 이펙트들 체인 딜레이")][SerializeField] private float chainDelay = 0;
 
         private bool isClicked = false;
         protected override void Start() {

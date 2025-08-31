@@ -4,11 +4,12 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using UI.Effect;
 using UnityEngine;
 
 namespace InGame
 {
-    public class WindObj : AutoTaskControl
+    public class WindObj : ChainEffect
     {
         [LabelText("바람 세기")]
         [SerializeField] private float windForce = 3;

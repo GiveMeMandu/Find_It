@@ -10,20 +10,20 @@ namespace Effect
 {
     public class VFXObject : AutoTaskControl
     {
-        [BoxGroup("세부 설정")] [LabelText("시작시 재생")] [SerializeField] private bool isPlayOnStart = false;
-        [BoxGroup("세부 설정")] [LabelText("활성화시 재생")] [SerializeField] private bool isPlayOnEnable = false;
-        [BoxGroup("세부 설정")] [LabelText("재생시 다른 이펙트 멈춤")] [SerializeField] private bool isStopOtherEffect = false;
-        [BoxGroup("세부 설정")] [LabelText("재생 시작 전 딜레이 (초)")] [SerializeField] private float startDelay = 0;
-        [BoxGroup("세부 설정")] [LabelText("반복 재생시 딜레이 (초)")] [SerializeField] private float delay = 0;
-        [BoxGroup("세부 설정")] [LabelText("재생시 무조건 무한루프")] [SerializeField] private bool isLoopForce = false;
-        [BoxGroup("세부 설정")] [LabelText("UI 이펙트인가")] [SerializeField] protected bool isUIEffect = false;
-        [BoxGroup("세부 설정")] [LabelText("효과 정도 가중치")] [SerializeField] protected float effectAddValue = 0;
-        [BoxGroup("세부 설정")] [LabelText("효과 속도, 클수록 느려짐")] [SerializeField] protected float effectSpeed = 1;
-        [BoxGroup("세부 설정")] [LabelText("재생중 재생 시도 금지")] [SerializeField] protected bool isPlayLock = false;
+        [FoldoutGroup("세부 설정")] [LabelText("시작시 재생")] [SerializeField] private bool isPlayOnStart = false;
+        [FoldoutGroup("세부 설정")] [LabelText("활성화시 재생")] [SerializeField] private bool isPlayOnEnable = false;
+        [FoldoutGroup("세부 설정")] [LabelText("재생시 다른 이펙트 멈춤")] [SerializeField] private bool isStopOtherEffect = false;
+        [FoldoutGroup("세부 설정")] [LabelText("재생 시작 전 딜레이 (초)")] [SerializeField] private float startDelay = 0;
+        [FoldoutGroup("세부 설정")] [LabelText("반복 재생시 딜레이 (초)")] [SerializeField] private float delay = 0;
+        [FoldoutGroup("세부 설정")] [LabelText("재생시 무조건 무한루프")] [SerializeField] private bool isLoopForce = false;
+        [FoldoutGroup("세부 설정")] [LabelText("UI 이펙트인가")] [SerializeField] protected bool isUIEffect = false;
+        [FoldoutGroup("세부 설정")] [LabelText("효과 정도 가중치")] [SerializeField] protected float effectAddValue = 0;
+        [FoldoutGroup("세부 설정")] [LabelText("효과 속도, 클수록 느려짐")] [SerializeField] protected float effectSpeed = 1;
+        [FoldoutGroup("세부 설정")] [LabelText("재생중 재생 시도 금지")] [SerializeField] protected bool isPlayLock = false;
 
 
-        [BoxGroup("이벤트 설정")] public UnityEvent OnEffectStart;
-        [BoxGroup("이벤트 설정")] public UnityEvent OnEffectEnd;
+        [FoldoutGroup("이벤트 설정")] public UnityEvent OnEffectStart;
+        [FoldoutGroup("이벤트 설정")] public UnityEvent OnEffectEnd;
 
 
         public bool isPlaying = false;
