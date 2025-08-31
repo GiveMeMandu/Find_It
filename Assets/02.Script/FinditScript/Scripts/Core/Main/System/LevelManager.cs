@@ -229,7 +229,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                             BGScaleLerp bGScaleLerp = bgObj.GetComponent<BGScaleLerp>();
                             if (bGScaleLerp != null)
                                 if(hideWhenFoundHelper != null)
-                                    hiddenObj.HideWhenFound = hideWhenFoundHelper.hideWhenFound;
+                                    bGScaleLerp.HideHiddenObjAfterDone = hideWhenFoundHelper.hideWhenFound;
                         }
 
                         // Debug.Log($"Added HiddenObj component and BoxCollider2D to {child.name}");
