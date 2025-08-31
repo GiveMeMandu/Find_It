@@ -7891,8 +7891,6 @@ MonoBehaviour:
   _levelManager: {fileID: 991907604}
   _introDirector: {fileID: 2039485039}
   _outroDirector: {fileID: 2039485039}
-  _outroDirector2: {fileID: 1513356326}
-  _outroDirector3: {fileID: 1915792284}
 --- !u!114 &874517317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13852,6 +13850,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -16087,7 +16086,8 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 986789261578633565, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4981339638468725780, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
@@ -16097,6 +16097,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7729668457626703680, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2008823314}
+    - targetCorrespondingSourceObject: {fileID: 7729668457626703680, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2008823321}
   m_SourcePrefab: {fileID: 100100000, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
 --- !u!4 &2008823309 stripped
 Transform:
@@ -16140,6 +16143,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -16152,6 +16156,73 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 711631251102987569, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
   m_PrefabInstance: {fileID: 2008823308}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2008823321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203433581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2008823317}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_sortingLayerName
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Object
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2008823317}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_sortingOrder
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 23
+          m_FloatArgument: 0
+          m_StringArgument: Effect
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _maxClickCount: -1
 --- !u!1 &2025819490
 GameObject:
   m_ObjectHideFlags: 0

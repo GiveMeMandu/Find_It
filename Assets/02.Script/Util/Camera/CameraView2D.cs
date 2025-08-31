@@ -284,19 +284,6 @@ namespace Util.CameraSetting
             // 카메라가 자동 이동 중일 때는 사용자 입력 무시
             if (_isMovingCamera) return;
 
-            // 디버그 정보 업데이트
-            if (_showDebugInfo)
-            {
-                _mouseCurrentAvailable = Mouse.current != null;
-                
-                // 입력 시스템 상태 확인 (필요시에만)
-                if (Time.frameCount % 120 == 0) // 2초마다 한 번씩만
-                {
-                    Debug.Log($"[Input Status] Mouse: {(Mouse.current != null ? "OK" : "NULL")}, " +
-                             $"PlayerAction: {(_playerInputActions != null ? "OK" : "NULL")}, " +
-                             $"Zoom: {_enableZoom}, Pan: {_enablePan}, LastInput: {_lastInputMethod}");
-                }
-            }
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
             HandleMouseInput();
