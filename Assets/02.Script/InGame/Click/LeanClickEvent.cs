@@ -54,6 +54,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 		// Hidden object priority check
 		if (!CheckHiddenObjectPriority(finger.ScreenPosition)) return;
 
+		// Check hierarchy priority - only allow top-most object to be clicked
+		if (!CheckHierarchyPriority(finger.ScreenPosition)) return;
+
 		// Fire down event
 		OnMouseDownEvent?.Invoke();
 
@@ -70,6 +73,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 		// Hidden object priority check
 		if (!CheckHiddenObjectPriority(finger.ScreenPosition)) return;
 
+		// Check hierarchy priority - only allow top-most object to be clicked
+		if (!CheckHierarchyPriority(finger.ScreenPosition)) return;
+
 		OnMouseUpEvent?.Invoke();
 		// selection removal is handled by LeanSelectableByFinger.HandleFingerUp
 	}
@@ -85,6 +91,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 
 		// Hidden object priority check using EventSystem raycast
 		if (!CheckHiddenObjectPriority(finger.ScreenPosition)) return;
+
+		// Check hierarchy priority - only allow top-most object to be clicked
+		if (!CheckHierarchyPriority(finger.ScreenPosition)) return;
 
 		// Fire click event
 		OnClickEvent?.Invoke();
@@ -190,5 +199,65 @@ public class LeanClickEvent : LeanSelectableByFinger
 		}
 
 		return true; // 다른 오브젝트 클릭 허용
+	}
+
+	/// <summary>
+	/// 하이어라키 우선순위 검사: 겹치는 객체들 중에서 하이어라키상 가장 위에 있는 객체만 클릭을 허용
+	/// </summary>
+	private bool CheckHierarchyPriority(Vector2 screenPosition)
+	{
+		Camera cam = Camera.main;
+		if (cam == null) return true;
+
+		Vector3 worldPoint = cam.ScreenToWorldPoint(screenPosition);
+		
+		// 모든 2D 콜라이더를 검사하여 겹치는 LeanClickEvent를 가진 객체들을 찾음
+		Collider2D[] overlappingColliders = Physics2D.OverlapPointAll(worldPoint);
+		
+		List<LeanClickEvent> overlappingClickEvents = new List<LeanClickEvent>();
+		
+		foreach (var collider in overlappingColliders)
+		{
+			LeanClickEvent clickEvent = collider.GetComponent<LeanClickEvent>();
+			if (clickEvent != null && clickEvent.Enable)
+			{
+				overlappingClickEvents.Add(clickEvent);
+			}
+		}
+		
+		// 겹치는 객체가 1개 이하면 그냥 허용
+		if (overlappingClickEvents.Count <= 1)
+		{
+			return true;
+		}
+		
+		// 하이어라키 순서로 정렬 (sibling index가 작을수록 위에 있음)
+		overlappingClickEvents.Sort((a, b) => 
+		{
+			// 같은 부모를 가진 경우 sibling index로 비교
+			if (a.transform.parent == b.transform.parent)
+			{
+				return a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex());
+			}
+			
+			// 다른 부모를 가진 경우, 루트까지 올라가서 비교
+			Transform aRoot = a.transform;
+			Transform bRoot = b.transform;
+			
+			while (aRoot.parent != null) aRoot = aRoot.parent;
+			while (bRoot.parent != null) bRoot = bRoot.parent;
+			
+			return aRoot.GetSiblingIndex().CompareTo(bRoot.GetSiblingIndex());
+		});
+		
+		// 가장 위에 있는(첫 번째) 객체만 클릭을 허용
+		bool isTopMost = overlappingClickEvents[0] == this;
+		
+		if (!isTopMost)
+		{
+			Debug.Log($"Hierarchy priority: {overlappingClickEvents[0].gameObject.name} blocks {gameObject.name}");
+		}
+		
+		return isTopMost;
 	}
 }

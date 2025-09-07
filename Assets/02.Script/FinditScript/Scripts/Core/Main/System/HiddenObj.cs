@@ -9,7 +9,7 @@ using SnowRabbit.Helper;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
-    public class HiddenObj : LeanClickEvent
+    public class HiddenObj : MonoBehaviour, IPointerClickHandler
     {
         [Tooltip("Decide This Object Is Click To Found Or Drag To Specified Region")]
         public HiddenObjFoundType hiddenObjFoundType = HiddenObjFoundType.Click;
@@ -75,40 +75,92 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             return UISprite;
         }
 
-        protected override void OnEnable()
+        private void OnEnable()
         {
-            base.OnEnable();
-            
-            Debug.Log($"HiddenObj {gameObject.name} OnEnable - LeanClickEvent inherited");
+            // HiddenObj 터치 처리를 위한 LeanTouch 이벤트 등록
+            LeanTouch.OnFingerTap += HandleFingerTap;
         }
 
-        // HiddenObj는 LeanClickEvent의 OnClickEvent를 설정하여 최우선 처리
+        // HiddenObj는 독립적인 클릭 처리
         private void Start()
         {
-            // HiddenObj는 우선순위 검사를 비활성화 (무조건 클릭 허용)
-            Enable = true; // LeanClickEvent 활성화
-            
-            // HiddenObj 전용 클릭 이벤트 설정
-            if (OnClickEvent == null)
+            // HiddenObj 초기화
+        }
+
+        private void OnDisable()
+        {
+            // HiddenObj 터치 이벤트 해제
+            LeanTouch.OnFingerTap -= HandleFingerTap;
+        }
+
+        private void OnDestroy()
+        {
+            // HiddenObj 터치 이벤트 해제
+            LeanTouch.OnFingerTap -= HandleFingerTap;
+        }
+
+        // Lean Touch 탭 처리
+        private void HandleFingerTap(LeanFinger finger)
+        {
+            if (IsFound) return;
+
+            // 이 오브젝트 위에 손가락이 있는지 확인
+            if (IsFingerOverThis(finger))
             {
-                OnClickEvent = new UnityEngine.Events.UnityEvent();
+                HitHiddenObject();
             }
-            
-            // 기존 리스너 제거 후 HiddenObj 클릭 처리를 연결
-            OnClickEvent.RemoveAllListeners();
-            OnClickEvent.AddListener(HitHiddenObject);
-            
-            Debug.Log($"HiddenObj {gameObject.name} Start - Click event setup complete");
         }
 
-        protected override void OnDisable()
+        /// <summary>
+        /// 손가락이 이 GameObject 위에 있는지 확인합니다.
+        /// </summary>
+        private bool IsFingerOverThis(LeanFinger finger)
         {
-            base.OnDisable();
-        }
+            // UI 체크
+            if (EventSystem.current != null)
+            {
+                var ped = new PointerEventData(EventSystem.current)
+                {
+                    position = finger.ScreenPosition
+                };
 
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
+                var raycastResults = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(ped, raycastResults);
+
+                foreach (var result in raycastResults)
+                {
+                    if (result.gameObject == gameObject || result.gameObject.transform.IsChildOf(transform))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // 3D/2D Physics 체크
+            var cam = Camera.main ?? Camera.current;
+            if (cam != null)
+            {
+                var ray = cam.ScreenPointToRay(finger.ScreenPosition);
+
+                // 3D 체크
+                if (Physics.Raycast(ray, out var hit))
+                {
+                    if (hit.collider != null && (hit.collider.gameObject == gameObject || hit.collider.transform.IsChildOf(transform)))
+                    {
+                        return true;
+                    }
+                }
+
+                // 2D 체크
+                var wp = cam.ScreenToWorldPoint(new Vector3(finger.ScreenPosition.x, finger.ScreenPosition.y, cam.nearClipPlane));
+                var hit2d = Physics2D.OverlapPoint(wp);
+                if (hit2d != null && (hit2d.gameObject == gameObject || hit2d.transform.IsChildOf(transform)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void HitHiddenObject()
@@ -197,10 +249,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             Debug.Log($"OnPointerClick called for {gameObject.name}");
             
-            // 클릭 우선순위 체크
-            if (!CheckClickPriority(eventData))
+            // 이미 찾아진 경우 무시
+            if (IsFound)
             {
-                Debug.Log($"CheckClickPriority failed for {gameObject.name}");
+                Debug.Log($"{gameObject.name} is already found, ignoring click");
                 return;
             }
                 
@@ -227,18 +279,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             BgAnimationTransform = bgAnimationPrefab.transform;
             BgAnimationSpriteRenderer = bgAnimationPrefab.GetComponentInChildren<SpriteRenderer>();
             BgAnimationLerp = bgAnimationPrefab.GetComponent<BGScaleLerp>();
-        }
-
-        /// <summary>
-        /// 클릭 가능한지 확인합니다. HiddenObj는 찾아지지 않은 상태에서만 클릭 가능합니다.
-        /// </summary>
-        /// <param name="eventData">포인터 이벤트 데이터</param>
-        /// <returns>HiddenObj가 클릭되어야 하는지 여부</returns>
-        private bool CheckClickPriority(PointerEventData eventData)
-        {
-            // HiddenObj가 이미 찾아진 경우에만 클릭 무시
-            // 찾아지지 않은 상태라면 무조건 클릭 허용
-            return !IsFound;
         }
     }
 }
