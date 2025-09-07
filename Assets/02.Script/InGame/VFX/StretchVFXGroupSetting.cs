@@ -11,7 +11,8 @@ using Lean.Touch;
 public class StretchVFXGroupSetting : MonoBehaviour
 {
     [Title("스트레치 이펙트 설정")]
-    [InfoBox("이 컴포넌트는 오브젝트에 스트레치 이펙트와 클릭 이벤트를 설정합니다.")]
+    [InfoBox("이 컴포넌트는 오브젝트에 스트레치 이펙트와 클릭 이벤트를 설정합니다.\n" +
+             "※ 중요: 콜라이더가 겹치는 경우 하이어라키 순서상 위에 있는 객체만 클릭됩니다.")]
     
     [FoldoutGroup("애니메이션 설정"), Range(1f, 2f)]
     [LabelText("늘어남 배율"), Tooltip("X축 및 Y축 늘어남 배율")]
