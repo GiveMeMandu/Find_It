@@ -32,7 +32,7 @@ namespace InGame
         {
             try
             {
-                while (gameObject.activeSelf)
+                while (this != null && gameObject != null && gameObject.activeSelf)
                 {
                     await transform.DORotate(dir, windTime, rotateMode).SetEase(rotateEase).WithCancellation(destroyCancellationToken);
                     await transform.DORotate(dir * -1, windTime, rotateMode).SetEase(rotateEase).WithCancellation(destroyCancellationToken);
@@ -48,7 +48,7 @@ namespace InGame
                     }
 
                     // A single set (two rotations + optional pause) finished -> notify
-                    if (gameObject.activeSelf)
+                    if (this != null && gameObject != null && gameObject.activeSelf)
                     {
                         OnVFXEnd();
                     }

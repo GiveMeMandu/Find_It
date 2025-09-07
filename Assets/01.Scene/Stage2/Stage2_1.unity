@@ -401,6 +401,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -1105,6 +1106,63 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &92330819
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1255548703}
+    m_Modifications:
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4173081777343938787, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+      propertyPath: m_Name
+      value: Butterflies_white
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
 --- !u!1 &100056664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1597,6 +1655,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3158429166461130969, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
   m_PrefabInstance: {fileID: 1371304276}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &237898271 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 119681373298385011, guid: 1b58d95c82064ab4dac899b409ba11f7, type: 3}
+  m_PrefabInstance: {fileID: 92330819}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &240938326
 GameObject:
   m_ObjectHideFlags: 0
@@ -2049,6 +2112,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -2530,6 +2594,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -2822,6 +2887,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -4578,6 +4644,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -4725,6 +4792,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -5099,11 +5167,133 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 591667357}
   m_SourcePrefab: {fileID: 100100000, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
+--- !u!1001 &640635999
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1255548703}
+    m_Modifications:
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -17.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90.00001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3762883769098897874, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: m_Name
+      value: Windlines
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385688584893325495, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: simulationSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385688584893325495, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 0.8
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
 --- !u!4 &643654594 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3158429166461130969, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
   m_PrefabInstance: {fileID: 1159846774}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &656224843
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1255548703}
+    m_Modifications:
+    - target: {fileID: 1364764383216781268, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_Name
+      value: Butterflies_blue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 12.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
 --- !u!1 &660393014
 GameObject:
   m_ObjectHideFlags: 0
@@ -5828,6 +6018,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -6833,6 +7024,7 @@ Transform:
   - {fileID: 1199788209}
   - {fileID: 723441352}
   - {fileID: 1670789330836841212}
+  - {fileID: 1255548703}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &874517317
@@ -7754,6 +7946,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -8980,6 +9173,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -10250,6 +10444,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -10741,6 +10936,55 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1255548702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1255548703}
+  - component: {fileID: 1255548704}
+  m_Layer: 0
+  m_Name: VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1255548703
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255548702}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1601912521}
+  - {fileID: 1886749933}
+  - {fileID: 237898271}
+  - {fileID: 1333872599}
+  - {fileID: 1554782459544520115}
+  m_Father: {fileID: 874517315}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &1255548704
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255548702}
+  m_Enabled: 1
+  m_SortingLayerID: 1564024643
+  m_SortingLayer: 6
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &1255598334
 GameObject:
   m_ObjectHideFlags: 0
@@ -11465,6 +11709,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &1333872599 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8775430932147770978, guid: 932095f08cf98a74495a8b8356dcadb2, type: 3}
+  m_PrefabInstance: {fileID: 656224843}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1340799432
 GameObject:
   m_ObjectHideFlags: 0
@@ -12628,6 +12877,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -13070,6 +13320,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -13971,6 +14222,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -14515,6 +14767,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &1601912521 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+  m_PrefabInstance: {fileID: 3933206836966756474}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1620966786 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7729668457626703680, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
@@ -14558,6 +14815,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -14998,6 +15256,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -15429,6 +15688,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -15707,7 +15967,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8233476207433535642, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000030517578
+      value: -0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 8233476207477577881, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -16000,6 +16260,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -16441,6 +16702,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &1886749933 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1106851336836060260, guid: cdeeef5756596f04fae48a91ad9328ea, type: 3}
+  m_PrefabInstance: {fileID: 640635999}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1910474537
 GameObject:
   m_ObjectHideFlags: 0
@@ -21315,8 +21581,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: -1
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &859914081168785084
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -23413,8 +23704,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &1473674605554123134
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -23730,6 +24046,11 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &1554782459544520115 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+  m_PrefabInstance: {fileID: 8965367826210761650}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1562973802518675962
 Transform:
   m_ObjectHideFlags: 0
@@ -24083,6 +24404,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -30075,8 +30397,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 4
   windTime: 4
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &3402177773419131417
 GameObject:
   m_ObjectHideFlags: 0
@@ -30799,8 +31146,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &3586985890910904260
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -32045,8 +32417,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 2
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &3923333130678677861
 GameObject:
   m_ObjectHideFlags: 0
@@ -32093,6 +32490,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1095461162564038881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &3933206836966756474
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1255548703}
+    m_Modifications:
+    - target: {fileID: 901612148295950221, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_Name
+      value: DustMotesCalm
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377879561961095321, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d14ca066cde06f9419971957f9ae730b, type: 3}
 --- !u!1 &3939047902742102098
 GameObject:
   m_ObjectHideFlags: 0
@@ -33687,8 +34141,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 5
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &4453952899403947746
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -35725,8 +36204,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 4
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &4772550078356761949
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -35794,8 +36298,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 5
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &4774829555621732801
 Transform:
   m_ObjectHideFlags: 0
@@ -37038,8 +37567,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 5
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &5116300805505506874
 Transform:
   m_ObjectHideFlags: 0
@@ -37067,8 +37621,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!114 &5124869045101957079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38313,6 +38892,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -38920,8 +39500,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 1
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &5477952187343388376
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -38989,8 +39594,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 2
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &5496011163565787988
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -40040,8 +40670,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: -2
   windTime: 5
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &5681495919527158239
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -40109,8 +40764,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 1
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &5687175526365856931
 Transform:
   m_ObjectHideFlags: 0
@@ -41065,8 +41745,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &6073495260099796879
 Transform:
   m_ObjectHideFlags: 0
@@ -41621,6 +42326,7 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 0
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
@@ -42638,8 +43344,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 4
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &6476573250674317480
 GameObject:
   m_ObjectHideFlags: 0
@@ -42964,8 +43695,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &6565991807592343110
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -43048,8 +43804,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 5
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &6574472748707012564
 GameObject:
   m_ObjectHideFlags: 0
@@ -43149,8 +43930,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &6595754155280932846
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -43533,8 +44339,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &6660178671222564999
 GameObject:
   m_ObjectHideFlags: 0
@@ -43579,8 +44410,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &6684165740190551568
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -43648,8 +44504,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 15
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &6686248634546419952
 GameObject:
   m_ObjectHideFlags: 0
@@ -44222,8 +45103,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 2
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &6826419013856669001
 GameObject:
   m_ObjectHideFlags: 0
@@ -44848,8 +45754,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 1
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &6935062974024247257
 GameObject:
   m_ObjectHideFlags: 0
@@ -44934,8 +45865,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &6948406916762668274
 Transform:
   m_ObjectHideFlags: 0
@@ -46465,8 +47421,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 4
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &7259334240540888741
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -46699,8 +47680,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: -2
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &7271043283230075415
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -46768,8 +47774,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 2
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &7271053130456696915
 GameObject:
   m_ObjectHideFlags: 0
@@ -46929,8 +47960,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 2
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &7320843104762553072
 GameObject:
   m_ObjectHideFlags: 0
@@ -46961,8 +48017,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: -1
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &7321815553482340304
 Transform:
   m_ObjectHideFlags: 0
@@ -47616,8 +48697,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 5
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &7539905213337031065
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -47851,8 +48957,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 4
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &7584737501723486647
 Transform:
   m_ObjectHideFlags: 0
@@ -47880,8 +49011,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: -4
   windTime: 5
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &7599900581095454530
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -48091,8 +49247,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 8
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!114 &7610429305551731744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48495,8 +49676,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 2
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &7647219687437535649
 Transform:
   m_ObjectHideFlags: 0
@@ -48920,8 +50126,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 2
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &7737742166494024362
 GameObject:
   m_ObjectHideFlags: 0
@@ -49353,8 +50584,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 1
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &7994252693668614581
 GameObject:
   m_ObjectHideFlags: 0
@@ -49923,8 +51179,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 1
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &8095764004654427013
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -50179,8 +51460,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 1
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &8158025232383186043
 Transform:
   m_ObjectHideFlags: 0
@@ -50241,8 +51547,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 1
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &8198905016306548235
 Transform:
   m_ObjectHideFlags: 0
@@ -50285,8 +51616,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 4
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &8198922717790623098
 GameObject:
   m_ObjectHideFlags: 0
@@ -50675,8 +52031,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: -1
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &8355804272120439021
 GameObject:
   m_ObjectHideFlags: 0
@@ -50707,8 +52088,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 4
   windTime: 4
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &8369539890019842270
 GameObject:
   m_ObjectHideFlags: 0
@@ -50956,8 +52362,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 1
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &8433065526647141715
 Transform:
   m_ObjectHideFlags: 0
@@ -51054,8 +52485,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 2
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &8489324973562279359
 Transform:
   m_ObjectHideFlags: 0
@@ -51083,8 +52539,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &8491001181151433887
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -52027,8 +53508,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 0.5
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &8697698887986774079
 Transform:
   m_ObjectHideFlags: 0
@@ -52984,8 +54490,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 0.5
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &8926703185241946974
 Transform:
   m_ObjectHideFlags: 0
@@ -53028,8 +54559,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &8945357613304511606
 Transform:
   m_ObjectHideFlags: 0
@@ -53169,6 +54725,63 @@ MonoBehaviour:
   isResetedThisTime: 0
   isResetOnStart: 0
   useAnchorReference: 1
+--- !u!1001 &8965367826210761650
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1255548703}
+    m_Modifications:
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997142724849676741, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6986186202595398804, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
+      propertyPath: m_Name
+      value: Area_bubbles_white
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2c9068b7d1fb7af40bcfe33346c644af, type: 3}
 --- !u!1 &8965851174243191595
 GameObject:
   m_ObjectHideFlags: 0
@@ -53231,8 +54844,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: -2
   windTime: 1
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!1 &8977617545014350955
 GameObject:
   m_ObjectHideFlags: 0
@@ -53263,8 +54901,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
   windForce: 3
   windTime: 4
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!4 &8981865818656260102
 Transform:
   m_ObjectHideFlags: 0
