@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityWeld;
 using UnityWeld.Binding;
+using Manager;
+using Data;
 
 namespace UI.Page
 {
@@ -20,6 +22,7 @@ namespace UI.Page
         [Binding]
         public void OnClickDailyQuestButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             foreach (var q in questViewModels)
             {
                 if (q as DailyQuestScrollView)

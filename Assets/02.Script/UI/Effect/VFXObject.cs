@@ -22,8 +22,8 @@ namespace Effect
         [FoldoutGroup("세부 설정")] [LabelText("재생중 재생 시도 금지")] [SerializeField] protected bool isPlayLock = false;
 
 
-        [FoldoutGroup("이벤트 설정")] public UnityEvent OnEffectStart;
-        [FoldoutGroup("이벤트 설정")] public UnityEvent OnEffectEnd;
+        [FoldoutGroup("이벤트 설정")] [SerializeField] public UnityEvent OnEffectStart;
+        [FoldoutGroup("이벤트 설정")] [SerializeField] public UnityEvent OnEffectEnd;
 
 
         public bool isPlaying = false;

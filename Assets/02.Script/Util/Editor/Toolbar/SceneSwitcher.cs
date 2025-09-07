@@ -94,6 +94,11 @@ namespace NKStudio
 
                 _menu.ShowAsContext();
             }
+            
+            if (GUILayout.Button("Reload Domain"))
+            {
+                EditorUtility.RequestScriptReload();
+            }
 
             GUILayout.FlexibleSpace();
         }
@@ -108,6 +113,12 @@ namespace NKStudio
     {
         private static string _sceneToOpen;
         private static bool _isAutoPlay;
+        [RuntimeInitializeOnLoadMethod]
+        public static void Initialize()
+        {
+            _sceneToOpen = null;
+            _isAutoPlay = false;
+        }
 
         public static void StartScene(string sceneName, bool isPlay)
         {
@@ -115,7 +126,6 @@ namespace NKStudio
 
             _sceneToOpen = sceneName;
             _isAutoPlay = isPlay;
-
             EditorApplication.update += OnUpdate;
         }
 

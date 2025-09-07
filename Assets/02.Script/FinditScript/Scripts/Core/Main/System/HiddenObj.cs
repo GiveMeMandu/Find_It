@@ -4,10 +4,12 @@ using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
 using DeskCat.FindIt.Scripts.Core.Model;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Lean.Touch;
+using SnowRabbit.Helper;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
-    public class HiddenObj : MonoBehaviour, IPointerClickHandler
+    public class HiddenObj : LeanClickEvent
     {
         [Tooltip("Decide This Object Is Click To Found Or Drag To Specified Region")]
         public HiddenObjFoundType hiddenObjFoundType = HiddenObjFoundType.Click;
@@ -73,8 +75,82 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             return UISprite;
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            
+            Debug.Log($"HiddenObj {gameObject.name} OnEnable - LeanClickEvent inherited");
+        }
+
+        // HiddenObj는 LeanClickEvent의 OnClickEvent를 설정하여 최우선 처리
+        private void Start()
+        {
+            // HiddenObj는 우선순위 검사를 비활성화 (무조건 클릭 허용)
+            Enable = true; // LeanClickEvent 활성화
+            
+            // HiddenObj 전용 클릭 이벤트 설정
+            if (OnClickEvent == null)
+            {
+                OnClickEvent = new UnityEngine.Events.UnityEvent();
+            }
+            
+            // 기존 리스너 제거 후 HiddenObj 클릭 처리를 연결
+            OnClickEvent.RemoveAllListeners();
+            OnClickEvent.AddListener(HitHiddenObject);
+            
+            Debug.Log($"HiddenObj {gameObject.name} Start - Click event setup complete");
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+        }
+
+        public void HitHiddenObject()
+        {
+            Debug.Log($"HitHiddenObject called for {gameObject.name}, IsFound: {IsFound}");
+            
+            if(IsFound == false) {
+                Debug.Log($"Setting {gameObject.name} as found!");
+                IsFound = true;
+                if (AudioWhenClick != null)
+                {
+                    LevelManager.PlayItemFx(AudioWhenClick);
+                }
+                if (EnableBGAnimation)
+                {
+                    BgAnimationTransform.gameObject.SetActive(true);
+                }
+
+                if (HideWhenFound)
+                {
+                    gameObject.SetActive(false);
+                }
+
+                TargetClickAction?.Invoke();
+            }
+            else
+            {
+                Debug.Log($"{gameObject.name} is already found, ignoring click");
+            }
+        }
+
         private void Awake()
         {
+            // 에디터에서 레이어 자동 설정
+#if UNITY_EDITOR
+            if (gameObject.layer != LayerManager.HiddenObjectLayer)
+            {
+                gameObject.layer = LayerManager.HiddenObjectLayer;
+                UnityEditor.EditorUtility.SetDirty(gameObject);
+            }
+#endif
+
             if (UISprite == null)
             {
                 if (TryGetComponent(out spriteRenderer))
@@ -101,17 +177,34 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
         }
 
+        // Unity 에디터에서 컴포넌트가 추가되거나 Reset 버튼을 눌렀을 때 호출됩니다
+        private void Reset()
+        {
+#if UNITY_EDITOR
+            // HiddenObj 컴포넌트가 추가될 때 자동으로 레이어를 HiddenObjectLayer로 설정
+            gameObject.layer = LayerManager.HiddenObjectLayer;
+            UnityEditor.EditorUtility.SetDirty(gameObject);
+#endif
+        }
+
         private void OnMouseDown()
         {
+            Debug.Log($"OnMouseDown called for {gameObject.name}");
             HitHiddenObject();
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            Debug.Log($"OnPointerClick called for {gameObject.name}");
+            
             // 클릭 우선순위 체크
             if (!CheckClickPriority(eventData))
+            {
+                Debug.Log($"CheckClickPriority failed for {gameObject.name}");
                 return;
+            }
                 
+            Debug.Log($"OnPointerClick processing {gameObject.name}");
             HitHiddenObject();
         }
 
@@ -126,29 +219,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             gameObject.SetActive(!gameObject.activeSelf);
         }
 
-
-        private void HitHiddenObject()
-        {
-            if(IsFound == false) {
-                IsFound = true;
-                if (AudioWhenClick != null)
-                {
-                    LevelManager.PlayItemFx(AudioWhenClick);
-                }
-                if (EnableBGAnimation)
-                {
-                    BgAnimationTransform.gameObject.SetActive(true);
-                }
-
-                if (HideWhenFound)
-                {
-                    gameObject.SetActive(false);
-                }
-
-                TargetClickAction?.Invoke();
-            }
-        }
-
         public void SetBgAnimation(GameObject bgAnimationPrefab)
         {
             HideWhenFound = false;
@@ -160,122 +230,15 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         }
 
         /// <summary>
-        /// 클릭 우선순위를 확인합니다. HiddenObj가 최우선 순위를 가집니다.
+        /// 클릭 가능한지 확인합니다. HiddenObj는 찾아지지 않은 상태에서만 클릭 가능합니다.
         /// </summary>
         /// <param name="eventData">포인터 이벤트 데이터</param>
         /// <returns>HiddenObj가 클릭되어야 하는지 여부</returns>
         private bool CheckClickPriority(PointerEventData eventData)
         {
-            // HiddenObj가 이미 찾아진 경우 클릭 무시
-            if (IsFound)
-                return false;
-
-            // Raycast를 통해 모든 히트된 오브젝트들을 가져옴
-            List<RaycastResult> raycastResults = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventData, raycastResults);
-
-            if (raycastResults.Count == 0)
-                return false;
-
-            // HiddenObj 컴포넌트를 가진 오브젝트들 찾기
-            List<GameObject> hiddenObjects = new List<GameObject>();
-            foreach (var result in raycastResults)
-            {
-                var hiddenObj = result.gameObject.GetComponent<HiddenObj>();
-                if (hiddenObj != null && !hiddenObj.IsFound)
-                {
-                    hiddenObjects.Add(result.gameObject);
-                }
-            }
-
-            // HiddenObj가 없으면 다른 오브젝트들도 클릭 가능
-            if (hiddenObjects.Count == 0)
-                return false;
-
-            // 여러 HiddenObj가 겹쳐있는 경우, 우선순위 결정
-            GameObject topPriorityObject = GetTopPriorityHiddenObject(hiddenObjects);
-            
-            // 디버그 로그 (필요시 주석 해제)
-            // Debug.Log($"[HiddenObj] Click Priority Check - Current: {gameObject.name}, TopPriority: {topPriorityObject.name}, Hidden objects found: {hiddenObjects.Count}");
-            
-            // 현재 오브젝트가 최우선 순위인지 확인
-            return topPriorityObject == gameObject;
+            // HiddenObj가 이미 찾아진 경우에만 클릭 무시
+            // 찾아지지 않은 상태라면 무조건 클릭 허용
+            return !IsFound;
         }
-
-        /// <summary>
-        /// 여러 HiddenObj 중에서 최우선 순위 오브젝트를 결정합니다.
-        /// </summary>
-        /// <param name="hiddenObjects">HiddenObj 컴포넌트를 가진 오브젝트들</param>
-        /// <returns>최우선 순위 오브젝트</returns>
-        private GameObject GetTopPriorityHiddenObject(List<GameObject> hiddenObjects)
-        {
-            if (hiddenObjects.Count == 1)
-                return hiddenObjects[0];
-
-            GameObject topPriority = hiddenObjects[0];
-            var topHiddenObj = topPriority.GetComponent<HiddenObj>();
-            int highestClickPriority = topHiddenObj.clickPriority;
-            float highestZ = topPriority.transform.position.z;
-            int highestSortingOrder = GetSortingOrder(topPriority);
-            
-            // 클릭 우선순위 -> SortingOrder -> Z축 순으로 우선순위 결정
-            for (int i = 1; i < hiddenObjects.Count; i++)
-            {
-                var currentObj = hiddenObjects[i];
-                var currentHiddenObj = currentObj.GetComponent<HiddenObj>();
-                int currentClickPriority = currentHiddenObj.clickPriority;
-                float currentZ = currentObj.transform.position.z;
-                int currentSortingOrder = GetSortingOrder(currentObj);
-                
-                // 1. 클릭 우선순위가 높을수록 우선순위
-                if (currentClickPriority > highestClickPriority)
-                {
-                    topPriority = currentObj;
-                    topHiddenObj = currentHiddenObj;
-                    highestClickPriority = currentClickPriority;
-                    highestZ = currentZ;
-                    highestSortingOrder = currentSortingOrder;
-                }
-                // 2. 클릭 우선순위가 같으면 SortingOrder로 비교
-                else if (currentClickPriority == highestClickPriority)
-                {
-                    if (currentSortingOrder > highestSortingOrder)
-                    {
-                        topPriority = currentObj;
-                        topHiddenObj = currentHiddenObj;
-                        highestZ = currentZ;
-                        highestSortingOrder = currentSortingOrder;
-                    }
-                    // 3. SortingOrder도 같으면 Z축으로 비교 (Z값이 클수록 카메라에 가까움)
-                    else if (currentSortingOrder == highestSortingOrder && currentZ > highestZ)
-                    {
-                        topPriority = currentObj;
-                        topHiddenObj = currentHiddenObj;
-                        highestZ = currentZ;
-                    }
-                }
-            }
-            
-            return topPriority;
-        }
-
-        /// <summary>
-        /// 오브젝트의 SortingOrder를 가져옵니다.
-        /// </summary>
-        /// <param name="obj">확인할 오브젝트</param>
-        /// <returns>SortingOrder 값</returns>
-        private int GetSortingOrder(GameObject obj)
-        {
-            var spriteRenderer = obj.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-                return spriteRenderer.sortingOrder;
-            
-            var renderer = obj.GetComponent<Renderer>();
-            if (renderer != null)
-                return renderer.sortingOrder;
-                
-            return 0;
-        }
-
     }
 }

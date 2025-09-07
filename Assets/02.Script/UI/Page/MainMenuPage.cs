@@ -29,6 +29,7 @@ namespace UI.Page
         [Binding]
         public void OnClickStartButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             PlayerPrefs.SetInt("IsIntro1", 1);
             PlayerPrefs.Save();
             var main = Global.CurrentScene as OutGame.MainMenu;
@@ -37,11 +38,13 @@ namespace UI.Page
         [Binding]
         public void OnClickOptionButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             Global.UIManager.OpenPage<OptionPage>();
         }
         [Binding]
         public void OnClickMapButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             CanPlay = false;
             var main = Global.CurrentScene as OutGame.MainMenu;
             main.OnClickMapButton();
@@ -49,12 +52,14 @@ namespace UI.Page
         [Binding]
         public void OnClickMainMenuButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             var main = Global.CurrentScene as OutGame.MainMenu;
             main.OnClickMainMenuButton();
         }
         [Binding]
         public void OnClickResetButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
             SceneManager.LoadScene(0);
@@ -62,6 +67,7 @@ namespace UI.Page
         [Binding]
         public void OnClickExitButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #endif

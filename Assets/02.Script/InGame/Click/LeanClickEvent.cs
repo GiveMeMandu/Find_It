@@ -51,6 +51,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 
 		if (IsFingerOverThis(finger) == false) return;
 
+		// Hidden object priority check
+		if (!CheckHiddenObjectPriority(finger.ScreenPosition)) return;
+
 		// Fire down event
 		OnMouseDownEvent?.Invoke();
 
@@ -63,6 +66,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 		if (!Enable) return;
 
 		if (IsFingerOverThis(finger) == false) return;
+
+		// Hidden object priority check
+		if (!CheckHiddenObjectPriority(finger.ScreenPosition)) return;
 
 		OnMouseUpEvent?.Invoke();
 		// selection removal is handled by LeanSelectableByFinger.HandleFingerUp
@@ -159,29 +165,30 @@ public class LeanClickEvent : LeanSelectableByFinger
 	}
 
 	/// <summary>
-	/// HiddenObj 우선순위 검사: EventSystem.RaycastAll 결과에 HiddenObj가 있고 IsFound==false면 클릭을 막음
+	/// HiddenObj 우선순위 검사: HiddenObj가 있고 찾아지지 않은 상태면 클릭을 막음
+	/// 단, 현재 오브젝트가 HiddenObj라면 우선순위 검사 무시
 	/// </summary>
 	private bool CheckHiddenObjectPriority(Vector2 screenPosition)
 	{
-		if (EventSystem.current == null) return true;
+		// HiddenObject 레이어만 체크 (Layer 8)
+		int hiddenObjectLayerMask = 1 << 8;
 
-		var ped = new PointerEventData(EventSystem.current)
+		Camera cam = Camera.main;
+		if (cam == null) return true;
+
+		Vector3 worldPoint = cam.ScreenToWorldPoint(screenPosition);
+		Collider2D hiddenObjHit = Physics2D.OverlapPoint(worldPoint, hiddenObjectLayerMask);
+
+		if (hiddenObjHit != null)
 		{
-			position = screenPosition
-		};
-
-		var raycastResults = new List<RaycastResult>();
-		EventSystem.current.RaycastAll(ped, raycastResults);
-
-		foreach (var result in raycastResults)
-		{
-			var hiddenObj = result.gameObject.GetComponent<HiddenObj>();
+			HiddenObj hiddenObj = hiddenObjHit.GetComponent<HiddenObj>();
 			if (hiddenObj != null && !hiddenObj.IsFound)
 			{
-				return false;
+				Debug.Log($"HiddenObj {hiddenObj.gameObject.name} has priority, blocking other clicks");
+				return false; // HiddenObj가 우선순위를 가짐
 			}
 		}
 
-		return true;
+		return true; // 다른 오브젝트 클릭 허용
 	}
 }

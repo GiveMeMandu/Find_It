@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.InputSystem;
 using System.Threading;
 using System.Threading.Tasks;
+using Data;
 
 namespace UI.Page
 {
@@ -174,12 +175,14 @@ namespace UI.Page
         [Binding]
         public void OnClickStartButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             Debug.Log("Start button clicked");
         }
 
         [Binding]
         public void OnClickSkipIntroButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             Debug.Log("Skip intro button clicked");
         }
 

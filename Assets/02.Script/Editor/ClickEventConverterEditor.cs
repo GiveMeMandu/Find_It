@@ -4,6 +4,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using UnityEditor.Events;
 using System.Reflection;
+using Effect;
 
 // Utility to convert ClickEvent components to LeanClickEvent in editor time
 public static class ClickEventConverterEditor
@@ -117,23 +118,27 @@ public static class ClickEventConverterEditor
                     var methodName = getMethodNameMethod?.Invoke(srcEvent, new object[] { i }) as string;
                     if (target == null || string.IsNullOrEmpty(methodName)) continue;
 
-                    // Try to create a UnityAction delegate for parameterless methods
-                    try
+                    // StretchVFX 컴포넌트의 PlayVFX 메서드만 연결 (소리 제외)
+                    if (target is StretchVFX && methodName == "PlayVFX")
                     {
-                        var del = System.Delegate.CreateDelegate(typeof(UnityEngine.Events.UnityAction), target, methodName) as UnityEngine.Events.UnityAction;
-                        if (del != null)
+                        try
                         {
-                            UnityEventTools.AddPersistentListener(dstEvent as UnityEngine.Events.UnityEvent, del);
+                            var del = System.Delegate.CreateDelegate(typeof(UnityEngine.Events.UnityAction), target, methodName) as UnityEngine.Events.UnityAction;
+                            if (del != null)
+                            {
+                                UnityEventTools.AddPersistentListener(dstEvent as UnityEngine.Events.UnityEvent, del);
+                                Debug.Log($"PlayVFX 메서드만 연결됨: {target}.{methodName} on {go.name}");
+                            }
                         }
-                        else
+                        catch (System.Exception ex)
                         {
-                            // If creating delegate failed, attempt to add by method name using reflection via SerializedObject fallback
-                            Debug.LogWarning($"Could not create delegate for {target}.{methodName} on {go.name}. Listener skipped.");
+                            Debug.LogWarning($"Failed to copy PlayVFX listener {methodName} on {go.name}: {ex.Message}");
                         }
                     }
-                    catch (System.Exception ex)
+                    // 다른 메서드는 무시 (소리 재생 이벤트 등 중복 방지)
+                    else
                     {
-                        Debug.LogWarning($"Failed to copy listener {methodName} on {go.name}: {ex.Message}");
+                        Debug.Log($"Skipping non-PlayVFX method: {target}.{methodName} on {go.name}");
                     }
                 }
             }

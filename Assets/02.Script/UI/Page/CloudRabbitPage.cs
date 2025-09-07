@@ -25,11 +25,13 @@ namespace UI.Page
         [Binding]
         public void OnClickOptionButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             Global.UIManager.OpenPage<OptionPage>();
         }
         [Binding]
         public void OnClickExitButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #endif

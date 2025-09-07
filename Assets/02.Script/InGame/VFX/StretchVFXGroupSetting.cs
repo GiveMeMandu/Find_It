@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using System.Reflection;
 using DG.Tweening;
+using Lean.Touch;
 
 public class StretchVFXGroupSetting : MonoBehaviour
 {
@@ -43,6 +44,14 @@ public class StretchVFXGroupSetting : MonoBehaviour
     [FoldoutGroup("고급 설정")]
     [LabelText("자식 오브젝트에도 적용")]
     public bool applyToChildren = false;
+    
+    [FoldoutGroup("사운드 설정")]
+    [LabelText("클릭 사운드 추가")]
+    public bool addClickSound = true;
+    
+    [FoldoutGroup("사운드 설정"), ShowIf("addClickSound")]
+    [LabelText("사운드 타입")]
+    public Data.SFXEnum clickSoundType = Data.SFXEnum.ClickStretch;
     
     [Button("컴포넌트 설정하기", ButtonSizes.Large)]
     public void SetupComponents()
@@ -88,7 +97,7 @@ public class StretchVFXGroupSetting : MonoBehaviour
         
         try
         {
-            // 기존 컴포넌트 제거 후 새로 추가하는 방식으로 변경
+            // 기존 컴포넌트 제거 후 새로 추가하는 방식으로 변경 (중복 방지)
             // 기존 StretchVFX 제거
             StretchVFX existingStretchVFX = targetObj.GetComponent<StretchVFX>();
             if (existingStretchVFX != null)
@@ -96,11 +105,24 @@ public class StretchVFXGroupSetting : MonoBehaviour
                 DestroyImmediate(existingStretchVFX);
             }
             
-            // 기존 ClickEvent 제거
+            // 기존 ClickEvent, LeanClickEvent 모두 제거
             ClickEvent existingClickEvent = targetObj.GetComponent<ClickEvent>();
             if (existingClickEvent != null)
             {
                 DestroyImmediate(existingClickEvent);
+            }
+            
+            LeanClickEvent existingLeanClickEvent = targetObj.GetComponent<LeanClickEvent>();
+            if (existingLeanClickEvent != null)
+            {
+                DestroyImmediate(existingLeanClickEvent);
+            }
+            
+            // 기존 ClickTouchSound 제거 (중복 방지)
+            ClickTouchSound existingClickTouchSound = targetObj.GetComponent<ClickTouchSound>();
+            if (existingClickTouchSound != null)
+            {
+                DestroyImmediate(existingClickTouchSound);
             }
             
             // 기존 DragObj 제거 (드래그 방지)
@@ -118,29 +140,45 @@ public class StretchVFXGroupSetting : MonoBehaviour
             // 이펙트 설정 적용
             ApplyEffectSettings(stretchVFX);
             
-            // ClickEvent 컴포넌트 추가
-            ClickEvent clickEvent = targetObj.AddComponent<ClickEvent>();
-            Debug.Log($"{targetObj.name}에 ClickEvent 컴포넌트가 추가되었습니다.");
+            // LeanClickEvent 컴포넌트 추가 (기본적으로 LeanClickEvent 사용)
+            LeanClickEvent leanClickEvent = targetObj.AddComponent<LeanClickEvent>();
+            Debug.Log($"{targetObj.name}에 LeanClickEvent 컴포넌트가 추가되었습니다.");
             
-            // ClickEvent 활성화
-            clickEvent.Enable = true;
+            // ClickTouchSound 컴포넌트 추가 (사운드 설정이 활성화된 경우)
+            ClickTouchSound clickTouchSound = null;
+            if (addClickSound)
+            {
+                clickTouchSound = targetObj.AddComponent<ClickTouchSound>();
+                clickTouchSound.SetSoundType(clickSoundType);
+                Debug.Log($"{targetObj.name}에 ClickTouchSound 컴포넌트가 추가되었습니다.");
+            }
+            
+            // LeanClickEvent 활성화
+            leanClickEvent.Enable = true;
             
             // 직접 이벤트 필드 초기화
-            InitializeClickEventFields(clickEvent);
+            InitializeLeanClickEventFields(leanClickEvent);
             
             // StretchVFX 참조를 캡처하는 메서드 참조
             UnityAction playVFXAction = () => PlayVFXOnObject(targetObj);
             
-            // ClickEvent에 PlayVFX 메서드 연결
-            if (clickEvent.OnClickEvent != null)
+            // LeanClickEvent에 PlayVFX 메서드 연결 (오직 PlayVFX만 연결)
+            if (leanClickEvent.OnClickEvent != null)
             {
-                clickEvent.OnClickEvent.RemoveAllListeners();
-                clickEvent.OnClickEvent.AddListener(playVFXAction);
-                Debug.Log($"{targetObj.name}의 ClickEvent에 PlayVFX 메서드가 연결되었습니다. (리스너 수: {clickEvent.OnClickEvent.GetPersistentEventCount()})");
+                leanClickEvent.OnClickEvent.RemoveAllListeners();
+                leanClickEvent.OnClickEvent.AddListener(playVFXAction);
+                
+                Debug.Log($"{targetObj.name}의 LeanClickEvent에 PlayVFX 메서드가 연결되었습니다. (리스너 수: {leanClickEvent.OnClickEvent.GetPersistentEventCount()})");
             }
             else
             {
                 Debug.LogError($"{targetObj.name}의 OnClickEvent가 초기화 후에도 null입니다!");
+            }
+            
+            // 사운드 이벤트는 StretchVFX의 OnEffectStart에 연결
+            if (addClickSound && clickTouchSound != null)
+            {
+                ConnectSoundToVFXObject(stretchVFX, clickTouchSound);
             }
             
             // Collider2D 설정
@@ -187,6 +225,36 @@ public class StretchVFXGroupSetting : MonoBehaviour
         }
     }
     
+    // LeanClickEvent의 UnityEvent 필드를 직접 초기화
+    private void InitializeLeanClickEventFields(LeanClickEvent leanClickEvent)
+    {
+        if (leanClickEvent == null) return;
+        
+        try
+        {
+            // 모든 UnityEvent 필드 초기화
+            if (leanClickEvent.OnMouseDownEvent == null)
+                leanClickEvent.OnMouseDownEvent = new UnityEvent();
+                
+            if (leanClickEvent.OnMouseUpEvent == null)
+                leanClickEvent.OnMouseUpEvent = new UnityEvent();
+                
+            if (leanClickEvent.OnClickEvent == null)
+                leanClickEvent.OnClickEvent = new UnityEvent();
+                
+            // 계층구조 저장을 통해 이벤트가 유지되도록 보장
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(leanClickEvent);
+#endif
+            
+            Debug.Log($"LeanClickEvent의 모든 이벤트 필드가 초기화되었습니다.");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"LeanClickEvent 필드 초기화 중 오류: {e.Message}");
+        }
+    }
+
     // ClickEvent의 UnityEvent 필드를 직접 초기화
     private void InitializeClickEventFields(ClickEvent clickEvent)
     {
@@ -230,6 +298,97 @@ public class StretchVFXGroupSetting : MonoBehaviour
         }
     }
     
+    // VFXObject의 OnEffectStart에 사운드 이벤트 연결
+    private void ConnectSoundToVFXObject(StretchVFX stretchVFX, ClickTouchSound clickTouchSound)
+    {
+        if (stretchVFX == null || clickTouchSound == null) return;
+        
+        // StretchVFX의 OnEffectStart 이벤트에 사운드 연결
+        if (stretchVFX.OnEffectStart != null)
+        {
+            // 기존 사운드 리스너 제거 (중복 방지)
+            stretchVFX.OnEffectStart.RemoveListener(clickTouchSound.PlayClickSound);
+            // 새 리스너 추가
+            stretchVFX.OnEffectStart.AddListener(clickTouchSound.PlayClickSound);
+            Debug.Log($"{stretchVFX.name}의 StretchVFX.OnEffectStart에 사운드가 연결되었습니다.");
+        }
+        else
+        {
+            Debug.LogWarning($"{stretchVFX.name}의 StretchVFX.OnEffectStart가 null입니다.");
+        }
+    }
+
+    // LeanClickEvent에만 사운드 이벤트 연결 (PlayVFX와 분리)
+    private void ConnectSoundToLeanClickEvent(GameObject targetObj, ClickTouchSound clickTouchSound)
+    {
+        if (targetObj == null || clickTouchSound == null) return;
+        
+        // LeanClickEvent 확인 및 연결
+        LeanClickEvent leanClickEvent = targetObj.GetComponent<LeanClickEvent>();
+        if (leanClickEvent != null && leanClickEvent.OnClickEvent != null)
+        {
+            // 기존 사운드 리스너 제거 (중복 방지)
+            leanClickEvent.OnClickEvent.RemoveListener(clickTouchSound.PlayClickSound);
+            // 새 리스너 추가
+            leanClickEvent.OnClickEvent.AddListener(clickTouchSound.PlayClickSound);
+            Debug.Log($"{targetObj.name}의 LeanClickEvent에 사운드가 연결되었습니다.");
+        }
+    }
+    
+    // ClickEvent 또는 LeanClickEvent에 사운드 이벤트 연결
+    private void ConnectSoundToClickEvents(GameObject targetObj, ClickTouchSound clickTouchSound)
+    {
+        if (targetObj == null || clickTouchSound == null) return;
+        
+        // ClickEvent 확인 및 연결
+        ClickEvent clickEvent = targetObj.GetComponent<ClickEvent>();
+        if (clickEvent != null && clickEvent.OnClickEvent != null)
+        {
+            // 기존 사운드 리스너 제거 (중복 방지)
+            clickEvent.OnClickEvent.RemoveListener(clickTouchSound.PlayClickSound);
+            // 새 리스너 추가
+            clickEvent.OnClickEvent.AddListener(clickTouchSound.PlayClickSound);
+            Debug.Log($"{targetObj.name}의 ClickEvent에 사운드가 연결되었습니다.");
+        }
+        
+        // LeanClickEvent 확인 및 연결
+        LeanClickEvent leanClickEvent = targetObj.GetComponent<LeanClickEvent>();
+        if (leanClickEvent != null)
+        {
+            // LeanClickEvent의 OnClickEvent 필드에 접근
+            if (leanClickEvent.OnClickEvent != null)
+            {
+                // 기존 사운드 리스너 제거 (중복 방지)
+                leanClickEvent.OnClickEvent.RemoveListener(clickTouchSound.PlayClickSound);
+                // 새 리스너 추가
+                leanClickEvent.OnClickEvent.AddListener(clickTouchSound.PlayClickSound);
+                Debug.Log($"{targetObj.name}의 LeanClickEvent에 사운드가 연결되었습니다.");
+            }
+        }
+    }
+    
+    // ClickEvent 또는 LeanClickEvent에서 사운드 이벤트 제거
+    private void DisconnectSoundFromClickEvents(GameObject targetObj, ClickTouchSound clickTouchSound)
+    {
+        if (targetObj == null || clickTouchSound == null) return;
+        
+        // ClickEvent에서 제거
+        ClickEvent clickEvent = targetObj.GetComponent<ClickEvent>();
+        if (clickEvent != null && clickEvent.OnClickEvent != null)
+        {
+            clickEvent.OnClickEvent.RemoveListener(clickTouchSound.PlayClickSound);
+            Debug.Log($"{targetObj.name}의 ClickEvent에서 사운드가 제거되었습니다.");
+        }
+        
+        // LeanClickEvent에서 제거
+        LeanClickEvent leanClickEvent = targetObj.GetComponent<LeanClickEvent>();
+        if (leanClickEvent != null && leanClickEvent.OnClickEvent != null)
+        {
+            leanClickEvent.OnClickEvent.RemoveListener(clickTouchSound.PlayClickSound);
+            Debug.Log($"{targetObj.name}의 LeanClickEvent에서 사운드가 제거되었습니다.");
+        }
+    }
+    
     [Button("이벤트 연결 확인 및 수정", ButtonSizes.Medium)]
     public void CheckAndFixEvents()
     {
@@ -254,25 +413,47 @@ public class StretchVFXGroupSetting : MonoBehaviour
             {
                 if (obj == null) continue;
                 
-                ClickEvent clickEvent = obj.GetComponent<ClickEvent>();
+                LeanClickEvent leanClickEvent = obj.GetComponent<LeanClickEvent>();
                 
-                if (clickEvent != null)
+                if (leanClickEvent != null)
                 {
                     // 모든 이벤트 필드 초기화
-                    InitializeClickEventFields(clickEvent);
+                    InitializeLeanClickEventFields(leanClickEvent);
+                    
+                    // ClickTouchSound 컴포넌트 확인 및 추가
+                    ClickTouchSound clickTouchSound = obj.GetComponent<ClickTouchSound>();
+                    if (addClickSound && clickTouchSound == null)
+                    {
+                        clickTouchSound = obj.AddComponent<ClickTouchSound>();
+                        clickTouchSound.SetSoundType(clickSoundType);
+                        Debug.Log($"{obj.name}에 ClickTouchSound 컴포넌트를 추가했습니다.");
+                    }
+                    else if (!addClickSound && clickTouchSound != null)
+                    {
+                        DestroyImmediate(clickTouchSound);
+                        Debug.Log($"{obj.name}에서 ClickTouchSound 컴포넌트를 제거했습니다.");
+                        clickTouchSound = null;
+                    }
                     
                     // 이벤트에 리스너가 있는지 확인
-                    if (clickEvent.OnClickEvent != null && clickEvent.OnClickEvent.GetPersistentEventCount() == 0)
+                    if (leanClickEvent.OnClickEvent != null && leanClickEvent.OnClickEvent.GetPersistentEventCount() == 0)
                     {
-                        // 리스너가 없으면 새로 추가
+                        // 리스너가 없으면 PlayVFX만 새로 추가
                         UnityAction playVFXAction = () => PlayVFXOnObject(obj);
-                        clickEvent.OnClickEvent.AddListener(playVFXAction);
+                        leanClickEvent.OnClickEvent.AddListener(playVFXAction);
                         
                         Debug.Log($"{obj.name}의 OnClickEvent에 리스너를 추가했습니다.");
                     }
-                    else if (clickEvent.OnClickEvent != null)
+                    else if (leanClickEvent.OnClickEvent != null)
                     {
-                        Debug.Log($"{obj.name}의 OnClickEvent에 {clickEvent.OnClickEvent.GetPersistentEventCount()}개의 리스너가 있습니다.");
+                        Debug.Log($"{obj.name}의 OnClickEvent에 {leanClickEvent.OnClickEvent.GetPersistentEventCount()}개의 리스너가 있습니다.");
+                    }
+                    
+                    // 사운드 이벤트는 StretchVFX의 OnEffectStart에 연결
+                    StretchVFX stretchVFX = obj.GetComponent<StretchVFX>();
+                    if (addClickSound && clickTouchSound != null && stretchVFX != null)
+                    {
+                        ConnectSoundToVFXObject(stretchVFX, clickTouchSound);
                     }
                 }
             }
@@ -437,6 +618,27 @@ public class StretchVFXGroupSetting : MonoBehaviour
         }
     }
     
+    [Button("사운드 설정 도구 열기", ButtonSizes.Medium)]
+    [GUIColor(0.7f, 1f, 0.7f)]
+    public void OpenSoundSetupTool()
+    {
+#if UNITY_EDITOR
+        try
+        {
+            // 메뉴 아이템을 직접 실행 (가장 안전한 방법)
+            UnityEditor.EditorApplication.ExecuteMenuItem("Tools/StretchVFX/사운드 자동 설정");
+            Debug.Log("StretchVFX 사운드 설정 도구를 열었습니다.");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"사운드 설정 도구를 열 수 없습니다: {e.Message}");
+            Debug.Log("대신 'Tools > StretchVFX > 사운드 자동 설정' 메뉴를 직접 클릭해주세요.");
+        }
+#else
+        Debug.LogWarning("이 기능은 에디터에서만 사용할 수 있습니다.");
+#endif
+    }
+    
     [Button("전체 제거", ButtonSizes.Medium, ButtonStyle.FoldoutButton)]
     [GUIColor(1f, 0.5f, 0.5f)]
     public void RemoveAllComponents()
@@ -476,6 +678,19 @@ public class StretchVFXGroupSetting : MonoBehaviour
                 if (clickEvent != null)
                 {
                     DestroyImmediate(clickEvent);
+                }
+                
+                LeanClickEvent leanClickEvent = obj.GetComponent<LeanClickEvent>();
+                if (leanClickEvent != null)
+                {
+                    DestroyImmediate(leanClickEvent);
+                }
+                
+                // ClickTouchSound 컴포넌트 제거
+                ClickTouchSound clickTouchSound = obj.GetComponent<ClickTouchSound>();
+                if (clickTouchSound != null)
+                {
+                    DestroyImmediate(clickTouchSound);
                 }
                 
                 // DragObj 컴포넌트도 제거

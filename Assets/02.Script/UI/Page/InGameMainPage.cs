@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityWeld.Binding;
 using Cysharp.Threading.Tasks;
+using Data;
 
 namespace UI.Page
 {
@@ -280,11 +281,13 @@ namespace UI.Page
         [Binding]
         public void OnClickOptionButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             Global.UIManager.OpenPage<OptionPage>();
         }
         [Binding]
         public void OnClickAdButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             // Global.GoogleMobileAdsManager.ShowRewardedAd();
         }
 
@@ -292,6 +295,7 @@ namespace UI.Page
         [Binding]
         public void OnClickSkipButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             var inGameSceneBase = FindFirstObjectByType<OutGame.InGameSceneBase>();
             inGameSceneBase.SkipIntro();
         }
@@ -300,6 +304,7 @@ namespace UI.Page
         [Binding]
         public void OnClickRotateUIButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             if (LevelManager.Instance != null)
             {
                 LevelManager.Instance.ToggleScrollView();

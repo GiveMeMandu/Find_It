@@ -6,6 +6,7 @@ using UI;
 using DeskCat.FindIt.Scripts.Core.Model;
 using DeskCat.FindIt.Scripts.Core.Main.System;
 using Manager;
+using Data;
 
 namespace UI.Page
 {
@@ -251,18 +252,21 @@ namespace UI.Page
         [Binding]
         public void OnClickOptionButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             Global.UIManager.OpenPage<OptionPage>();
         }
         
         [Binding]
         public void OnClickAdButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             // Global.GoogleMobileAdsManager.ShowRewardedAd();
         }
 
         [Binding]
         public void OnClickSkipButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             var inGameSceneBase = FindFirstObjectByType<OutGame.InGameSceneBase>();
             inGameSceneBase.SkipIntro();
         }
@@ -270,6 +274,7 @@ namespace UI.Page
         [Binding]
         public void OnClickRotateUIButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             if (TimeChallengeManager.Instance != null)
             {
                 TimeChallengeManager.Instance.ToggleScrollView();

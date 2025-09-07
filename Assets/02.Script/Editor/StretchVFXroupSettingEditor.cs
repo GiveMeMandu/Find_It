@@ -81,22 +81,53 @@ public class StretchVFXGroupSettingEditor : OdinEditor
         {
             if (obj == null) continue;
             
-            // 컴포넌트를 재생성하는 대신 기존 컴포넌트를 활용합니다
-            ClickEvent clickEvent = obj.GetComponent<ClickEvent>();
-            if (clickEvent == null)
+            // 기존 컴포넌트들을 모두 제거 후 재생성 (중복 방지)
+            ClickEvent existingClickEvent = obj.GetComponent<ClickEvent>();
+            if (existingClickEvent != null)
             {
-                clickEvent = obj.AddComponent<ClickEvent>();
-                Debug.Log($"{obj.name}에 ClickEvent 컴포넌트를 추가했습니다.");
+                Object.DestroyImmediate(existingClickEvent);
+                Debug.Log($"{obj.name}에서 기존 ClickEvent 컴포넌트를 제거했습니다.");
             }
             
-            StretchVFX stretchVFX = obj.GetComponent<StretchVFX>();
-            if (stretchVFX == null)
+            LeanClickEvent existingLeanClickEvent = obj.GetComponent<LeanClickEvent>();
+            if (existingLeanClickEvent != null)
             {
-                stretchVFX = obj.AddComponent<StretchVFX>();
-                Debug.Log($"{obj.name}에 StretchVFX 컴포넌트를 추가했습니다.");
-                
-                // 이펙트 설정 적용
-                setting.ApplyEffectSettings(stretchVFX);
+                Object.DestroyImmediate(existingLeanClickEvent);
+                Debug.Log($"{obj.name}에서 기존 LeanClickEvent 컴포넌트를 제거했습니다.");
+            }
+            
+            StretchVFX existingStretchVFX = obj.GetComponent<StretchVFX>();
+            if (existingStretchVFX != null)
+            {
+                Object.DestroyImmediate(existingStretchVFX);
+                Debug.Log($"{obj.name}에서 기존 StretchVFX 컴포넌트를 제거했습니다.");
+            }
+            
+            ClickTouchSound existingClickTouchSound = obj.GetComponent<ClickTouchSound>();
+            if (existingClickTouchSound != null)
+            {
+                Object.DestroyImmediate(existingClickTouchSound);
+                Debug.Log($"{obj.name}에서 기존 ClickTouchSound 컴포넌트를 제거했습니다.");
+            }
+            
+            // LeanClickEvent 컴포넌트 새로 추가 (기본으로 LeanClickEvent 사용)
+            LeanClickEvent leanClickEvent = obj.AddComponent<LeanClickEvent>();
+            Debug.Log($"{obj.name}에 LeanClickEvent 컴포넌트를 추가했습니다.");
+            
+            // StretchVFX 컴포넌트 새로 추가
+            StretchVFX stretchVFX = obj.AddComponent<StretchVFX>();
+            Debug.Log($"{obj.name}에 StretchVFX 컴포넌트를 추가했습니다.");
+            
+            // 이펙트 설정 적용
+            setting.ApplyEffectSettings(stretchVFX);
+            
+            // ClickTouchSound 컴포넌트 확인 및 추가
+            ClickTouchSound clickTouchSound = null;
+            if (setting.addClickSound)
+            {
+                clickTouchSound = obj.AddComponent<ClickTouchSound>();
+                clickTouchSound.SetSoundType(setting.clickSoundType);
+                Debug.Log($"{obj.name}에 ClickTouchSound 컴포넌트를 추가했습니다.");
             }
             
             // BoxCollider2D 확인
@@ -134,44 +165,88 @@ public class StretchVFXGroupSettingEditor : OdinEditor
             try
             {
                 // 이벤트가 있는지 확인하고 초기화
-                if (clickEvent.OnClickEvent == null)
+                if (leanClickEvent.OnClickEvent == null)
                 {
-                    clickEvent.OnClickEvent = new UnityEvent();
+                    leanClickEvent.OnClickEvent = new UnityEvent();
                 }
                 
                 // 기존 리스너 제거
-                clickEvent.OnClickEvent.RemoveAllListeners();
+                leanClickEvent.OnClickEvent.RemoveAllListeners();
                 
-                // ClickEvent에 PlayVFX 메서드 직접 연결
-                UnityAction action = new UnityAction(stretchVFX.PlayVFX);
-                clickEvent.OnClickEvent.AddListener(action);
+                // LeanClickEvent에 PlayVFX 메서드만 직접 연결 (PlayVFX만!)
+                UnityAction vfxAction = new UnityAction(stretchVFX.PlayVFX);
+                leanClickEvent.OnClickEvent.AddListener(vfxAction);
+                
+                // 사운드 이벤트는 StretchVFX의 OnEffectStart에 연결 (있는 경우)
+                if (setting.addClickSound && clickTouchSound != null)
+                {
+                    // StretchVFX의 OnEffectStart에 사운드 연결
+                    if (stretchVFX.OnEffectStart != null)
+                    {
+                        stretchVFX.OnEffectStart.RemoveListener(clickTouchSound.PlayClickSound);
+                        UnityAction soundAction = new UnityAction(clickTouchSound.PlayClickSound);
+                        stretchVFX.OnEffectStart.AddListener(soundAction);
+                        Debug.Log($"{obj.name}의 StretchVFX.OnEffectStart에 사운드가 연결되었습니다.");
+                    }
+                }
                 
                 // SerializedObject를 통한 등록
-                SerializedObject serializedClickEvent = new SerializedObject(clickEvent);
-                serializedClickEvent.Update();
+                SerializedObject serializedLeanClickEvent = new SerializedObject(leanClickEvent);
+                serializedLeanClickEvent.Update();
                 
-                SerializedProperty onClickEventProperty = serializedClickEvent.FindProperty("OnClickEvent");
+                SerializedProperty onClickEventProperty = serializedLeanClickEvent.FindProperty("OnClickEvent");
                 if (onClickEventProperty != null)
                 {
                     // m_PersistentCalls.m_Calls 초기화 및 설정
                     SerializedProperty persistentCallsProperty = onClickEventProperty.FindPropertyRelative("m_PersistentCalls.m_Calls");
                     persistentCallsProperty.ClearArray();
+                    
+                    // LeanClickEvent에는 오직 PlayVFX만 연결
                     persistentCallsProperty.arraySize = 1;
                     
-                    SerializedProperty call = persistentCallsProperty.GetArrayElementAtIndex(0);
-                    call.FindPropertyRelative("m_Target").objectReferenceValue = stretchVFX;
-                    call.FindPropertyRelative("m_MethodName").stringValue = "PlayVFX";
-                    call.FindPropertyRelative("m_Mode").enumValueIndex = 1; // PersistentListenerMode.Void
-                    call.FindPropertyRelative("m_Arguments.m_ObjectArgumentAssemblyTypeName").stringValue = "UnityEngine.Object, UnityEngine";
-                    call.FindPropertyRelative("m_CallState").enumValueIndex = 2; // UnityEventCallState.RuntimeOnly
+                    // VFX 이벤트 설정 (PlayVFX만!)
+                    SerializedProperty vfxCall = persistentCallsProperty.GetArrayElementAtIndex(0);
+                    vfxCall.FindPropertyRelative("m_Target").objectReferenceValue = stretchVFX;
+                    vfxCall.FindPropertyRelative("m_MethodName").stringValue = "PlayVFX";
+                    vfxCall.FindPropertyRelative("m_Mode").enumValueIndex = 1; // PersistentListenerMode.Void
+                    vfxCall.FindPropertyRelative("m_Arguments.m_ObjectArgumentAssemblyTypeName").stringValue = "UnityEngine.Object, UnityEngine";
+                    vfxCall.FindPropertyRelative("m_CallState").enumValueIndex = 2; // UnityEventCallState.RuntimeOnly
                     
-                    serializedClickEvent.ApplyModifiedProperties();
-                    Debug.Log($"{obj.name}에 StretchVFX.PlayVFX 메서드가 Runtime Only 상태로 등록되었습니다.");
+                    serializedLeanClickEvent.ApplyModifiedProperties();
+                    Debug.Log($"{obj.name}에 PlayVFX 이벤트가 Runtime Only 상태로 등록되었습니다.");
+                }
+                
+                // 사운드 이벤트는 StretchVFX의 OnEffectStart에 별도로 등록
+                if (setting.addClickSound && clickTouchSound != null)
+                {
+                    SerializedObject serializedStretchVFX = new SerializedObject(stretchVFX);
+                    serializedStretchVFX.Update();
+                    
+                    SerializedProperty onEffectStartProperty = serializedStretchVFX.FindProperty("OnEffectStart");
+                    if (onEffectStartProperty != null)
+                    {
+                        SerializedProperty soundPersistentCallsProperty = onEffectStartProperty.FindPropertyRelative("m_PersistentCalls.m_Calls");
+                        soundPersistentCallsProperty.ClearArray();
+                        soundPersistentCallsProperty.arraySize = 1;
+                        
+                        // 사운드 이벤트 설정
+                        SerializedProperty soundCall = soundPersistentCallsProperty.GetArrayElementAtIndex(0);
+                        soundCall.FindPropertyRelative("m_Target").objectReferenceValue = clickTouchSound;
+                        soundCall.FindPropertyRelative("m_MethodName").stringValue = "PlayClickSound";
+                        soundCall.FindPropertyRelative("m_Mode").enumValueIndex = 1; // PersistentListenerMode.Void
+                        soundCall.FindPropertyRelative("m_Arguments.m_ObjectArgumentAssemblyTypeName").stringValue = "UnityEngine.Object, UnityEngine";
+                        soundCall.FindPropertyRelative("m_CallState").enumValueIndex = 2; // UnityEventCallState.RuntimeOnly
+                        
+                        serializedStretchVFX.ApplyModifiedProperties();
+                        Debug.Log($"{obj.name}의 StretchVFX.OnEffectStart에 사운드 이벤트가 Runtime Only 상태로 등록되었습니다.");
+                    }
                 }
                 
                 // 변경사항을 에디터에 알리기
-                EditorUtility.SetDirty(clickEvent);
+                EditorUtility.SetDirty(leanClickEvent);
                 EditorUtility.SetDirty(stretchVFX);
+                if (clickTouchSound != null)
+                    EditorUtility.SetDirty(clickTouchSound);
                 EditorUtility.SetDirty(obj);
             }
             catch (System.Exception e)
@@ -188,6 +263,6 @@ public class StretchVFXGroupSettingEditor : OdinEditor
             AssetDatabase.SaveAssets();
         }
         
-        Debug.Log("모든 영구 리스너가 Runtime Only 상태로 등록되었습니다!");
+        Debug.Log("모든 영구 리스너가 Runtime Only 상태로 등록되었습니다! (LeanClickEvent: PlayVFX만, StretchVFX.OnEffectStart: 사운드만)");
     }
 }

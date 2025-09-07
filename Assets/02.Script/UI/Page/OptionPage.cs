@@ -108,6 +108,7 @@ namespace UI.Page
         [Binding]
         public void OnClickPrevLanguage()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             var allLanguage = LocalizationManager.GetAllLanguages();
             for (int i = 0; i < allLanguage.Count; i++)
             {
@@ -124,6 +125,7 @@ namespace UI.Page
         [Binding]
         public void OnClickNextLanguage()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             var allLanguage = LocalizationManager.GetAllLanguages();
             for (int i = 0; i < allLanguage.Count; i++)
             {
@@ -139,6 +141,7 @@ namespace UI.Page
         [Binding]
         public void OnClickChangeLanguage()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             var allLanguage = LocalizationManager.GetAllLanguages();
             for (int i = 0; i < allLanguage.Count; i++)
             {
@@ -155,21 +158,25 @@ namespace UI.Page
         [Binding]
         public void OnClickBackToMainMenu()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             LoadingSceneManager.LoadScene(SceneNum.START);
         }
         [Binding]
         public void OnClickRetry()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             LoadingSceneManager.LoadScene((int)Global.CurrentScene.SceneName);
         }
         [Binding]
         public void OnClickMuteBGM()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             IsMuteBGM = Global.SoundManager.MuteBGM();
         }
         [Binding]
         public void OnClickMuteSFX()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             IsMuteSFX = Global.SoundManager.MuteSFX();
         }
 
@@ -177,6 +184,7 @@ namespace UI.Page
         [Binding]
         public void OnClickExitButton()
         {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #endif

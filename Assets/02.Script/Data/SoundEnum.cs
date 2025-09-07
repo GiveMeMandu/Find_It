@@ -18,9 +18,9 @@ namespace Data
     public enum SFXEnum
     {
         NONE,
-        EAT,
-        COOK,
-        COOK_DONE,
-        CheckOut,
+        ClickStretch,
+        ClickStretch2,
+        ClickUI,
+
     }
 }

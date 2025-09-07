@@ -3,6 +3,7 @@ using UnityWeld.Binding;
 using UI;
 using System;
 using Manager;
+using Data;
 
 [Binding]
 public class GameEndPage : PageViewModel
@@ -133,6 +134,7 @@ public class GameEndPage : PageViewModel
     [Binding]
     public void OnClickNextStage()
     {
+        Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
         // 다음 스테이지로 이동 또는 메인 메뉴로 이동
         LoadingSceneManager.LoadScene(Data.SceneNum.SELECT);
     }
@@ -140,6 +142,7 @@ public class GameEndPage : PageViewModel
     [Binding]
     public void OnClickRestart()
     {
+        Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
         // 현재 스테이지 재시작
         if (Global.MainMenuSelectedManager != null && Global.MainMenuSelectedManager.HasSelectedStage())
         {
@@ -156,6 +159,7 @@ public class GameEndPage : PageViewModel
     [Binding]
     public void OnClickMainMenu()
     {
+        Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
         // 메인 메뉴로 이동
         LoadingSceneManager.LoadScene(Data.SceneNum.SELECT);
     }

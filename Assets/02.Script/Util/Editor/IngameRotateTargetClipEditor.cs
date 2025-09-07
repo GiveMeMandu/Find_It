@@ -21,6 +21,10 @@ public class IngameRotateTargetClipEditor : Editor
 
     private void OnEnable()
     {
+        // target이 null이거나 파괴된 경우 serializedObject 생성을 건너뜀
+        if (target == null)
+            return;
+            
         rotateTargetProperty = serializedObject.FindProperty("rotateTarget");
         rotationModeProperty = serializedObject.FindProperty("rotationMode");
         
@@ -37,6 +41,13 @@ public class IngameRotateTargetClipEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        // target이 null이거나 serializedObject가 유효하지 않은 경우 처리 중단
+        if (target == null || serializedObject == null)
+        {
+            EditorGUILayout.HelpBox("Target object is null or invalid.", MessageType.Error);
+            return;
+        }
+        
         serializedObject.Update();
 
         // 회전 타겟

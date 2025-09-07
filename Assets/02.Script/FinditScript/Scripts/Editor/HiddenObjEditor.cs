@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UI;
+using SnowRabbit.Helper;
 
 namespace DeskCat.FindIt.Scripts.Editor
 {
@@ -31,6 +32,14 @@ namespace DeskCat.FindIt.Scripts.Editor
         private void OnEnable()
         {
             HiddenObjTarget = (HiddenObj)target;
+
+            // 레이어가 HiddenObjectLayer가 아니면 자동으로 설정
+            if (HiddenObjTarget.gameObject.layer != LayerManager.HiddenObjectLayer)
+            {
+                Undo.RecordObject(HiddenObjTarget.gameObject, "Set HiddenObject Layer");
+                HiddenObjTarget.gameObject.layer = LayerManager.HiddenObjectLayer;
+                EditorUtility.SetDirty(HiddenObjTarget.gameObject);
+            }
 
             baseInfoAnimBool = new AnimBool(true);
             baseInfoAnimBool.valueChanged.AddListener(Repaint);
@@ -58,6 +67,17 @@ namespace DeskCat.FindIt.Scripts.Editor
 
         public override void OnInspectorGUI()
         {
+            // 레이어 상태 확인 및 정보 표시
+            if (HiddenObjTarget.gameObject.layer != LayerManager.HiddenObjectLayer)
+            {
+                EditorGUILayout.HelpBox($"HiddenObj는 자동으로 HiddenObjectLayer({LayerManager.HiddenObjectLayer})로 설정됩니다.", MessageType.Info);
+                
+                // 자동으로 레이어 설정
+                Undo.RecordObject(HiddenObjTarget.gameObject, "Set HiddenObject Layer");
+                HiddenObjTarget.gameObject.layer = LayerManager.HiddenObjectLayer;
+                EditorUtility.SetDirty(HiddenObjTarget.gameObject);
+            }
+
             DrawBaseInfo();
             DrawTooltips();
             DrawBGAnimation();
