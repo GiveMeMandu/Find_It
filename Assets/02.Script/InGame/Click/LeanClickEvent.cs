@@ -161,12 +161,16 @@ public class LeanClickEvent : LeanSelectableByFinger
 				}
 			}
 
-			// 2D check
+			// 2D check - 모든 겹치는 콜라이더를 확인
 			var wp = cam.ScreenToWorldPoint(new Vector3(finger.ScreenPosition.x, finger.ScreenPosition.y, cam.nearClipPlane));
-			var hit2d = Physics2D.OverlapPoint(wp);
-			if (hit2d != null && (hit2d.gameObject == gameObject || hit2d.transform.IsChildOf(transform)))
+			Collider2D[] allHits = Physics2D.OverlapPointAll(wp);
+			
+			foreach (var hit2d in allHits)
 			{
-				return true;
+				if (hit2d != null && (hit2d.gameObject == gameObject || hit2d.transform.IsChildOf(transform)))
+				{
+					return true;
+				}
 			}
 		}
 
@@ -231,33 +235,92 @@ public class LeanClickEvent : LeanSelectableByFinger
 			return true;
 		}
 		
-		// 하이어라키 순서로 정렬 (sibling index가 작을수록 위에 있음)
+		// 하이어라키 순서로 정렬 (더 깊은 계층이 우선, 같은 계층에서는 sibling index가 클수록 우선)
 		overlappingClickEvents.Sort((a, b) => 
 		{
-			// 같은 부모를 가진 경우 sibling index로 비교
-			if (a.transform.parent == b.transform.parent)
+			// 먼저 계층 깊이를 비교 (더 깊은 계층이 우선)
+			int depthA = GetHierarchyDepth(a.transform);
+			int depthB = GetHierarchyDepth(b.transform);
+			
+			if (depthA != depthB)
 			{
-				return a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex());
+				return depthB.CompareTo(depthA); // 더 깊은 계층이 우선 (내림차순)
 			}
 			
-			// 다른 부모를 가진 경우, 루트까지 올라가서 비교
+			// 같은 깊이라면 sibling index로 비교
+			// 같은 부모를 가진 경우
+			if (a.transform.parent == b.transform.parent)
+			{
+				return b.transform.GetSiblingIndex().CompareTo(a.transform.GetSiblingIndex());
+			}
+			
+			// 다른 부모를 가진 경우, 루트까지 올라가서 비교 (내림차순)
 			Transform aRoot = a.transform;
 			Transform bRoot = b.transform;
 			
 			while (aRoot.parent != null) aRoot = aRoot.parent;
 			while (bRoot.parent != null) bRoot = bRoot.parent;
 			
-			return aRoot.GetSiblingIndex().CompareTo(bRoot.GetSiblingIndex());
+			return bRoot.GetSiblingIndex().CompareTo(aRoot.GetSiblingIndex());
 		});
+		
+		// 디버그 로그: 겹치는 모든 객체와 우선순위 표시
+		Debug.Log($"[{gameObject.name}] CheckHierarchyPriority - Overlapping objects at touch position:");
+		for (int i = 0; i < overlappingClickEvents.Count; i++)
+		{
+			var obj = overlappingClickEvents[i];
+			string hierarchy = GetHierarchyPath(obj.transform);
+			int depth = GetHierarchyDepth(obj.transform);
+			string marker = (obj == this) ? " <- THIS OBJECT" : "";
+			Debug.Log($"  [{i}] {obj.gameObject.name} (Sibling: {obj.transform.GetSiblingIndex()}, Depth: {depth}) - {hierarchy}{marker}");
+		}
 		
 		// 가장 위에 있는(첫 번째) 객체만 클릭을 허용
 		bool isTopMost = overlappingClickEvents[0] == this;
 		
 		if (!isTopMost)
 		{
-			Debug.Log($"Hierarchy priority: {overlappingClickEvents[0].gameObject.name} blocks {gameObject.name}");
+			Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
+		}
+		else
+		{
+			Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
 		}
 		
 		return isTopMost;
+	}
+	
+	/// <summary>
+	/// 오브젝트의 전체 하이어라키 경로를 반환
+	/// </summary>
+	private string GetHierarchyPath(Transform transform)
+	{
+		string path = transform.name;
+		Transform current = transform.parent;
+		
+		while (current != null)
+		{
+			path = current.name + "/" + path;
+			current = current.parent;
+		}
+		
+		return path;
+	}
+	
+	/// <summary>
+	/// 오브젝트의 하이어라키 깊이를 반환 (루트부터 몇 단계인지)
+	/// </summary>
+	private int GetHierarchyDepth(Transform transform)
+	{
+		int depth = 0;
+		Transform current = transform;
+		
+		while (current.parent != null)
+		{
+			depth++;
+			current = current.parent;
+		}
+		
+		return depth;
 	}
 }
