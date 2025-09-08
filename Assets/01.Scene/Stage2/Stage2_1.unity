@@ -35214,6 +35214,8 @@ MonoBehaviour:
   colliderSize: {x: 1, y: 1}
   colliderOffset: {x: 0, y: 0}
   applyToChildren: 0
+  addClickSound: 1
+  clickSoundType: 1
 --- !u!114 &4578050478999769495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38611,6 +38613,7 @@ GameObject:
   - component: {fileID: 2329670742289089960}
   - component: {fileID: 4625671462477968469}
   - component: {fileID: 5318878261202168581}
+  - component: {fileID: 5318878261202168582}
   m_Layer: 0
   m_Name: day_hide_Butterfly2
   m_TagString: Hidden
@@ -38658,6 +38661,45 @@ MonoBehaviour:
   customDirection: {x: 0, y: 1, z: 0}
   easeType: 4
   autoStart: 1
+--- !u!114 &5318878261202168582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5318878261202168580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
+  windForce: 2
+  windTime: 3
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!212 &5355089031420151645
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -43623,7 +43665,7 @@ MonoBehaviour:
   chainStartDelay: 0
   chainDelay: 0
   floatingDirection: 0
-  floatingDistance: 0.1
+  floatingDistance: 0.4
   floatingSpeed: 4
   customDirection: {x: 0, y: 1, z: 0}
   easeType: 4
@@ -46631,6 +46673,8 @@ MonoBehaviour:
   colliderSize: {x: 1, y: 1}
   colliderOffset: {x: 0, y: 0}
   applyToChildren: 0
+  addClickSound: 1
+  clickSoundType: 1
 --- !u!60 &7133452066933614407
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -47351,7 +47395,7 @@ MonoBehaviour:
   chainStartDelay: 0
   chainDelay: 0
   floatingDirection: 0
-  floatingDistance: 0.2
+  floatingDistance: 0.4
   floatingSpeed: 2
   customDirection: {x: 0, y: 1, z: 0}
   easeType: 4
@@ -49594,6 +49638,8 @@ MonoBehaviour:
   colliderSize: {x: 1, y: 1}
   colliderOffset: {x: 0, y: 0}
   applyToChildren: 0
+  addClickSound: 1
+  clickSoundType: 1
 --- !u!212 &7646428086526322816
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -53585,7 +53631,7 @@ MonoBehaviour:
   chainStartDelay: 0
   chainDelay: 0
   floatingDirection: 0
-  floatingDistance: 0.2
+  floatingDistance: 0.4
   floatingSpeed: 2
   customDirection: {x: 0, y: 1, z: 0}
   easeType: 4
@@ -55681,6 +55727,8 @@ MonoBehaviour:
   colliderSize: {x: 1, y: 1}
   colliderOffset: {x: 0, y: 0}
   applyToChildren: 0
+  addClickSound: 1
+  clickSoundType: 1
 --- !u!212 &9209263875633004792
 SpriteRenderer:
   m_ObjectHideFlags: 0
