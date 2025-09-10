@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 5023479049011876385}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.16, y: 5.616, z: 0}
-  m_LocalScale: {x: 0.22708799, y: 0.22708799, z: 0.22708799}
+  m_LocalPosition: {x: 0, y: 5.616, z: 0}
+  m_LocalScale: {x: 0.1773103, y: 0.1773103, z: 0.1773103}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5023479049011876385}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00c6a855b4638234c98d58b20cb60d7b, type: 3}
   m_Name: 
@@ -118,6 +118,18 @@ MonoBehaviour:
   OnEffectEnd:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: dia
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 5023479049011876385}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -138,6 +150,9 @@ MonoBehaviour:
   chainDelay: 0
   windForce: 3
   windTime: 2
+  pauseBetweenSets: 0
+  rotateEase: 1
+  rotateMode: 0
 --- !u!114 &4340107826944688751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,11 +188,17 @@ MonoBehaviour:
   Enable: 1
   OnMouseDownEvent:
     m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1093182026969907870}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
+        m_TargetAssemblyTypeName: Effect.VFXObject, Assembly-CSharp
+        m_MethodName: PlayVFX
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -186,12 +207,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls: []
   _maxClickCount: -1
 --- !u!114 &4738543518619404216
 MonoBehaviour:
