@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Manager;
+using NaughtyAttributes;
 using UI.Page;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,6 +20,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
     public class ItemSetManager : MMSingleton<ItemSetManager>
     {
+        [InfoBox("각 세트 요구 그룹 적을 땐 hide 글자 없애기", EInfoBoxType.Warning)]
         [SerializeField]
         private List<ItemSetData> itemSetDataList;  // Unity Inspector에서 설정 가능
 

@@ -22,7 +22,7 @@ namespace InGame
         protected override void Start()
         {
             base.Start();
-            _introDirector.enabled = false;
+            if (_introDirector != null) _introDirector.enabled = false;
             StartStage();
         }
         public override void SkipIntro()

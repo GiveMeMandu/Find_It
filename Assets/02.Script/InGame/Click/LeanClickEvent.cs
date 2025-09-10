@@ -235,7 +235,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 			return true;
 		}
 		
-		// 하이어라키 순서로 정렬 (더 깊은 계층이 우선, 같은 계층에서는 sibling index가 클수록 우선)
+		// 하이어라키 순서로 정렬 (더 깊은 계층이 우선, 같은 계층에서는 부모의 sibling index가 클수록 우선)
 		overlappingClickEvents.Sort((a, b) => 
 		{
 			// 먼저 계층 깊이를 비교 (더 깊은 계층이 우선)
@@ -247,14 +247,32 @@ public class LeanClickEvent : LeanSelectableByFinger
 				return depthB.CompareTo(depthA); // 더 깊은 계층이 우선 (내림차순)
 			}
 			
-			// 같은 깊이라면 sibling index로 비교
+			// 같은 깊이라면 부모 계층의 sibling index로 비교
 			// 같은 부모를 가진 경우
 			if (a.transform.parent == b.transform.parent)
 			{
 				return b.transform.GetSiblingIndex().CompareTo(a.transform.GetSiblingIndex());
 			}
 			
-			// 다른 부모를 가진 경우, 루트까지 올라가서 비교 (내림차순)
+			// 다른 부모를 가진 경우, 각각의 루트 부모의 sibling index 비교
+			Transform aParent = a.transform.parent;
+			Transform bParent = b.transform.parent;
+			
+			// 같은 조부모를 찾을 때까지 올라가기
+			while (aParent != null && bParent != null && aParent.parent != bParent.parent)
+			{
+				if (aParent.parent == null || bParent.parent == null) break;
+				aParent = aParent.parent;
+				bParent = bParent.parent;
+			}
+			
+			// 같은 조부모를 가진 부모들의 sibling index 비교
+			if (aParent != null && bParent != null && aParent.parent == bParent.parent)
+			{
+				return bParent.GetSiblingIndex().CompareTo(aParent.GetSiblingIndex());
+			}
+			
+			// 최종적으로 루트까지 올라가서 비교
 			Transform aRoot = a.transform;
 			Transform bRoot = b.transform;
 			
@@ -265,14 +283,14 @@ public class LeanClickEvent : LeanSelectableByFinger
 		});
 		
 		// 디버그 로그: 겹치는 모든 객체와 우선순위 표시
-		Debug.Log($"[{gameObject.name}] CheckHierarchyPriority - Overlapping objects at touch position:");
+		// Debug.Log($"[{gameObject.name}] CheckHierarchyPriority - Overlapping objects at touch position:");
 		for (int i = 0; i < overlappingClickEvents.Count; i++)
 		{
 			var obj = overlappingClickEvents[i];
 			string hierarchy = GetHierarchyPath(obj.transform);
 			int depth = GetHierarchyDepth(obj.transform);
 			string marker = (obj == this) ? " <- THIS OBJECT" : "";
-			Debug.Log($"  [{i}] {obj.gameObject.name} (Sibling: {obj.transform.GetSiblingIndex()}, Depth: {depth}) - {hierarchy}{marker}");
+			// Debug.Log($"  [{i}] {obj.gameObject.name} (Sibling: {obj.transform.GetSiblingIndex()}, Depth: {depth}) - {hierarchy}{marker}");
 		}
 		
 		// 가장 위에 있는(첫 번째) 객체만 클릭을 허용

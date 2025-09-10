@@ -4,15 +4,20 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
 using DeskCat.FindIt.Scripts.Core.Main.System;
+using UnityEngine.Events;
+using NaughtyAttributes;
 
 public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
 {
+    public bool IsHideOnStart = true;
     public string SetName;
     public GameObject CompletionView;  // 세트 완성 모습을 보여줄 GameObject
     public GameObject AlertView; // 세트 완성 알림을 보여줄 GameObject
     public bool IsFound { get; private set; }
     public bool PlaySoundWhenFound = true;
     public AudioClip AudioWhenClick;
+    [Label("세트 완성 시 이벤트")]
+    public UnityEvent OnSetComplete;
     
 
     private void Awake()
@@ -22,7 +27,7 @@ public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
             CompletionView.SetActive(false);
             AlertView.SetActive(false);
         }
-        gameObject.SetActive(false);  // 처음에는 숨김
+        if (IsHideOnStart) gameObject.SetActive(false);  // 처음에는 숨김
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -52,6 +57,8 @@ public class SetCompletionObject : MonoBehaviour, IPointerClickHandler
         {
             AlertView.SetActive(true);
         }
+        OnSetComplete?.Invoke();
+        
         // Debug.Log($"SetCompletionObject {SetName} is now active and ready to be clicked!");
     }
 }
