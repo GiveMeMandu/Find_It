@@ -10902,11 +10902,11 @@ Transform:
   m_GameObject: {fileID: 1200939558}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.65584874, w: 0.75489235}
-  m_LocalPosition: {x: -12.972, y: 10.741, z: 0}
+  m_LocalPosition: {x: -4.8919992, y: 0.73099995, z: 0}
   m_LocalScale: {x: 0.73617536, y: 0.73617536, z: 0.74361145}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1396701710}
+  m_Father: {fileID: 8814928680215416485}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 81.968}
 --- !u!212 &1200939560
 SpriteRenderer:
@@ -12478,7 +12478,6 @@ Transform:
   m_Children:
   - {fileID: 8700411859626623769}
   - {fileID: 8814928680215416485}
-  - {fileID: 1200939559}
   m_Father: {fileID: 1105638522245588208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1396701711
@@ -12536,8 +12535,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c57d8c04335b1384986b2e10cc53a593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnableClickLoop: 1
-  OnClickEventList: []
+  EnableClickLoop: 0
+  OnClickEventList:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Knife1
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Knife2
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   CurrentClickCount: 0
 --- !u!95 &1396701713
 Animator:
@@ -33960,6 +33999,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8814928680215416485}
   - component: {fileID: 3574596115386507925}
+  - component: {fileID: 8814928680215416487}
+  - component: {fileID: 8814928680215416486}
   m_Layer: 0
   m_Name: ' 2-1 tree leaf'
   m_TagString: Untagged
@@ -43681,9 +43722,111 @@ Transform:
   m_LocalPosition: {x: -8.080001, y: 10.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1200939559}
   m_Father: {fileID: 1396701710}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8814928680215416486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6556640554688929332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: TreeShake
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _maxClickCount: -1
+--- !u!61 &8814928680215416487
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6556640554688929332}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.38311815, y: 0.310143}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 13.64, y: 9.76}
+    newSize: {x: 13.64, y: 9.76}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 9.80882, y: 7.315342}
+  m_EdgeRadius: 0
 --- !u!212 &8821864377376212141
 SpriteRenderer:
   m_ObjectHideFlags: 0
