@@ -21,25 +21,36 @@ namespace InGame
         [SerializeField] private Ease rotateEase = Ease.Linear;
         [LabelText("회전 모드")]
         [SerializeField] private RotateMode rotateMode = RotateMode.Fast;
+        [LabelText("자동 시작 여부")]
+        public bool AutoStart = true;
         private Vector3 dir;
         protected override void OnEnable()
         {
             base.OnEnable();
             dir = new Vector3(0, 0, windForce);
-            WindMove().Forget();
+            if (AutoStart) WindMoveLoop().Forget();
         }
-        private async UniTaskVoid WindMove()
+
+        protected override async UniTask VFXOnceInGame()
+        {
+            await UniTask.Yield();
+            // When VFX is played via PlayVFXTask, we should run exactly one wind "set"
+            // so that PlayVFXTask can observe completion and call OnVFXEnd().
+            await WindMoveOnce();
+        }
+        // Infinite loop used for AutoStart behavior
+        private async UniTaskVoid WindMoveLoop()
         {
             try
             {
                 while (this != null && gameObject != null && gameObject.activeSelf)
                 {
-                    await transform.DORotate(dir, windTime, rotateMode).SetEase(rotateEase).WithCancellation(destroyCancellationToken);
-                    await transform.DORotate(dir * -1, windTime, rotateMode).SetEase(rotateEase).WithCancellation(destroyCancellationToken);
+                    await transform.DORotate(dir, windTime, rotateMode).SetEase(rotateEase).WithCancellation(destroyCancellation.Token);
+                    await transform.DORotate(dir * -1, windTime, rotateMode).SetEase(rotateEase).WithCancellation(destroyCancellation.Token);
 
                     if (pauseBetweenSets > 0f)
                     {
-                        await UniTask.Delay(System.TimeSpan.FromSeconds(pauseBetweenSets), cancellationToken: destroyCancellationToken);
+                        await UniTask.Delay(System.TimeSpan.FromSeconds(pauseBetweenSets), cancellationToken: destroyCancellation.Token);
                     }
                     else
                     {
@@ -57,6 +68,27 @@ namespace InGame
             catch (System.OperationCanceledException)
             {
                 // expected when object is destroyed or disabled; swallow to allow cleanup
+            }
+        }
+        
+        // Single set used when VFX is played once via PlayVFXTask
+        private async UniTask WindMoveOnce()
+        {
+            try
+            {
+                if (this == null || gameObject == null || !gameObject.activeSelf) return;
+
+                await transform.DORotate(dir, windTime, rotateMode).SetEase(rotateEase).WithCancellation(destroyCancellation.Token);
+                await transform.DORotate(dir * -1, windTime, rotateMode).SetEase(rotateEase).WithCancellation(destroyCancellation.Token);
+                // Single set finished -> notify
+                if (this != null && gameObject != null && gameObject.activeSelf)
+                {
+                    OnVFXEnd();
+                }
+            }
+            catch (System.OperationCanceledException)
+            {
+                // swallow
             }
         }
         [SerializeField] [Button("바람 랜덤 세기")]

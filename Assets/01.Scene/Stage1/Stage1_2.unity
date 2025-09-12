@@ -7459,6 +7459,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!114 &830620930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12828,9 +12829,9 @@ GameObject:
   - component: {fileID: 1443296365}
   - component: {fileID: 1443296371}
   - component: {fileID: 1443296370}
-  - component: {fileID: 1443296369}
-  - component: {fileID: 1443296368}
   - component: {fileID: 1443296366}
+  - component: {fileID: 1443296374}
+  - component: {fileID: 1443296373}
   - component: {fileID: 1443296372}
   m_Layer: 0
   m_Name: m small strawberries_2
@@ -12900,106 +12901,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 6.532855, y: 3.1244788}
   m_EdgeRadius: 0
---- !u!114 &1443296368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1443296364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlayOnStart: 0
-  isPlayOnEnable: 0
-  isStopOtherEffect: 0
-  startDelay: 0
-  delay: 0
-  isLoopForce: 0
-  isUIEffect: 0
-  effectAddValue: 0
-  effectSpeed: 1
-  isPlayLock: 0
-  OnEffectStart:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1443296372}
-        m_TargetAssemblyTypeName: ClickTouchSound, Assembly-CSharp
-        m_MethodName: PlayClickSound
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEffectEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  isPlaying: 0
-  stretchMultiplier: 1.1
-  xAnimDuration: 0.1
-  yRestoreDuration: 0.15
-  animationEase: 3
---- !u!114 &1443296369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1443296364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selfSelected: 0
-  onSelected:
-    m_PersistentCalls:
-      m_Calls: []
-  onDeselected:
-    m_PersistentCalls:
-      m_Calls: []
-  use: 0
-  onSelectedFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Effect.StretchVFX, Assembly-CSharp
-        m_MethodName: PlayVFX
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _maxClickCount: -1
 --- !u!114 &1443296370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13092,6 +12993,106 @@ MonoBehaviour:
   clickSoundType: 1
   playOnAwake: 0
   useRandomSound: 1
+--- !u!114 &1443296373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443296364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1443296372}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayClickSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  stretchMultiplier: 1.1
+  xAnimDuration: 0.1
+  yRestoreDuration: 0.15
+  animationEase: 3
+--- !u!114 &1443296374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443296364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1443296373}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayVFX
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _maxClickCount: -1
 --- !u!1 &1468579816
 GameObject:
   m_ObjectHideFlags: 0
@@ -18838,6 +18839,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!4 &510531588563186184
 Transform:
   m_ObjectHideFlags: 0
@@ -20718,6 +20720,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!212 &1412112844779064867
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21062,6 +21065,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!212 &1522986676244362096
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -22148,6 +22152,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!4 &2018723181139410731
 Transform:
   m_ObjectHideFlags: 0
@@ -23675,6 +23680,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!4 &2688739398838345713
 Transform:
   m_ObjectHideFlags: 0
@@ -24897,6 +24903,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!1 &3169587427792757718
 GameObject:
   m_ObjectHideFlags: 0
@@ -25213,6 +25220,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!1 &3341135920887026276
 GameObject:
   m_ObjectHideFlags: 0
@@ -26476,6 +26484,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!1 &4003287026829131798
 GameObject:
   m_ObjectHideFlags: 0
@@ -30996,6 +31005,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!212 &5650197293916056583
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -35155,6 +35165,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!4 &6845685467929455847
 Transform:
   m_ObjectHideFlags: 0
@@ -40721,6 +40732,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!212 &8080183173688047198
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -41404,6 +41416,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!212 &8259345070251478024
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -41657,6 +41670,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!4 &8355771091844185845
 Transform:
   m_ObjectHideFlags: 0
@@ -42535,6 +42549,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!4 &8578848838059509597
 Transform:
   m_ObjectHideFlags: 0
@@ -44999,6 +45014,7 @@ MonoBehaviour:
   pauseBetweenSets: 0
   rotateEase: 1
   rotateMode: 0
+  AutoStart: 1
 --- !u!212 &9211721821436831488
 SpriteRenderer:
   m_ObjectHideFlags: 0
