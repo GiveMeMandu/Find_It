@@ -10,6 +10,17 @@ namespace UI.Page
     [Binding]
     public class MainMenuPage : PageViewModel
     {
+        private string _inGameTimer;
+        [Binding]
+        public string InGameTimer
+        {
+            get => _inGameTimer;
+            set
+            {
+                _inGameTimer = value;
+                OnPropertyChanged(nameof(InGameTimer));
+            }
+        }
         private bool _canPlay;
 
         [Binding]
@@ -25,6 +36,16 @@ namespace UI.Page
         private void OnEnable()
         {
             DeskCat.FindIt.Scripts.Core.Model.GlobalSetting.InitializeSetting();
+            if (InGameTimer == "") Global.StageTimer = 600;
+        }
+        public void SetTimer()
+        {
+            if (InGameTimer == "") Global.StageTimer = 600;
+            else
+            {
+                Debug.Log("Set StageTimer to: " + InGameTimer);
+                Global.StageTimer = int.Parse(InGameTimer);
+            }
         }
         [Binding]
         public void OnClickStartButton()

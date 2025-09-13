@@ -16,7 +16,7 @@ namespace UI.Page
     {
         private string _curStage;
 
-        [Binding] 
+        [Binding]
         public string CurStage
         {
             get => _curStage;
@@ -28,7 +28,7 @@ namespace UI.Page
         }
         private string _stageName;
 
-        [Binding] 
+        [Binding]
         public string StageName
         {
             get => _stageName;
@@ -44,14 +44,14 @@ namespace UI.Page
         {
             _cts = new CancellationTokenSource();
             _curStage = Global.CurrentScene.SceneName.ToString();
-            
+
             // 전체 스테이지 이름 사용
             string stageKey = _curStage;
             _stageName = I2.Loc.LocalizationManager.GetTranslation("SceneName/" + stageKey);
 
             // 위에 표기를 위해 _ 대신 - 쓰기
             _curStage = _curStage.Replace('_', '-');
-            
+
             DisableInputAndDestroyAsync(_cts.Token).Forget();
         }
 
@@ -60,24 +60,18 @@ namespace UI.Page
             _cts?.Cancel();
             _cts?.Dispose();
             _cts = null;
-            
+
             Global.InputManager.EnableAllInput();
         }
 
         private async UniTaskVoid DisableInputAndDestroyAsync(CancellationToken cancellationToken)
         {
             Global.InputManager.DisableAllInput();
-            
-            try
-            {
-                await UniTask.Delay(3000, cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                Global.InputManager.EnableAllInput();
-            }
 
+            await UniTask.WaitForSeconds(3, cancellationToken: cancellationToken);
+            Global.InputManager.EnableAllInput();
             Global.UIManager.ClosePage();
+            Global.UIManager.OpenPage<InGameTutorialPage>();
         }
 
         [Binding]

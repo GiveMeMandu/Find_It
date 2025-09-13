@@ -3,12 +3,14 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityWeld.Binding;
 using UnityWeld;
+using UnityEngine.Events;
 
 namespace UI
 {
     [Binding]
     public class TimerCountViewModel : ViewModel
     {
+        public UnityEvent OnTimerEnd = new UnityEvent();
         private float _currentTime;
 
         [Binding]
@@ -47,7 +49,7 @@ namespace UI
         private async UniTaskVoid StartTimer(float seconds, CancellationToken cancellationToken)
         {
             CurrentTime = seconds;
-            CurrentTimeText = string.Format("{0}", CurrentTime);
+            CurrentTimeText = FormatTime((int)CurrentTime);
             
             while (CurrentTime > 0)
             {
@@ -55,7 +57,7 @@ namespace UI
                 {
                     await UniTask.Delay(1000, cancellationToken: cancellationToken);
                     CurrentTime--;
-                    CurrentTimeText = string.Format("{0}", CurrentTime);
+                    CurrentTimeText = FormatTime((int)CurrentTime);
                 }
                 catch (System.OperationCanceledException)
                 {
@@ -64,6 +66,22 @@ namespace UI
             }
 
             OnTimerComplete?.Invoke();
+            OnTimerEnd.Invoke();
+        }
+
+        private string FormatTime(int totalSeconds)
+        {
+            if (totalSeconds < 0) totalSeconds = 0;
+            int hours = totalSeconds / 3600;
+            int minutes = (totalSeconds % 3600) / 60;
+            int seconds = totalSeconds % 60;
+
+            if (hours > 0)
+            {
+                return string.Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
+            }
+
+            return string.Format("{0:D2}:{1:D2}", minutes, seconds);
         }
 
         private void OnDestroy()

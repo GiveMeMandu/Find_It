@@ -24,7 +24,9 @@ namespace OutGame
             if(_levelManager == null) {
                 _levelManager = FindAnyObjectByType<LevelManager>();
                 if(_levelManager != null)
+                {
                     _levelManager.OnEndEvent.Add(ClearStageTask);
+                }
             } else {
                 _levelManager.OnEndEvent.Add(ClearStageTask);
             }

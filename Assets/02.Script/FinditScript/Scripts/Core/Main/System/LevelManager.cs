@@ -15,6 +15,7 @@ using Data;
 using OutGame;
 using Manager;
 using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
+using UI;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
@@ -102,6 +103,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public List<Transform> StarList = new List<Transform>();
 
+        [Header("Timer ViewModels")]
+        [Tooltip("List of TimerCountViewModel instances to start when the level begins (seconds)")]
+        public List<TimerCountViewModel> TimerViewModels;
+        public int defaultSeconds = 600; // 기본 타이머 시간 (초)
+        private int timersCompleted = 0;
+        private bool forcedEndTriggered = false;
+
         // 기존 CurrentLevelName, NextLevelName 제거하고 SceneBase에서 자동으로 가져오기
         public bool IsOverwriteGameEnd;
         public UnityEvent GameEndEvent;
@@ -123,7 +131,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             Instance.ItemFx.clip = clip;
             Instance.ItemFx.Play();
         }
-        
+
         /// <summary>
         /// 다음 레벨로 이동하는 메서드
         /// </summary>
@@ -134,7 +142,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 SceneName currentScene = Global.CurrentScene.SceneName;
                 SceneName? nextScene = SceneHelper.GetNextStageScene(currentScene);
-                
+
                 if (nextScene.HasValue)
                 {
                     // 다음 스테이지가 있으면 이동
@@ -160,20 +168,79 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             CollectHiddenObjects();
             BuildDictionary();
             ScrollViewTrigger();
-            
+
             // 버튼들 null 체크
             if (ToggleBtn != null)
                 ToggleBtn.onClick.AddListener(ToggleScrollView);
             if (GameEndBtn != null)
                 GameEndBtn.onClick.AddListener(GoToNextLevel);
-                
+
             StartTime = DateTime.Now;
+
+            // Start timers for all assigned TimerCountViewModel instances (default 10 minutes = 600 seconds)
+            if (TimerViewModels != null)
+            {
+                foreach (var timerVm in TimerViewModels)
+                {
+                    if (timerVm == null) continue;
+                    // Subscribe to completion event
+                    timerVm.OnTimerComplete += OnSingleTimerComplete;
+                    defaultSeconds = Global.StageTimer;
+                    timerVm.Initialize(defaultSeconds);
+                }
+            }
 
             if (Canvas != null)
             {
                 Canvas.SetActive(true);
             }
             OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnSingleTimerComplete()
+        {
+            // Fire-and-forget the async handler
+            _ = HandleTimerCompletionAsync();
+        }
+
+        private async UniTaskVoid HandleTimerCompletionAsync()
+        {
+            timersCompleted++;
+
+            Debug.Log($"[LevelManager] Timer completed ({timersCompleted}/{(TimerViewModels?.Count ?? 0)})");
+
+            if (forcedEndTriggered) return;
+
+            if (TimerViewModels != null && timersCompleted >= TimerViewModels.Count)
+            {
+                forcedEndTriggered = true;
+                Debug.Log("[LevelManager] All timers finished — forcing game end sequence.");
+
+                // Run any registered async end tasks first
+                if (OnEndEvent.Count > 0)
+                {
+                    foreach (var func in OnEndEvent)
+                    {
+                        await func();
+                    }
+                }
+
+                GameEndEvent?.Invoke();
+                DefaultGameEndFunc();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            // Unsubscribe from timer events to avoid leaks
+            if (TimerViewModels != null)
+            {
+                foreach (var timerVm in TimerViewModels)
+                {
+                    if (timerVm == null) continue;
+                    timerVm.OnTimerComplete -= OnSingleTimerComplete;
+                }
+            }
         }
 
         private void CollectHiddenObjects()
@@ -198,23 +265,23 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
                         // hideWhenFound 클래스가 있다면 여기의 설정을 HiddenObj 에 덮어쓰기
                         HideWhenFoundHelper hideWhenFoundHelper = null;
-                        if(child.TryGetComponent(out hideWhenFoundHelper))
+                        if (child.TryGetComponent(out hideWhenFoundHelper))
                         {
                             hiddenObj.HideWhenFound = hideWhenFoundHelper.hideWhenFound;
                         }
-                        
+
                         // UIChangeHelper 컴포넌트가 있다면 HiddenObj에 연결
                         if (hiddenObj.uiChangeHelper == null)
                         {
                             hiddenObj.uiChangeHelper = child.GetComponent<UIChangeHelper>();
                         }
-                        
+
                         // BoxCollider2D 추가 또는 리셋
                         if (!child.TryGetComponent<BoxCollider2D>(out var boxCollider))
                         {
                             boxCollider = child.gameObject.AddComponent<BoxCollider2D>();
                         }
-                        
+
                         // 터치 영역을 넓히기 위해 콜라이더 사이즈 조정
                         boxCollider.size = new Vector2(boxCollider.size.x * 1.5f, boxCollider.size.y * 1.5f);
 
@@ -228,7 +295,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                             hiddenObj.SetBgAnimation(bgObj);
                             BGScaleLerp bGScaleLerp = bgObj.GetComponent<BGScaleLerp>();
                             if (bGScaleLerp != null)
-                                if(hideWhenFoundHelper != null)
+                                if (hideWhenFoundHelper != null)
                                     bGScaleLerp.HideHiddenObjAfterDone = hideWhenFoundHelper.hideWhenFound;
                         }
 
@@ -249,13 +316,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                         hiddenObj = obj.AddComponent<HiddenObj>();
                         // Debug.Log($"Added HiddenObj component to {obj.name}");
                     }
-                    
+
                     // UIChangeHelper 컴포넌트가 있다면 HiddenObj에 연결
                     if (hiddenObj.uiChangeHelper == null)
                     {
                         hiddenObj.uiChangeHelper = obj.GetComponent<UIChangeHelper>();
                     }
-                    
+
                     normalHiddenObjs.Add(hiddenObj);
                 }
                 // Debug.Log($"Found and processed {normalHiddenObjs.Count} hidden objects in scene with tag");
@@ -288,15 +355,15 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Debug.LogWarning("[LevelManager] HorizontalScrollView or VerticalScrollView is null");
                 return;
             }
-            
+
             CurrentScrollView = UIScrollType == UIScrollType.Horizontal ? HorizontalScrollView : VerticalScrollView;
-            
+
             // mainPanel null 체크
             if (HorizontalScrollView.mainPanel != null)
                 HorizontalScrollView.mainPanel.SetActive(false);
             if (VerticalScrollView.mainPanel != null)
                 VerticalScrollView.mainPanel.SetActive(false);
-                
+
             // CurrentScrollView null 체크
             if (CurrentScrollView != null)
             {
@@ -350,7 +417,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
 
             RabbitObjDic = new Dictionary<Guid, HiddenObj>();
-            
+
             // RabbitObjs null 체크
             if (RabbitObjs != null)
             {
@@ -365,10 +432,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     }
                 }
             }
-            
+
             maxRabbitObjCount = RabbitObjDic.Count;
             rabbitObjCount = 0;
-            
+
             // RabbitCountText null 체크
             if (RabbitCountText != null)
                 RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
@@ -425,24 +492,24 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             var group = TargetObjDic[guid];
             var clickedObj = group.LastClickedObject;
-            
+
             // 실제로 오브젝트를 찾았을 때만 사운드 재생 및 처리
             if (clickedObj != null && !group.IsObjectFound(clickedObj))
             {
                 // 오브젝트를 찾았을 때만 사운드 재생
                 if (group.Representative.PlaySoundWhenFound && FoundFx != null)
                     FoundFx.Play();
-                    
+
                 group.MarkObjectAsFound(clickedObj);
-                
+
                 // CurrentScrollView null 체크
                 if (CurrentScrollView != null)
                     CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
-                    
+
                 OnFoundObj?.Invoke(this, clickedObj);
 
                 // Debug.Log($"Found {clickedObj.name} from group {group.BaseGroupName} ({group.FoundCount}/{group.TotalCount})");
-                
+
                 DetectGameEnd();
             }
         }
@@ -453,11 +520,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
             RabbitObjDic.Remove(guid);
             rabbitObjCount++;
-            
+
             // RabbitCountText null 체크
             if (RabbitCountText != null)
                 RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
-                
+
             DetectGameEnd();
         }
 
@@ -468,16 +535,16 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             int remainingObjects = GetLeftHiddenObjCount();
             int totalObjects = GetTotalHiddenObjCount();
             int foundObjects = totalObjects - remainingObjects;
-            
+
             // 디버그 로그 추가
             Debug.Log($"[LevelManager] DetectGameEnd - Remaining: {remainingObjects}, Total: {totalObjects}, Found: {foundObjects}");
             Debug.Log($"[LevelManager] ItemSetManager - Found: {ItemSetManager.Instance?.FoundSetsCount}, Total: {ItemSetManager.Instance?.TotalSetsCount}");
-            
+
             // 모든 숨겨진 오브젝트를 찾았고, ItemSetManager의 모든 세트도 찾았을 때만 게임 종료
             if (remainingObjects <= 0 && ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount)
             {
                 Debug.Log("[LevelManager] Game End condition met! Starting end sequence...");
-                
+
                 if (IsOverwriteGameEnd)
                 {
                     // UnityEvent의 모든 리스너가 실행 완료될 때까지 대기
@@ -614,13 +681,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             int remainingObjects = GetLeftHiddenObjCount();
             int totalObjects = GetTotalHiddenObjCount();
             int foundObjects = totalObjects - remainingObjects;
-            
+
             Debug.Log($"[LevelManager] === GAME STATE DEBUG ===");
             Debug.Log($"[LevelManager] Total Objects: {totalObjects}");
             Debug.Log($"[LevelManager] Found Objects: {foundObjects}");
             Debug.Log($"[LevelManager] Remaining Objects: {remainingObjects}");
             Debug.Log($"[LevelManager] Rabbit Count: {rabbitObjCount}/{maxRabbitObjCount}");
-            
+
             if (ItemSetManager.Instance != null)
             {
                 Debug.Log($"[LevelManager] ItemSet - Found: {ItemSetManager.Instance.FoundSetsCount}, Total: {ItemSetManager.Instance.TotalSetsCount}");
@@ -629,14 +696,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 Debug.Log("[LevelManager] ItemSetManager.Instance is null!");
             }
-            
+
             // 각 그룹별 상태 출력
             foreach (var kvp in TargetObjDic)
             {
                 var group = kvp.Value;
                 Debug.Log($"[LevelManager] Group '{group.BaseGroupName}': {group.FoundCount}/{group.TotalCount}");
             }
-            
+
             Debug.Log($"[LevelManager] =========================");
         }
         [Button("테스트 : 아무 물건 찾기")]
@@ -644,45 +711,45 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             // 찾지 않은 오브젝트가 있는 그룹들을 찾기
             var availableGroups = TargetObjDic.Where(kvp => kvp.Value.FoundCount < kvp.Value.TotalCount).ToList();
-            
+
             if (availableGroups.Count == 0)
             {
                 Debug.Log("[LevelManager] 모든 오브젝트를 이미 찾았습니다!");
                 return;
             }
-            
+
             // 랜덤하게 그룹 선택
             var randomGroupIndex = Random.Range(0, availableGroups.Count);
             var selectedGroup = availableGroups[randomGroupIndex];
             var group = selectedGroup.Value;
-            
+
             // 해당 그룹에서 아직 찾지 않은 오브젝트들 찾기
             var notFoundObjects = group.Objects.Where(obj => !group.IsObjectFound(obj)).ToList();
-            
+
             if (notFoundObjects.Count > 0)
             {
                 // 랜덤하게 오브젝트 선택
                 var randomObjIndex = Random.Range(0, notFoundObjects.Count);
                 var selectedObj = notFoundObjects[randomObjIndex];
-                
+
                 // 해당 오브젝트를 찾은 것으로 처리
                 group.LastClickedObject = selectedObj;
                 group.MarkObjectAsFound(selectedObj);
-                
+
                 Debug.Log($"[LevelManager] 테스트로 찾은 오브젝트: {selectedObj.name} (그룹: {group.BaseGroupName})");
-                
+
                 // UI 업데이트
                 if (CurrentScrollView != null)
                     CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
-                
+
                 // 사운드 재생
                 if (group.Representative.PlaySoundWhenFound && FoundFx != null)
                     FoundFx.Play();
-                
+
                 // 이벤트 발생
                 OnFoundObj?.Invoke(this, selectedObj);
                 OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
-                
+
                 // 게임 종료 조건 확인
                 DetectGameEnd();
             }

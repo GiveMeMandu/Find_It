@@ -310,5 +310,12 @@ namespace UI.Page
                 LevelManager.Instance.ToggleScrollView();
             }
         }
+
+        [Binding]
+        public void OnClickTutorialButton()
+        {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
+            Global.UIManager.OpenPage<InGameTutorialPage>();
+        }
     }
 }

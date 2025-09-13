@@ -35,6 +35,7 @@ namespace Manager
         public static DailyCheckManager DailyCheckManager { get; set; }
         public static QuestManager QuestManager { get; set; }
         public static RewardManager RewardManager { get; set; }
+        public static int StageTimer { get; set; } = 600;
 
         protected override void Awake()
         {
