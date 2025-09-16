@@ -552,6 +552,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     {
                         foreach (var func in OnEndEvent)
                         {
+                            Debug.Log("[LevelManager] Awaiting OnEndEvent function..." + func.Method.Name);
                             await func();
                         }
                     }
@@ -565,9 +566,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 {
                     foreach (var func in OnEndEvent)
                     {
+                        Debug.Log("[LevelManager] Awaiting OnEndEvent function..." + func.Method.Name);
                         await func();
                     }
                 }
+                Debug.Log("[LevelManager] task 다 끝남");
                 GameEndEvent?.Invoke();  // 모든 UnityEvent 호출이 완료된 뒤에 종료 이벤트 호출
 
                 DefaultGameEndFunc();
