@@ -54,6 +54,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         [Tooltip("Action When Target Is Drag To The Specified Region")]
         public Action DragRegionAction;
 
+        [Tooltip("WhenFoundEventHelper component for custom found events")]
+        public WhenFoundEventHelper whenFoundEventHelper;
+
         [HideInInspector] public bool IsFound;
         
         public bool baseInfoBool = true;
@@ -184,6 +187,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     gameObject.SetActive(false);
                 }
 
+                // WhenFoundEventHelper 이벤트 호출
+                whenFoundEventHelper?.onFoundEvent?.Invoke();
+
                 TargetClickAction?.Invoke();
             }
             else
@@ -215,6 +221,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (uiChangeHelper == null)
             {
                 uiChangeHelper = GetComponent<UIChangeHelper>();
+            }
+
+            // WhenFoundEventHelper 컴포넌트 자동 찾기
+            if (whenFoundEventHelper == null)
+            {
+                whenFoundEventHelper = GetComponent<WhenFoundEventHelper>();
             }
 
             if (HideOnStart)

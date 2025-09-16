@@ -14413,6 +14413,7 @@ MonoBehaviour:
   PlaySoundWhenFound: 1
   clickPriority: 0
   AudioWhenClick: {fileID: 0}
+  whenFoundEventHelper: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
   tooltipsBool: 1
@@ -15624,6 +15625,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1670789330258832011}
     m_Modifications:
+    - target: {fileID: 564369212291037757, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
+      propertyPath: HideHiddenObjAfterDone
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 564369212291037757, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
       propertyPath: AfterDone.m_PersistentCalls.m_Calls.Array.size
       value: 3
@@ -16922,6 +16927,7 @@ MonoBehaviour:
   PlaySoundWhenFound: 1
   clickPriority: 0
   AudioWhenClick: {fileID: 0}
+  whenFoundEventHelper: {fileID: 0}
   IsFound: 0
   baseInfoBool: 0
   tooltipsBool: 0
@@ -33053,12 +33059,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 1777378106768954716}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c57d8c04335b1384986b2e10cc53a593, type: 3}
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnableClickLoop: 0
-  OnClickEventList:
-  - m_PersistentCalls:
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1745464383}
         m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
@@ -33072,18 +33104,6 @@ MonoBehaviour:
           m_StringArgument: AfterFind
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1885276662}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 8271066101587322244}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
@@ -33096,7 +33116,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  CurrentClickCount: 0
+  _maxClickCount: 1
 --- !u!1 &8329020554106027605
 GameObject:
   m_ObjectHideFlags: 0

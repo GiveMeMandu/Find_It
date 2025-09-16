@@ -276,6 +276,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                             hiddenObj.uiChangeHelper = child.GetComponent<UIChangeHelper>();
                         }
 
+                        // WhenFoundEventHelper 컴포넌트가 있다면 HiddenObj에 연결
+                        if (hiddenObj.whenFoundEventHelper == null)
+                        {
+                            hiddenObj.whenFoundEventHelper = child.GetComponent<WhenFoundEventHelper>();
+                        }
+
                         // BoxCollider2D 추가 또는 리셋
                         if (!child.TryGetComponent<BoxCollider2D>(out var boxCollider))
                         {
@@ -321,6 +327,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     if (hiddenObj.uiChangeHelper == null)
                     {
                         hiddenObj.uiChangeHelper = obj.GetComponent<UIChangeHelper>();
+                    }
+
+                    // WhenFoundEventHelper 컴포넌트가 있다면 HiddenObj에 연결
+                    if (hiddenObj.whenFoundEventHelper == null)
+                    {
+                        hiddenObj.whenFoundEventHelper = obj.GetComponent<WhenFoundEventHelper>();
                     }
 
                     normalHiddenObjs.Add(hiddenObj);
@@ -501,6 +513,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     FoundFx.Play();
 
                 group.MarkObjectAsFound(clickedObj);
+
+                // WhenFoundEventHelper 이벤트 호출
+                if (clickedObj.whenFoundEventHelper != null)
+                {
+                    clickedObj.whenFoundEventHelper.onFoundEvent?.Invoke();
+                }
 
                 // CurrentScrollView null 체크
                 if (CurrentScrollView != null)
@@ -738,6 +756,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 // 해당 오브젝트를 찾은 것으로 처리
                 group.LastClickedObject = selectedObj;
                 group.MarkObjectAsFound(selectedObj);
+
+                // WhenFoundEventHelper 이벤트 호출
+                if (selectedObj.whenFoundEventHelper != null)
+                {
+                    selectedObj.whenFoundEventHelper.onFoundEvent?.Invoke();
+                }
 
                 Debug.Log($"[LevelManager] 테스트로 찾은 오브젝트: {selectedObj.name} (그룹: {group.BaseGroupName})");
 
