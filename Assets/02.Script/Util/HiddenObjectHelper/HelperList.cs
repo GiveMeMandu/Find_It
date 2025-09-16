@@ -23,6 +23,16 @@ public class HelperList : MonoBehaviour
         }
     }
 
+    [Button("찾았을 때 이벤트 설정")]
+    public void SetWhenFoundEventHelper()
+    {
+        WhenFoundEventHelper whenFoundEventHelper = GetComponent<WhenFoundEventHelper>();
+        if (whenFoundEventHelper == null)
+        {
+            whenFoundEventHelper = gameObject.AddComponent<WhenFoundEventHelper>();
+        }
+    }
+
     [Button("전체 지우기")]
     public void RemoveAllHelper()
     {
@@ -45,6 +55,17 @@ public class HelperList : MonoBehaviour
         UnityEditor.Undo.RecordObject(gameObject, "Remove UIChangeHelper");
         UnityEditor.Undo.DestroyObjectImmediate(uiChangeHelper);
         uiChangeHelper = null;
+#endif
+    }
+
+    // Remove WhenFoundEventHelper if present
+    WhenFoundEventHelper whenFoundEventHelper = GetComponent<WhenFoundEventHelper>();
+    if (whenFoundEventHelper != null)
+    {
+#if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(gameObject, "Remove WhenFoundEventHelper");
+        UnityEditor.Undo.DestroyObjectImmediate(whenFoundEventHelper);
+        whenFoundEventHelper = null;
 #endif
     }
     }

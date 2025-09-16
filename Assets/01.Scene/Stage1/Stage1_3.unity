@@ -800,6 +800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 870993022397449990, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+    - {fileID: 6120874204364091257, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 608470595612455202, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
@@ -814,7 +815,10 @@ PrefabInstance:
       addedObject: {fileID: 187506449}
     - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 187506450}
+      addedObject: {fileID: 187506454}
+    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 187506453}
   m_SourcePrefab: {fileID: 100100000, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
 --- !u!4 &187506444 stripped
 Transform:
@@ -906,13 +910,19 @@ MonoBehaviour:
   PlaySoundWhenFound: 1
   clickPriority: 0
   AudioWhenClick: {fileID: 0}
+  whenFoundEventHelper: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
   tooltipsBool: 1
   bgAnimBool: 1
   actionFoldoutBool: 1
   spriteRenderer: {fileID: 0}
---- !u!114 &187506450
+--- !u!95 &187506451 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7927754508570010578, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+  m_PrefabInstance: {fileID: 187506443}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &187506453
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -921,37 +931,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 187506445}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Script: {fileID: 11500000, guid: c619157deafb63045bf068237f51d09e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfSelected: 0
-  onSelected:
-    m_PersistentCalls:
-      m_Calls: []
-  onDeselected:
-    m_PersistentCalls:
-      m_Calls: []
-  use: 0
-  onSelectedFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
+  onFoundEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 569434346}
@@ -990,12 +973,18 @@ MonoBehaviour:
           m_StringArgument: tail_in
           m_BoolArgument: 1
         m_CallState: 2
-  _maxClickCount: 1
---- !u!95 &187506451 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7927754508570010578, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-  m_PrefabInstance: {fileID: 187506443}
+--- !u!114 &187506454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187506445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbc1c9095f929e54ba2e924d1865a8c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &223968475
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10353,6 +10342,7 @@ MonoBehaviour:
   PlaySoundWhenFound: 1
   clickPriority: 0
   AudioWhenClick: {fileID: 0}
+  whenFoundEventHelper: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
   tooltipsBool: 1
@@ -17038,10 +17028,10 @@ GameObject:
   - component: {fileID: 1819510552779776657}
   - component: {fileID: 7706584271925059029}
   - component: {fileID: 7706584271925059032}
-  - component: {fileID: 7706584271925059031}
   - component: {fileID: 7706584271925059030}
   - component: {fileID: 7706584271925059034}
   - component: {fileID: 7706584271925059033}
+  - component: {fileID: 7706584271925059035}
   m_Layer: 0
   m_Name: hide_smile_carrot
   m_TagString: Hidden
@@ -25298,6 +25288,7 @@ MonoBehaviour:
   PlaySoundWhenFound: 1
   clickPriority: 0
   AudioWhenClick: {fileID: 0}
+  whenFoundEventHelper: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
   tooltipsBool: 1
@@ -26295,61 +26286,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.6166667, y: 1.0433333}
   m_EdgeRadius: 0
---- !u!114 &7706584271925059031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1188050498441017572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selfSelected: 0
-  onSelected:
-    m_PersistentCalls:
-      m_Calls: []
-  onDeselected:
-    m_PersistentCalls:
-      m_Calls: []
-  use: 0
-  onSelectedFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7706584271925059032}
-        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: Play
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: smile_find
-          m_BoolArgument: 0
-        m_CallState: 2
-  _maxClickCount: 1
 --- !u!95 &7706584271925059032
 Animator:
   serializedVersion: 7
@@ -26397,6 +26333,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc1c9095f929e54ba2e924d1865a8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7706584271925059035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1188050498441017572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c619157deafb63045bf068237f51d09e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onFoundEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7706584271925059032}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: smile_find
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7785829101537240694
 GameObject:
   m_ObjectHideFlags: 0
@@ -28377,6 +28340,7 @@ MonoBehaviour:
   PlaySoundWhenFound: 1
   clickPriority: 0
   AudioWhenClick: {fileID: 0}
+  whenFoundEventHelper: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
   tooltipsBool: 1
