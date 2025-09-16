@@ -1470,6 +1470,46 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &115099907 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8489626642451835166, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
+  m_PrefabInstance: {fileID: 323560418}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &115099909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115099907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31545ff16d915145b72efd9108864b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onEnableEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 115099911}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: drinking_tea
+          m_BoolArgument: 0
+        m_CallState: 2
+  TestEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!95 &115099911 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8655599109992078064, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
+  m_PrefabInstance: {fileID: 323560418}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &144985713
 GameObject:
   m_ObjectHideFlags: 0
@@ -2476,7 +2516,10 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 288499234498473816, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8489626642451835166, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 115099909}
   m_SourcePrefab: {fileID: 100100000, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
 --- !u!4 &323560419 stripped
 Transform:
@@ -3891,6 +3934,11 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
   CurrentClickCount: 0
+--- !u!1 &478195372 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1084722370689323268, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+  m_PrefabInstance: {fileID: 1090648868}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &485605138
 GameObject:
   m_ObjectHideFlags: 0
@@ -10106,7 +10154,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2289426111245846887, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
       insertIndex: 14
       addedObject: {fileID: 1987698916}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1084722370689323268, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1090648871}
   m_SourcePrefab: {fileID: 100100000, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
 --- !u!4 &1090648869 stripped
 Transform:
@@ -10116,6 +10167,41 @@ Transform:
 --- !u!4 &1090648870 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2289426111245846887, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+  m_PrefabInstance: {fileID: 1090648868}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1090648871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478195372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31545ff16d915145b72efd9108864b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onEnableEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1090648872}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: pull
+          m_BoolArgument: 0
+        m_CallState: 2
+  TestEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!95 &1090648872 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3845766064033132267, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
   m_PrefabInstance: {fileID: 1090648868}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1094658446 stripped

@@ -8222,7 +8222,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7729668457626703680, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273453109481252710, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
       propertyPath: m_Size.x
@@ -9851,7 +9851,6 @@ MonoBehaviour:
   IsHideOnStart: 1
   SetName: "\uB2F9\uADFC \uB514\uC800\uD2B8 \uC138\uD2B8 \uC644\uC131"
   CompletionView: {fileID: 77706562}
-  AlertView: {fileID: 926720424}
   PlaySoundWhenFound: 0
   AudioWhenClick: {fileID: 0}
   OnSetComplete:
@@ -11237,7 +11236,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1650458915}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.14627934}
 --- !u!212 &1410733084
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11918,7 +11917,10 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 288499234498473816, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8489626642451835166, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1582363304}
   m_SourcePrefab: {fileID: 100100000, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
 --- !u!4 &1455123504 stripped
 Transform:
@@ -11928,6 +11930,11 @@ Transform:
 --- !u!95 &1455123505 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8655599109992078064, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
+  m_PrefabInstance: {fileID: 1455123503}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1455123506 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8489626642451835166, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
   m_PrefabInstance: {fileID: 1455123503}
   m_PrefabAsset: {fileID: 0}
 --- !u!61 &1459308997
@@ -13165,6 +13172,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9128760215730774068, guid: e000fcfdfdb16ef4e82a43c4748999d0, type: 3}
   m_PrefabInstance: {fileID: 1455123503}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1582363304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455123506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31545ff16d915145b72efd9108864b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onEnableEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1455123505}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: carrot_harvest
+          m_BoolArgument: 0
+        m_CallState: 2
+  TestEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1591356361
 GameObject:
   m_ObjectHideFlags: 0
@@ -13694,6 +13731,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1111062270}
     m_Modifications:
+    - target: {fileID: 1349068095280547408, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 83.512314
+      objectReference: {fileID: 0}
+    - target: {fileID: 2407614262510295793, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -1.1947441
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782552620043705842, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 287.623
+      objectReference: {fileID: 0}
     - target: {fileID: 3137651875993860940, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
       propertyPath: m_Name
       value: MalchaController
@@ -13701,6 +13750,26 @@ PrefabInstance:
     - target: {fileID: 3877566182929297446, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3965439438576846412, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 116.10638
+      objectReference: {fileID: 0}
+    - target: {fileID: 3967911556859271611, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 63.224827
+      objectReference: {fileID: 0}
+    - target: {fileID: 4930633175445551234, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -166.67522
+      objectReference: {fileID: 0}
+    - target: {fileID: 5676957512689546425, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -184.32861
+      objectReference: {fileID: 0}
+    - target: {fileID: 5712256886127582682, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 77.67371
       objectReference: {fileID: 0}
     - target: {fileID: 5810717647415520070, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -13742,6 +13811,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7246360794282985753, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 91.775185
+      objectReference: {fileID: 0}
+    - target: {fileID: 7720680878924089299, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -168.78348
+      objectReference: {fileID: 0}
+    - target: {fileID: 8139874601581209937, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.03836156
+      objectReference: {fileID: 0}
+    - target: {fileID: 8360815615780662428, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -137.81679
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -13751,7 +13836,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2289426111245846887, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
       insertIndex: 14
       addedObject: {fileID: 1903854139}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1084722370689323268, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1650458917}
   m_SourcePrefab: {fileID: 100100000, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
 --- !u!95 &1650458913 stripped
 Animator:
@@ -13768,6 +13856,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2289426111245846887, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
   m_PrefabInstance: {fileID: 1650458912}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1650458916 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1084722370689323268, guid: 670a75a4f5c8f7d4a93891cc252020b3, type: 3}
+  m_PrefabInstance: {fileID: 1650458912}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1650458917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650458916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31545ff16d915145b72efd9108864b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onEnableEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1650458913}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: carrat_harvest
+          m_BoolArgument: 0
+        m_CallState: 2
+  TestEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1651171889 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3158429166461130969, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
