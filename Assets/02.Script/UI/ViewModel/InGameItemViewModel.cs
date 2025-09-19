@@ -25,6 +25,7 @@ namespace UI
         private int _compassHintCount;
         private int _compassMaxHints = 5;
         private float _compassDuration = 12f;
+        private HiddenObj _currentCompassTarget; // 현재 추적 중인 오브젝트
         
         // 돋보기 관련 필드들
         private HiddenObj _currentMagnifierTarget;
@@ -336,8 +337,13 @@ namespace UI
                 {
                     if (currentTargetObject != null && currentTargetObject.IsFound)
                     {
-                        Debug.Log($"힌트된 오브젝트 {currentTargetObject.name}가 발견됨!");
+                        Debug.Log($"힌트된 오브젝트 {currentTargetObject.name}가 발견됨! 추적 종료하고 다음 오브젝트로 전환");
                         hintedObjects.Add(currentTargetGuid);
+                        
+                        // 발견된 오브젝트에 대한 추적 즉시 종료
+                        currentTargetObject = null;
+                        currentTargetGuid = System.Guid.Empty;
+                        _currentCompassTarget = null; // 현재 추적 중인 오브젝트 초기화
                     }
 
                     var closestObject = FindClosestUnfoundObject(hintedObjects);
@@ -346,9 +352,10 @@ namespace UI
                     {
                         currentTargetObject = closestObject.Value.rabbit;
                         currentTargetGuid = closestObject.Value.guid;
+                        _currentCompassTarget = currentTargetObject; // 현재 추적 중인 오브젝트 저장
                         CompassHintCount++;
                         
-                        Debug.Log($"나침판 힌트 {CompassHintCount}: {currentTargetObject.name} 추적 시작");
+                        Debug.Log($"<color=yellow>나침판 힌트 {CompassHintCount}: {currentTargetObject.name} 추적 시작</color>");
                     }
                     else
                     {
@@ -357,11 +364,22 @@ namespace UI
                     }
                 }
 
-                // 현재 타겟이 있으면 실시간으로 방향 업데이트
+                // 현재 타겟이 있고 아직 발견되지 않았으면 실시간으로 방향 업데이트
                 if (currentTargetObject != null && !currentTargetObject.IsFound)
                 {
+                    // 카메라 위치에 따라 실시간으로 방향 계산
                     Quaternion direction = CalculateDirectionToObject(currentTargetObject);
                     CompassDirection = direction;
+                }
+                else if (currentTargetObject != null && currentTargetObject.IsFound)
+                {
+                    // 타겟이 발견되었으면 즉시 추적 종료
+                    Debug.Log($"추적 중인 오브젝트 {currentTargetObject.name}가 발견됨! 추적 즉시 종료");
+                    hintedObjects.Add(currentTargetGuid);
+                    currentTargetObject = null;
+                    currentTargetGuid = System.Guid.Empty;
+                    _currentCompassTarget = null; // 현재 추적 중인 오브젝트 초기화
+                    CompassDirection = Quaternion.identity;
                 }
 
                 await UniTask.Delay(100); // 0.1초마다 업데이트
@@ -371,6 +389,7 @@ namespace UI
             // 나침판 효과 종료
             IsCompassActive = false;
             CompassDirection = Quaternion.identity;
+            _currentCompassTarget = null; // 현재 추적 중인 오브젝트 초기화
             Debug.Log($"나침판 효과 종료. 총 {CompassHintCount}개 힌트 제공됨");
         }
 
@@ -379,7 +398,7 @@ namespace UI
             Camera mainCamera = Camera.main;
             if (mainCamera == null) return null;
 
-            // 카메라의 현재 위치를 기준으로 계산
+            // 카메라의 월드 포지션을 기준으로 계산
             Vector3 cameraPosition = mainCamera.transform.position;
 
             var rabbitDict = GetHiddenObjectDictionary();
@@ -393,8 +412,9 @@ namespace UI
             {
                 if (kvp.Value.IsFound || excludeGuids.Contains(kvp.Key)) continue;
 
-                // 카메라 위치에서 오브젝트까지의 실제 거리 계산
-                float distance = Vector3.Distance(cameraPosition, kvp.Value.transform.position);
+                // 카메라 월드 포지션에서 오브젝트 월드 포지션까지의 거리 계산
+                Vector3 targetPosition = kvp.Value.transform.position;
+                float distance = Vector3.Distance(cameraPosition, targetPosition);
                 
                 if (distance < closestDistance)
                 {
@@ -417,18 +437,20 @@ namespace UI
             Camera mainCamera = Camera.main;
             if (mainCamera == null) return Quaternion.identity;
 
-            // 카메라의 현재 위치를 기준으로 계산
+            // 카메라의 월드 포지션을 기준으로 계산
             Vector3 cameraPosition = mainCamera.transform.position;
             Vector3 targetPosition = targetObject.transform.position;
             
             // 카메라에서 타겟으로의 방향 벡터 (월드 좌표계)
             Vector3 directionVector = targetPosition - cameraPosition;
             
-            // 카메라의 회전을 고려하여 로컬 방향으로 변환
-            Vector3 localDirection = mainCamera.transform.InverseTransformDirection(directionVector);
+            // 2D 게임에서는 월드 좌표계에서 직접 각도 계산
+            // 나침반 바늘이 위쪽을 가리키도록 각도 계산
+            // 위쪽이 뾰족한 바늘에 맞게 Y축이 위쪽일 때 0도가 되도록 계산
+            float angle = Mathf.Atan2(directionVector.x, directionVector.y) * Mathf.Rad2Deg;
             
-            // 2D 평면에서의 방향 계산 (X, Y 성분만 사용)
-            float angle = Mathf.Atan2(localDirection.x, localDirection.y) * Mathf.Rad2Deg;
+            // Z축 값을 뒤집어서 정확한 방향으로 수정
+            angle = -angle;
             
             // Quaternion으로 회전 생성 (Z축 회전)
             return Quaternion.Euler(0f, 0f, angle);
@@ -739,6 +761,23 @@ namespace UI
         public bool CanUseHint()
         {
             return Global.ItemManager != null && Global.ItemManager.GetItemCount(ItemType.Hint) > 0;
+        }
+
+        // 나침반 추적 대상 오브젝트 위치에 기즈모 표시
+        private void OnDrawGizmos()
+        {
+            if (_currentCompassTarget != null && IsCompassActive)
+            {
+                // 나침반이 추적 중인 오브젝트 위치에 빨간색 구체 표시
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(_currentCompassTarget.transform.position, 0.5f);
+                
+                // 오브젝트 이름 표시를 위한 텍스트 (Scene View에서만 보임)
+                #if UNITY_EDITOR
+                UnityEditor.Handles.Label(_currentCompassTarget.transform.position + Vector3.up * 1f, 
+                    $"<color=red>나침반 타겟: {_currentCompassTarget.name}</color>");
+                #endif
+            }
         }
     }
 }

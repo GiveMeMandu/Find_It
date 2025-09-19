@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Lean.Touch;
 using SnowRabbit.Helper;
+using Manager;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
@@ -106,6 +107,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private void HandleFingerTap(LeanFinger finger)
         {
             if (IsFound) return;
+
+            // InputManager의 isEnabled 상태 확인
+            if (!IsInputEnabled()) return;
 
             // 이 오브젝트 위에 손가락이 있는지 확인
             if (IsFingerOverThis(finger))
@@ -254,12 +258,19 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private void OnMouseDown()
         {
             Debug.Log($"OnMouseDown called for {gameObject.name}");
+            
+            // InputManager의 isEnabled 상태 확인
+            if (!IsInputEnabled()) return;
+            
             HitHiddenObject();
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             Debug.Log($"OnPointerClick called for {gameObject.name}");
+            
+            // InputManager의 isEnabled 상태 확인
+            if (!IsInputEnabled()) return;
             
             // 이미 찾아진 경우 무시
             if (IsFound)
@@ -291,6 +302,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             BgAnimationTransform = bgAnimationPrefab.transform;
             BgAnimationSpriteRenderer = bgAnimationPrefab.GetComponentInChildren<SpriteRenderer>();
             BgAnimationLerp = bgAnimationPrefab.GetComponent<BGScaleLerp>();
+        }
+
+        /// <summary>
+        /// InputManager의 isEnabled 상태를 확인하는 헬퍼 메서드
+        /// </summary>
+        private bool IsInputEnabled()
+        {
+            return Global.InputManager != null && Global.InputManager.isEnabled;
         }
     }
 }

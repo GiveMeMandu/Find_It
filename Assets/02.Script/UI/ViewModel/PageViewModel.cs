@@ -10,7 +10,7 @@ namespace UI
         [Binding]
         public void ClosePage()
         {
-            Global.UIManager.ClosePage();
+            Global.UIManager.ClosePage(this);
         }
         [Binding]
         public void OnClickShopButton()

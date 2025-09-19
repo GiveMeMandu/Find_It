@@ -33,6 +33,16 @@ public class HelperList : MonoBehaviour
         }
     }
 
+    [Button("게임 시작시 이벤트 설정")]
+    public void SetOnEnableHelper()
+    {
+        OnEnableHelper onEnableHelper = GetComponent<OnEnableHelper>();
+        if (onEnableHelper == null)
+        {
+            onEnableHelper = gameObject.AddComponent<OnEnableHelper>();
+        }
+    }
+
     [Button("전체 지우기")]
     public void RemoveAllHelper()
     {
@@ -66,6 +76,17 @@ public class HelperList : MonoBehaviour
         UnityEditor.Undo.RecordObject(gameObject, "Remove WhenFoundEventHelper");
         UnityEditor.Undo.DestroyObjectImmediate(whenFoundEventHelper);
         whenFoundEventHelper = null;
+#endif
+    }
+
+    // Remove OnEnableHelper if present
+    OnEnableHelper onEnableHelper = GetComponent<OnEnableHelper>();
+    if (onEnableHelper != null)
+    {
+#if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(gameObject, "Remove OnEnableHelper");
+        UnityEditor.Undo.DestroyObjectImmediate(onEnableHelper);
+        onEnableHelper = null;
 #endif
     }
     }

@@ -29,6 +29,9 @@ namespace UnityWeld
         [BoxGroup("스테이지 정보")]
         [TermsPopup("SceneDescription/")]
         public string sceneDescriptionKey;
+        [BoxGroup("스테이지 정보")]
+        [LabelText("표시 여부")]
+        public bool Show = true;
     }
     [Binding]
     public class MapSelectView : ViewModel
@@ -369,7 +372,7 @@ namespace UnityWeld
         }
 
         /// <summary>
-        /// 특정 씬 이름으로 스테이지를 선택합니다
+        /// 특정 씬 이름으로 스테이지를 선택합니다 (Show가 true인 것만)
         /// </summary>
         /// <param name="sceneName">선택할 씬 이름</param>
         public void SelectStageBySceneName(SceneName sceneName)
@@ -377,10 +380,10 @@ namespace UnityWeld
             // 씬 변경 시 모든 이펙트 리셋
             ResetAllEffects();
             
-            // 해당 sceneName의 첫 번째 스테이지를 찾아서 선택
+            // 해당 sceneName의 첫 번째 스테이지를 찾아서 선택 (Show가 true인 것만)
             for (int i = 0; i < sceneInfos.Count; i++)
             {
-                if (sceneInfos[i].sceneName == sceneName)
+                if (sceneInfos[i].Show && sceneInfos[i].sceneName == sceneName)
                 {
                     // 씬 변경 시에는 이전 스테이지 이펙트 처리 없이 바로 맵만 설정
                     SetCurMap(i);
@@ -409,7 +412,7 @@ namespace UnityWeld
         }
 
         /// <summary>
-        /// 고유한 씬 이름들의 리스트를 가져옵니다
+        /// 고유한 씬 이름들의 리스트를 가져옵니다 (Show가 true인 것만)
         /// </summary>
         /// <returns>고유한 씬 이름들의 리스트</returns>
         private List<SceneName> GetUniqueSceneNames()
@@ -417,7 +420,7 @@ namespace UnityWeld
             var uniqueScenes = new List<SceneName>();
             foreach (var sceneInfo in sceneInfos)
             {
-                if (!uniqueScenes.Contains(sceneInfo.sceneName))
+                if (sceneInfo.Show && !uniqueScenes.Contains(sceneInfo.sceneName))
                 {
                     uniqueScenes.Add(sceneInfo.sceneName);
                 }
@@ -440,6 +443,9 @@ namespace UnityWeld
         private void SetCurMap(int stageIndex)
         {
             if (!IsValidStageIndex(stageIndex)) return;
+            
+            // Show가 false인 스테이지는 선택할 수 없음
+            if (!sceneInfos[stageIndex].Show) return;
 
             _currentStageIndex = stageIndex;
             var currentStage = sceneInfos[stageIndex];
@@ -472,7 +478,7 @@ namespace UnityWeld
         }
         
         /// <summary>
-        /// 현재 선택된 월드에 해당하는 스테이지 수를 가져옵니다
+        /// 현재 선택된 월드에 해당하는 스테이지 수를 가져옵니다 (Show가 true인 것만)
         /// </summary>
         /// <returns>현재 월드의 스테이지 수</returns>
         private int GetCurrentSceneStageCount()
@@ -480,11 +486,11 @@ namespace UnityWeld
             // 현재 월드 번호 가져오기
             int currentWorld = SceneHelper.GetWorldNumber(_currentSceneName);
             
-            // 해당 월드의 스테이지들 중 실제 sceneInfos에 존재하는 것만 카운트
+            // 해당 월드의 스테이지들 중 실제 sceneInfos에 존재하고 Show가 true인 것만 카운트
             int count = 0;
             for (int i = 0; i < sceneInfos.Count; i++)
             {
-                if (SceneHelper.GetWorldNumber(sceneInfos[i].sceneName) == currentWorld)
+                if (sceneInfos[i].Show && SceneHelper.GetWorldNumber(sceneInfos[i].sceneName) == currentWorld)
                 {
                     count++;
                 }
@@ -534,9 +540,9 @@ namespace UnityWeld
         }
         
         /// <summary>
-        /// 현재 선택된 월드에 해당하는 스테이지 인덱스들을 가져옵니다
+        /// 현재 선택된 월드에 해당하는 스테이지 인덱스들을 가져옵니다 (Show가 true인 것만)
         /// </summary>
-        /// <returns>현재 월드의 스테이지 인덱스 리스트 (실제 sceneInfos에 존재하는 것만)</returns>
+        /// <returns>현재 월드의 스테이지 인덱스 리스트 (실제 sceneInfos에 존재하고 Show가 true인 것만)</returns>
         public List<int> GetCurrentSceneStageIndices()
         {
             var indices = new List<int>();
@@ -544,7 +550,7 @@ namespace UnityWeld
             
             for (int i = 0; i < sceneInfos.Count; i++)
             {
-                if (SceneHelper.GetWorldNumber(sceneInfos[i].sceneName) == currentWorld)
+                if (sceneInfos[i].Show && SceneHelper.GetWorldNumber(sceneInfos[i].sceneName) == currentWorld)
                 {
                     indices.Add(i);
                 }

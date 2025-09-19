@@ -32,6 +32,13 @@ namespace OutGame
                 pageSlideEffect = mainMenuPage.GetComponent<PageSlideEffect>();
             }
             CanPlay = true;
+            
+            // 인게임 스테이지에서 Start 씬으로 전환된 경우 리뷰 페이지 열기
+            if (LoadingSceneManager.shouldOpenReviewPage)
+            {
+                Global.UIManager.OpenPage<InGameReviewPage>();
+                LoadingSceneManager.shouldOpenReviewPage = false; // 플래그 리셋
+            }
         }
 
         public void OnClickMapButton()

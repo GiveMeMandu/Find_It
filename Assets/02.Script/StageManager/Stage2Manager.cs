@@ -31,11 +31,10 @@ public class Stage2Manager : InGameSceneBase
     private List<NightObj> nightObjs = new List<NightObj>();
     private List<SpriteRenderer> nightObjsNoFade = new List<SpriteRenderer>();
 
-    private EndingSequenceStage2 _endingSequenceStage2;
+    [SerializeField] private EndingSequenceStage2 _endingSequenceStage2;
     protected override void Start()
     {
         base.Start();
-        _endingSequenceStage2 = GetComponent<EndingSequenceStage2>();
         nightObjs = FindObjectsByType<NightObj>(FindObjectsSortMode.None).ToList();
         foreach (var n in nightObjs)
         {
@@ -77,16 +76,26 @@ public class Stage2Manager : InGameSceneBase
 
     protected override async UniTask ClearStageTask()
     {
-        await _endingSequenceStage2.StartSequence();
-        _playableDirector.initialTime = 0;
-        _playableDirector.enabled = true;
-        _playableDirector.Play();
-        await UniTask.WaitUntil(() => _playableDirector.state != PlayState.Playing);
+        if (_endingSequenceStage2 != null)
+        {
+            await _endingSequenceStage2.StartSequence();
+        }
+        
+        if (_playableDirector != null)
+        {
+            _playableDirector.initialTime = 0;
+            _playableDirector.enabled = true;
+            _playableDirector.Play();
+            await UniTask.WaitUntil(() => _playableDirector.state != PlayState.Playing);
+        }
 
-        _playableDirector2.initialTime = 0;
-        _playableDirector2.enabled = true;
-        _playableDirector2.Play();
-        await UniTask.WaitUntil(() => _playableDirector2.state != PlayState.Playing);
+        if (_playableDirector2 != null)
+        {
+            _playableDirector2.initialTime = 0;
+            _playableDirector2.enabled = true;
+            _playableDirector2.Play();
+            await UniTask.WaitUntil(() => _playableDirector2.state != PlayState.Playing);
+        }
     }
 
     public void ClearStage()

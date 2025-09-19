@@ -23,7 +23,7 @@ namespace Manager
 
         public PlayerAction playerAction;
         private EventSystem eventSystem;
-        private bool isEnabled = true;
+        public bool isEnabled = true;
 
         public struct TouchData
         {
@@ -220,7 +220,7 @@ namespace Manager
                 eventSystem.enabled = false;
             }
             
-            CameraView2D.SetEnablePanAndZoom(false);
+            CameraView2D.SetForceDisabled(true);
         }
 
         public void EnableAllInput()
@@ -234,7 +234,44 @@ namespace Manager
                 eventSystem.enabled = true;
             }
             
-            CameraView2D.SetEnablePanAndZoom(true);
+            CameraView2D.SetForceDisabled(false);
+        }
+
+        public void DisableGameInputOnly()
+        {
+            isEnabled = false;
+            playerAction.playerControl.Disable();
+            playerAction.Disable();
+            
+            // UI는 활성화 상태로 유지
+            if (eventSystem != null)
+            {
+                eventSystem.enabled = true;
+            }
+            
+            // 카메라 컨트롤을 강제로 비활성화 (UI 드래그 상태와 관계없이)
+            CameraView2D.SetForceDisabled(true);
+        }
+
+        public void EnableGameInputOnly()
+        {
+            isEnabled = true;
+            playerAction.playerControl.Enable();
+            playerAction.Enable();
+            
+            // UI는 활성화 상태로 유지
+            if (eventSystem != null)
+            {
+                eventSystem.enabled = true;
+            }
+            
+            // 카메라 컨트롤 강제 비활성화 해제 (UI 드래그 상태에 따라 자동 관리)
+            CameraView2D.SetForceDisabled(false);
+        }
+
+        public bool IsInputEnabled()
+        {
+            return isEnabled;
         }
     }
 }

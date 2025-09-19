@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using DeskCat.FindIt.Scripts.Core.Main.System;
+using Manager;
 
 public class LeanClickEvent : LeanSelectableByFinger
 {
@@ -49,6 +50,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 	{
 		if (!Enable) return;
 
+		// InputManager의 isEnabled 상태 확인
+		if (Global.InputManager != null && !IsInputEnabled()) return;
+
 		if (IsFingerOverThis(finger) == false) return;
 
 		// Hidden object priority check
@@ -68,6 +72,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 	{
 		if (!Enable) return;
 
+		// InputManager의 isEnabled 상태 확인
+		if (Global.InputManager != null && !IsInputEnabled()) return;
+
 		if (IsFingerOverThis(finger) == false) return;
 
 		// Hidden object priority check
@@ -83,6 +90,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 	private void HandleFingerTap(LeanFinger finger)
 	{
 		if (!Enable) return;
+
+		// InputManager의 isEnabled 상태 확인
+		if (Global.InputManager != null && !IsInputEnabled()) return;
 
 		if (IsFingerOverThis(finger) == false) return;
 
@@ -120,6 +130,14 @@ public class LeanClickEvent : LeanSelectableByFinger
 	public int GetClickCount()
 	{
 		return _clickCount;
+	}
+
+	/// <summary>
+	/// InputManager의 isEnabled 상태를 확인하는 헬퍼 메서드
+	/// </summary>
+	private bool IsInputEnabled()
+	{
+		return Global.InputManager != null && Global.InputManager.isEnabled;
 	}
 
 	/// <summary>

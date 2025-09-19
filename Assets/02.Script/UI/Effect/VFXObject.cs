@@ -106,38 +106,76 @@ namespace Effect
                 }
             }
 
-            // 재생 시작 전 딜레이 적용
-            if(startDelay > 0)
+            try
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(startDelay), cancellationToken: destroyCancellation.Token);
-            }
+                // 재생 시작 전 딜레이 적용
+                if(startDelay > 0)
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(startDelay), cancellationToken: destroyCancellation.Token);
+                }
 
-            int loop = 0;
-            if(isLoopForce) isLoop = true;
-            do
+                int loop = 0;
+                if(isLoopForce) isLoop = true;
+                do
+                {
+                    await UniTask.Yield(cancellationToken: destroyCancellation.Token);
+                    OnEffectStart?.Invoke();
+                    if(isUIEffect) await VFXOnceUI();
+                    else await VFXOnceInGame();
+                    loop++;
+                    
+                    if(!isLoop) break;
+                    if(loopCount > 0 && loop >= loopCount) break;
+                    
+                    await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: destroyCancellation.Token);
+                } while (true);
+            }
+            catch (OperationCanceledException)
             {
-                await UniTask.Yield(cancellationToken: destroyCancellation.Token);
-                OnEffectStart?.Invoke();
-                if(isUIEffect) await VFXOnceUI();
-                else await VFXOnceInGame();
-                loop++;
-                
-                if(!isLoop) break;
-                if(loopCount > 0 && loop >= loopCount) break;
-                
-                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: destroyCancellation.Token);
-            } while (true);
-            OnVFXEnd();
+                // 취소된 경우 정상적으로 종료
+                return;
+            }
+            catch (ObjectDisposedException)
+            {
+                // CancellationTokenSource가 dispose된 경우 정상적으로 종료
+                return;
+            }
+            finally
+            {
+                OnVFXEnd();
+            }
         }
         
         //* VFX 재생시 재생될 효과들 디테일하게 구현
         protected virtual async UniTask VFXOnceInGame()
         {
-            await UniTask.Yield();
+            try
+            {
+                await UniTask.Yield(cancellationToken: destroyCancellation.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // 취소된 경우 정상적으로 종료
+            }
+            catch (ObjectDisposedException)
+            {
+                // CancellationTokenSource가 dispose된 경우 정상적으로 종료
+            }
         }
         protected virtual async UniTask VFXOnceUI()
         {
-            await UniTask.Yield();
+            try
+            {
+                await UniTask.Yield(cancellationToken: destroyCancellation.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // 취소된 경우 정상적으로 종료
+            }
+            catch (ObjectDisposedException)
+            {
+                // CancellationTokenSource가 dispose된 경우 정상적으로 종료
+            }
         }
         protected virtual void OnVFXEnd() {
             isPlaying = false;

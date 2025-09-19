@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityWeld;
 using UnityWeld.Binding;
 using UI.Page;
+using Manager;
 
 [Binding]
 public class TutorialViewModel : ViewModel
@@ -77,8 +78,13 @@ public class TutorialViewModel : ViewModel
             OnPropertyChanged(nameof(CurInfoText));
         }
     }
+
+    private CancellationTokenSource _cts;
     public void OnEnable()
     {
+        _cts = new CancellationTokenSource();
+        Global.InputManager.DisableGameInputOnly();
+        
         CurrentIndex = 0;
         if (_tutorialPages != null && _tutorialPages.Count > 0)
         {
@@ -135,11 +141,22 @@ public class TutorialViewModel : ViewModel
     [Binding]
     public void Skip()
     {
+        Global.InputManager.EnableGameInputOnly();
         GetComponentInParent<InGameTutorialPage>().ClosePage();
     }
 
+    private void OnDisable()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
+        Global.InputManager.EnableGameInputOnly();
+    }
 
     private void OnDestroy()
     {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
     }
 }

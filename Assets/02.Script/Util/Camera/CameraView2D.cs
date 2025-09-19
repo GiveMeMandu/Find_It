@@ -38,6 +38,10 @@ namespace Util.CameraSetting
         public bool _autoPanBoundary = true;
         public float _panMinX, _panMinY;
         public float _panMaxX, _panMaxY;
+        
+        // 상태 관리 변수들
+        private bool _forceDisabled = false; // InputManager에서 강제로 비활성화된 상태
+        private bool _uiDragState = false; // UI 드래그 중인 상태
 
         private UnityEngine.Camera _camera;
         private Vector2 _previousTouchPosition;
@@ -466,8 +470,76 @@ namespace Util.CameraSetting
         public static void SetEnablePanAndZoom(bool value)
         {
             if (Instance == null) return;
+            
+            // InputManager에서 강제로 비활성화된 상태라면 SetEnablePanAndZoom 호출을 무시
+            if (Instance._forceDisabled)
+            {
+                return;
+            }
+            
             Instance._enablePan = value;
             Instance._enableZoom = value;
+        }
+        
+        /// <summary>
+        /// InputManager에서 강제로 카메라 컨트롤을 비활성화/활성화합니다.
+        /// 이 상태에서는 UI 드래그 상태와 관계없이 강제로 적용됩니다.
+        /// </summary>
+        public static void SetForceDisabled(bool value)
+        {
+            if (Instance == null) return;
+            Instance._forceDisabled = value;
+            
+            if (value)
+            {
+                // 강제 비활성화 시 즉시 카메라 컨트롤 비활성화
+                Instance._enablePan = false;
+                Instance._enableZoom = false;
+            }
+            else
+            {
+                // 강제 비활성화 해제 시 UI 드래그 상태에 따라 결정
+                UpdateActualPanAndZoomState();
+            }
+        }
+        
+        /// <summary>
+        /// UI 드래그 상태를 설정합니다.
+        /// InputManager가 강제 비활성화 상태가 아닐 때만 적용됩니다.
+        /// </summary>
+        public static void SetUIDragState(bool value)
+        {
+            if (Instance == null) return;
+            
+            // InputManager에서 강제로 비활성화된 상태라면 UI 드래그 상태 변경을 무시
+            if (Instance._forceDisabled)
+            {
+                return;
+            }
+            
+            Instance._uiDragState = value;
+            UpdateActualPanAndZoomState();
+        }
+        
+        /// <summary>
+        /// 실제 팬과 줌 상태를 업데이트합니다.
+        /// InputManager 강제 비활성화 상태가 우선순위를 가집니다.
+        /// </summary>
+        private static void UpdateActualPanAndZoomState()
+        {
+            if (Instance == null) return;
+            
+            // InputManager에서 강제로 비활성화된 경우 - UI 드래그 상태와 관계없이 항상 비활성화
+            if (Instance._forceDisabled)
+            {
+                Instance._enablePan = false;
+                Instance._enableZoom = false;
+                return; // 강제 비활성화 상태에서는 UI 드래그 상태를 무시
+            }
+            
+            // InputManager가 강제 비활성화 상태가 아닐 때만 UI 드래그 상태를 고려
+            Instance._enablePan = !Instance._uiDragState;
+            Instance._enableZoom = !Instance._uiDragState;
         }
 
         private Vector3 ClampCamera(Vector3 targetPosition)

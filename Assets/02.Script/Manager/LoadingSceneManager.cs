@@ -24,8 +24,10 @@ namespace Manager
         public static void Initialize() 
         {
             nextScene = (int)SceneNum.START;
+            shouldOpenReviewPage = false;
         }
         public static int nextScene;
+        public static bool shouldOpenReviewPage = false;
 
         private void Start()
         {
@@ -37,6 +39,16 @@ namespace Manager
         public static void LoadScene(int sceneName)
         {
             nextScene = sceneName;
+            
+            // Start 씬으로 전환하는 경우 리뷰 페이지 열기 플래그 설정
+            if (sceneName == (int)SceneNum.START)
+            {
+                shouldOpenReviewPage = true;
+            }
+            else
+            {
+                shouldOpenReviewPage = false;
+            }
 
             SceneManager.LoadScene(SceneNum.LOADING); //로딩 씬
         }
