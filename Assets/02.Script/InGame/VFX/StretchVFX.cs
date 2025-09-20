@@ -41,7 +41,17 @@ namespace Effect
         private void ResetAnimation()
         {
             if (this == null || transform == null) return;
-            transform.DOKill();
+            
+            // 안전한 DOTween 정리
+            try
+            {
+                transform.DOKill();
+            }
+            catch (System.Exception)
+            {
+                // DOTween이 이미 정리된 경우 무시
+            }
+            
             transform.localScale = originalScale;
         }
         
@@ -99,6 +109,13 @@ namespace Effect
                 ResetAnimation();
                 throw;
             }
+            catch (System.Exception ex)
+            {
+                // 기타 예외 발생 시에도 안전하게 정리
+                ResetAnimation();
+                Debug.LogWarning($"StretchVFX 애니메이션 중 예외 발생: {ex.Message}");
+                throw;
+            }
         }
         
         protected override async UniTask VFXOnceUI()
@@ -140,9 +157,34 @@ namespace Effect
                 // 작업 취소 시 스케일 초기화
                 if (rectTransform != null)
                 {
-                    rectTransform.DOKill();
+                    try
+                    {
+                        rectTransform.DOKill();
+                    }
+                    catch (System.Exception)
+                    {
+                        // DOTween이 이미 정리된 경우 무시
+                    }
                     rectTransform.localScale = originalUIScale;
                 }
+                throw;
+            }
+            catch (System.Exception ex)
+            {
+                // 기타 예외 발생 시에도 안전하게 정리
+                if (rectTransform != null)
+                {
+                    try
+                    {
+                        rectTransform.DOKill();
+                    }
+                    catch (System.Exception)
+                    {
+                        // DOTween이 이미 정리된 경우 무시
+                    }
+                    rectTransform.localScale = originalUIScale;
+                }
+                Debug.LogWarning($"StretchVFX UI 애니메이션 중 예외 발생: {ex.Message}");
                 throw;
             }
         }

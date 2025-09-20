@@ -177,15 +177,21 @@ namespace Effect
                 // CancellationTokenSource가 dispose된 경우 정상적으로 종료
             }
         }
+        private bool isInvokingEffectEnd = false;
         protected virtual void OnVFXEnd() {
             isPlaying = false;
-            OnEffectEnd?.Invoke();
-            
-            // 대기 중인 재생 요청이 있다면 실행
-            if (isPendingPlay)
+            // 대기 중인 재생 요청이 있다면 실행 (null 체크 추가)
+            if (isPendingPlay && this != null && gameObject != null)
             {
                 isPendingPlay = false;
                 PlayVFXTask(false, 0).Forget();
+            }
+            // Prevent recursive event invocation
+            if (!isInvokingEffectEnd)
+            {
+                isInvokingEffectEnd = true;
+                OnEffectEnd?.Invoke();
+                isInvokingEffectEnd = false;
             }
         }
     }

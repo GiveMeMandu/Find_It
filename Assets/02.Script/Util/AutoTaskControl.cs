@@ -12,35 +12,87 @@ public class AutoTaskControl : MonoBehaviour
     }
     protected virtual void OnDisable()
     {
-        if (!destroyCancellation.IsCancellationRequested)
+        if (destroyCancellation != null && !destroyCancellation.IsCancellationRequested)
         {
-            destroyCancellation.Cancel();
+            try
+            {
+                destroyCancellation.Cancel();
+            }
+            catch (System.Exception ex)
+            {
+                // CancellationTokenSource가 이미 dispose되었거나 다른 문제가 발생한 경우
+                Debug.LogWarning($"AutoTaskControl 취소 처리 중 예외 발생: {ex.Message}");
+            }
         }
     }
     protected virtual void OnDestroy()
     {
         if (destroyCancellation != null)
         {
-            destroyCancellation.Cancel();
-            destroyCancellation.Dispose();
+            try
+            {
+                if (!destroyCancellation.IsCancellationRequested)
+                {
+                    destroyCancellation.Cancel();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"AutoTaskControl OnDestroy 취소 처리 중 예외 발생: {ex.Message}");
+            }
+            finally
+            {
+                try
+                {
+                    destroyCancellation.Dispose();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"AutoTaskControl OnDestroy dispose 중 예외 발생: {ex.Message}");
+                }
+            }
         }
     }
     protected void StopAllTask()
     {
-        if (!destroyCancellation.IsCancellationRequested)
+        if (destroyCancellation != null && !destroyCancellation.IsCancellationRequested)
         {
-            destroyCancellation.Cancel();
+            try
+            {
+                destroyCancellation.Cancel();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"AutoTaskControl StopAllTask 취소 처리 중 예외 발생: {ex.Message}");
+            }
         }
     }
     protected void ResetCancellationToken()
     {
         if (destroyCancellation != null)
         {
-            if (!destroyCancellation.IsCancellationRequested)
+            try
             {
-                destroyCancellation.Cancel();
+                if (!destroyCancellation.IsCancellationRequested)
+                {
+                    destroyCancellation.Cancel();
+                }
             }
-            destroyCancellation.Dispose();
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"AutoTaskControl ResetCancellationToken 취소 처리 중 예외 발생: {ex.Message}");
+            }
+            finally
+            {
+                try
+                {
+                    destroyCancellation.Dispose();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"AutoTaskControl ResetCancellationToken dispose 중 예외 발생: {ex.Message}");
+                }
+            }
         }
         destroyCancellation = new CancellationTokenSource();
     }

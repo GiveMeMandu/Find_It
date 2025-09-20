@@ -69,7 +69,10 @@ namespace Manager
             if(_uiPageList.Contains(page))
             {
                 _uiPageList.Remove(page);
-                Destroy(page.gameObject);
+                if(page != null && page.gameObject != null)
+                {
+                    Destroy(page.gameObject);
+                }
             }
         }
         

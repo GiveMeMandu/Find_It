@@ -28,6 +28,7 @@ namespace UI.Effect
         [FoldoutGroup("체인 이펙트 설정")][LabelText("다른 이펙트들 체인 딜레이")][SerializeField] private float chainDelay = 0;
 
         private bool isClicked = false;
+        private bool isChainPlaying = false; // 체인 재생 중 플래그
         protected override void Start() {
             base.Start();
             if(chainType == ChainType.OnStart) PlayOtherVFX().Forget();
@@ -43,9 +44,12 @@ namespace UI.Effect
         protected override void OnVFXEnd()
         {
             base.OnVFXEnd();
-            if(chainFireType == ChainFireType.OnFuntionCall) PlayOtherVFX().Forget();
+            if(chainFireType == ChainFireType.OnFuntionCall && !isChainPlaying) 
+            {
+                PlayOtherVFX().Forget();
+            }
             if(chainFireType == ChainFireType.OnClick) {
-                if(isClicked)
+                if(isClicked && !isChainPlaying)
                 {
                     PlayOtherVFX().Forget();
                     isClicked = false;
@@ -61,10 +65,23 @@ namespace UI.Effect
         }
         private async UniTask PlayOtherVFX()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(chainStartDelay), cancellationToken: destroyCancellation.Token);
-            foreach(var otherVFX in otherVFXs) {
-                otherVFX.PlayVFXAppend();
-                await UniTask.Delay(TimeSpan.FromSeconds(chainDelay), cancellationToken: destroyCancellation.Token);
+            if(isChainPlaying) return; // 이미 체인이 재생 중이면 중단
+            isChainPlaying = true;
+            
+            try
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(chainStartDelay), cancellationToken: destroyCancellation.Token);
+                foreach(var otherVFX in otherVFXs) {
+                    if(otherVFX != null && otherVFX.gameObject != null) // null 체크 추가
+                    {
+                        otherVFX.PlayVFXAppend();
+                        await UniTask.Delay(TimeSpan.FromSeconds(chainDelay), cancellationToken: destroyCancellation.Token);
+                    }
+                }
+            }
+            finally
+            {
+                isChainPlaying = false; // 체인 재생 완료 후 플래그 해제
             }
         }
     }

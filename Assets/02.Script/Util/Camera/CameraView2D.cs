@@ -81,9 +81,9 @@ namespace Util.CameraSetting
             // Mouse 디바이스 강제 초기화
             try
             {
-                Debug.Log($"[Input System Debug] 초기화 시작");
-                Debug.Log($"[Input System Debug] InputSystem.settings: {InputSystem.settings}");
-                Debug.Log($"[Input System Debug] 현재 활성화된 디바이스 수: {InputSystem.devices.Count}");
+                // Debug.Log($"[Input System Debug] 초기화 시작");
+                // Debug.Log($"[Input System Debug] InputSystem.settings: {InputSystem.settings}");
+                // Debug.Log($"[Input System Debug] 현재 활성화된 디바이스 수: {InputSystem.devices.Count}");
                 
                 foreach (var device in InputSystem.devices)
                 {
@@ -109,9 +109,9 @@ namespace Util.CameraSetting
                 }
                 else
                 {
-                    Debug.Log($"Mouse.current 정상 작동: {Mouse.current.name}");
-                    Debug.Log($"Mouse.current.scroll: {Mouse.current.scroll}");
-                    Debug.Log($"Mouse.current.scroll.ReadValue(): {Mouse.current.scroll.ReadValue()}");
+                    // Debug.Log($"Mouse.current 정상 작동: {Mouse.current.name}");
+                    // Debug.Log($"Mouse.current.scroll: {Mouse.current.scroll}");
+                    // Debug.Log($"Mouse.current.scroll.ReadValue(): {Mouse.current.scroll.ReadValue()}");
                 }
             }
             catch (System.Exception e)
@@ -209,8 +209,8 @@ namespace Util.CameraSetting
                 // 0이 아닌 모든 값 감지
                 if (scroll != 0f)
                 {
-                    if (_showDebugInfo)
-                        Debug.Log($"[PlayerAction] 마우스 휠 감지: scroll={scroll}");
+                    // if (_showDebugInfo)
+                        // Debug.Log($"[PlayerAction] 마우스 휠 감지: scroll={scroll}");
                     
                     finalScroll = scroll;
                     finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
@@ -227,8 +227,8 @@ namespace Util.CameraSetting
                 
                 if (scroll != 0f)
                 {
-                    if (_showDebugInfo)
-                        Debug.Log($"[Mouse.current] 마우스 휠 감지: scroll={scroll}");
+                    // if (_showDebugInfo)
+                        // Debug.Log($"[Mouse.current] 마우스 휠 감지: scroll={scroll}");
                     
                     finalScroll = scroll;
                     finalMousePos = Mouse.current.position.ReadValue();
