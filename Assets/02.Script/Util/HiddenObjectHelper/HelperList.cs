@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using InGame;
 
 public class HelperList : MonoBehaviour
 {
@@ -40,6 +41,36 @@ public class HelperList : MonoBehaviour
         if (onEnableHelper == null)
         {
             onEnableHelper = gameObject.AddComponent<OnEnableHelper>();
+        }
+    }
+
+    [Button("스트레치 VFX 그룹 설정")]
+    public void SetStretchVFXGroupSetting()
+    {
+        StretchVFXGroupSetting stretchVFXGroupSetting = GetComponent<StretchVFXGroupSetting>();
+        if (stretchVFXGroupSetting == null)
+        {
+            stretchVFXGroupSetting = gameObject.AddComponent<StretchVFXGroupSetting>();
+        }
+    }
+
+    [Button("흔들림 VFX 그룹 설정")]
+    public void SetShakeVFXGroupSetting()
+    {
+        ShakeVFXGroupSetting shakeVFXGroupSetting = GetComponent<ShakeVFXGroupSetting>();
+        if (shakeVFXGroupSetting == null)
+        {
+            shakeVFXGroupSetting = gameObject.AddComponent<ShakeVFXGroupSetting>();
+        }
+    }
+
+    [Button("애니메이션 오브젝트 설정")]
+    public void SetAnimationObj()
+    {
+        AnimationObj animationObj = GetComponent<AnimationObj>();
+        if (animationObj == null)
+        {
+            animationObj = gameObject.AddComponent<AnimationObj>();
         }
     }
 
@@ -87,6 +118,39 @@ public class HelperList : MonoBehaviour
         UnityEditor.Undo.RecordObject(gameObject, "Remove OnEnableHelper");
         UnityEditor.Undo.DestroyObjectImmediate(onEnableHelper);
         onEnableHelper = null;
+#endif
+    }
+
+    // Remove StretchVFXGroupSetting if present
+    StretchVFXGroupSetting stretchVFXGroupSetting = GetComponent<StretchVFXGroupSetting>();
+    if (stretchVFXGroupSetting != null)
+    {
+#if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(gameObject, "Remove StretchVFXGroupSetting");
+        UnityEditor.Undo.DestroyObjectImmediate(stretchVFXGroupSetting);
+        stretchVFXGroupSetting = null;
+#endif
+    }
+
+    // Remove ShakeVFXGroupSetting if present
+    ShakeVFXGroupSetting shakeVFXGroupSetting = GetComponent<ShakeVFXGroupSetting>();
+    if (shakeVFXGroupSetting != null)
+    {
+#if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(gameObject, "Remove ShakeVFXGroupSetting");
+        UnityEditor.Undo.DestroyObjectImmediate(shakeVFXGroupSetting);
+        shakeVFXGroupSetting = null;
+#endif
+    }
+
+    // Remove AnimationObj if present
+    AnimationObj animationObj = GetComponent<AnimationObj>();
+    if (animationObj != null)
+    {
+#if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(gameObject, "Remove AnimationObj");
+        UnityEditor.Undo.DestroyObjectImmediate(animationObj);
+        animationObj = null;
 #endif
     }
     }
