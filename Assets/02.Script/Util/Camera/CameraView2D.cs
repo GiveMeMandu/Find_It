@@ -31,7 +31,7 @@ namespace Util.CameraSetting
         public bool _enablePan;
         [Header("Pan Speed")]
         [Tooltip("PC 마우스 드래그 이동 속도")]
-        public float pcPanSpeed = 1.0f;
+        public float pcCamPanSpeed = 5.0f;
         [Tooltip("모바일 터치 드래그 이동 속도")]
         public float mobilePanSpeed = 1.5f;
         public bool _infinitePan = false;
@@ -172,7 +172,7 @@ namespace Util.CameraSetting
                     
                     if (movement != Vector2.zero)
                     {
-                        var panDelta = movement * pcPanSpeed * Time.deltaTime * _camera.orthographicSize;
+                        var panDelta = movement * pcCamPanSpeed * Time.deltaTime * _camera.orthographicSize;
                         var newPosition = _camera.transform.position + new Vector3(panDelta.x, panDelta.y, 0);
                         _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
                     }
@@ -183,7 +183,7 @@ namespace Util.CameraSetting
             // 마우스 드래그로 이동
             if (_enablePan && Mouse.current.leftButton.isPressed)
             {
-                var mouseDelta = Mouse.current.delta.ReadValue() * (_camera.orthographicSize / _camera.pixelHeight) * pcPanSpeed;
+                var mouseDelta = Mouse.current.delta.ReadValue() * (_camera.orthographicSize / _camera.pixelHeight) * pcCamPanSpeed;
                 var newPosition = _camera.transform.position - new Vector3(mouseDelta.x, mouseDelta.y, 0);
                 _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
             }
