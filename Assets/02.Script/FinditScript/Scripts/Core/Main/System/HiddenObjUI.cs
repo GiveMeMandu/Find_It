@@ -13,6 +13,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
     public class HiddenObjUI : MonoBehaviour
     {
         [LabelText("찾았을 때 배경이 바뀔 이미지")] [SerializeField] private Sprite backGroundToChange;
+        [LabelText("실루엣 모드용 이미지")] public Image silhouetteImage;
         public Image backGround;
         public Image targetSprite;
         public Image FoundSprite;
@@ -83,6 +84,30 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             FoundSprite.gameObject.SetActive(true);
             if(backGround != null && backGroundToChange != null) {
                 backGround.sprite = backGroundToChange;
+            }
+            
+            // 실루엣 모드에서 찾았을 때 원본 이미지로 복원
+            if (silhouetteImage)
+            {
+                SetSilhouetteMode(false);
+            }
+        }
+        
+        /// <summary>
+        /// 실루엣 모드 활성화/비활성화
+        /// </summary>
+        public void SetSilhouetteMode(bool isActive)
+        {
+            if (silhouetteImage != null)
+            {
+                silhouetteImage.gameObject.SetActive(isActive);
+                targetSprite.gameObject.SetActive(!isActive);
+                
+                if (isActive && targetSprite.sprite != null)
+                {
+                    // 원본 스프라이트를 실루엣 이미지에 복사하고 검은색으로 변경
+                    silhouetteImage.sprite = targetSprite.sprite;
+                }
             }
         }
 

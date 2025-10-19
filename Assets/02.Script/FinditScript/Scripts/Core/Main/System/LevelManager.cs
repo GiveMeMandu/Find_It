@@ -28,6 +28,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public Dictionary<HiddenObj, bool> ObjectStates { get; private set; }
         public HiddenObj LastClickedObject { get; set; }
         public string BaseGroupName { get; private set; }
+        
+        // UI 연결을 위한 참조 추가
+        public HiddenObjUI AssociatedUI { get; set; }
 
         public HiddenObjGroup(List<HiddenObj> objects, string baseGroupName)
         {
@@ -103,13 +106,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public List<Transform> StarList = new List<Transform>();
 
-        [Header("Timer ViewModels")]
-        [Tooltip("List of TimerCountViewModel instances to start when the level begins (seconds)")]
-        public List<TimerCountViewModel> TimerViewModels;
-        public int defaultSeconds = 600; // 기본 타이머 시간 (초)
-        private int timersCompleted = 0;
-        private bool forcedEndTriggered = false;
-
         // 기존 CurrentLevelName, NextLevelName 제거하고 SceneBase에서 자동으로 가져오기
         public bool IsOverwriteGameEnd;
         public UnityEvent GameEndEvent;
@@ -124,6 +120,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         // 새로운 변수 추가
         private List<HiddenObj> normalHiddenObjs = new List<HiddenObj>();
+        
+        // HiddenObjUI 관리를 위한 리스트 추가
+        private List<HiddenObjUI> allHiddenObjUIs = new List<HiddenObjUI>();
 
         public static void PlayItemFx(AudioClip clip)
         {
@@ -177,69 +176,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
             StartTime = DateTime.Now;
 
-            // Start timers for all assigned TimerCountViewModel instances (default 10 minutes = 600 seconds)
-            if (TimerViewModels != null)
-            {
-                foreach (var timerVm in TimerViewModels)
-                {
-                    if (timerVm == null) continue;
-                    // Subscribe to completion event
-                    timerVm.OnTimerComplete += OnSingleTimerComplete;
-                    defaultSeconds = Global.StageTimer;
-                    timerVm.Initialize(defaultSeconds);
-                }
-            }
-
             if (Canvas != null)
             {
                 Canvas.SetActive(true);
             }
             OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnSingleTimerComplete()
-        {
-            // Fire-and-forget the async handler
-            _ = HandleTimerCompletionAsync();
-        }
-
-        private async UniTaskVoid HandleTimerCompletionAsync()
-        {
-            timersCompleted++;
-
-            Debug.Log($"[LevelManager] Timer completed ({timersCompleted}/{(TimerViewModels?.Count ?? 0)})");
-
-            if (forcedEndTriggered) return;
-
-            if (TimerViewModels != null && timersCompleted >= TimerViewModels.Count)
+            if(FindAnyObjectByType<ModeManager>() != null)
             {
-                forcedEndTriggered = true;
-                Debug.Log("[LevelManager] All timers finished — forcing game end sequence.");
-
-                // Run any registered async end tasks first
-                if (OnEndEvent.Count > 0)
-                {
-                    foreach (var func in OnEndEvent)
-                    {
-                        await func();
-                    }
-                }
-
-                GameEndEvent?.Invoke();
-                DefaultGameEndFunc();
-            }
-        }
-
-        private void OnDestroy()
-        {
-            // Unsubscribe from timer events to avoid leaks
-            if (TimerViewModels != null)
-            {
-                foreach (var timerVm in TimerViewModels)
-                {
-                    if (timerVm == null) continue;
-                    timerVm.OnTimerComplete -= OnSingleTimerComplete;
-                }
+                FindAnyObjectByType<ModeManager>().InitializeMode();
             }
         }
 
@@ -380,7 +324,20 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (CurrentScrollView != null)
             {
                 CurrentScrollView.Initialize();
-                CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+                var createdUIs = CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+                
+                // 생성된 UI들을 LevelManager에서 관리
+                allHiddenObjUIs.Clear();
+                allHiddenObjUIs.AddRange(createdUIs);
+                
+                // 그룹과 UI 연결 (Dictionary의 순서와 UI 리스트의 순서가 일치)
+                var groupList = TargetObjDic.Values.ToList();
+                for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
+                {
+                    groupList[i].AssociatedUI = createdUIs[i];
+                }
+                
+                Debug.Log($"[LevelManager] ScrollView UI 업데이트 완료: {allHiddenObjUIs.Count}개의 HiddenObjUI 생성 및 그룹 연결");
             }
         }
 
@@ -696,6 +653,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             return InGameObjectNameFilter.GetBaseGroupName(objName);
         }
 
+        /// <summary>
+        /// TargetImagePrefab으로 생성된 모든 HiddenObjUI 컴포넌트를 반환합니다.
+        /// ScrollViewTrigger에서 자동으로 관리되므로 FindObject를 사용하지 않습니다.
+        /// </summary>
+        public List<HiddenObjUI> GetAllHiddenObjUIs()
+        {
+            return allHiddenObjUIs;
+        }
         // 디버깅을 위한 게임 상태 확인 메서드
         public void DebugGameState()
         {
