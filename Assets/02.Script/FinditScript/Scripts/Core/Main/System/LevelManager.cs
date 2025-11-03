@@ -181,9 +181,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Canvas.SetActive(true);
             }
             OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
-            if(FindAnyObjectByType<ModeManager>() != null)
+            // 모드 초기화: ModeSelector가 있으면 선택된 모드를 초기화하고,
+            // 없으면 기존 동작대로 씬의 아무 ModeManager 하나를 초기화합니다.
+            var selector = FindAnyObjectByType<ModeSelector>();
+            if (selector != null)
             {
-                FindAnyObjectByType<ModeManager>().InitializeMode();
+                selector.InitializeSelectedMode();
             }
         }
 
