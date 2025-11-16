@@ -34,7 +34,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             _isHiding = !_isHiding;
         }
 
-        public void UpdateScrollView(
+        public List<HiddenObjUI> UpdateScrollView(
             Dictionary<Guid, HiddenObjGroup> objDic,
             GameObject prefab, 
             Action<Guid> targetClick, 
@@ -45,6 +45,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 Destroy(obj.gameObject);
             }
+
+            var createdUIs = new List<HiddenObjUI>();
 
             foreach (var pair in objDic)
             {
@@ -72,9 +74,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 // 클릭 이벤트 설정
                 var guid = pair.Key;
                 imgObj.OnUIClickEvent.AddListener(() => targetClick(guid));
+                
+                // 생성된 UI를 리스트에 추가
+                createdUIs.Add(imgObj);
             }
 
             UIClickAction += uiClick;
+            return createdUIs;
         }
 
         private void DisplayTooltips(List<MultiLanguageTextListModel> multiLanguageTextList, TooltipsType tooltipsType,
