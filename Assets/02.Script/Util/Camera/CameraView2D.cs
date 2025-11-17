@@ -547,20 +547,36 @@ namespace Util.CameraSetting
             var orthographicSize = _camera.orthographicSize;
             var camWidth = orthographicSize * _camera.aspect;
 
-            var position = backgroundSprite.transform.position;
-            var bounds = backgroundSprite.bounds;
+            float minX, minY, maxX, maxY;
 
-            var margin = 0.01f;
-            _panMinX = position.x - bounds.size.x / 2f + margin;
-            _panMinY = position.y - bounds.size.y / 2f + margin;
-            _panMaxX = position.x + bounds.size.x / 2f - margin;
-            _panMaxY = position.y + bounds.size.y / 2f - margin;
+            // _autoPanBoundary가 false이면 수동으로 설정된 경계값 사용 (FogModeManager 등에서 설정)
+            if (!_autoPanBoundary)
+            {
+                // 수동으로 설정된 _panMinX, _panMaxX, _panMinY, _panMaxY 값 사용
+                minX = _panMinX + camWidth;
+                minY = _panMinY + orthographicSize;
+                maxX = _panMaxX - camWidth;
+                maxY = _panMaxY - orthographicSize;
+            }
+            else
+            {
+                // _autoPanBoundary가 true이면 backgroundSprite 기준으로 자동 계산
+                var position = backgroundSprite.transform.position;
+                var bounds = backgroundSprite.bounds;
 
-            var minX = _panMinX + camWidth;
-            var minY = _panMinY + orthographicSize;
-            var maxX = _panMaxX - camWidth;
-            var maxY = _panMaxY - orthographicSize;
+                var margin = 0.01f;
+                _panMinX = position.x - bounds.size.x / 2f + margin;
+                _panMinY = position.y - bounds.size.y / 2f + margin;
+                _panMaxX = position.x + bounds.size.x / 2f - margin;
+                _panMaxY = position.y + bounds.size.y / 2f - margin;
 
+                minX = _panMinX + camWidth;
+                minY = _panMinY + orthographicSize;
+                maxX = _panMaxX - camWidth;
+                maxY = _panMaxY - orthographicSize;
+            }
+
+            // 경계값이 역전된 경우 중앙으로 설정
             if (minX > maxX)
             {
                 var center = (_panMinX + _panMaxX) * 0.5f;

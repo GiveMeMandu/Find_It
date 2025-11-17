@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UI;
-using SnowRabbit.Helper;
+using Helper;
 
 namespace DeskCat.FindIt.Scripts.Editor
 {

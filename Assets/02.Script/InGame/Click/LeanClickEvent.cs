@@ -18,6 +18,23 @@ public class LeanClickEvent : LeanSelectableByFinger
 	private int _clickCount = 0;
 	public int _maxClickCount = -1;
 
+	private void Awake()
+	{
+		// UnityEvent 초기화 (런타임에 AddComponent로 추가된 경우 대비)
+		if (OnMouseDownEvent == null)
+		{
+			OnMouseDownEvent = new UnityEvent();
+		}
+		if (OnMouseUpEvent == null)
+		{
+			OnMouseUpEvent = new UnityEvent();
+		}
+		if (OnClickEvent == null)
+		{
+			OnClickEvent = new UnityEvent();
+		}
+	}
+
 	protected override void OnEnable()
 	{
 		base.OnEnable();
@@ -53,6 +70,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 		// InputManager의 isEnabled 상태 확인
 		if (Global.InputManager != null && !IsInputEnabled()) return;
 
+		// UI가 위에 있으면 클릭 차단
+		if (IsUIBlockingClick(finger.ScreenPosition)) return;
+
 		if (IsFingerOverThis(finger) == false) return;
 
 		// Hidden object priority check
@@ -75,6 +95,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 		// InputManager의 isEnabled 상태 확인
 		if (Global.InputManager != null && !IsInputEnabled()) return;
 
+		// UI가 위에 있으면 클릭 차단
+		if (IsUIBlockingClick(finger.ScreenPosition)) return;
+
 		if (IsFingerOverThis(finger) == false) return;
 
 		// Hidden object priority check
@@ -94,6 +117,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 		// InputManager의 isEnabled 상태 확인
 		if (Global.InputManager != null && !IsInputEnabled()) return;
 
+		// UI가 위에 있으면 클릭 차단
+		if (IsUIBlockingClick(finger.ScreenPosition)) return;
+
 		if (IsFingerOverThis(finger) == false) return;
 
 		// Prevent tap if max reached
@@ -106,6 +132,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 		if (!CheckHierarchyPriority(finger.ScreenPosition)) return;
 
 		// Fire click event
+		Debug.Log($"[LeanClickEvent] {gameObject.name}: About to invoke OnClickEvent. OnClickEvent is null: {OnClickEvent == null}, Listener count: {(OnClickEvent != null ? OnClickEvent.GetPersistentEventCount() : 0)}");
 		OnClickEvent?.Invoke();
 		_clickCount++;
 
@@ -138,6 +165,37 @@ public class LeanClickEvent : LeanSelectableByFinger
 	private bool IsInputEnabled()
 	{
 		return Global.InputManager != null && Global.InputManager.isEnabled;
+	}
+
+	/// <summary>
+	/// UI가 현재 위치를 차단하고 있는지 확인 (현재 오브젝트가 아닌 다른 UI)
+	/// </summary>
+	private bool IsUIBlockingClick(Vector2 screenPosition)
+	{
+		if (EventSystem.current != null)
+		{
+			var ped = new PointerEventData(EventSystem.current)
+			{
+				position = screenPosition
+			};
+
+			var raycastResults = new List<RaycastResult>();
+			EventSystem.current.RaycastAll(ped, raycastResults);
+
+			// UI 결과가 있고, 첫 번째 히트가 현재 오브젝트가 아니면 UI가 차단하고 있음
+			if (raycastResults.Count > 0)
+			{
+				// 첫 번째 UI 요소가 현재 오브젝트 또는 자식이 아니면 차단
+				var firstHit = raycastResults[0];
+				if (firstHit.gameObject != gameObject && !firstHit.gameObject.transform.IsChildOf(transform))
+				{
+					Debug.Log($"[LeanClickEvent] {gameObject.name}: Blocked by UI {firstHit.gameObject.name}");
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/// <summary>
@@ -196,18 +254,47 @@ public class LeanClickEvent : LeanSelectableByFinger
 	}
 
 	/// <summary>
-	/// HiddenObj 우선순위 검사: HiddenObj가 있고 찾아지지 않은 상태면 클릭을 막음
-	/// 단, 현재 오브젝트가 HiddenObj라면 우선순위 검사 무시
+	/// HiddenObj 우선순위 검사: 
+	/// 1. OverHiddenObjectLayer 객체는 HiddenObj보다 우선순위가 높음
+	/// 2. HiddenObj가 있고 찾아지지 않은 상태면 일반 객체의 클릭을 막음
 	/// </summary>
 	private bool CheckHiddenObjectPriority(Vector2 screenPosition)
 	{
-		// HiddenObject 레이어만 체크 (Layer 8)
-		int hiddenObjectLayerMask = 1 << 8;
-
 		Camera cam = Camera.main;
 		if (cam == null) return true;
 
 		Vector3 worldPoint = cam.ScreenToWorldPoint(screenPosition);
+		
+		// 현재 오브젝트가 HiddenObj 컴포넌트를 가지고 있는지 확인
+		bool isCurrentHiddenObj = GetComponent<HiddenObj>() != null;
+		
+		// OverHiddenObjectLayer 체크 - 이 레이어는 HiddenObj보다 우선순위가 높음
+		int overHiddenObjectLayerMask = 1 << Helper.LayerManager.OverHiddenObjectLayer;
+		Collider2D overHiddenObjHit = Physics2D.OverlapPoint(worldPoint, overHiddenObjectLayerMask);
+		
+		if (overHiddenObjHit != null)
+		{
+			// 현재 오브젝트가 OverHiddenObjectLayer면 통과
+			if (gameObject.layer == Helper.LayerManager.OverHiddenObjectLayer)
+			{
+				return true;
+			}
+			// 현재 오브젝트가 HiddenObj면 OverHiddenObjectLayer에 의해 차단됨
+			else if (isCurrentHiddenObj)
+			{
+				Debug.Log($"OverHiddenObject {overHiddenObjHit.gameObject.name} has priority, blocking HiddenObj {gameObject.name}");
+				return false;
+			}
+		}
+
+		// 현재 오브젝트가 HiddenObj라면 일반 객체보다 우선순위가 높음
+		if (isCurrentHiddenObj)
+		{
+			return true;
+		}
+
+		// HiddenObject 레이어 체크
+		int hiddenObjectLayerMask = 1 << Helper.LayerManager.HiddenObjectLayer;
 		Collider2D hiddenObjHit = Physics2D.OverlapPoint(worldPoint, hiddenObjectLayerMask);
 
 		if (hiddenObjHit != null)
@@ -216,7 +303,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 			if (hiddenObj != null && !hiddenObj.IsFound)
 			{
 				Debug.Log($"HiddenObj {hiddenObj.gameObject.name} has priority, blocking other clicks");
-				return false; // HiddenObj가 우선순위를 가짐
+				return false; // HiddenObj가 일반 객체보다 우선순위를 가짐
 			}
 		}
 

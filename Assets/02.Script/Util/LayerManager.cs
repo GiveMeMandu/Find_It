@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SnowRabbit.Helper
+namespace Helper
 {
     public static class LayerManager
     {
@@ -10,8 +10,10 @@ namespace SnowRabbit.Helper
         public static int TransparentFXLayer = 1;
         public static int IgnoreRaycastLayer = 2;
         public static int HiddenObjectLayer = 3;
+        public static int OverHiddenObjectLayer = 7;
         public static int WaterLayer = 4;
         public static int UILayer = 5;
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init()
         {
@@ -21,6 +23,7 @@ namespace SnowRabbit.Helper
             HiddenObjectLayer = 3;
             WaterLayer = 4;
             UILayer = 5;
+            OverHiddenObjectLayer = 7;
         }
 
         /// <summary>

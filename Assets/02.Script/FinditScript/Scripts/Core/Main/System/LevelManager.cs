@@ -205,9 +205,26 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     if (child.CompareTag("Hidden"))
                     {
                         // HiddenObj 컴포넌트가 없다면 추가
-                        if (!child.TryGetComponent<HiddenObj>(out HiddenObj hiddenObj))
+                        HiddenObj hiddenObj = null;
+                        if (!child.TryGetComponent<HiddenObj>(out hiddenObj))
                         {
-                            hiddenObj = child.gameObject.AddComponent<HiddenObj>();
+                            try
+                            {
+                                hiddenObj = child.gameObject.AddComponent<HiddenObj>();
+                                Debug.Log($"[LevelManager] Successfully added HiddenObj to {child.name}");
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.LogError($"[LevelManager] Failed to add HiddenObj to {child.name}: {e.Message}\n{e.StackTrace}");
+                                continue; // 이 오브젝트는 건너뛰고 다음으로
+                            }
+                        }
+
+                        // hiddenObj가 null이면 건너뛰기
+                        if (hiddenObj == null)
+                        {
+                            Debug.LogError($"[LevelManager] hiddenObj is null for {child.name}, skipping...");
+                            continue;
                         }
 
                         // hideWhenFound 클래스가 있다면 여기의 설정을 HiddenObj 에 덮어쓰기

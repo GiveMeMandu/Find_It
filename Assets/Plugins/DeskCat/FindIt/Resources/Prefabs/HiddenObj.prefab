@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8543626495462253304}
   - component: {fileID: 8543626495462253307}
   - component: {fileID: 8543626495462253309}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HiddenObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,6 +55,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -76,6 +78,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -103,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hiddenObjFoundType: 0
-  UISprite: {fileID: 0}
+  UISprite: {fileID: 21300000, guid: 4261286f80a786b47adbe1d5ac8b090b, type: 3}
   uiChangeHelper: {fileID: 0}
   HideOnStart: 0
   EnableTooltip: 0
@@ -116,7 +119,9 @@ MonoBehaviour:
   BgAnimationSpriteRenderer: {fileID: 0}
   HideWhenFound: 1
   PlaySoundWhenFound: 1
+  clickPriority: 0
   AudioWhenClick: {fileID: 0}
+  whenFoundEventHelper: {fileID: 0}
   IsFound: 0
   baseInfoBool: 1
   tooltipsBool: 1
