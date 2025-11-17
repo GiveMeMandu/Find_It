@@ -20,11 +20,13 @@ namespace Manager
             EPS = "0";
             dailyRewardData = new DailyRewardData();
             spinRewardNames = new List<string>();
+            collectionData = new CollectionData();
             
             // 아이템 데이터 초기화
             itemData = new List<ItemData>();
         }
         // public HashSet<int> CollectedItem = new();
+        public CollectionData collectionData;
         public List<SceneData> sceneData;
         public SceneName curScene;
         public List<UpgradeData> recipeUpgradeData;

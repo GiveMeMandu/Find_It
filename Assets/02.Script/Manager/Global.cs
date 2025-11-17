@@ -30,6 +30,7 @@ namespace Manager
         // public static SceneBase CurrentScene { get; private set; }
         // public static LocalizationManager LocalizationManager { get; private set; }
         // public static NewDialogueManager DialogueManager { get; private set; }
+        public static CollectionManager CollectionManager { get; set; }
 
         //* SO 데이터 관련 매니저
         public static DailyCheckManager DailyCheckManager { get; set; }
@@ -209,6 +210,13 @@ namespace Manager
             catch (Exception e)
             {
                 Debug.LogError($"Failed to load MainMenuSelectedManager: {e.Message}");
+            }
+
+            if (CollectionManager == null)
+            {
+                CollectionManager = Instantiate(Resources.Load<CollectionManager>(prefixManager + nameof(CollectionManager)), transform);
+                CollectionManager.name = nameof(CollectionManager);
+                Debug.Log("CollectionManager loaded successfully");
             }
             
             Debug.Log("LoadManagerPrefabs completed");

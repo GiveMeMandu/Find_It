@@ -8,9 +8,9 @@ namespace UI
     public class PageViewModel : BaseViewModel
     {
         [Binding]
-        public void ClosePage()
+        public virtual void ClosePage()
         {
-            Global.UIManager.ClosePage(this);
+            Global.UIManager.ClosePage();
         }
         [Binding]
         public void OnClickShopButton()

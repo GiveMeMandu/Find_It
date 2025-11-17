@@ -71,6 +71,12 @@ namespace UI.Page
             main.OnClickMapButton();
         }
         [Binding]
+        public void OnClickCollectionButton()
+        {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
+            Global.UIManager.OpenPage<CollectionPage>();
+        }
+        [Binding]
         public void OnClickMainMenuButton()
         {
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
