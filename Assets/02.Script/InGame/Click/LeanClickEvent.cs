@@ -132,11 +132,11 @@ public class LeanClickEvent : LeanSelectableByFinger
 		if (!CheckHierarchyPriority(finger.ScreenPosition)) return;
 
 		// Fire click event
-		Debug.Log($"[LeanClickEvent] {gameObject.name}: About to invoke OnClickEvent. OnClickEvent is null: {OnClickEvent == null}, Listener count: {(OnClickEvent != null ? OnClickEvent.GetPersistentEventCount() : 0)}");
+		// Debug.Log($"[LeanClickEvent] {gameObject.name}: About to invoke OnClickEvent. OnClickEvent is null: {OnClickEvent == null}, Listener count: {(OnClickEvent != null ? OnClickEvent.GetPersistentEventCount() : 0)}");
 		OnClickEvent?.Invoke();
 		_clickCount++;
 
-		Debug.Log("LeanClickEvent OnFingerTap " + gameObject.name + " _clickCount: " + _clickCount);
+		// Debug.Log("LeanClickEvent OnFingerTap " + gameObject.name + " _clickCount: " + _clickCount);
 	}
 
 	public void IsEnable(bool enable)
@@ -189,7 +189,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 				var firstHit = raycastResults[0];
 				if (firstHit.gameObject != gameObject && !firstHit.gameObject.transform.IsChildOf(transform))
 				{
-					Debug.Log($"[LeanClickEvent] {gameObject.name}: Blocked by UI {firstHit.gameObject.name}");
+					// Debug.Log($"[LeanClickEvent] {gameObject.name}: Blocked by UI {firstHit.gameObject.name}");
 					return true;
 				}
 			}
@@ -403,11 +403,11 @@ public class LeanClickEvent : LeanSelectableByFinger
 		
 		if (!isTopMost)
 		{
-			Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
+			// Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
 		}
 		else
 		{
-			Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
+			// Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
 		}
 		
 		return isTopMost;

@@ -82,12 +82,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public void HitHiddenObject()
         {
-            Debug.Log($"HitHiddenObject called for {gameObject.name}, IsFound: {IsFound}");
+            // Debug.Log($"HitHiddenObject called for {gameObject.name}, IsFound: {IsFound}");
             
             // 이미 찾아진 경우 무시
             if (IsFound)
             {
-                Debug.Log($"{gameObject.name} is already found, ignoring click");
+                // Debug.Log($"{gameObject.name} is already found, ignoring click");
                 return;
             }
             
@@ -178,7 +178,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (leanClickEvent != null && leanClickEvent.OnClickEvent != null)
             {
                 leanClickEvent.OnClickEvent.AddListener(HitHiddenObject);
-                Debug.Log($"[HiddenObj.Start] {gameObject.name}: OnClickEvent listener added successfully");
+                // Debug.Log($"[HiddenObj.Start] {gameObject.name}: OnClickEvent listener added successfully");
             }
             else
             {
