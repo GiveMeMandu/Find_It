@@ -36,6 +36,19 @@ namespace UI.Page
             }
         }
 
+        private bool _missionGroupEnabled;
+
+        [Binding]
+        public bool MissionGroupEnabled
+        {
+            get => _missionGroupEnabled;
+            set
+            {
+                _missionGroupEnabled = value;
+                OnPropertyChanged(nameof(MissionGroupEnabled));
+            }
+        }
+
         private bool _showFoundObjToolTip;
 
         [Binding]
@@ -95,6 +108,7 @@ namespace UI.Page
             ShowFoundObjToolTip = false;
             ShowSkipButton = false;
             ShowMissionButton = false;
+            MissionGroupEnabled = true;
             _currentFoundObj = null;
         }
 
@@ -108,7 +122,7 @@ namespace UI.Page
             if (ItemSetManager.Instance != null)
             {
                 ItemSetManager.Instance.OnSetCompleted += OnSetCompleted;
-                // 이미 완료된 미션이 있다면 버튼 활성화
+                // 이미 완료된 미션이 있다면 버튼 활성화 및 미션 그룹 활성화
                 if (ItemSetManager.Instance.FoundSetsCount > 0)
                 {
                     ShowMissionButton = true;

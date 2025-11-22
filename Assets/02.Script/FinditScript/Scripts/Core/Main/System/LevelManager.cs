@@ -123,6 +123,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         
         // HiddenObjUI 관리를 위한 리스트 추가
         private List<HiddenObjUI> allHiddenObjUIs = new List<HiddenObjUI>();
+        
+        // ModeSelector 캐싱
+        private ModeSelector modeSelector;
 
         public static void PlayItemFx(AudioClip clip)
         {
@@ -183,10 +186,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
             // 모드 초기화: ModeSelector가 있으면 선택된 모드를 초기화하고,
             // 없으면 기존 동작대로 씬의 아무 ModeManager 하나를 초기화합니다.
-            var selector = FindAnyObjectByType<ModeSelector>();
-            if (selector != null)
+            modeSelector = FindAnyObjectByType<ModeSelector>();
+            if (modeSelector != null)
             {
-                selector.InitializeSelectedMode();
+                modeSelector.InitializeSelectedMode();
             }
         }
 
@@ -535,10 +538,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             Debug.Log($"[LevelManager] DetectGameEnd - Remaining: {remainingObjects}, Total: {totalObjects}, Found: {foundObjects}");
             Debug.Log($"[LevelManager] ItemSetManager - Found: {ItemSetManager.Instance?.FoundSetsCount}, Total: {ItemSetManager.Instance?.TotalSetsCount}");
 
-            // 모든 숨겨진 오브젝트를 찾았고, ItemSetManager의 모든 세트도 찾았을 때만 게임 종료
-            if (remainingObjects <= 0 && ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount)
+            // DARK 모드인 경우 미션(ItemSet) 검사 제외
+            bool isDarkMode = modeSelector != null && modeSelector.selectedMode == ModeManager.GameMode.DARK;
+            bool itemSetConditionMet = isDarkMode || (ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount);
+
+            // 모든 숨겨진 오브젝트를 찾았고, (DARK 모드가 아니라면) ItemSetManager의 모든 세트도 찾았을 때만 게임 종료
+            if (remainingObjects <= 0 && itemSetConditionMet)
             {
-                Debug.Log("[LevelManager] Game End condition met! Starting end sequence...");
+                Debug.Log($"[LevelManager] Game End condition met! (DARK 모드: {isDarkMode}) Starting end sequence...");
 
                 if (IsOverwriteGameEnd)
                 {
@@ -572,7 +579,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
             else
             {
-                Debug.Log($"[LevelManager] Game End condition not met - Remaining objects: {remainingObjects}, ItemSet condition: {ItemSetManager.Instance?.FoundSetsCount == ItemSetManager.Instance?.TotalSetsCount}");
+                Debug.Log($"[LevelManager] Game End condition not met - Remaining objects: {remainingObjects}, ItemSet condition: {itemSetConditionMet} (DARK 모드: {isDarkMode})");
             }
         }
 
