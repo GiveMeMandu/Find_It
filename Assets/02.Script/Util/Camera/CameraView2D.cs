@@ -205,7 +205,6 @@ namespace Util.CameraSetting
             {
                 var scrollValue = _mouseWheelAction.ReadValue<Vector2>();
                 var scroll = scrollValue.y;
-                
                 // 0이 아닌 모든 값 감지
                 if (scroll != 0f)
                 {

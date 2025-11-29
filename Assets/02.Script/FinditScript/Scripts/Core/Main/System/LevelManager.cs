@@ -359,7 +359,35 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 {
                     groupList[i].AssociatedUI = createdUIs[i];
                 }
-                
+
+                // 시각적 정렬: 이미 모두 찾은(완료된) 그룹들의 UI는 리스트의 마지막으로 보냅니다.
+                // contentContainer가 존재할 때만 순서를 변경합니다.
+                if (CurrentScrollView.contentContainer != null)
+                {
+                    // pair list 생성 (group, ui)
+                    var pairs = new List<(HiddenObjGroup group, HiddenObjUI ui)>();
+                    for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
+                    {
+                        pairs.Add((groupList[i], createdUIs[i]));
+                    }
+
+                    // 완성 여부 기준으로 정렬: 미완성(앞), 완성(뒤). OrderBy는 안정 정렬이므로 기존 순서 보존.
+                    var sorted = pairs.OrderBy(p => p.group.FoundCount >= p.group.TotalCount ? 1 : 0).ToList();
+
+                    // sibling index를 재설정하여 contentContainer 내의 시각적 순서를 변경
+                    for (int i = 0; i < sorted.Count; i++)
+                    {
+                        var uiTransform = sorted[i].ui != null ? sorted[i].ui.transform : null;
+                        if (uiTransform != null)
+                        {
+                            uiTransform.SetSiblingIndex(i);
+                        }
+                    }
+
+                    // LevelManager에서 관리하는 UI 리스트도 새 순서로 갱신
+                    allHiddenObjUIs = sorted.Select(p => p.ui).ToList();
+                }
+
                 Debug.Log($"[LevelManager] ScrollView UI 업데이트 완료: {allHiddenObjUIs.Count}개의 HiddenObjUI 생성 및 그룹 연결");
             }
         }
@@ -500,9 +528,49 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     clickedObj.whenFoundEventHelper.onFoundEvent?.Invoke();
                 }
 
-                // CurrentScrollView null 체크
+                // CurrentScrollView null 체크 및 UI 갱신
                 if (CurrentScrollView != null)
-                    CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+                {
+                    var createdUIs = CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+
+                    // LevelManager에서 관리하는 UI 리스트 갱신
+                    allHiddenObjUIs.Clear();
+                    allHiddenObjUIs.AddRange(createdUIs);
+
+                    // 그룹과 UI 연결 (기존 순서 기준)
+                    var groupList = TargetObjDic.Values.ToList();
+                    for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
+                    {
+                        groupList[i].AssociatedUI = createdUIs[i];
+                    }
+
+                    // 시각적 정렬: 이미 모두 찾은(완료된) 그룹들의 UI는 리스트의 마지막으로 보냅니다.
+                    if (CurrentScrollView.contentContainer != null)
+                    {
+                        var pairs = new List<(HiddenObjGroup group, HiddenObjUI ui)>();
+                        for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
+                        {
+                            pairs.Add((groupList[i], createdUIs[i]));
+                        }
+
+                        var sorted = pairs.OrderBy(p => p.group.FoundCount >= p.group.TotalCount ? 1 : 0).ToList();
+
+                        for (int i = 0; i < sorted.Count; i++)
+                        {
+                            var uiTransform = sorted[i].ui != null ? sorted[i].ui.transform : null;
+                            if (uiTransform != null)
+                            {
+                                uiTransform.SetSiblingIndex(i);
+                            }
+
+                            // 정렬 후에도 그룹-UI 연결을 최신화
+                            sorted[i].group.AssociatedUI = sorted[i].ui;
+                        }
+
+                        // LevelManager에서 관리하는 UI 리스트도 새 순서로 갱신
+                        allHiddenObjUIs = sorted.Select(p => p.ui).ToList();
+                    }
+                }
 
                 OnFoundObj?.Invoke(this, clickedObj);
 
@@ -757,9 +825,49 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
                 Debug.Log($"[LevelManager] 테스트로 찾은 오브젝트: {selectedObj.name} (그룹: {group.BaseGroupName})");
 
-                // UI 업데이트
+                // UI 업데이트 및 정렬
                 if (CurrentScrollView != null)
-                    CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+                {
+                    var createdUIs = CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+
+                    // LevelManager에서 관리하는 UI 리스트 갱신
+                    allHiddenObjUIs.Clear();
+                    allHiddenObjUIs.AddRange(createdUIs);
+
+                    // 그룹과 UI 연결 (기존 순서 기준)
+                    var groupList = TargetObjDic.Values.ToList();
+                    for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
+                    {
+                        groupList[i].AssociatedUI = createdUIs[i];
+                    }
+
+                    // 시각적 정렬: 이미 모두 찾은(완료된) 그룹들의 UI는 리스트의 마지막으로 보냅니다.
+                    if (CurrentScrollView.contentContainer != null)
+                    {
+                        var pairs = new List<(HiddenObjGroup group, HiddenObjUI ui)>();
+                        for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
+                        {
+                            pairs.Add((groupList[i], createdUIs[i]));
+                        }
+
+                        var sorted = pairs.OrderBy(p => p.group.FoundCount >= p.group.TotalCount ? 1 : 0).ToList();
+
+                        for (int i = 0; i < sorted.Count; i++)
+                        {
+                            var uiTransform = sorted[i].ui != null ? sorted[i].ui.transform : null;
+                            if (uiTransform != null)
+                            {
+                                uiTransform.SetSiblingIndex(i);
+                            }
+
+                            // 정렬 후에도 그룹-UI 연결을 최신화
+                            sorted[i].group.AssociatedUI = sorted[i].ui;
+                        }
+
+                        // LevelManager에서 관리하는 UI 리스트도 새 순서로 갱신
+                        allHiddenObjUIs = sorted.Select(p => p.ui).ToList();
+                    }
+                }
 
                 // 사운드 재생
                 if (group.Representative.PlaySoundWhenFound && FoundFx != null)
