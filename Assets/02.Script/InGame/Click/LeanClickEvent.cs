@@ -343,6 +343,20 @@ public class LeanClickEvent : LeanSelectableByFinger
 		// 하이어라키 순서로 정렬 (더 깊은 계층이 우선, 같은 계층에서는 부모의 sibling index가 클수록 우선)
 		overlappingClickEvents.Sort((a, b) => 
 		{
+			// Prioritize OverHiddenObjectLayer first, then unfound HiddenObj, then existing hierarchy rules
+			int layerA = a.gameObject.layer;
+			int layerB = b.gameObject.layer;
+			if (layerA == Helper.LayerManager.OverHiddenObjectLayer && layerB != Helper.LayerManager.OverHiddenObjectLayer) return -1;
+			if (layerB == Helper.LayerManager.OverHiddenObjectLayer && layerA != Helper.LayerManager.OverHiddenObjectLayer) return 1;
+
+			// HiddenObj priority: unfound HiddenObj should beat normal objects
+			var hiddenAComp = a.GetComponent<HiddenObj>();
+			var hiddenBComp = b.GetComponent<HiddenObj>();
+			bool aHiddenPriority = hiddenAComp != null && !hiddenAComp.IsFound;
+			bool bHiddenPriority = hiddenBComp != null && !hiddenBComp.IsFound;
+			if (aHiddenPriority && !bHiddenPriority) return -1;
+			if (bHiddenPriority && !aHiddenPriority) return 1;
+
 			// 먼저 계층 깊이를 비교 (더 깊은 계층이 우선)
 			int depthA = GetHierarchyDepth(a.transform);
 			int depthB = GetHierarchyDepth(b.transform);
@@ -388,7 +402,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 		});
 		
 		// 디버그 로그: 겹치는 모든 객체와 우선순위 표시
-		// Debug.Log($"[{gameObject.name}] CheckHierarchyPriority - Overlapping objects at touch position:");
+		Debug.Log($"[{gameObject.name}] CheckHierarchyPriority - Overlapping objects at touch position:");
 		for (int i = 0; i < overlappingClickEvents.Count; i++)
 		{
 			var obj = overlappingClickEvents[i];
@@ -403,11 +417,11 @@ public class LeanClickEvent : LeanSelectableByFinger
 		
 		if (!isTopMost)
 		{
-			// Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
+			Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
 		}
 		else
 		{
-			// Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
+			Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
 		}
 		
 		return isTopMost;

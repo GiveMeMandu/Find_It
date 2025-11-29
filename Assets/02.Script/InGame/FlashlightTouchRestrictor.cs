@@ -21,32 +21,87 @@ public class FlashlightTouchRestrictor : MonoBehaviour
     public UnityEvent OnDragEnd;
 
     private bool wasDragging = false;
+    private int framesSinceEnable = 0;
 
     private void Awake()
     {
+        Debug.Log("[FlashlightTouchRestrictor] Awake");
+        // Awake -> 사용 가능한 초기화는 최소화합니다.
+        // 주요 초기화는 Start/OnEnable에서 수행하여 LeanTouch와의 초기화 순서 문제를 피합니다.
+    }
+
+    private void Start()
+    {
+        Debug.Log("[FlashlightTouchRestrictor] Start");
         // LeanDragTranslate 컴포넌트 자동 찾기
         if (leanDragTranslate == null)
         {
             leanDragTranslate = GetComponent<LeanDragTranslate>();
         }
 
-        // UnityEvent 초기화
+        // UnityEvent 초기화 (리스너는 OnEnable에서 연결)
+        if (OnDragStart == null)
+            OnDragStart = new UnityEvent();
+        if (OnDragEnd == null)
+            OnDragEnd = new UnityEvent();
+    }
+
+    private void OnEnable()
+    {
+        Debug.Log("[FlashlightTouchRestrictor] OnEnable");
+        framesSinceEnable = 0;
         if (OnDragStart == null)
             OnDragStart = new UnityEvent();
         if (OnDragEnd == null)
             OnDragEnd = new UnityEvent();
 
-        // 자동으로 드래그 이벤트 연결
+        // 이벤트 리스너 연결 (중복 방지 위해 제거 후 추가)
+        OnDragStart.RemoveListener(StartDrag);
+        OnDragEnd.RemoveListener(EndDrag);
         OnDragStart.AddListener(StartDrag);
         OnDragEnd.AddListener(EndDrag);
     }
 
+    private void OnDisable()
+    {
+        Debug.Log("[FlashlightTouchRestrictor] OnDisable");
+        // 이벤트 해제 및 카메라 입력 복구
+        OnDragStart?.RemoveListener(StartDrag);
+        OnDragEnd?.RemoveListener(EndDrag);
+
+        if (CameraView2D.Instance != null)
+        {
+            CameraView2D.SetUIDragState(false);
+        }
+
+        wasDragging = false;
+    }
+
     private void Update()
     {
-        if (leanDragTranslate == null) return;
-
+        if (leanDragTranslate == null)
+        {
+            leanDragTranslate = GetComponent<LeanDragTranslate>();
+            if (leanDragTranslate == null) return;
+        }
         // LeanDragTranslate의 손가락 상태 확인
-        var fingers = leanDragTranslate.Use.UpdateAndGetFingers();
+        framesSinceEnable++;
+        if (framesSinceEnable == 120)
+        {
+            Debug.LogWarning("[FlashlightTouchRestrictor] Still waiting for LeanTouch/LeanDragTranslate to produce fingers after 120 frames.");
+        }
+
+        Lean.Touch.LeanFinger[] fingersArray = null;
+        System.Collections.Generic.List<Lean.Touch.LeanFinger> fingers = null;
+        try
+        {
+            // 기존 API returns List<LeanFinger>
+            fingers = leanDragTranslate.Use.UpdateAndGetFingers();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarningFormat(this, "[FlashlightTouchRestrictor] Exception while UpdateAndGetFingers: {0}", ex.Message);
+        }
         bool isDragging = fingers != null && fingers.Count > 0;
 
         // 드래그 상태 변화 감지
