@@ -35,6 +35,7 @@ public class Stage2Manager : InGameSceneBase
     protected override void Start()
     {
         base.Start();
+        NightGroup.gameObject.SetActive(false);
         nightObjs = FindObjectsByType<NightObj>(FindObjectsSortMode.None).ToList();
         foreach (var n in nightObjs)
         {
@@ -47,9 +48,10 @@ public class Stage2Manager : InGameSceneBase
         
         StartStageBase();
     }
-
+    [Button("밤 스테이지 시작")]
     public void StartNightStage()
     {
+        NightGroup.gameObject.SetActive(true);
         var childs = NightGroup.GetComponentsInChildren<SpriteRenderer>();
         var dChilds = DayGroup.GetComponentsInChildren<SpriteRenderer>();
         foreach(var obj in nightObjsNoFade) {
