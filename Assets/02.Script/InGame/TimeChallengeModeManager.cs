@@ -71,7 +71,7 @@ public class TimeChallengeModeManager : ModeManager
                 if (timerVm == null) continue;
                 // Subscribe to completion event
                 timerVm.OnTimerComplete += OnSingleTimerComplete;
-                defaultSeconds = Global.StageTimer;
+                // defaultSeconds = Global.StageTimer;
                 timerVm.Initialize(defaultSeconds);
             }
         }

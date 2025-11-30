@@ -92,7 +92,7 @@ namespace InGame
                 StartClockSound().Forget();
                 UniTask.Void(async () => { 
                     await UniTask.WaitForSeconds(1f);
-                    stage2Manager.StartStage();
+                    stage2Manager.StartNightStage();
                 });
                 UniTask.Void(async () => { 
                     audioSource.PlayOneShot(whoosh);

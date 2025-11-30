@@ -48,7 +48,7 @@ public class Stage2Manager : InGameSceneBase
         StartStageBase();
     }
 
-    public void StartStage()
+    public void StartNightStage()
     {
         var childs = NightGroup.GetComponentsInChildren<SpriteRenderer>();
         var dChilds = DayGroup.GetComponentsInChildren<SpriteRenderer>();
