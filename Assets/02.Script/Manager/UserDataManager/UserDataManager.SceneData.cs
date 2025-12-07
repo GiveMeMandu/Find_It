@@ -6,22 +6,69 @@ namespace Manager
 {
     public partial class UserDataManager
     {
-        public List<SceneData> GetSceneDatas()
-        {
-            return userStorage.sceneData;
-        }
-        public SceneData GetSceneData(SceneName _sceneName)
-        {
-            foreach(var data in userStorage.sceneData) {
-                if (data.sceneName == _sceneName)
-                {
-                    return data;
-                }
-            }
-            //* 찾지 못했을 경우 씬 데이터 새로 생성
-            return InitialSceneData(_sceneName);;
-        }
 
+        #region 스테이지 클리어 데이터 관리
+        
+        /// <summary>
+        /// 특정 스테이지가 클리어되었는지 확인합니다.
+        /// </summary>
+        public bool IsStageClear(string sceneName)
+        {
+            if (string.IsNullOrEmpty(sceneName))
+                return false;
+            
+            if (userStorage.clearedStages == null)
+                userStorage.clearedStages = new HashSet<string>();
+            
+            return userStorage.clearedStages.Contains(sceneName);
+        }
+        
+        /// <summary>
+        /// 특정 스테이지를 클리어 상태로 설정합니다.
+        /// </summary>
+        public void SetStageClear(string sceneName)
+        {
+            if (string.IsNullOrEmpty(sceneName))
+                return;
+            
+            if (userStorage.clearedStages == null)
+                userStorage.clearedStages = new HashSet<string>();
+            
+            if (!userStorage.clearedStages.Contains(sceneName))
+            {
+                userStorage.clearedStages.Add(sceneName);
+                Save();
+            }
+        }
+        
+        /// <summary>
+        /// 특정 스테이지의 클리어 상태를 초기화합니다.
+        /// </summary>
+        public void ClearStageClear(string sceneName)
+        {
+            if (string.IsNullOrEmpty(sceneName))
+                return;
+            
+            if (userStorage.clearedStages != null && userStorage.clearedStages.Contains(sceneName))
+            {
+                userStorage.clearedStages.Remove(sceneName);
+                Save();
+            }
+        }
+        
+        /// <summary>
+        /// 모든 스테이지 클리어 데이터를 초기화합니다.
+        /// </summary>
+        public void ClearAllStages()
+        {
+            if (userStorage.clearedStages != null)
+            {
+                userStorage.clearedStages.Clear();
+                Save();
+            }
+        }
+        
+        #endregion
         private SceneData InitialSceneData(SceneName _sceneName)
         {
             SceneData sceneData = new SceneData();
@@ -44,16 +91,6 @@ namespace Manager
             userStorage.sceneData.Remove(targetSceneData);
             userStorage.sceneData.Add(sceneData);
             Save();
-        }
-        public List<SceneName> GetAllScenesName()
-        {
-            int count = System.Enum.GetValues(typeof(SceneName)).Length;
-            List<SceneName> SceneNameList = new List<SceneName>(); 
-
-            for(int i = 0; i < count; i++) {
-                SceneNameList.Add((SceneName)i);
-            }
-            return SceneNameList;
         }
     }
 }

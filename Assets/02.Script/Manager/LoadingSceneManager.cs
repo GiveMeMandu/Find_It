@@ -16,6 +16,8 @@ namespace Manager
 
     public class LoadingSceneManager : MonoBehaviour
     {
+        private static string nextSceneName;
+
         [SerializeField] private TextMeshProUGUI percentText;
         [LabelText("로딩 문구")] [SerializeField] private TextMeshProUGUI loadingText;
         public UnityEvent onLoadScene;
@@ -23,6 +25,7 @@ namespace Manager
         [RuntimeInitializeOnLoadMethod]
         public static void Initialize() 
         {
+            nextSceneName = null;
             nextScene = (int)SceneNum.START;
             shouldOpenReviewPage = false;
         }
@@ -56,6 +59,18 @@ namespace Manager
         {
             SceneManager.LoadScene(SceneNum.LOADING); //로딩 씬
         }
+
+        /// <summary>
+        /// 씬 이름(문자열)으로 씬을 로드합니다
+        /// </summary>
+        /// <param name="sceneName">로드할 씬 이름</param>
+        public static void LoadSceneByName(string sceneName)
+        {
+            nextSceneName = sceneName;
+            shouldOpenReviewPage = false;
+            SceneManager.LoadScene(SceneNum.LOADING); //로딩 씬
+        }
+        
         private async UniTaskVoid LoadSceneSide()
         {
             await UniTask.NextFrame();
@@ -64,7 +79,16 @@ namespace Manager
             // 로딩 텍스트 애니메이션 시작
             LoadingTextAnimation().Forget();
 
-            var op = SceneManager.LoadSceneAsync(nextScene);
+            AsyncOperation op;
+            if (!string.IsNullOrEmpty(nextSceneName))
+            {
+                op = SceneManager.LoadSceneAsync(nextSceneName);
+                nextSceneName = null; // 사용 후 초기화
+            }
+            else
+            {
+                op = SceneManager.LoadSceneAsync(nextScene);
+            }
             op.allowSceneActivation = false;
             
             Application.backgroundLoadingPriority = UnityEngine.ThreadPriority.Low;

@@ -6,6 +6,19 @@ using UnityEngine;
 
 namespace I2.Loc
 {
+    public static class Loc
+    {
+        public static string Get(string Term, params object[] args)
+        {
+            var translation = LocalizationManager.GetTranslation(Term);
+            if (string.IsNullOrEmpty(translation))
+            {
+                Debug.LogWarning($"Translation not found for term: {Term}");
+                return Term + " " + string.Join(", ", args);
+            }
+            return string.Format(translation, args);
+        }
+    }
     public static partial class LocalizationManager
     {
 
