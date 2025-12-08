@@ -33,8 +33,23 @@ namespace UI.Page
                 OnPropertyChanged(nameof(CanPlay));
             }
         }
+        
+        private bool _showMapButton;
+
+        [Binding]
+        public bool ShowMapButton
+        {
+            get => _showMapButton;
+            set
+            {
+                _showMapButton = value;
+                OnPropertyChanged(nameof(ShowMapButton));
+            }
+        }
+        
         private void OnEnable()
         {
+            ShowMapButton = true;
             DeskCat.FindIt.Scripts.Core.Model.GlobalSetting.InitializeSetting();
             if (InGameTimer == "") Global.StageTimer = 600;
         }
@@ -67,8 +82,13 @@ namespace UI.Page
         {
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             CanPlay = false;
-            var main = Global.CurrentScene as OutGame.MainMenu;
-            main.OnClickMapButton();
+            // var main = Global.CurrentScene as OutGame.MainMenu;
+            // main.OnClickMapButton();
+
+            ShowMapButton = false;
+
+
+            Global.UIManager.OpenPage<MapSelectPage>();
         }
         [Binding]
         public void OnClickCollectionButton()

@@ -24,6 +24,9 @@ namespace Manager
             
             // 아이템 데이터 초기화
             itemData = new List<ItemData>();
+            
+            // 스테이지 클리어 데이터 초기화
+            clearedStages = new HashSet<string>();
         }
         // public HashSet<int> CollectedItem = new();
         public CollectionData collectionData;
@@ -42,6 +45,9 @@ namespace Manager
         
         // 아이템 수량 저장
         public List<ItemData> itemData;
+        
+        // 클리어한 스테이지 씬 이름들
+        public HashSet<string> clearedStages;
     }
     public partial class UserDataManager
     {
@@ -69,6 +75,14 @@ namespace Manager
                 else
                 {
                     userStorage = new Storage();
+                    InitializeFirstStage();
+                    Save();
+                }
+                
+                // 기존 데이터에 clearedStages가 비어있다면 첫 번째 스테이지 해금
+                if (userStorage.clearedStages == null || userStorage.clearedStages.Count == 0)
+                {
+                    InitializeFirstStage();
                     Save();
                 }
             }
@@ -185,5 +199,35 @@ namespace Manager
         }
 
         #endregion
+        
+        /// <summary>
+        /// 첫 번째 챕터의 첫 번째 스테이지를 해금 상탌로 초기화합니다.
+        /// </summary>
+        private void InitializeFirstStage()
+        {
+            if (userStorage.clearedStages == null)
+                userStorage.clearedStages = new HashSet<string>();
+        }
+        
+        /// <summary>
+        /// 첫 번째 스테이지가 해금되어 있는지 확인하고, 없다면 해금합니다.
+        /// </summary>
+        /// <param name="firstStageSceneName">첫 번째 스테이지의 씬 이름</param>
+        public void EnsureFirstStageUnlocked(string firstStageSceneName)
+        {
+            if (string.IsNullOrEmpty(firstStageSceneName))
+                return;
+            
+            if (userStorage.clearedStages == null)
+                userStorage.clearedStages = new HashSet<string>();
+            
+            // clearedStages가 비어있다면 첫 번째 스테이지 해금
+            if (userStorage.clearedStages.Count == 0)
+            {
+                userStorage.clearedStages.Add(firstStageSceneName);
+                Save();
+                Debug.Log($"첫 번째 스테이지 해금: {firstStageSceneName}");
+            }
+        }
     }
 }

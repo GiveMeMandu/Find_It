@@ -47,14 +47,14 @@ namespace OutGame
             isMapButtonClicked = true;
             mapSelectView.Refresh();
             Camera.main.transform.DOLocalMoveX(-19.86f, 1f).SetEase(Ease.OutQuint);
-            pageSlideEffect.SlideOut(true, 0.8f);
+            // pageSlideEffect.SlideOut(true, 0.8f);
         }
 
         public void OnClickMainMenuButton()
         {
             isMapButtonClicked = false;
             Camera.main.transform.DOLocalMoveX(0f, 1f).SetEase(Ease.OutQuint);
-            pageSlideEffect.SlideIn(true, 0.8f);
+            // pageSlideEffect.SlideIn(true, 0.8f);
         }
 
         public void OnClickStartButton(int stageIndex = 0)

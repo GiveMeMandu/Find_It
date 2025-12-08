@@ -1,76 +1,92 @@
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
-using UnityEngine.UI;
 using UnityEngine;
-using Sirenix.OdinInspector;
-
-
+using UnityEngine.UI;
+using DG.Tweening;
+using NaughtyAttributes;
+using System;
 namespace UI.Effect
 {
-    public class PageSlideEffect : MonoBehaviour
+    public class PageScaleEffect : UIDotweenEffect
     {
-        [SerializeField] [LabelText("시작시 실행")] private bool isPlayEnable = false;
-        [SerializeField] [LabelText("슬라이드 될 방향이 행인가")] private bool isSlideHorizontal = true;
-        [SerializeField] [LabelText("역으로 오는가")] private bool isReverse = true;
-        [SerializeField] [LabelText("회전할건가")] private bool isRotate = true;
-        [SerializeField] [LabelText("효과 재생 시간")] private float effectTime = 0.2f;
+        [Label("행 방향으로 들어오는가")]
+        [SerializeField] private bool isHorizontal = false; // 행(가로)으로 이동할지 여부
+        [Label("역방향으로 들어오는가")]
+        [SerializeField] private bool isReverse = false;    // 역방향으로 들어올지 여부
+        [Label("첫 OnEnable 무시할까")]
+        [SerializeField] private bool ignoreFirstOnEnable = false; // 첫 OnEnable 시 애니메이션을 실행하지 않을지
+        private bool hasEnabledOnce = false;
 
-        [LabelText("이펙트 타입")]
-        [SerializeField] private Ease easeType = Ease.Linear;
-        [SerializeField] private RectTransform r;
-        void Start()
-        {
-            if(r == null) r = transform.GetComponent<RectTransform>();
-        }
-        void OnEnable()
-        {
-            if(isPlayEnable) SlideIn();
-        }
-        public void SlideOut(bool isForceReverse = false, float delay = 0f)
-        {
-            int isReverseValue = isReverse ? -1 : 1;
+        private RectTransform rectTransform;
+        private Image image;
 
-            if(isForceReverse) isReverseValue *= -1;
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            rectTransform = transform as RectTransform;
+            image = GetComponent<Image>();
 
-            var _effectTime = effectTime + delay;
-            if (isSlideHorizontal)
+            if (rectTransform == null)
+                return;
+
+            // 첫 OnEnable을 무시하도록 설정된 경우, 최초 진입에서는 애니메이션을 실행하지 않고 플래그만 설정
+            if (ignoreFirstOnEnable && !hasEnabledOnce)
             {
-                r.DOLocalMoveX(0, 0);
-                r.DOLocalMoveX(1920 * isReverseValue, _effectTime).SetEase(easeType);
+                hasEnabledOnce = true;
+                return;
+            }
+
+            PlayScaleAnimation();
+        }
+
+        private void PlayScaleAnimation()
+        {
+            // 초기 설정
+            rectTransform.localScale = Vector3.zero;
+
+            // 페이드 시퀀스
+            if (image != null)
+            {
+                var fadeSequence = CreateSequence();
+                fadeSequence.SetUpdate(true);
+                fadeSequence
+                    .AppendCallback(() => image.color = new Color(0, 0, 0, 0))
+                    .Append(image.DOColor(new Color(1, 1, 1, 1), 0.2f).SetEase(Ease.InSine));
+            }
+
+            // 이동 시퀀스 (가로/세로 분기)
+            var moveSequence = CreateSequence();
+            moveSequence.SetUpdate(true);
+            int dir = isReverse ? -1 : 1;
+
+            if (isHorizontal)
+            {
+                // 가로로 들어오는 경우: 화면 밖 X 위치 -> 중간 X -> 최종 0
+                moveSequence
+                    .AppendCallback(() => rectTransform.localPosition = new Vector3(1080f * dir, rectTransform.localPosition.y, 0))
+                    .Append(rectTransform.DOLocalMoveX(4f * dir, 0.7f).SetEase(Ease.OutExpo))
+                    .Append(rectTransform.DOLocalMoveX(0f, 0.2f).SetEase(Ease.Linear));
             }
             else
             {
-                r.DOLocalMoveY(0, 0f);
-                r.DOLocalMoveY(1080 * isReverseValue, _effectTime).SetEase(easeType);
-            }
-        }
-
-        public void SlideIn(bool isForceReverse = false, float delay = 0f)
-        {
-            int isReverseValue = isReverse ? -1 : 1;
-
-            if(isForceReverse) isReverseValue *= -1;
-
-            var _effectTime = effectTime + delay;
-            if (isSlideHorizontal)
-            {
-                r.DOLocalMoveX(1920 * isReverseValue, 0);
-                r.DOLocalMoveX(0, _effectTime).SetEase(easeType);
-            }
-            else
-            {
-                r.DOLocalMoveY(1080 * isReverseValue, 0);
-                r.DOLocalMoveY(0, _effectTime).SetEase(easeType);
+                // 세로로 들어오는 기존 동작과 동일하게 동작하도록 유지
+                moveSequence
+                    .AppendCallback(() => rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, 1080f * dir, 0))
+                    .Append(rectTransform.DOLocalMoveY(4f * dir, 0.7f).SetEase(Ease.OutExpo))
+                    .Append(rectTransform.DOLocalMoveY(0f, 0.2f).SetEase(Ease.Linear));
             }
 
-            if (isRotate)
-            {
-                r.DORotate(Vector3.zero, 0);
-                r.DORotate(new Vector3(0, 0, -2), effectTime).SetEase(Ease.InOutQuad);
-                r.DORotate(Vector3.zero, effectTime).SetEase(Ease.InOutQuad).SetDelay(effectTime);
-                r.DOScale(1, effectTime).SetEase(Ease.OutBack);
-            }
+            // 회전 시퀀스 (진입 방향에 따라 회전 방향을 약간 반전)
+            var rotateSequence = CreateSequence();
+            rotateSequence.SetUpdate(true);
+            rotateSequence
+                .AppendCallback(() => rectTransform.rotation = Quaternion.identity)
+                .Append(rectTransform.DORotate(new Vector3(0, 0, -2f * dir), 0.25f).SetEase(Ease.InOutQuad))
+                .Append(rectTransform.DORotate(Vector3.zero, 0.4f).SetEase(Ease.InOutQuad));
+
+            // 스케일 시퀀스 (독립적으로 실행)
+            var scaleSequence = CreateSequence();
+            scaleSequence.SetUpdate(true);
+            scaleSequence
+                .Append(rectTransform.DOScale(1, 0.35f).SetEase(Ease.OutBack));
         }
     }
 }
