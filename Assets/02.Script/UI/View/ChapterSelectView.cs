@@ -420,20 +420,12 @@ namespace UnityWeld
             }
             
             // unlockSceneNames가 없는 경우: 이전 스테이지 클리어 여부 확인
-            if (stageIndex > 0 && stageIndex < chapter.stages.Count)
+            if (stageIndex > 0 && stageIndex <= chapter.stages.Count)
             {
                 var prevStage = chapter.stages[stageIndex - 1];
                 return !Global.UserDataManager.IsStageClear(prevStage.sceneName);
             }
-
-            // stageIndex == 0인 경우: 이전 스테이지가 없으므로
-            // 현재(해당 챕터의 0번째) 스테이지가 이미 클리어됐는지 확인합니다.
-            // 클리어되어 있지 않으면 잠금(true), 클리어되어 있으면 해금(false).
-            if (stageIndex == 0)
-            {
-                return !Global.UserDataManager.IsStageClear(stage.sceneName);
-            }
-
+            
             return false;
         }
 

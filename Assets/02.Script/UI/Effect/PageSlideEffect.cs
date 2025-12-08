@@ -42,15 +42,15 @@ namespace UI.Effect
             // 초기 설정
             rectTransform.localScale = Vector3.zero;
 
-            // 페이드 시퀀스
-            if (image != null)
-            {
-                var fadeSequence = CreateSequence();
-                fadeSequence.SetUpdate(true);
-                fadeSequence
-                    .AppendCallback(() => image.color = new Color(0, 0, 0, 0))
-                    .Append(image.DOColor(new Color(1, 1, 1, 1), 0.2f).SetEase(Ease.InSine));
-            }
+            // // 페이드 시퀀스
+            // if (image != null)
+            // {
+            //     var fadeSequence = CreateSequence();
+            //     fadeSequence.SetUpdate(true);
+            //     fadeSequence
+            //         .AppendCallback(() => image.color = new Color(0, 0, 0, 0))
+            //         .Append(image.DOColor(new Color(1, 1, 1, 1), 0.2f).SetEase(Ease.InSine));
+            // }
 
             // 이동 시퀀스 (가로/세로 분기)
             var moveSequence = CreateSequence();
