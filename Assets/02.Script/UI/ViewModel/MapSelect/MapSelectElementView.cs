@@ -29,6 +29,7 @@ namespace UnityWeld
         private bool _isSelected;
         private bool _isLocked;
         private ChapterSelectView _parentView;
+        private ChapterSelectGroupView _groupView;
 
         private string _displayName;
         private Sprite _thumbnail;
@@ -89,6 +90,7 @@ namespace UnityWeld
             stageIndex = index;
             sceneName = scene;
             _parentView = parentView;
+            _groupView = GetComponentInParent<ChapterSelectGroupView>();
             IsLocked = isLocked;
 
             DisplayName = string.IsNullOrEmpty(stageDisplayName) 
@@ -110,7 +112,12 @@ namespace UnityWeld
                 return;
             }
             
-            if (_parentView != null)
+            if (_groupView != null)
+            {
+                _groupView.SelectStage(stageIndex);
+                Debug.Log($"Selected Stage: {DisplayName} (Scene: {sceneName})");
+            }
+            else if (_parentView != null)
             {
                 _parentView.SelectStage(stageIndex);
                 IsSelected = true;

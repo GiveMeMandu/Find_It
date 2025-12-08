@@ -14,7 +14,7 @@ namespace UnityWeld
         [LabelText("스테이지 씬 이름")]
         [Tooltip("이 스테이지의 유니티 씬 이름")]
         public string sceneName;
-        
+
         [LabelText("해금 조건 씬 이름들")]
         [Tooltip("이 스테이지를 해금하기 위해 클리어해야 하는 씬 이름들. 비어있으면 이전 스테이지 클리어 필요")]
         public List<string> unlockSceneNames = new List<string>();
@@ -26,27 +26,27 @@ namespace UnityWeld
         [BoxGroup("챕터 정보")]
         [LabelText("챕터 인덱스")]
         public int chapterIndex;
-        
+
         [BoxGroup("챕터 정보")]
         [LabelText("챕터 이름")]
         [TermsPopup("SceneName/")]
         public string chapterName;
-        
+
         [BoxGroup("챕터 정보")]
         [LabelText("챕터 설명")]
         [TermsPopup("SceneDescription/")]
         [TextArea(3, 5)]
         public string chapterDescription;
-        
+
         [BoxGroup("챕터 정보")]
         [LabelText("챕터 썸네일")]
         public Sprite chapterThumbnail;
-        
+
         [BoxGroup("스테이지 목록")]
         [LabelText("스테이지 정보들")]
         [Tooltip("각 스테이지의 정보를 입력하세요")]
         public List<StageInfo> stages = new List<StageInfo>();
-        
+
         [Button("스테이지 추가")]
         public void AddStage()
         {
@@ -57,7 +57,7 @@ namespace UnityWeld
     [Binding]
     public class ChapterSelectView : ViewModel
     {
-        [SerializeField] 
+        [SerializeField]
         [LabelText("챕터 목록")]
         private List<ChapterInfo> chapters = new List<ChapterInfo>();
 
@@ -211,14 +211,14 @@ namespace UnityWeld
             {
                 _currentChapterIndex = 0;
                 _currentStageIndex = 0;
-                
+
                 // 첫 스테이지 해금 확인
                 string firstStageScene = GetFirstStageSceneName();
                 if (!string.IsNullOrEmpty(firstStageScene))
                 {
-                    Global.UserDataManager.EnsureFirstStageUnlocked(firstStageScene);
+                    // Global.UserDataManager.EnsureFirstStageUnlocked(firstStageScene);
                 }
-                
+
                 UpdateChapterUI();
             }
         }
@@ -278,7 +278,7 @@ namespace UnityWeld
                 Debug.LogWarning("이 스테이지는 잠겨있습니다.");
                 return;
             }
-            
+
             string sceneName = CurrentStageSceneName;
             if (!string.IsNullOrEmpty(sceneName))
             {
@@ -369,7 +369,7 @@ namespace UnityWeld
                 return chapter.stages[stageIndex].sceneName;
             return null;
         }
-        
+
         /// <summary>
         /// 첫 번째 챕터의 첫 번째 스테이지 씬 이름을 반환합니다.
         /// </summary>
@@ -379,7 +379,7 @@ namespace UnityWeld
                 return chapters[0].stages[0].sceneName;
             return null;
         }
-        
+
         /// <summary>
         /// 특정 스테이지가 잠겨있는지 확인
         /// </summary>
@@ -390,11 +390,11 @@ namespace UnityWeld
             var chapter = CurrentChapter;
             if (chapter == null || stageIndex < 0 || stageIndex >= chapter.stages.Count)
                 return true;
-            
+
             var stage = chapter.stages[stageIndex];
             return IsStageLockedInternal(stage, stageIndex);
         }
-        
+
         /// <summary>
         /// StageInfo를 받아 잠금 상태 확인 (내부용)
         /// </summary>
@@ -402,11 +402,11 @@ namespace UnityWeld
         {
             var chapter = CurrentChapter;
             if (chapter == null) return true;
-            
-            // 첫 번째 챕터의 첫 번째 스테이지만 항상 해금
-            if (_currentChapterIndex == 0 && stageIndex == 0)
-                return false;
-            
+
+            // // 첫 번째 챕터의 첫 번째 스테이지만 항상 해금
+            // if (_currentChapterIndex == 0 && stageIndex == 0)
+            //     return false;
+
             // unlockSceneNames가 지정되어 있는 경우
             if (stage.unlockSceneNames != null && stage.unlockSceneNames.Count > 0)
             {
@@ -418,14 +418,18 @@ namespace UnityWeld
                 }
                 return false; // 모두 클리어됐으면 해금
             }
-            
+
             // unlockSceneNames가 없는 경우: 이전 스테이지 클리어 여부 확인
             if (stageIndex > 0 && stageIndex <= chapter.stages.Count)
             {
                 var prevStage = chapter.stages[stageIndex - 1];
                 return !Global.UserDataManager.IsStageClear(prevStage.sceneName);
             }
-            
+            if (stageIndex == 0 && _currentChapterIndex > 0)
+            {
+                return true;
+            }
+
             return false;
         }
 
