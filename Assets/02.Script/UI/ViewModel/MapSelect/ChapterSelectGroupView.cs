@@ -57,7 +57,7 @@ namespace UI
                 {
                     string sceneName = _parentChapterView.GetStageSceneName(i);
                     bool isLocked = _parentChapterView.IsStageLockedByIndex(i);
-                    Debug.Log($"Initializing stage {i}: SceneName={sceneName}, IsLocked={isLocked}");
+                    // Debug.Log($"Initializing stage {i}: SceneName={sceneName}, IsLocked={isLocked}");
                     stageElement.Initialize(i, sceneName, _parentChapterView, isLocked);
                     _stageElements.Add(stageElement);
                     

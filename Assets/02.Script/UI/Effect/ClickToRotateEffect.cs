@@ -19,6 +19,7 @@ namespace UI.Effect
         [BoxGroup("회전 이펙트 설정")][LabelText("다음 실행시 복귀 효과 재생")][SerializeField] private bool isResetOnNext = false;
         [BoxGroup("회전 이펙트 설정")][LabelText("이미 복귀 효과가 재생되었는지 체크")][SerializeField] private bool isResetedThisTime = false;
         [BoxGroup("회전 이펙트 설정")][LabelText("시작 시 복귀 효과에서 시작")][SerializeField] private bool isResetOnStart = false;
+        [BoxGroup("회전 이펙트 설정")][LabelText("활성화 시 복귀 효과에서 시작")][SerializeField] private bool isResetOnEnable = false;
 
         private Vector3 startRotation;
         private bool isInitialized = false;  // 초기화 여부를 체크하는 플래그
@@ -47,6 +48,22 @@ namespace UI.Effect
                     {
                         transform.localScale = Vector3.zero;
                     }
+                }
+            }
+        }
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            if(isResetOnEnable)
+            {
+                if (isUIEffect)
+                {
+                    var rectTransform = GetComponent<RectTransform>();
+                    rectTransform.localRotation = Quaternion.Euler(startRotation);
+                }
+                else
+                {
+                    transform.localRotation = Quaternion.Euler(startRotation);
                 }
             }
         }
