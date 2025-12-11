@@ -82,7 +82,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public void HitHiddenObject()
         {
-            // Debug.Log($"HitHiddenObject called for {gameObject.name}, IsFound: {IsFound}");
+            Debug.Log($"HitHiddenObject called for {gameObject.name}, IsFound: {IsFound}");
             
             // 이미 찾아진 경우 무시
             if (IsFound)

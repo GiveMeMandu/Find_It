@@ -35,15 +35,23 @@ public class Stage2Manager : InGameSceneBase
     protected override void Start()
     {
         base.Start();
-        NightGroup.gameObject.SetActive(false);
+        if(NightGroup != null)
+        {
+            NightGroup.gameObject.SetActive(false);
+        }
         nightObjs = FindObjectsByType<NightObj>(FindObjectsSortMode.None).ToList();
         foreach (var n in nightObjs)
         {
             if (n.isDisableOnStart) n.gameObject.SetActive(false);
         }
-        nightObjsNoFade = NightNoFadeGroup.GetComponentsInChildren<SpriteRenderer>().ToList();
-        foreach(var obj in nightObjsNoFade) {
-            obj.gameObject.SetActive(false);
+        if(NightNoFadeGroup != null)
+            nightObjsNoFade = NightNoFadeGroup.GetComponentsInChildren<SpriteRenderer>().ToList();
+        if(nightObjsNoFade.Count > 0)
+        {
+            foreach (var obj in nightObjsNoFade)
+            {
+                obj.gameObject.SetActive(false);
+            }
         }
         
         StartStageBase();

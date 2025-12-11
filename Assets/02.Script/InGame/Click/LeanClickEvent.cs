@@ -182,14 +182,16 @@ public class LeanClickEvent : LeanSelectableByFinger
 			var raycastResults = new List<RaycastResult>();
 			EventSystem.current.RaycastAll(ped, raycastResults);
 
-			// UI 결과가 있고, 첫 번째 히트가 현재 오브젝트가 아니면 UI가 차단하고 있음
-			if (raycastResults.Count > 0)
+			// UI 레이어(레이어 5)인 오브젝트만 체크
+			foreach (var result in raycastResults)
 			{
-				// 첫 번째 UI 요소가 현재 오브젝트 또는 자식이 아니면 차단
-				var firstHit = raycastResults[0];
-				if (firstHit.gameObject != gameObject && !firstHit.gameObject.transform.IsChildOf(transform))
+				// UI 레이어가 아니면 스킵
+				if (result.gameObject.layer != 5) continue;
+				
+				// 현재 오브젝트 또는 자식이 아닌 UI가 있으면 차단
+				if (result.gameObject != gameObject && !result.gameObject.transform.IsChildOf(transform))
 				{
-					// Debug.Log($"[LeanClickEvent] {gameObject.name}: Blocked by UI {firstHit.gameObject.name}");
+					Debug.Log($"[LeanClickEvent] {gameObject.name}: Blocked by UI {result.gameObject.name}");
 					return true;
 				}
 			}
@@ -240,7 +242,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 			// 2D check - 모든 겹치는 콜라이더를 확인
 			var wp = cam.ScreenToWorldPoint(new Vector3(finger.ScreenPosition.x, finger.ScreenPosition.y, cam.nearClipPlane));
 			Collider2D[] allHits = Physics2D.OverlapPointAll(wp);
-			
+
 			foreach (var hit2d in allHits)
 			{
 				if (hit2d != null && (hit2d.gameObject == gameObject || hit2d.transform.IsChildOf(transform)))
@@ -264,14 +266,15 @@ public class LeanClickEvent : LeanSelectableByFinger
 		if (cam == null) return true;
 
 		Vector3 worldPoint = cam.ScreenToWorldPoint(screenPosition);
-		
+
 		// 현재 오브젝트가 HiddenObj 컴포넌트를 가지고 있는지 확인
-		bool isCurrentHiddenObj = GetComponent<HiddenObj>() != null;
-		
+		HiddenObj currentHiddenObj = GetComponent<HiddenObj>();
+		bool isCurrentUnfoundHiddenObj = currentHiddenObj != null && !currentHiddenObj.IsFound;
+
 		// OverHiddenObjectLayer 체크 - 이 레이어는 HiddenObj보다 우선순위가 높음
 		int overHiddenObjectLayerMask = 1 << Helper.LayerManager.OverHiddenObjectLayer;
 		Collider2D overHiddenObjHit = Physics2D.OverlapPoint(worldPoint, overHiddenObjectLayerMask);
-		
+
 		if (overHiddenObjHit != null)
 		{
 			// 현재 오브젝트가 OverHiddenObjectLayer면 통과
@@ -279,16 +282,16 @@ public class LeanClickEvent : LeanSelectableByFinger
 			{
 				return true;
 			}
-			// 현재 오브젝트가 HiddenObj면 OverHiddenObjectLayer에 의해 차단됨
-			else if (isCurrentHiddenObj)
+			// 현재 오브젝트가 아직 찾지 않은 HiddenObj면 OverHiddenObjectLayer에 의해 차단됨
+			else if (isCurrentUnfoundHiddenObj)
 			{
-				Debug.Log($"OverHiddenObject {overHiddenObjHit.gameObject.name} has priority, blocking HiddenObj {gameObject.name}");
+				Debug.Log($"[LeanClickEvent] 차단됨: OverHiddenObject {overHiddenObjHit.gameObject.name}가 숨은 오브젝트 {gameObject.name}의 클릭을 막음");
 				return false;
 			}
 		}
 
-		// 현재 오브젝트가 HiddenObj라면 일반 객체보다 우선순위가 높음
-		if (isCurrentHiddenObj)
+		// 현재 오브젝트가 아직 찾지 않은 HiddenObj라면 일반 객체보다 우선순위가 높음
+		if (isCurrentUnfoundHiddenObj)
 		{
 			return true;
 		}
@@ -302,8 +305,8 @@ public class LeanClickEvent : LeanSelectableByFinger
 			HiddenObj hiddenObj = hiddenObjHit.GetComponent<HiddenObj>();
 			if (hiddenObj != null && !hiddenObj.IsFound)
 			{
-				Debug.Log($"HiddenObj {hiddenObj.gameObject.name} has priority, blocking other clicks");
-				return false; // HiddenObj가 일반 객체보다 우선순위를 가짐
+				Debug.Log($"[LeanClickEvent] 차단됨: 숨은 오브젝트 {hiddenObj.gameObject.name} (찾음 여부={hiddenObj.IsFound})가 일반 오브젝트 {gameObject.name}의 클릭을 막음");
+				return false;
 			}
 		}
 
@@ -319,29 +322,67 @@ public class LeanClickEvent : LeanSelectableByFinger
 		if (cam == null) return true;
 
 		Vector3 worldPoint = cam.ScreenToWorldPoint(screenPosition);
-		
+
 		// 모든 2D 콜라이더를 검사하여 겹치는 LeanClickEvent를 가진 객체들을 찾음
 		Collider2D[] overlappingColliders = Physics2D.OverlapPointAll(worldPoint);
-		
+
 		List<LeanClickEvent> overlappingClickEvents = new List<LeanClickEvent>();
 		
+		// 현재 오브젝트가 아직 찾지 않은 HiddenObj인지 확인
+		HiddenObj currentHiddenObj = GetComponent<HiddenObj>();
+		bool isCurrentUnfoundHiddenObj = currentHiddenObj != null && !currentHiddenObj.IsFound;
+
 		foreach (var collider in overlappingColliders)
 		{
 			LeanClickEvent clickEvent = collider.GetComponent<LeanClickEvent>();
 			if (clickEvent != null && clickEvent.Enable)
 			{
-				overlappingClickEvents.Add(clickEvent);
+				// 현재 오브젝트가 아직 찾지 않은 HiddenObj라면 HiddenObj끼리만 비교
+				if (isCurrentUnfoundHiddenObj)
+				{
+					HiddenObj hiddenComp = clickEvent.GetComponent<HiddenObj>();
+					if (hiddenComp != null && !hiddenComp.IsFound)
+					{
+						overlappingClickEvents.Add(clickEvent);
+					}
+				}
+				else
+				{
+					// 현재 오브젝트가 일반 객체라면 일반 객체끼리만 비교 (아직 찾지 않은 HiddenObj 제외)
+					HiddenObj hiddenComp = clickEvent.GetComponent<HiddenObj>();
+					if (hiddenComp == null || hiddenComp.IsFound)
+					{
+						overlappingClickEvents.Add(clickEvent);
+					}
+				}
 			}
 		}
-		
+
 		// 겹치는 객체가 1개 이하면 그냥 허용
 		if (overlappingClickEvents.Count <= 1)
 		{
 			return true;
 		}
 		
+		// 현재 오브젝트가 일반 객체인데, 겹친 객체 중에 아직 찾지 않은 HiddenObj가 있으면 차단
+		if (!isCurrentUnfoundHiddenObj)
+		{
+			foreach (var obj in overlappingClickEvents)
+			{
+				if (obj != this)
+				{
+					HiddenObj otherHiddenObj = obj.GetComponent<HiddenObj>();
+					if (otherHiddenObj != null && !otherHiddenObj.IsFound)
+					{
+						Debug.Log($"[{gameObject.name}] 차단됨: 겹친 숨은 오브젝트 {obj.gameObject.name}가 일반 오브젝트 {gameObject.name}보다 우선순위가 높음");
+						return false;
+					}
+				}
+			}
+		}
+
 		// 하이어라키 순서로 정렬 (더 깊은 계층이 우선, 같은 계층에서는 부모의 sibling index가 클수록 우선)
-		overlappingClickEvents.Sort((a, b) => 
+		overlappingClickEvents.Sort((a, b) =>
 		{
 			// Prioritize OverHiddenObjectLayer first, then unfound HiddenObj, then existing hierarchy rules
 			int layerA = a.gameObject.layer;
@@ -349,7 +390,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 			if (layerA == Helper.LayerManager.OverHiddenObjectLayer && layerB != Helper.LayerManager.OverHiddenObjectLayer) return -1;
 			if (layerB == Helper.LayerManager.OverHiddenObjectLayer && layerA != Helper.LayerManager.OverHiddenObjectLayer) return 1;
 
-			// HiddenObj priority: unfound HiddenObj should beat normal objects
+			// HiddenObj priority: unfound HiddenObj should beat normal objects (이 부분은 이제 위에서 처리하지만 정렬에도 반영)
 			var hiddenAComp = a.GetComponent<HiddenObj>();
 			var hiddenBComp = b.GetComponent<HiddenObj>();
 			bool aHiddenPriority = hiddenAComp != null && !hiddenAComp.IsFound;
@@ -360,23 +401,23 @@ public class LeanClickEvent : LeanSelectableByFinger
 			// 먼저 계층 깊이를 비교 (더 깊은 계층이 우선)
 			int depthA = GetHierarchyDepth(a.transform);
 			int depthB = GetHierarchyDepth(b.transform);
-			
+
 			if (depthA != depthB)
 			{
 				return depthB.CompareTo(depthA); // 더 깊은 계층이 우선 (내림차순)
 			}
-			
+
 			// 같은 깊이라면 부모 계층의 sibling index로 비교
 			// 같은 부모를 가진 경우
 			if (a.transform.parent == b.transform.parent)
 			{
 				return b.transform.GetSiblingIndex().CompareTo(a.transform.GetSiblingIndex());
 			}
-			
+
 			// 다른 부모를 가진 경우, 각각의 루트 부모의 sibling index 비교
 			Transform aParent = a.transform.parent;
 			Transform bParent = b.transform.parent;
-			
+
 			// 같은 조부모를 찾을 때까지 올라가기
 			while (aParent != null && bParent != null && aParent.parent != bParent.parent)
 			{
@@ -384,23 +425,23 @@ public class LeanClickEvent : LeanSelectableByFinger
 				aParent = aParent.parent;
 				bParent = bParent.parent;
 			}
-			
+
 			// 같은 조부모를 가진 부모들의 sibling index 비교
 			if (aParent != null && bParent != null && aParent.parent == bParent.parent)
 			{
 				return bParent.GetSiblingIndex().CompareTo(aParent.GetSiblingIndex());
 			}
-			
+
 			// 최종적으로 루트까지 올라가서 비교
 			Transform aRoot = a.transform;
 			Transform bRoot = b.transform;
-			
+
 			while (aRoot.parent != null) aRoot = aRoot.parent;
 			while (bRoot.parent != null) bRoot = bRoot.parent;
-			
+
 			return bRoot.GetSiblingIndex().CompareTo(aRoot.GetSiblingIndex());
 		});
-		
+
 		// 디버그 로그: 겹치는 모든 객체와 우선순위 표시
 		Debug.Log($"[{gameObject.name}] CheckHierarchyPriority - Overlapping objects at touch position:");
 		for (int i = 0; i < overlappingClickEvents.Count; i++)
@@ -411,10 +452,10 @@ public class LeanClickEvent : LeanSelectableByFinger
 			string marker = (obj == this) ? " <- THIS OBJECT" : "";
 			// Debug.Log($"  [{i}] {obj.gameObject.name} (Sibling: {obj.transform.GetSiblingIndex()}, Depth: {depth}) - {hierarchy}{marker}");
 		}
-		
+
 		// 가장 위에 있는(첫 번째) 객체만 클릭을 허용
 		bool isTopMost = overlappingClickEvents[0] == this;
-		
+
 		if (!isTopMost)
 		{
 			Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
@@ -423,10 +464,10 @@ public class LeanClickEvent : LeanSelectableByFinger
 		{
 			Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
 		}
-		
+
 		return isTopMost;
 	}
-	
+
 	/// <summary>
 	/// 오브젝트의 전체 하이어라키 경로를 반환
 	/// </summary>
@@ -434,16 +475,16 @@ public class LeanClickEvent : LeanSelectableByFinger
 	{
 		string path = transform.name;
 		Transform current = transform.parent;
-		
+
 		while (current != null)
 		{
 			path = current.name + "/" + path;
 			current = current.parent;
 		}
-		
+
 		return path;
 	}
-	
+
 	/// <summary>
 	/// 오브젝트의 하이어라키 깊이를 반환 (루트부터 몇 단계인지)
 	/// </summary>
@@ -451,13 +492,13 @@ public class LeanClickEvent : LeanSelectableByFinger
 	{
 		int depth = 0;
 		Transform current = transform;
-		
+
 		while (current.parent != null)
 		{
 			depth++;
 			current = current.parent;
 		}
-		
+
 		return depth;
 	}
 }
