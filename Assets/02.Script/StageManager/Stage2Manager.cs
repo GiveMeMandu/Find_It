@@ -13,6 +13,7 @@ using UnityEngine.Playables;
 
 public class Stage2Manager : InGameSceneBase
 {
+    [BoxGroup("낮밤 바뀌는 연출")] [LabelText("낮 바뀌는 시간 수정")] public float DayToNightTime = 1.5f; 
     [BoxGroup("낮밤 바뀌는 연출")] [LabelText("밤 전체 옵젝 부모")]
     [SerializeField] private Transform NightGroup;
     [BoxGroup("낮밤 바뀌는 연출")] [LabelText("밤 페이드 없는 옵젝 부모")]
@@ -80,7 +81,7 @@ public class Stage2Manager : InGameSceneBase
                     if(nightObj.isNoFade) continue;
                 }
             }
-            d.DOFade(0, 3f);
+            d.DOFade(0, DayToNightTime);
         }
 
         foreach (var n in nightObjs)
