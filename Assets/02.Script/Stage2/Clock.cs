@@ -108,6 +108,7 @@ namespace InGame
         }
         private void OnStartStage(object sender, EventArgs e)
         {
+            CheckDayChange();
         }
         private async UniTaskVoid StartClockSound()
         {
