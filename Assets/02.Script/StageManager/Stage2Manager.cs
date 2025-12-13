@@ -85,6 +85,11 @@ public class Stage2Manager : InGameSceneBase
 
         foreach (var n in nightObjs)
         {
+            if(n.isDisableOnNight) 
+            {
+                n.gameObject.SetActive(false);
+                continue;
+            }
             if(n.isActiveOnNight) n.gameObject.SetActive(true);
             Debug.Log("<color=red>" + n.gameObject.name + "</color>");
             n.OnNight();
