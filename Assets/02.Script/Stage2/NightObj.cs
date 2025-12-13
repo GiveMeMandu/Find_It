@@ -88,8 +88,9 @@ namespace InGame
 
             if(isChangeColor) 
             {
-                var sr = transform.GetComponent<SpriteRenderer>(); 
-                sr.color = nightColor;
+                var sr = transform.GetComponent<SpriteRenderer>();
+                if(sr != null)
+                    sr.color = nightColor;
             }
             isNight = true;
         }
