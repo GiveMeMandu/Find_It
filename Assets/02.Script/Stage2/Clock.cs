@@ -96,12 +96,12 @@ namespace InGame
                 });
                 UniTask.Void(async () => { 
                     audioSource.PlayOneShot(whoosh);
-                    await sun.DOLocalMoveY(5f, 1f).SetEase(Ease.InOutBack);
+                    await sun.DOLocalMoveY(-4f, 1f).SetEase(Ease.InOutBack);
                     await UniTask.WaitForSeconds(0.1f);
                     audioSource.PlayOneShot(whoosh);
                     moon.gameObject.SetActive(true);
-                    await moon.DOLocalMoveY(-1.46f, 0f);
-                    await moon.DOLocalMoveY(8.885f, 1f).SetEase(Ease.InOutBack);
+                    await moon.DOLocalMoveY(3.32f, 0f);
+                    await moon.DOLocalMoveY(8.15f, 1f).SetEase(Ease.InOutBack);
                 });
 
             // }
