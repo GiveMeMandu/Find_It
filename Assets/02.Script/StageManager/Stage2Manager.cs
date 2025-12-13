@@ -69,7 +69,7 @@ public class Stage2Manager : InGameSceneBase
         foreach (var c in childs)
         {
             // Debug.Log("<color=green>" + c.name + "</color>");
-            c.DOFade(1, 1f).SetEase(Ease.Linear);
+            c.DOFade(1, 0f).SetEase(Ease.Linear);
         }
         foreach (var d in dChilds)
         {
