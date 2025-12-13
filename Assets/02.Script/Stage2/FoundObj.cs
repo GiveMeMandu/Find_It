@@ -6,7 +6,6 @@ using UnityEngine.Events;
 
 namespace InGame
 {
-    [RequireComponent(typeof(AudioSource))]
     public class FoundObj : MonoBehaviour
     {
         [LabelText("플레이할 오디오")]
