@@ -83,8 +83,8 @@ namespace InGame
 
         private void CheckDayChange()
         {
-            if (foundClcok && foundHourHand && foundMinHand)
-            {
+            // if (foundClcok && foundHourHand && foundMinHand)
+            // {
                 hourHand.gameObject.SetActive(true);
                 audioSource.Play();
                 needFastHourRotate = true;
@@ -104,7 +104,7 @@ namespace InGame
                     await moon.DOLocalMoveY(8.885f, 1f).SetEase(Ease.InOutBack);
                 });
 
-            }
+            // }
         }
         private void OnStartStage(object sender, EventArgs e)
         {
