@@ -42,6 +42,7 @@ public class Stage2Manager : InGameSceneBase
         nightObjs = FindObjectsByType<NightObj>(FindObjectsSortMode.None).ToList();
         foreach (var n in nightObjs)
         {
+            // Debug.Log("<color=green>" + n.gameObject.name + "</color>" + n.isDisableOnStart);
             if (n.isDisableOnStart) n.gameObject.SetActive(false);
         }
         if(NightNoFadeGroup != null)
@@ -67,10 +68,18 @@ public class Stage2Manager : InGameSceneBase
         }
         foreach (var c in childs)
         {
-            c.DOFade(1, 0f).SetEase(Ease.Linear);
+            Debug.Log("<color=green>" + c.name + "</color>");
+            c.DOFade(1, 1f).SetEase(Ease.Linear);
         }
         foreach (var d in dChilds)
         {
+            if(d != null) 
+            {
+                if(d.TryGetComponent<NightObj>(out var nightObj))
+                {
+                    if(nightObj.isNoFade) continue;
+                }
+            }
             d.DOFade(0, 3f);
         }
 
