@@ -16,16 +16,10 @@ public abstract class ModeManager : AutoTaskControl
     [Header("Mode Settings")]
     public GameMode currentMode = GameMode.CLASSIC;
 
-    protected LevelManager levelManager;
+    protected LevelManager levelManager => LevelManager.Instance;
 
     protected virtual void Start()
     {
-        levelManager = LevelManager.Instance;
-        if (levelManager == null)
-        {
-            Debug.LogError("[ModeManager] LevelManager.Instance이 null입니다!");
-            return;
-        }
     }
 
     public abstract void InitializeMode();
