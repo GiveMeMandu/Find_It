@@ -26,11 +26,18 @@ Shader "Custom/WaterShader_Mobile"
 	}
 	SubShader
 	{
-		Tags { "RenderType" = "Opaque" }
+		Tags 
+		{ 
+			"Queue" = "Transparent"
+			"RenderType" = "Transparent"
+			"IgnoreProjector" = "True"
+		}
 		LOD 100
 
 		Pass
 		{
+			ZWrite Off
+			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
