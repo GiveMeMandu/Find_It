@@ -12,6 +12,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
     public class HiddenObjUI : MonoBehaviour
     {
+        // Public reference to the HiddenObj this UI represents
+        public HiddenObj RepresentedHiddenObj;
+
         [LabelText("찾았을 때 배경이 바뀔 이미지")] [SerializeField] private Sprite backGroundToChange;
         [LabelText("실루엣 모드용 이미지")] public Image silhouetteImage;
         public Image backGround;
@@ -33,7 +36,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public void Initialize(Sprite sprite)
         {
             targetSprite.sprite = sprite;
+
             FoundSprite.gameObject.SetActive(false);
+        }
+
+        public void SetRepresentedHiddenObj(HiddenObj obj)
+        {
+            RepresentedHiddenObj = obj;
         }
 
         public void SetCount(int totalCount, int foundCount)

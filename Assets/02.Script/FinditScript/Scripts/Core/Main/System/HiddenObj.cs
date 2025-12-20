@@ -29,7 +29,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public bool EnableTooltip;
         public TooltipsType TooltipsType;
 
-        [NonReorderable] 
+        [NonReorderable]
         public List<MultiLanguageTextListModel> Tooltips;
 
         [Tooltip("Use Background Animation When Clicked")]
@@ -60,7 +60,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public WhenFoundEventHelper whenFoundEventHelper;
 
         [HideInInspector] public bool IsFound;
-        
+
         public bool baseInfoBool = true;
         public bool tooltipsBool = true;
         public bool bgAnimBool = true;
@@ -68,30 +68,82 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public SpriteRenderer spriteRenderer;
 
+        // Cached UI sprite so GetUISprite works even if the GameObject is inactive
+        private Sprite cachedUISprite;
+
         /// <summary>
         /// UI에 표시할 스프라이트를 반환합니다. UIChangeHelper가 있으면 그 스프라이트를, 없으면 UISprite를 반환합니다.
         /// </summary>
         public Sprite GetUISprite()
         {
-            if (uiChangeHelper != null && uiChangeHelper.sprite != null)
+            // 캐시가 null이면 강제로 다시 캐시 시도
+            if (cachedUISprite == null)
             {
-                return uiChangeHelper.sprite;
+                if (UISprite == null)
+                {
+                    if (TryGetComponent(out spriteRenderer) && spriteRenderer.sprite != null)
+                    {
+                        UISprite = spriteRenderer.sprite;
+                    }
+                    else
+                    {
+                        // Try to find a SpriteRenderer in children (some prefabs use child renderers)
+                        var childSr = GetComponentInChildren<SpriteRenderer>();
+                        if (childSr != null && childSr.sprite != null)
+                        {
+                            spriteRenderer = childSr;
+                            UISprite = childSr.sprite;
+                        }
+                    }
+                }
+
+                // UIChangeHelper 컴포넌트 자동 찾기
+                if (uiChangeHelper == null)
+                {
+                    uiChangeHelper = GetComponent<UIChangeHelper>();
+                }
+                cachedUISprite = (uiChangeHelper != null && uiChangeHelper.sprite != null) ? uiChangeHelper.sprite : UISprite;
             }
-            return UISprite;
+
+            // 객체가 비활성화되어 있으면 캐시된 값만 반환
+            if (!gameObject.activeInHierarchy)
+            {
+                return cachedUISprite;
+            }
+
+            // 객체가 활성화되어 있으면 실시간으로 체크하고 캐시 업데이트
+            Sprite currentSprite = (uiChangeHelper != null && uiChangeHelper.sprite != null) 
+                ? uiChangeHelper.sprite 
+                : UISprite;
+            
+            // 캐시 업데이트
+            if (currentSprite != null)
+            {
+                cachedUISprite = currentSprite;
+            }
+
+            return currentSprite;
+        }
+
+        // Call to refresh the cached UI sprite if components change at runtime
+        public void RefreshCachedUISprite()
+        {
+            cachedUISprite = (uiChangeHelper != null && uiChangeHelper.sprite != null) ? uiChangeHelper.sprite : UISprite;
         }
 
         public void HitHiddenObject()
         {
             Debug.Log($"HitHiddenObject called for {gameObject.name}, IsFound: {IsFound}");
-            
+
             // 이미 찾아진 경우 무시
             if (IsFound)
             {
                 // Debug.Log($"{gameObject.name} is already found, ignoring click");
                 return;
             }
-            
-            if(IsFound == false) {
+
+            if (IsFound == false)
+            {
                 Debug.Log($"Setting {gameObject.name} as found!");
                 IsFound = true;
                 if (AudioWhenClick != null)
@@ -137,9 +189,19 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
                 if (UISprite == null)
                 {
-                    if (TryGetComponent(out spriteRenderer))
+                    if (TryGetComponent(out spriteRenderer) && spriteRenderer.sprite != null)
                     {
                         UISprite = spriteRenderer.sprite;
+                    }
+                    else
+                    {
+                        // Try to find a SpriteRenderer in children (some prefabs use child renderers)
+                        var childSr = GetComponentInChildren<SpriteRenderer>();
+                        if (childSr != null && childSr.sprite != null)
+                        {
+                            spriteRenderer = childSr;
+                            UISprite = childSr.sprite;
+                        }
                     }
                 }
 
@@ -155,15 +217,26 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     whenFoundEventHelper = GetComponent<WhenFoundEventHelper>();
                 }
 
-                if (HideOnStart)
-                {
-                    gameObject.SetActive(false);
-                }
                 if (BgAnimationSpriteRenderer == null && BgAnimationTransform != null)
                 {
                     BgAnimationSpriteRenderer = BgAnimationTransform.GetComponentInChildren<SpriteRenderer>();
 
                     BgAnimationLerp = BgAnimationTransform.GetComponent<BGScaleLerp>();
+                }
+
+                // Cache the UI sprite value BEFORE potentially hiding the object
+                // (avoids relying on active state for sprite access)
+                cachedUISprite = (uiChangeHelper != null && uiChangeHelper.sprite != null) ? uiChangeHelper.sprite : UISprite;
+
+                // HideOnStart는 모든 초기화 후에 마지막으로 실행
+                if (HideOnStart)
+                {
+                    gameObject.SetActive(false);
+                }
+
+                if (cachedUISprite == null)
+                {
+                    Debug.LogWarning($"[HiddenObj.Awake] No UI sprite cached for {gameObject.name}. uiChangeHelper: {(uiChangeHelper != null)}, UISprite set: {(UISprite != null)}");
                 }
             }
             catch (Exception e)
