@@ -28,7 +28,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public Dictionary<HiddenObj, bool> ObjectStates { get; private set; }
         public HiddenObj LastClickedObject { get; set; }
         public string BaseGroupName { get; private set; }
-        
+
         // UI 연결을 위한 참조 추가
         public HiddenObjUI AssociatedUI { get; set; }
 
@@ -120,10 +120,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         // 새로운 변수 추가
         private List<HiddenObj> normalHiddenObjs = new List<HiddenObj>();
-        
+
         // HiddenObjUI 관리를 위한 리스트 추가
         private List<HiddenObjUI> allHiddenObjUIs = new List<HiddenObjUI>();
-        
+
         // ModeSelector 캐싱
         private ModeSelector modeSelector;
 
@@ -183,7 +183,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 Canvas.SetActive(true);
             }
-            
+
             // 모드 초기화: ModeSelector가 있으면 선택된 모드를 초기화하고,
             // 없으면 기존 동작대로 씬의 아무 ModeManager 하나를 초기화합니다.
             modeSelector = FindAnyObjectByType<ModeSelector>();
@@ -191,7 +191,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 modeSelector.InitializeSelectedMode();
             }
-            
+
             // 초기화 완료 후 UI 업데이트 알림 (늦게 구독한 리스너들을 위해)
             Debug.Log($"[LevelManager] Initialization complete. TargetObjDic count: {TargetObjDic?.Count ?? 0}");
             OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
@@ -267,9 +267,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                         // BG Object 생성 및 설정
                         if (DefaultBgAnimation != null)
                         {
-                            var bgObj = Instantiate(DefaultBgAnimation, hiddenObj.transform);
-                            hiddenObj.BgAnimationTransform = bgObj.transform;
-                            hiddenObj.SetBgAnimation(bgObj);
+                            GameObject bgObj = null;
+                            if (hiddenObj.BgAnimationTransform == null)
+                            {
+                                bgObj = Instantiate(DefaultBgAnimation, hiddenObj.transform);
+                                hiddenObj.BgAnimationTransform = bgObj.transform;
+                                hiddenObj.SetBgAnimation(bgObj);
+                            }
+                            else bgObj = hiddenObj.BgAnimationTransform.gameObject;
                             BGScaleLerp bGScaleLerp = bgObj.GetComponent<BGScaleLerp>();
                             if (bGScaleLerp != null)
                                 if (hideWhenFoundHelper != null)
@@ -352,11 +357,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 CurrentScrollView.Initialize();
                 var createdUIs = CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
-                
+
                 // 생성된 UI들을 LevelManager에서 관리
                 allHiddenObjUIs.Clear();
                 allHiddenObjUIs.AddRange(createdUIs);
-                
+
                 // 그룹과 UI 연결 (Dictionary의 순서와 UI 리스트의 순서가 일치)
                 var groupList = TargetObjDic.Values.ToList();
                 for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
@@ -493,7 +498,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Debug.LogWarning("[LevelManager] TargetClick called but TargetObjDic is not initialized yet.");
                 return;
             }
-            
+
             if (TargetObjDic.ContainsKey(guid))
             {
                 if (TargetObjDic[guid].Representative.hiddenObjFoundType != HiddenObjFoundType.Click) return;
@@ -516,7 +521,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Debug.LogWarning("[LevelManager] RegionToggle called but TargetObjDic is not initialized yet.");
                 return;
             }
-            
+
             if (!TargetObjDic.ContainsKey(guid)) return;
 
             if (TargetObjDic[guid].Representative.hiddenObjFoundType != HiddenObjFoundType.Drag) return;
@@ -531,13 +536,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Debug.LogWarning("[LevelManager] FoundObjAction called but TargetObjDic is not initialized yet.");
                 return;
             }
-            
+
             if (!TargetObjDic.ContainsKey(guid))
             {
                 Debug.LogWarning($"[LevelManager] FoundObjAction called with unknown guid: {guid}");
                 return;
             }
-            
+
             var group = TargetObjDic[guid];
             var clickedObj = group.LastClickedObject;
 
@@ -601,7 +606,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 }
 
                 OnFoundObj?.Invoke(this, clickedObj);
-                
+
                 // ChangeDayObject 컴포넌트가 있으면 Found() 호출
                 if (clickedObj.TryGetComponent<ChangeDayObject>(out var changeDayObject))
                 {
@@ -772,7 +777,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Debug.LogWarning("[LevelManager] TargetObjDic is not initialized yet.");
                 return (false, false, string.Empty);
             }
-            
+
             var group = TargetObjDic.FirstOrDefault(x => x.Value.BaseGroupName == groupName).Value;
             return group != null
                 ? (true, group.FoundCount == group.TotalCount, group.BaseGroupName)
@@ -787,7 +792,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Debug.LogWarning("[LevelManager] GetHiddenObjsByGroupName called but TargetObjDic is not initialized yet.");
                 return new List<HiddenObj>();
             }
-            
+
             // 씬에서 모든 HiddenObj 컴포넌트를 찾음
             var allHiddenObjs = TargetObjDic.Values.SelectMany(group => group.Objects).ToList();
 
@@ -867,7 +872,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Debug.LogError("[LevelManager] TargetObjDic is not initialized. Please start the game first.");
                 return;
             }
-            
+
             // 찾지 않은 오브젝트가 있는 그룹들을 찾기
             var availableGroups = TargetObjDic.Where(kvp => kvp.Value.FoundCount < kvp.Value.TotalCount).ToList();
 
