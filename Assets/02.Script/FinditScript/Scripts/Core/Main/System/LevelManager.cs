@@ -601,6 +601,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 }
 
                 OnFoundObj?.Invoke(this, clickedObj);
+                
+                // ChangeDayObject 컴포넌트가 있으면 Found() 호출
+                if (clickedObj.TryGetComponent<ChangeDayObject>(out var changeDayObject))
+                {
+                    changeDayObject.Found();
+                }
 
                 // Notify listeners that count changed and update UI
                 OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);

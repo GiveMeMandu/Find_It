@@ -53,6 +53,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         [Tooltip("Action When Target Is Clicked")]
         public Action TargetClickAction;
 
+        // Event invoked when this hidden object is found (useful for subscribers like NightObj)
+        public event Action OnFound;
+
         [Tooltip("Action When Target Is Drag To The Specified Region")]
         public Action DragRegionAction;
 
@@ -160,10 +163,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     gameObject.SetActive(false);
                 }
 
-                // WhenFoundEventHelper 이벤트 호출
-                whenFoundEventHelper?.onFoundEvent?.Invoke();
+                    // Raise the public found event for subscribers
+                    OnFound?.Invoke();
 
-                TargetClickAction?.Invoke();
+                    // WhenFoundEventHelper 이벤트 호출
+                    whenFoundEventHelper?.onFoundEvent?.Invoke();
+
+                    TargetClickAction?.Invoke();
             }
         }
 

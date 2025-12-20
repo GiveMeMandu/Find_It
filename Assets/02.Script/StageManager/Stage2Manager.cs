@@ -31,6 +31,10 @@ public class Stage2Manager : InGameSceneBase
     public EventHandler OnStartStage;
     private List<NightObj> nightObjs = new List<NightObj>();
     private List<SpriteRenderer> nightObjsNoFade = new List<SpriteRenderer>();
+    
+    // ChangeDayObject 관리
+    private List<ChangeDayObject> changeDayObjects = new List<ChangeDayObject>();
+    private int foundChangeDayObjectCount = 0;
 
     [SerializeField] private EndingSequenceStage2 _endingSequenceStage2;
     protected override void Start()
@@ -55,6 +59,18 @@ public class Stage2Manager : InGameSceneBase
                 obj.gameObject.SetActive(false);
             }
         }
+        
+        // 모든 ChangeDayObject 캐싱
+        changeDayObjects = FindObjectsByType<ChangeDayObject>(FindObjectsSortMode.None).ToList();
+        foundChangeDayObjectCount = 0;
+        
+        // 각 ChangeDayObject에 이벤트 리스너 등록
+        foreach (var changeDayObj in changeDayObjects)
+        {
+            changeDayObj.OnFound += OnChangeDayObjectFound;
+        }
+        
+        Debug.Log($"[Stage2Manager] ChangeDayObject 총 {changeDayObjects.Count}개 캐싱됨");
         
         StartStageBase();
     }
@@ -92,7 +108,7 @@ public class Stage2Manager : InGameSceneBase
                 continue;
             }
             if(n.isActiveOnNight) n.gameObject.SetActive(true);
-            Debug.Log("<color=red>" + n.gameObject.name + "</color>");
+            // Debug.Log("<color=red>" + n.gameObject.name + "</color>");
             n.OnNight();
         }
         _dayRabbits.gameObject.SetActive(false);
@@ -127,6 +143,19 @@ public class Stage2Manager : InGameSceneBase
     public void ClearStage()
     {
         
+    }
+    
+    private void OnChangeDayObjectFound(object sender, EventArgs e)
+    {
+        foundChangeDayObjectCount++;
+        Debug.Log($"[Stage2Manager] ChangeDayObject 찾음: {foundChangeDayObjectCount}/{changeDayObjects.Count}");
+        
+        // 모든 ChangeDayObject를 찾았는지 확인
+        if (foundChangeDayObjectCount >= changeDayObjects.Count && changeDayObjects.Count > 0)
+        {
+            Debug.Log("[Stage2Manager] 모든 ChangeDayObject를 찾았습니다! 날짜 변경 효과 시작");
+            StartNightStage();
+        }
     }
 
 }
