@@ -191,7 +191,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 				// 현재 오브젝트 또는 자식이 아닌 UI가 있으면 차단
 				if (result.gameObject != gameObject && !result.gameObject.transform.IsChildOf(transform))
 				{
-					Debug.Log($"[LeanClickEvent] {gameObject.name}: Blocked by UI {result.gameObject.name}");
+					// Debug.Log($"[LeanClickEvent] {gameObject.name}: Blocked by UI {result.gameObject.name}");
 					return true;
 				}
 			}
@@ -285,7 +285,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 			// 현재 오브젝트가 아직 찾지 않은 HiddenObj면 OverHiddenObjectLayer에 의해 차단됨
 			else if (isCurrentUnfoundHiddenObj)
 			{
-				Debug.Log($"[LeanClickEvent] 차단됨: OverHiddenObject {overHiddenObjHit.gameObject.name}가 숨은 오브젝트 {gameObject.name}의 클릭을 막음");
+				// Debug.Log($"[LeanClickEvent] 차단됨: OverHiddenObject {overHiddenObjHit.gameObject.name}가 숨은 오브젝트 {gameObject.name}의 클릭을 막음");
 				return false;
 			}
 		}
@@ -305,7 +305,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 			HiddenObj hiddenObj = hiddenObjHit.GetComponent<HiddenObj>();
 			if (hiddenObj != null && !hiddenObj.IsFound)
 			{
-				Debug.Log($"[LeanClickEvent] 차단됨: 숨은 오브젝트 {hiddenObj.gameObject.name} (찾음 여부={hiddenObj.IsFound})가 일반 오브젝트 {gameObject.name}의 클릭을 막음");
+				// Debug.Log($"[LeanClickEvent] 차단됨: 숨은 오브젝트 {hiddenObj.gameObject.name} (찾음 여부={hiddenObj.IsFound})가 일반 오브젝트 {gameObject.name}의 클릭을 막음");
 				return false;
 			}
 		}

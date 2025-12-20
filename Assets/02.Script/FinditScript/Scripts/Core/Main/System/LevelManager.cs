@@ -183,7 +183,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 Canvas.SetActive(true);
             }
-            OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
+            
             // 모드 초기화: ModeSelector가 있으면 선택된 모드를 초기화하고,
             // 없으면 기존 동작대로 씬의 아무 ModeManager 하나를 초기화합니다.
             modeSelector = FindAnyObjectByType<ModeSelector>();
@@ -191,6 +191,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 modeSelector.InitializeSelectedMode();
             }
+            
+            // 초기화 완료 후 UI 업데이트 알림 (늦게 구독한 리스너들을 위해)
+            Debug.Log($"[LevelManager] Initialization complete. TargetObjDic count: {TargetObjDic?.Count ?? 0}");
+            OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void CollectHiddenObjects()
@@ -484,6 +488,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void TargetClick(Guid guid)
         {
+            if (TargetObjDic == null)
+            {
+                Debug.LogWarning("[LevelManager] TargetClick called but TargetObjDic is not initialized yet.");
+                return;
+            }
+            
             if (TargetObjDic.ContainsKey(guid))
             {
                 if (TargetObjDic[guid].Representative.hiddenObjFoundType != HiddenObjFoundType.Click) return;
@@ -501,6 +511,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void RegionToggle(Guid guid)
         {
+            if (TargetObjDic == null)
+            {
+                Debug.LogWarning("[LevelManager] RegionToggle called but TargetObjDic is not initialized yet.");
+                return;
+            }
+            
             if (!TargetObjDic.ContainsKey(guid)) return;
 
             if (TargetObjDic[guid].Representative.hiddenObjFoundType != HiddenObjFoundType.Drag) return;
@@ -510,6 +526,18 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void FoundObjAction(Guid guid)
         {
+            if (TargetObjDic == null)
+            {
+                Debug.LogWarning("[LevelManager] FoundObjAction called but TargetObjDic is not initialized yet.");
+                return;
+            }
+            
+            if (!TargetObjDic.ContainsKey(guid))
+            {
+                Debug.LogWarning($"[LevelManager] FoundObjAction called with unknown guid: {guid}");
+                return;
+            }
+            
             var group = TargetObjDic[guid];
             var clickedObj = group.LastClickedObject;
 
@@ -574,6 +602,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
                 OnFoundObj?.Invoke(this, clickedObj);
 
+                // Notify listeners that count changed and update UI
+                OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
+                UpdateFoundObjUI();
+
                 // Debug.Log($"Found {clickedObj.name} from group {group.BaseGroupName} ({group.FoundCount}/{group.TotalCount})");
 
                 DetectGameEnd();
@@ -590,6 +622,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             // RabbitCountText null 체크
             if (RabbitCountText != null)
                 RabbitCountText.text = $"{rabbitObjCount}/{maxRabbitObjCount}";
+
+            // Update overall found count UI as well
+            OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
+            UpdateFoundObjUI();
 
             DetectGameEnd();
         }
@@ -725,6 +761,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         // 그룹 상태를 확인하기 위한 public 메서드 추가
         public (bool exists, bool isComplete, string baseGroupName) GetGroupStatus(string groupName)
         {
+            if (TargetObjDic == null)
+            {
+                Debug.LogWarning("[LevelManager] TargetObjDic is not initialized yet.");
+                return (false, false, string.Empty);
+            }
+            
             var group = TargetObjDic.FirstOrDefault(x => x.Value.BaseGroupName == groupName).Value;
             return group != null
                 ? (true, group.FoundCount == group.TotalCount, group.BaseGroupName)
@@ -734,6 +776,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         // 그룹 이름으로 HiddenObj 목록을 찾는 메서드
         public List<HiddenObj> GetHiddenObjsByGroupName(string groupName)
         {
+            if (TargetObjDic == null)
+            {
+                Debug.LogWarning("[LevelManager] GetHiddenObjsByGroupName called but TargetObjDic is not initialized yet.");
+                return new List<HiddenObj>();
+            }
+            
             // 씬에서 모든 HiddenObj 컴포넌트를 찾음
             var allHiddenObjs = TargetObjDic.Values.SelectMany(group => group.Objects).ToList();
 
@@ -741,6 +789,24 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             return allHiddenObjs
                 .Where(obj => InGameObjectNameFilter.GetBaseGroupName(obj.gameObject.name) == groupName)
                 .ToList();
+        }
+
+        // 안전하게 숨겨진 물건 카운트 UI를 갱신합니다.
+        private void UpdateFoundObjUI()
+        {
+            if (TargetObjDic == null) return;
+
+            int totalObjects = TargetObjDic.Sum(x => x.Value.TotalCount);
+            int foundObjects = TargetObjDic.Sum(x => x.Value.FoundCount);
+
+            if (FoundObjCountText != null)
+                FoundObjCountText.text = $"{foundObjects} / {totalObjects}";
+
+            if (CurrentFoundObjCountText != null)
+                CurrentFoundObjCountText.text = $"{foundObjects} / {totalObjects}";
+
+            if (FoundObjCountFillImage != null)
+                FoundObjCountFillImage.fillAmount = totalObjects == 0 ? 0f : (float)foundObjects / totalObjects;
         }
 
         public string GetBaseGroupName(string objName)
@@ -790,6 +856,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         [Button("테스트 : 아무 물건 찾기")]
         public void FindAnyHidden()
         {
+            if (TargetObjDic == null)
+            {
+                Debug.LogError("[LevelManager] TargetObjDic is not initialized. Please start the game first.");
+                return;
+            }
+            
             // 찾지 않은 오브젝트가 있는 그룹들을 찾기
             var availableGroups = TargetObjDic.Where(kvp => kvp.Value.FoundCount < kvp.Value.TotalCount).ToList();
 
@@ -873,9 +945,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 if (group.Representative.PlaySoundWhenFound && FoundFx != null)
                     FoundFx.Play();
 
-                // 이벤트 발생
-                OnFoundObj?.Invoke(this, selectedObj);
-                OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
+                // 이벤트 발생 (TargetObjDic이 여전히 유효한지 확인 후)
+                if (TargetObjDic != null)
+                {
+                    OnFoundObj?.Invoke(this, selectedObj);
+                    OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
+                    UpdateFoundObjUI();
+                }
 
                 // 게임 종료 조건 확인
                 DetectGameEnd();
