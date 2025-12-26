@@ -58,6 +58,14 @@ namespace UI
         public void Initialize(string itemName)
         {
             this.itemName = itemName;
+            
+            // LevelManager가 아직 초기화되지 않았으면 기본값 설정
+            if (LevelManager.Instance == null || LevelManager.Instance.TargetObjDic == null)
+            {
+                MissionItemCount = "0 / 0";
+                return;
+            }
+            
             // LevelManager에서 그룹 상태를 확인
             var (exists, isComplete, groupName) = LevelManager.Instance.GetGroupStatus(itemName);
 
@@ -73,11 +81,17 @@ namespace UI
         }
         private void OnDestroy()
         {
-            LevelManager.Instance.OnFoundObj -= OnFoundObj;
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.OnFoundObj -= OnFoundObj;
+            }
         }
         private void OnEnable()
         {
-            LevelManager.Instance.OnFoundObj += OnFoundObj;
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.OnFoundObj += OnFoundObj;
+            }
         }
 
         private void OnFoundObj(object sender, HiddenObj e)
@@ -87,6 +101,13 @@ namespace UI
 
         private void UpdateCount()
         {
+            // LevelManager가 초기화되지 않았거나 TargetObjDic이 없으면 조기 반환
+            if (LevelManager.Instance == null || LevelManager.Instance.TargetObjDic == null)
+            {
+                MissionItemCount = "0 / 0";
+                return;
+            }
+            
             if(LevelManager.Instance.GetBaseGroupName(itemName) != itemName)
             {
                 return;

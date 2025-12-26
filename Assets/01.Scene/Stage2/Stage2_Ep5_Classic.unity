@@ -1053,13 +1053,14 @@ GameObject:
   - component: {fileID: 13783779}
   - component: {fileID: 13783778}
   - component: {fileID: 13783777}
+  - component: {fileID: 13783783}
   m_Layer: 0
   m_Name: mailbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &13783776
 Transform:
   m_ObjectHideFlags: 0
@@ -1206,7 +1207,7 @@ MonoBehaviour:
         m_MethodName: set_sprite
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 21300000, guid: cfbf07e2b2f28aa48aa720b67e458fe3, type: 3}
+          m_ObjectArgument: {fileID: 21300000, guid: 5752d32be10dd6241b405eee18954cf7, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -1329,7 +1330,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 37
-  m_Sprite: {fileID: 21300000, guid: b54cf19768a95af4989dd5f5902b84d7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fddb8ed45e172b745b1d8e950d0f1f05, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1340,6 +1341,39 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &13783783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13783775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac0cfd3da96c434987a4e4df8a5d9c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.NightObj
+  OnPlayAudio:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  dayNightObj: []
+  dayNightEnableObj: []
+  nightDarkObj: []
+  nightColor: {r: 0.8039216, g: 0.8039216, b: 0.8980392, a: 1}
+  isHideOnDay: 0
+  isActiveOnNight: 1
+  isDisableOnNight: 0
+  isNoFade: 0
+  isDisableOnStart: 0
+  isChangeColor: 1
+  isNight: 0
 --- !u!1 &17864377
 GameObject:
   m_ObjectHideFlags: 0
@@ -2530,6 +2564,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -2591,6 +2629,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -2958,6 +3000,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -3526,6 +3572,7 @@ GameObject:
   - component: {fileID: 68330722}
   - component: {fileID: 68330721}
   - component: {fileID: 68330720}
+  - component: {fileID: 68330728}
   m_Layer: 0
   m_Name: 5 middle cloud
   m_TagString: Untagged
@@ -3542,11 +3589,11 @@ Transform:
   m_GameObject: {fileID: 68330718}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.774001, y: 5.2700024, z: 0}
-  m_LocalScale: {x: 1.2000002, y: 1.2000002, z: 1.2000002}
+  m_LocalPosition: {x: 5.59, y: 10.979999, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 274169190}
+  m_Father: {fileID: 1798087659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &68330720
 MonoBehaviour:
@@ -3931,7 +3978,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 54
   m_Sprite: {fileID: 8034225974006346475, guid: e36443225f83826468dae789334b535c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3943,6 +3990,39 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &68330728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68330718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac0cfd3da96c434987a4e4df8a5d9c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.NightObj
+  OnPlayAudio:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  dayNightObj: []
+  dayNightEnableObj: []
+  nightDarkObj: []
+  nightColor: {r: 0.8039216, g: 0.8039216, b: 0.8980392, a: 1}
+  isHideOnDay: 0
+  isActiveOnNight: 1
+  isDisableOnNight: 0
+  isNoFade: 0
+  isDisableOnStart: 0
+  isChangeColor: 1
+  isNight: 0
 --- !u!1 &69357091
 GameObject:
   m_ObjectHideFlags: 0
@@ -3955,6 +4035,7 @@ GameObject:
   - component: {fileID: 69357094}
   - component: {fileID: 69357093}
   - component: {fileID: 69357092}
+  - component: {fileID: 69357096}
   m_Layer: 3
   m_Name: day hide_coin
   m_TagString: Hidden
@@ -4109,13 +4190,48 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 69357091}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.5255175, w: 0.8507828}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.067000575, y: 1.9319999, z: 0}
-  m_LocalScale: {x: -1.1, y: -1.1, z: 1.1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 691676763}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 63.406}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &69357096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69357091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea84c67849e70834bbf9dc241ac0f364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Effect.GrowVFX
+  isPlayOnStart: 0
+  isPlayOnEnable: 1
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  startScale: 0.1
+  useCustomStartScale: 1
+  customStartScale: 0
+  growthDuration: 0.5
+  growthDelay: 0.7
+  growthEase: 27
 --- !u!1 &73167052
 GameObject:
   m_ObjectHideFlags: 0
@@ -4150,7 +4266,6 @@ Transform:
   - {fileID: 673557988}
   - {fileID: 372863588}
   - {fileID: 170179360}
-  - {fileID: 379645871}
   m_Father: {fileID: 274169190}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &75764008
@@ -4317,6 +4432,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -5006,6 +5125,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -5965,6 +6088,7 @@ GameObject:
   - component: {fileID: 118059162}
   - component: {fileID: 118059163}
   - component: {fileID: 118059164}
+  - component: {fileID: 118059165}
   m_Layer: 3
   m_Name: day hide_clock
   m_TagString: Hidden
@@ -6063,6 +6187,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -6074,6 +6202,19 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &118059165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118059161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37485737d7561034eb3a79ba9de38f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClockChangeDayObject
+  clockChangeDayObjectType: 1
 --- !u!1 &122650204
 GameObject:
   m_ObjectHideFlags: 0
@@ -6284,6 +6425,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -6702,6 +6847,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -7106,6 +7255,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -7576,6 +7729,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -7642,6 +7799,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -8138,6 +8299,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -8632,6 +8797,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -8893,6 +9062,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -9776,6 +9949,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -9917,7 +10094,6 @@ Transform:
   - {fileID: 886955239}
   - {fileID: 874195200}
   - {fileID: 1717672819}
-  - {fileID: 1065727856}
   - {fileID: 1205383912}
   - {fileID: 553631390}
   - {fileID: 1925874749}
@@ -9939,7 +10115,6 @@ Transform:
   - {fileID: 487797345}
   - {fileID: 972820568}
   - {fileID: 1217429425}
-  - {fileID: 2126617519}
   - {fileID: 2095558578}
   - {fileID: 180385496}
   - {fileID: 1633451805}
@@ -10721,6 +10896,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -11402,6 +11581,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -12986,12 +13169,13 @@ Transform:
   m_LocalScale: {x: 0.8333332, y: 0.8333332, z: 0.8333332}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1151822429}
-  - {fileID: 872869880}
+  - {fileID: 779528081}
+  - {fileID: 936443989}
   - {fileID: 1759019119}
   - {fileID: 691676763}
   - {fileID: 1162909211}
   - {fileID: 1845884934}
+  - {fileID: 379645871}
   - {fileID: 943184099}
   - {fileID: 1188546953}
   - {fileID: 1687112707}
@@ -13024,7 +13208,6 @@ Transform:
   - {fileID: 127668271}
   - {fileID: 900467811}
   - {fileID: 1503263226}
-  - {fileID: 68330719}
   - {fileID: 725683947}
   - {fileID: 1713458976}
   - {fileID: 73167053}
@@ -14293,6 +14476,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj:
   - DayObjs: {fileID: 1319070386}
     NightObjs: {fileID: 1512528800}
@@ -14592,6 +14779,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -16228,6 +16419,7 @@ GameObject:
   - component: {fileID: 340105204}
   - component: {fileID: 340105205}
   - component: {fileID: 340105206}
+  - component: {fileID: 340105207}
   m_Layer: 3
   m_Name: day hide_minute hand
   m_TagString: Hidden
@@ -16326,6 +16518,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -16337,6 +16533,19 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &340105207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340105203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37485737d7561034eb3a79ba9de38f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClockChangeDayObject
+  clockChangeDayObjectType: 2
 --- !u!1 &342600120
 GameObject:
   m_ObjectHideFlags: 0
@@ -17164,6 +17373,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -17277,6 +17490,7 @@ GameObject:
   - component: {fileID: 374293558}
   - component: {fileID: 374293559}
   - component: {fileID: 374293560}
+  - component: {fileID: 374293561}
   m_Layer: 3
   m_Name: day hide_minute hand
   m_TagString: Hidden
@@ -17375,6 +17589,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -17386,6 +17604,19 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &374293561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374293557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37485737d7561034eb3a79ba9de38f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClockChangeDayObject
+  clockChangeDayObjectType: 2
 --- !u!1 &376001760
 GameObject:
   m_ObjectHideFlags: 0
@@ -17513,7 +17744,7 @@ Transform:
   m_LocalScale: {x: 1.2000002, y: 1.2000002, z: 1.2000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 73167053}
+  m_Father: {fileID: 274169190}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &379645872
 MonoBehaviour:
@@ -18028,6 +18259,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -19641,6 +19876,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -20741,6 +20980,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj:
   - DayObjs: {fileID: 1966308268}
     NightObjs: {fileID: 1058531851}
@@ -21002,6 +21245,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -21657,6 +21904,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -23846,6 +24097,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj:
   - DayObjs: {fileID: 1031429014}
     NightObjs: {fileID: 126792799}
@@ -24106,6 +24361,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -25305,6 +25564,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -26256,6 +26519,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -26374,6 +26641,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -28031,6 +28302,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -29642,6 +29917,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -31837,6 +32116,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -32503,6 +32786,7 @@ GameObject:
   m_Component:
   - component: {fileID: 673557988}
   - component: {fileID: 673557989}
+  - component: {fileID: 673557990}
   m_Layer: 0
   m_Name: Waterbg
   m_TagString: Untagged
@@ -32583,6 +32867,39 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &673557990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673557987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac0cfd3da96c434987a4e4df8a5d9c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.NightObj
+  OnPlayAudio:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  dayNightObj: []
+  dayNightEnableObj: []
+  nightDarkObj: []
+  nightColor: {r: 0, g: 0, b: 0, a: 1}
+  isHideOnDay: 0
+  isActiveOnNight: 0
+  isDisableOnNight: 1
+  isNoFade: 0
+  isDisableOnStart: 0
+  isChangeColor: 0
+  isNight: 0
 --- !u!1 &681657863
 GameObject:
   m_ObjectHideFlags: 0
@@ -33042,6 +33359,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -33162,6 +33483,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -33253,6 +33578,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -34328,6 +34657,7 @@ GameObject:
   - component: {fileID: 728133172}
   - component: {fileID: 728133173}
   - component: {fileID: 728133174}
+  - component: {fileID: 728133175}
   m_Layer: 3
   m_Name: day hide_clockhand
   m_TagString: Hidden
@@ -34426,6 +34756,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -34437,6 +34771,19 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &728133175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 728133171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37485737d7561034eb3a79ba9de38f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClockChangeDayObject
+  clockChangeDayObjectType: 0
 --- !u!1 &728324338
 GameObject:
   m_ObjectHideFlags: 0
@@ -35693,6 +36040,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -35968,6 +36319,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -36170,6 +36525,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -36627,6 +36986,145 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &779528080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 779528081}
+  - component: {fileID: 779528083}
+  - component: {fileID: 779528082}
+  m_Layer: 0
+  m_Name: TouchEvent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &779528081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779528080}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.292, y: -2.0679986, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1151822429}
+  m_Father: {fileID: 274169190}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &779528082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779528080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 807028ef82816d64188923619d90a57d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction.ClickEvent
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2132249871}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1151822432}
+        m_TargetAssemblyTypeName: UnityEngine.SpriteRenderer, UnityEngine
+        m_MethodName: set_sprite
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: -7911106607132242587, guid: e891e648bf89faa4583416522c18deb5, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2132249872}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_sortingOrder
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 90
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  _maxClickCount: 1
+--- !u!61 &779528083
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779528080}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1.01, y: 0.94}
+  m_EdgeRadius: 0
 --- !u!1 &783215389
 GameObject:
   m_ObjectHideFlags: 0
@@ -37402,6 +37900,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -38122,6 +38624,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj:
   - DayObjs: {fileID: 599103400}
@@ -38518,6 +39024,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj:
   - DayObjs: {fileID: 1992975029}
     NightObjs: {fileID: 981494739}
@@ -39062,6 +39572,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -39542,6 +40056,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -41043,9 +41561,12 @@ GameObject:
   m_Component:
   - component: {fileID: 872869880}
   - component: {fileID: 872869883}
-  - component: {fileID: 872869882}
   - component: {fileID: 872869881}
   - component: {fileID: 872869884}
+  - component: {fileID: 872869888}
+  - component: {fileID: 872869887}
+  - component: {fileID: 872869886}
+  - component: {fileID: 872869885}
   m_Layer: 0
   m_Name: Treasure (2)
   m_TagString: Untagged
@@ -41062,12 +41583,12 @@ Transform:
   m_GameObject: {fileID: 872869879}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.960002, y: -3.6759987, z: 0}
-  m_LocalScale: {x: 0.7200001, y: 0.7200001, z: 0.7200001}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.72, y: 0.72, z: 0.72}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1131019639}
-  m_Father: {fileID: 274169190}
+  m_Father: {fileID: 936443989}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &872869881
 BoxCollider2D:
@@ -41115,65 +41636,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2.4, y: 2.4}
   m_EdgeRadius: 0
---- !u!114 &872869882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 872869879}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 807028ef82816d64188923619d90a57d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1131019638}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 872869883}
-        m_TargetAssemblyTypeName: UnityEngine.SpriteRenderer, UnityEngine
-        m_MethodName: set_sprite
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 21300000, guid: 7d338ff54dc6aa34e88b35395601eb90, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2132249872}
-        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
-        m_MethodName: set_sortingOrder
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 90
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  _maxClickCount: 1
 --- !u!212 &872869883
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -41250,6 +41712,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -41261,6 +41727,143 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &872869885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872869879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6f70c0df96a36e46bd3551379937a42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickTouchSound
+  clickSoundType: 1
+  playOnAwake: 0
+  useRandomSound: 1
+--- !u!114 &872869886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872869879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Effect.StretchVFX
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 872869885}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayClickSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  stretchMultiplier: 1.1
+  xAnimDuration: 0.1
+  yRestoreDuration: 0.15
+  animationEase: 3
+--- !u!114 &872869887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872869879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeanClickEvent
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 872869886}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayVFX
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _maxClickCount: -1
+--- !u!114 &872869888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872869879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a209d8210ccc85418269a8e467afda6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StretchVFXGroupSetting
+  stretchMultiplier: 1.1
+  xAnimDuration: 0.1
+  yRestoreDuration: 0.15
+  animationEase: 3
+  useSpriteBounds: 1
+  colliderSize: {x: 1, y: 1}
+  colliderOffset: {x: 0, y: 0}
+  applyToChildren: 0
+  addClickSound: 1
+  clickSoundType: 1
 --- !u!1 &874195199
 GameObject:
   m_ObjectHideFlags: 0
@@ -41664,6 +42267,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1759019119}
     m_Modifications:
+    - target: {fileID: 7756655456692496908, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7861734223663072043, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -41704,6 +42311,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8110639523131118864, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 9027087120949270810, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
       propertyPath: m_Name
       value: Rcok
@@ -41715,6 +42326,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9027087120949270810, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1501550231}
+    - targetCorrespondingSourceObject: {fileID: 9027087120949270810, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1501550232}
+    - targetCorrespondingSourceObject: {fileID: 8110639523131118864, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1739887293}
+    - targetCorrespondingSourceObject: {fileID: 7756655456692496908, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 938478659}
   m_SourcePrefab: {fileID: 100100000, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
 --- !u!4 &875336302 stripped
 Transform:
@@ -43449,6 +44069,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj:
   - DayObjs: {fileID: 560936224}
     NightObjs: {fileID: 1182677479}
@@ -44247,11 +44871,10 @@ GameObject:
   m_Component:
   - component: {fileID: 924687079}
   - component: {fileID: 924687082}
-  - component: {fileID: 924687081}
   - component: {fileID: 924687080}
   - component: {fileID: 924687083}
   m_Layer: 3
-  m_Name: day_hidd_coin
+  m_Name: day_hide_coin
   m_TagString: Hidden
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -44265,12 +44888,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924687078}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.32000113, y: 0.4549997, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.56, y: 0.87, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1759019119}
+  m_Father: {fileID: 1582131975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &924687080
 BoxCollider2D:
@@ -44279,7 +44902,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924687078}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -44318,41 +44941,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.82, y: 0.69}
   m_EdgeRadius: 0
---- !u!114 &924687081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 924687078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fde72043aeb481e85fd14e2ff2a5c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DeskCat.FindIt.Scripts.Core.Main.System.HiddenObj
-  hiddenObjFoundType: 0
-  UISprite: {fileID: -8600489671109746797, guid: 94a81a50c862576439adc420d914804a, type: 3}
-  uiChangeHelper: {fileID: 0}
-  HideOnStart: 0
-  EnableTooltip: 0
-  TooltipsType: 0
-  Tooltips: []
-  EnableBGAnimation: 0
-  BGAnimationPrefab: {fileID: 0}
-  BgAnimationTransform: {fileID: 0}
-  BgAnimationLerp: {fileID: 0}
-  BgAnimationSpriteRenderer: {fileID: 0}
-  HideWhenFound: 1
-  PlaySoundWhenFound: 1
-  clickPriority: 0
-  AudioWhenClick: {fileID: 0}
-  whenFoundEventHelper: {fileID: 0}
-  IsFound: 0
-  baseInfoBool: 1
-  tooltipsBool: 1
-  bgAnimBool: 1
-  actionFoldoutBool: 1
-  spriteRenderer: {fileID: 0}
 --- !u!212 &924687082
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -44402,7 +44990,7 @@ SpriteRenderer:
   m_SortingOrder: 49
   m_Sprite: {fileID: -8600489671109746797, guid: 94a81a50c862576439adc420d914804a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.82, y: 0.69}
@@ -44427,6 +45015,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -44860,6 +45452,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -44961,6 +45557,145 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &936443988
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 936443989}
+  - component: {fileID: 936443991}
+  - component: {fileID: 936443990}
+  m_Layer: 0
+  m_Name: TouchEvent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &936443989
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936443988}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.960002, y: -3.6759984, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 872869880}
+  m_Father: {fileID: 274169190}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &936443990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936443988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 807028ef82816d64188923619d90a57d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction.ClickEvent
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1131019638}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 872869883}
+        m_TargetAssemblyTypeName: UnityEngine.SpriteRenderer, UnityEngine
+        m_MethodName: set_sprite
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 21300000, guid: 7d338ff54dc6aa34e88b35395601eb90, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2132249872}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_sortingOrder
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 90
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  _maxClickCount: 1
+--- !u!61 &936443991
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936443988}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 2.4, y: 2.4}
+  m_EdgeRadius: 0
 --- !u!1 &936911143
 GameObject:
   m_ObjectHideFlags: 0
@@ -45051,6 +45786,44 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &938478651 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7756655456692496908, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
+  m_PrefabInstance: {fileID: 875336301}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &938478659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938478651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac0cfd3da96c434987a4e4df8a5d9c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.NightObj
+  OnPlayAudio:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  dayNightObj: []
+  dayNightEnableObj: []
+  nightDarkObj: []
+  nightColor: {r: 0.7529412, g: 0.78431374, b: 1, a: 1}
+  isHideOnDay: 0
+  isActiveOnNight: 1
+  isDisableOnNight: 0
+  isNoFade: 1
+  isDisableOnStart: 0
+  isChangeColor: 1
+  isNight: 0
 --- !u!1 &943184098
 GameObject:
   m_ObjectHideFlags: 0
@@ -46784,6 +47557,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -46875,6 +47652,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -47038,6 +47819,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -47099,6 +47884,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -49634,6 +50423,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -50059,7 +50852,7 @@ Transform:
   m_Children:
   - {fileID: 128209957}
   - {fileID: 13783776}
-  m_Father: {fileID: 192768848}
+  m_Father: {fileID: 1582131975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1066256392
 GameObject:
@@ -51079,6 +51872,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -51607,6 +52404,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -52481,6 +53282,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -53434,6 +54239,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -55122,6 +55931,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -55856,6 +56669,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -55917,6 +56734,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -57298,9 +58119,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1151822429}
   - component: {fileID: 1151822432}
-  - component: {fileID: 1151822431}
   - component: {fileID: 1151822430}
   - component: {fileID: 1151822433}
+  - component: {fileID: 1151822437}
+  - component: {fileID: 1151822436}
+  - component: {fileID: 1151822435}
+  - component: {fileID: 1151822434}
   m_Layer: 0
   m_Name: Basket open
   m_TagString: Untagged
@@ -57317,12 +58141,12 @@ Transform:
   m_GameObject: {fileID: 1151822428}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.292, y: -2.0679986, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -0.96000016, y: 0.96000016, z: 0.96000016}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2132249874}
-  m_Father: {fileID: 274169190}
+  m_Father: {fileID: 779528081}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1151822430
 BoxCollider2D:
@@ -57370,65 +58194,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.01, y: 0.94}
   m_EdgeRadius: 0
---- !u!114 &1151822431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1151822428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 807028ef82816d64188923619d90a57d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2132249871}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1151822432}
-        m_TargetAssemblyTypeName: UnityEngine.SpriteRenderer, UnityEngine
-        m_MethodName: set_sprite
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: -7911106607132242587, guid: e891e648bf89faa4583416522c18deb5, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 2132249872}
-        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
-        m_MethodName: set_sortingOrder
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 90
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  _maxClickCount: 1
 --- !u!212 &1151822432
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -57505,6 +58270,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -57516,6 +58285,143 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &1151822434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151822428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6f70c0df96a36e46bd3551379937a42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickTouchSound
+  clickSoundType: 1
+  playOnAwake: 0
+  useRandomSound: 1
+--- !u!114 &1151822435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151822428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Effect.StretchVFX
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1151822434}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayClickSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  stretchMultiplier: 1.1
+  xAnimDuration: 0.1
+  yRestoreDuration: 0.15
+  animationEase: 3
+--- !u!114 &1151822436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151822428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeanClickEvent
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1151822435}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayVFX
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _maxClickCount: -1
+--- !u!114 &1151822437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151822428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a209d8210ccc85418269a8e467afda6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StretchVFXGroupSetting
+  stretchMultiplier: 1.1
+  xAnimDuration: 0.1
+  yRestoreDuration: 0.15
+  animationEase: 3
+  useSpriteBounds: 1
+  colliderSize: {x: 1, y: 1}
+  colliderOffset: {x: 0, y: 0}
+  applyToChildren: 0
+  addClickSound: 1
+  clickSoundType: 1
 --- !u!1 &1154574518
 GameObject:
   m_ObjectHideFlags: 0
@@ -58597,6 +59503,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -59226,6 +60136,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -59287,6 +60201,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -60339,6 +61257,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj:
   - DayObjs: {fileID: 2039112590}
@@ -63076,6 +63998,7 @@ GameObject:
   - component: {fileID: 1253595865}
   - component: {fileID: 1253595866}
   - component: {fileID: 1253595867}
+  - component: {fileID: 1253595868}
   m_Layer: 3
   m_Name: day hide_clockhand
   m_TagString: Hidden
@@ -63174,6 +64097,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -63185,6 +64112,19 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &1253595868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1253595864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37485737d7561034eb3a79ba9de38f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClockChangeDayObject
+  clockChangeDayObjectType: 0
 --- !u!1 &1253953455
 GameObject:
   m_ObjectHideFlags: 0
@@ -64548,6 +65488,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj:
   - DayObjs: {fileID: 549039663}
@@ -65584,6 +66528,7 @@ GameObject:
   - component: {fileID: 1324798579}
   - component: {fileID: 1324798580}
   - component: {fileID: 1324798581}
+  - component: {fileID: 1324798582}
   m_Layer: 3
   m_Name: day hide_clock
   m_TagString: Hidden
@@ -65682,6 +66627,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -65693,6 +66642,19 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &1324798582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324798578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37485737d7561034eb3a79ba9de38f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClockChangeDayObject
+  clockChangeDayObjectType: 1
 --- !u!1 &1327199996
 GameObject:
   m_ObjectHideFlags: 0
@@ -67551,6 +68513,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -67709,6 +68675,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -68109,6 +69079,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -68448,6 +69422,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -69783,6 +70761,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -72089,6 +73071,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -72100,6 +73086,33 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &1501550232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501550230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6637298f65604624a6714dad27759832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction.AfterAnimationFunction
+  AfterAnimationEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 924687080}
+        m_TargetAssemblyTypeName: UnityEngine.BoxCollider2D, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &1503263225
 GameObject:
   m_ObjectHideFlags: 0
@@ -74654,6 +75667,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -75609,6 +76626,8 @@ Transform:
   - {fileID: 986936522}
   - {fileID: 177691499}
   - {fileID: 1710134430}
+  - {fileID: 1065727856}
+  - {fileID: 924687079}
   m_Father: {fileID: 1798087659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1585360328
@@ -76825,6 +77844,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -77210,6 +78233,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj:
   - DayObjs: {fileID: 1867830830}
     NightObjs: {fileID: 1406300625}
@@ -78940,6 +79967,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj:
   - DayObjs: {fileID: 167105117}
     NightObjs: {fileID: 1547812905}
@@ -80120,6 +81151,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Treasure
       objectReference: {fileID: 0}
+    - target: {fileID: 7729668457626703680, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8093048253768625504, guid: a0a12c82e66778e47aeb9eb5eed0e229, type: 3}
       propertyPath: m_Size.x
       value: 0.74013513
@@ -80271,6 +81306,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj:
@@ -81525,6 +82564,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -82290,6 +83333,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -82350,6 +83397,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -83389,6 +84440,44 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1739887290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8110639523131118864, guid: 38726f89bc1315f478b848a27db1e702, type: 3}
+  m_PrefabInstance: {fileID: 875336301}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1739887293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739887290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac0cfd3da96c434987a4e4df8a5d9c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.NightObj
+  OnPlayAudio:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  dayNightObj: []
+  dayNightEnableObj: []
+  nightDarkObj: []
+  nightColor: {r: 0.7529412, g: 0.78431374, b: 1, a: 1}
+  isHideOnDay: 0
+  isActiveOnNight: 1
+  isDisableOnNight: 0
+  isNoFade: 1
+  isDisableOnStart: 0
+  isChangeColor: 1
+  isNight: 0
 --- !u!1 &1753164990
 GameObject:
   m_ObjectHideFlags: 0
@@ -83870,6 +84959,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -83893,7 +84986,7 @@ GameObject:
   - component: {fileID: 1759019121}
   - component: {fileID: 1759019120}
   - component: {fileID: 1759019122}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stone
   m_TagString: Untagged
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
@@ -83913,7 +85006,6 @@ Transform:
   m_LocalScale: {x: -1.2000002, y: 1.2000002, z: 1.2000002}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 924687079}
   - {fileID: 875336302}
   m_Father: {fileID: 274169190}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -83971,18 +85063,6 @@ MonoBehaviour:
           m_StringArgument: move
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 924687080}
-        m_TargetAssemblyTypeName: UnityEngine.BoxCollider2D, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1759019121}
         m_TargetAssemblyTypeName: UnityEngine.BoxCollider2D, UnityEngine
         m_MethodName: set_enabled
@@ -83995,7 +85075,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _maxClickCount: -1
+  _maxClickCount: 1
 --- !u!61 &1759019121
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -84058,6 +85138,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -84152,35 +85236,35 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a8769b0d9c8085c4b8b3f8eb1b8e526e, type: 2}
     - target: {fileID: 1893834568072888112, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1893834568072888112, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1893834568072888112, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 91.83535
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1893834568072888112, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1940067892916741373, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1940067892916741373, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1940067892916741373, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 91.83535
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1940067892916741373, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2425090023120708515, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_LocalScale.x
@@ -84216,19 +85300,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4002799270204951519, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4002799270204951519, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4002799270204951519, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 91.83535
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4002799270204951519, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -170
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4630755237202496357, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -84248,19 +85332,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8204772599105575866, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8204772599105575866, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8204772599105575866, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 91.83535
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8204772599105575866, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -170
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8233476206311598855, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -84308,7 +85392,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8233476206311598856, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8233476206311598857, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: normalHiddenObjGroup
@@ -84320,7 +85404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8233476206311598857, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: TargetObjs.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8233476206311598857, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: 'TargetObjs.Array.data[0]'
@@ -84334,17 +85418,21 @@ PrefabInstance:
       propertyPath: 'TargetObjs.Array.data[2]'
       value: 
       objectReference: {fileID: 761863374}
+    - target: {fileID: 8233476206311598857, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      propertyPath: 'TargetObjs.Array.data[3]'
+      value: 
+      objectReference: {fileID: 128209955}
     - target: {fileID: 8233476206597709868, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_Value
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8233476206625625849, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8233476206625625849, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8233476206625625849, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMin.x
@@ -84396,11 +85484,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8233476207766531613, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8233476207766531613, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8233476207766531613, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMin.y
@@ -84417,7 +85505,22 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8233476207588720699, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 5044890385312571970, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 5044890385312571970, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2665231050527092968, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 4176382925518705785, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 3966b132c92fe434097979961b6c444d, type: 3}
 --- !u!1 &1760745988
 GameObject:
@@ -86256,7 +87359,7 @@ GameObject:
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1798087659
 Transform:
   m_ObjectHideFlags: 0
@@ -86271,6 +87374,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1582131975}
+  - {fileID: 68330719}
   - {fileID: 274169190}
   m_Father: {fileID: 168312167}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -87767,6 +88871,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -89171,6 +90279,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -89528,6 +90640,7 @@ GameObject:
   - component: {fileID: 1869278684}
   - component: {fileID: 1869278685}
   - component: {fileID: 1869278686}
+  - component: {fileID: 1869278687}
   m_Layer: 3
   m_Name: day hide_minute hand
   m_TagString: Hidden
@@ -89626,6 +90739,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -89637,6 +90754,19 @@ MonoBehaviour:
   isDisableOnStart: 0
   isChangeColor: 1
   isNight: 0
+--- !u!114 &1869278687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869278683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37485737d7561034eb3a79ba9de38f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClockChangeDayObject
+  clockChangeDayObjectType: 2
 --- !u!1 &1870275721
 GameObject:
   m_ObjectHideFlags: 0
@@ -90324,6 +91454,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj:
@@ -91053,6 +92187,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -91632,6 +92770,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -92851,6 +93993,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -93962,6 +95108,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -94521,6 +95671,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -94831,6 +95985,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj:
@@ -98042,6 +99200,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -98768,6 +99930,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -99478,6 +100644,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -99686,6 +100856,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -100437,6 +101611,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []
@@ -103380,440 +104558,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &2126617518
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2126617519}
-  - component: {fileID: 2126617527}
-  - component: {fileID: 2126617526}
-  - component: {fileID: 2126617525}
-  - component: {fileID: 2126617524}
-  - component: {fileID: 2126617523}
-  - component: {fileID: 2126617522}
-  - component: {fileID: 2126617521}
-  - component: {fileID: 2126617520}
-  m_Layer: 0
-  m_Name: 5 middle cloud
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2126617519
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.59, y: 10.979999, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 192768848}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2126617520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6f70c0df96a36e46bd3551379937a42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ClickTouchSound
-  clickSoundType: 1
-  playOnAwake: 0
-  useRandomSound: 1
---- !u!114 &2126617521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Effect.StretchVFX
-  isPlayOnStart: 0
-  isPlayOnEnable: 0
-  isStopOtherEffect: 0
-  startDelay: 0
-  delay: 0
-  isLoopForce: 0
-  isUIEffect: 0
-  effectAddValue: 0
-  effectSpeed: 1
-  isPlayLock: 0
-  OnEffectStart:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2126617520}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PlayClickSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEffectEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  isPlaying: 0
-  stretchMultiplier: 1.1
-  xAnimDuration: 0.1
-  yRestoreDuration: 0.15
-  animationEase: 3
---- !u!114 &2126617522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LeanClickEvent
-  selfSelected: 0
-  onSelected:
-    m_PersistentCalls:
-      m_Calls: []
-  onDeselected:
-    m_PersistentCalls:
-      m_Calls: []
-  use: 0
-  onSelectedFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2126617521}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PlayVFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _maxClickCount: -1
---- !u!61 &2126617523
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.52, y: 1.74}
-    newSize: {x: 5.52, y: 1.74}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 5.52, y: 1.74}
-  m_EdgeRadius: 0
---- !u!114 &2126617524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 458a2d0a3aebc1d4ca28aadd8c2b3412, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI.Effect.FloatingEffect
-  isPlayOnStart: 0
-  isPlayOnEnable: 0
-  isStopOtherEffect: 0
-  startDelay: 0
-  delay: 0
-  isLoopForce: 0
-  isUIEffect: 0
-  effectAddValue: 0
-  effectSpeed: 1
-  isPlayLock: 0
-  OnEffectStart:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEffectEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  isPlaying: 0
-  chainType: 0
-  chainFireType: 0
-  otherVFXs: []
-  chainStartDelay: 0
-  chainDelay: 0
-  floatingDirection: 0
-  floatingDistance: 0.04
-  floatingSpeed: 3.2
-  customDirection: {x: 0, y: 1, z: 0}
-  easeType: 4
-  autoStart: 1
---- !u!60 &2126617525
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.52, y: 1.74}
-    newSize: {x: 5.52, y: 1.74}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 1.75, y: -0.87}
-      - {x: 1.8199999, y: -0.82}
-      - {x: 1.9599999, y: -0.78}
-      - {x: 2.6699998, y: -0.75}
-      - {x: 2.76, y: -0.71999997}
-      - {x: 2.76, y: -0.65}
-      - {x: 2.6799998, y: -0.62}
-      - {x: 2.4299998, y: -0.65999997}
-      - {x: 2.3799999, y: -0.61}
-      - {x: 2.26, y: -0.56}
-      - {x: 2.25, y: -0.48}
-      - {x: 2.1299999, y: -0.39999998}
-      - {x: 1.9599999, y: -0.41}
-      - {x: 1.9799999, y: -0.34}
-      - {x: 2, y: -0.11}
-      - {x: 1.91, y: 0.08}
-      - {x: 1.8199999, y: 0.14}
-      - {x: 1.6999999, y: 0.19}
-      - {x: 1.63, y: 0.21}
-      - {x: 1.55, y: 0.22}
-      - {x: 1.26, y: 0.21}
-      - {x: 1.2099999, y: 0.22}
-      - {x: 1.18, y: 0.38}
-      - {x: 1.11, y: 0.52}
-      - {x: 0.91999996, y: 0.7}
-      - {x: 0.65999997, y: 0.83}
-      - {x: 0.44, y: 0.87}
-      - {x: 0.17999999, y: 0.87}
-      - {x: 0, y: 0.81}
-      - {x: -0.12, y: 0.75}
-      - {x: -0.26, y: 0.65}
-      - {x: -0.34, y: 0.57}
-      - {x: -0.39999998, y: 0.65}
-      - {x: -0.51, y: 0.69}
-      - {x: -0.90999997, y: 0.65}
-      - {x: -1.11, y: 0.56}
-      - {x: -1.3, y: 0.35999998}
-      - {x: -1.37, y: 0.17}
-      - {x: -1.36, y: -0.01}
-      - {x: -1.3299999, y: -0.17999999}
-      - {x: -1.5, y: -0.06}
-      - {x: -1.5799999, y: -0.04}
-      - {x: -1.8, y: -0.049999997}
-      - {x: -1.91, y: -0.11}
-      - {x: -2.06, y: -0.32999998}
-      - {x: -2.04, y: -0.42}
-      - {x: -2.11, y: -0.53999996}
-      - {x: -2.24, y: -0.52}
-      - {x: -2.33, y: -0.52}
-      - {x: -2.62, y: -0.55}
-      - {x: -2.76, y: -0.58}
-      - {x: -2.76, y: -0.65999997}
-      - {x: -2.5, y: -0.7}
-      - {x: -2.1, y: -0.7}
-      - {x: -2.04, y: -0.72999996}
-      - {x: -1.4, y: -0.77}
-      - {x: -1.18, y: -0.78}
-      - {x: -0.97999996, y: -0.82}
-      - {x: -0.59, y: -0.85999995}
-      - {x: -0.22999999, y: -0.85999995}
-      - {x: -0.14999999, y: -0.79999995}
-      - {x: -0.04, y: -0.83}
-      - {x: 0.17, y: -0.84}
-      - {x: 0.41, y: -0.87}
-      - {x: 1.3199999, y: -0.87}
-      - {x: 1.5699999, y: -0.85999995}
-      - {x: 1.5699999, y: -0.87}
-  m_UseDelaunayMesh: 0
---- !u!114 &2126617526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a209d8210ccc85418269a8e467afda6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StretchVFXGroupSetting
-  stretchMultiplier: 1.1
-  xAnimDuration: 0.1
-  yRestoreDuration: 0.15
-  animationEase: 3
-  useSpriteBounds: 1
-  colliderSize: {x: 1, y: 1}
-  colliderOffset: {x: 0, y: 0}
-  applyToChildren: 0
-  addClickSound: 1
-  clickSoundType: 1
---- !u!212 &2126617527
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126617518}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 6
-  m_Sprite: {fileID: -4708401982271303361, guid: 7d1ddce9ba59b9942a6f267e079fc40c, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 5.52, y: 1.74}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
 --- !u!1 &2127893058
 GameObject:
   m_ObjectHideFlags: 0
@@ -104138,6 +104882,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayAudio2:
+    m_PersistentCalls:
+      m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
     m_PersistentCalls:
       m_Calls: []
   dayNightObj: []

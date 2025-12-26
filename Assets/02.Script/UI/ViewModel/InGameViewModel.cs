@@ -10,6 +10,7 @@ namespace UI
     {
         private string _foundObjCountText;
         private float _foundObjCountFillAmount;
+        private bool _isSubscribed = false;
         
         [Binding]
         public string FoundObjCountText
@@ -37,46 +38,61 @@ namespace UI
 
         private void Start()
         {
-            if (LevelManager.Instance != null)
-            {
-                LevelManager.Instance.OnFoundObj += OnFoundObj;
-                LevelManager.Instance.OnFoundObjCountChanged += OnFoundObjCountChanged;
-                
-                            // 현재 상태로 UI 강제 업데이트
-            UpdateFoundObjCountDisplay();
+            // Start에서 바로 구독하지 않고 LateStart로 연기
+            StartCoroutine(LateStart());
         }
+
+        private System.Collections.IEnumerator LateStart()
+        {
+            // 한 프레임 대기하여 LevelManager 초기화 보장
+            yield return null;
+            
+            if (LevelManager.Instance != null && !_isSubscribed)
+            {
+                // Subscribe only to the count-changed event to avoid duplicate updates
+                LevelManager.Instance.OnFoundObjCountChanged += OnFoundObjCountChanged;
+                _isSubscribed = true;
+
+                // 현재 상태로 UI 강제 업데이트
+                UpdateFoundObjCountDisplay();
+            }
         }
 
         private void OnDisable()
         {
-            if (LevelManager.Instance != null)
+            if (LevelManager.Instance != null && _isSubscribed)
             {
-                LevelManager.Instance.OnFoundObj -= OnFoundObj;
                 LevelManager.Instance.OnFoundObjCountChanged -= OnFoundObjCountChanged;
+                _isSubscribed = false;
             }
         }
 
         private void OnFoundObj(object sender, HiddenObj e)
         {
-            FoundObjCountText = string.Format("{0}/{1}", LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount(), LevelManager.Instance.GetTotalHiddenObjCount());
-            FoundObjCountFillAmount = (LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount()) / (float)LevelManager.Instance.GetTotalHiddenObjCount();
+            // Keep for compatibility but delegate to centralized update to avoid inconsistencies
+            UpdateFoundObjCountDisplay();
         }
 
         private void OnFoundObjCountChanged(object sender, EventArgs e)
         {
-            FoundObjCountText = string.Format("{0}/{1}", LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount(), LevelManager.Instance.GetTotalHiddenObjCount());
-            FoundObjCountFillAmount = (LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount()) / (float)LevelManager.Instance.GetTotalHiddenObjCount();
+            UpdateFoundObjCountDisplay();
         }
 
         private void UpdateFoundObjCountDisplay()
         {
-            if (LevelManager.Instance != null)
+            if (LevelManager.Instance != null && LevelManager.Instance.TargetObjDic != null)
             {
-                FoundObjCountText = string.Format("{0}/{1}", 
-                    LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount(), 
-                    LevelManager.Instance.GetTotalHiddenObjCount());
-                FoundObjCountFillAmount = (LevelManager.Instance.GetTotalHiddenObjCount() - LevelManager.Instance.GetLeftHiddenObjCount()) 
-                    / (float)LevelManager.Instance.GetTotalHiddenObjCount();
+                int total = LevelManager.Instance.GetTotalHiddenObjCount();
+                int found = total - LevelManager.Instance.GetLeftHiddenObjCount();
+
+                FoundObjCountText = string.Format("{0}/{1}", found, total);
+                FoundObjCountFillAmount = total == 0 ? 0f : (found) / (float)total;
+            }
+            else
+            {
+                // TargetObjDic이 아직 초기화되지 않은 경우 기본값 표시
+                FoundObjCountText = "0/0";
+                FoundObjCountFillAmount = 0f;
             }
         }
 

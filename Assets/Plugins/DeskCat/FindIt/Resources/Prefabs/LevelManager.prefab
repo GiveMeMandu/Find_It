@@ -4473,12 +4473,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FogModeManager
   currentMode: 1
-  fogAreas:
-  - {fileID: 6570191498850567817}
-  - {fileID: 4817547436966625197}
+  fogAreaDataList:
+  - fogArea: {fileID: 6570191498850567817}
+    revealPercent: 0.6
+  - fogArea: {fileID: 4817547436966625197}
+    revealPercent: 0.9
   minFogAlpha: 1
   maxFogAlpha: 1
-  lastFogRevealPercent: 0.8
   boundaryMargin: 0.5
 --- !u!1 &3265423010400807954
 GameObject:
@@ -13566,7 +13567,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8233476206625625846}
   m_HandleRect: {fileID: 8233476206625625849}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -13999,7 +14000,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -0.000024318695, y: 0}
+  m_AnchoredPosition: {x: 0.00002670288, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &8233476207151806515

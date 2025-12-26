@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
+using Cysharp.Threading.Tasks;
+using System.Threading;
+using DeskCat.FindIt.Scripts.Core.Main.System;
 using System;
 
 namespace InGame
@@ -19,6 +23,15 @@ namespace InGame
     }
     public class NightObj : FoundObj
     {
+        private HiddenObj cachedHiddenObj;
+        // Handler reference so we can unsubscribe cleanly
+        private Action hiddenObjFoundHandler;
+        // Delay (in frames) before subscribing to HiddenObj.OnFound
+        [LabelText("OnFound 구독 대기 프레임 수")] public int subscribeDelayFrames = 2;
+        private CancellationTokenSource subscribeCts;
+        [SerializeField]
+        [LabelText("밤이 될 때 호출할 이벤트")]
+        public UnityEvent onNightEvent;
         [SerializeField]
         [LabelText("밤낮 오브젝트들")]
         [EnableIf("isHideOnDay")]
@@ -41,6 +54,16 @@ namespace InGame
         public bool isNight;
         private void Awake()
         {
+            // cache HiddenObj on the same GameObject if present
+            if (TryGetComponent<HiddenObj>(out var h))
+            {
+                cachedHiddenObj = h;
+                if (cachedHiddenObj.IsFound)
+                {
+                    // 이미 찾은 숨겨진 물건이면 밤에 강제 활성화하지 않음
+                    isActiveOnNight = false;
+                }
+            }
             if (isHideOnDay)
             {
                 foreach (var obj in dayNightObj)
@@ -52,6 +75,74 @@ namespace InGame
                     obj.DayObjs.gameObject.SetActive(true);
                     obj.NightObjs.gameObject.SetActive(false);
                 }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            subscribeCts?.Cancel();
+            subscribeCts?.Dispose();
+            subscribeCts = null;
+
+            if (cachedHiddenObj != null && hiddenObjFoundHandler != null)
+            {
+                cachedHiddenObj.OnFound -= hiddenObjFoundHandler;
+            }
+        }
+
+        private void OnEnable()
+        {
+            // Cancel any previous pending subscribe task
+            subscribeCts?.Cancel();
+            subscribeCts?.Dispose();
+            subscribeCts = new CancellationTokenSource();
+
+            // Start delayed subscription (will be cancelled on disable/destroy)
+            SubscribeAfterDelayAsync(subscribeDelayFrames, subscribeCts.Token).Forget();
+        }
+
+        private void OnDisable()
+        {
+            // Cancel pending subscribe and unsubscribe handler
+            subscribeCts?.Cancel();
+            subscribeCts?.Dispose();
+            subscribeCts = null;
+
+            if (cachedHiddenObj != null && hiddenObjFoundHandler != null)
+            {
+                cachedHiddenObj.OnFound -= hiddenObjFoundHandler;
+                hiddenObjFoundHandler = null;
+            }
+        }
+
+        private async UniTaskVoid SubscribeAfterDelayAsync(int frames, CancellationToken ct)
+        {
+            try
+            {
+                await UniTask.DelayFrame(frames, cancellationToken: ct);
+
+                if (ct.IsCancellationRequested) return;
+
+                if (cachedHiddenObj == null)
+                {
+                    TryGetComponent<HiddenObj>(out cachedHiddenObj);
+                }
+
+                if (cachedHiddenObj != null)
+                {
+                    hiddenObjFoundHandler = () => { isActiveOnNight = false; };
+                    cachedHiddenObj.OnFound += hiddenObjFoundHandler;
+
+                    // Apply immediately if already found
+                    if (cachedHiddenObj.IsFound)
+                    {
+                        isActiveOnNight = false;
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // ignore
             }
         }
         public void OnNight()
@@ -94,6 +185,12 @@ namespace InGame
                     sr.color = nightColor;
             }
             isNight = true;
+
+            // Invoke UnityEvent for night (if assigned)
+            if (onNightEvent != null)
+            {
+                onNightEvent.Invoke();
+            }
         }
 
     }

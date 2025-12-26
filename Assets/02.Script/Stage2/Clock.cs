@@ -64,21 +64,18 @@ namespace InGame
             foundClcok = true;
             clockHand.gameObject.SetActive(true);
             StartClockHandRotate().Forget();
-            CheckDayChange();
         }
         //* 초침 찾음
         public void FoundHourHand()
         {
             foundHourHand = true;
             hourHand.gameObject.SetActive(true);
-            CheckDayChange();
         }
         //* 분침 찾음
         public void FoundMinHand()
         {
             foundMinHand = true;
             minHand.gameObject.SetActive(true);
-            CheckDayChange();
         }
 
         private void CheckDayChange()
