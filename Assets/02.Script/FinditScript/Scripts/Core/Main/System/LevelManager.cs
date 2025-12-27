@@ -405,6 +405,58 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             UIClickEvent?.Invoke();
         }
+        
+        /// <summary>
+        /// CoinRushModeManager의 코인들을 TargetObjDic에 포함
+        /// (미리 세팅된 코인 또는 시작시 생성된 코인)
+        /// </summary>
+        private void IncludeCoinRushCoins()
+        {
+            // ModeSelector를 통해 현재 모드가 COIN_RUSH인지 확인
+            if (modeSelector != null && modeSelector.selectedMode == ModeManager.GameMode.COIN_RUSH)
+            {
+                // CoinRushModeManager 찾기
+                var coinRushManager = FindAnyObjectByType<CoinRushModeManager>();
+                if (coinRushManager != null && coinRushManager.ShouldIncludeCoinsInLevelManager())
+                {
+                    var coinDic = coinRushManager.GetCoinDictionary();
+                    if (coinDic != null && coinDic.Count > 0)
+                    {
+                        Debug.Log($"[LevelManager] Including {coinDic.Count} coins from CoinRushModeManager");
+                        
+                        // 각 코인을 개별 그룹으로 추가 (TimeChallengeManager 방식)
+                        foreach (var kvp in coinDic)
+                        {
+                            var coinObj = kvp.Value;
+                            if (coinObj != null)
+                            {
+                                // BGAnimation 처리
+                                if (DefaultBgAnimation != null)
+                                {
+                                    // 이미 BGAnimation이 있는지 확인
+                                    if (coinObj.BgAnimationTransform == null)
+                                    {
+                                        GameObject bgObj = Instantiate(DefaultBgAnimation, coinObj.transform);
+                                        coinObj.BgAnimationTransform = bgObj.transform;
+                                        coinObj.SetBgAnimation(bgObj);
+                                        
+                                        Debug.Log($"[LevelManager] Added BGAnimation to coin: {coinObj.gameObject.name}");
+                                    }
+                                }
+                                
+                                var group = new HiddenObjGroup(
+                                    new List<HiddenObj> { coinObj }, 
+                                    coinObj.gameObject.name
+                                );
+                                TargetObjDic.Add(kvp.Key, group);
+                            }
+                        }
+                        
+                        Debug.Log($"[LevelManager] Total objects after including coins: {TargetObjDic.Count}");
+                    }
+                }
+            }
+        }
 
         private void BuildDictionary()
         {
@@ -415,6 +467,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 normalHiddenObjs.AddRange(TargetObjs);
             }
+            
+            // CoinRushModeManager의 미리 세팅된 코인들을 포함
+            IncludeCoinRushCoins();
 
             var groupedObjects = normalHiddenObjs
                 .Where(obj => obj != null)
