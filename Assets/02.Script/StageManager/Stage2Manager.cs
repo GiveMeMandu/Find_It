@@ -39,12 +39,13 @@ public class Stage2Manager : InGameSceneBase
     [SerializeField] private EndingSequenceStage2 _endingSequenceStage2;
     protected override void Start()
     {
+        NightObj.IsGlobalNight = false;
         base.Start();
         if(NightGroup != null)
         {
             NightGroup.gameObject.SetActive(false);
         }
-        nightObjs = FindObjectsByType<NightObj>(FindObjectsSortMode.None).ToList();
+        nightObjs = FindObjectsByType<NightObj>(findObjectsInactive:FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
         foreach (var n in nightObjs)
         {
             // Debug.Log("<color=green>" + n.gameObject.name + "</color>" + n.isDisableOnStart);

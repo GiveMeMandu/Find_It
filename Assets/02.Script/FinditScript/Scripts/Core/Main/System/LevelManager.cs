@@ -109,6 +109,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         // 기존 CurrentLevelName, NextLevelName 제거하고 SceneBase에서 자동으로 가져오기
         public bool IsOverwriteGameEnd;
         public UnityEvent GameEndEvent;
+        
+        [Label("게임 종료 시 아이템 세트 미션 체크 여부")]
+        public bool CheckItemSetCondition = true;
 
         public Dictionary<Guid, HiddenObjGroup> TargetObjDic;
         public Dictionary<Guid, HiddenObj> RabbitObjDic;
@@ -710,9 +713,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
             // DARK 모드인 경우 미션(ItemSet) 검사 제외
             bool isDarkMode = modeSelector != null && modeSelector.selectedMode == ModeManager.GameMode.DARK;
-            bool itemSetConditionMet = isDarkMode || (ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount);
+            // ItemSet 조건 체크: CheckItemSetCondition이 false면 무조건 통과, true면 조건 체크
+            bool itemSetConditionMet = !CheckItemSetCondition 
+                || isDarkMode 
+                || ItemSetManager.Instance == null 
+                || (ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount);
 
-            // 모든 숨겨진 오브젝트를 찾았고, (DARK 모드가 아니라면) ItemSetManager의 모든 세트도 찾았을 때만 게임 종료
+            // 모든 숨겨진 오브젝트를 찾았고, ItemSet 조건도 만족하면 게임 종료
             if (remainingObjects <= 0 && itemSetConditionMet)
             {
                 Debug.Log($"[LevelManager] Game End condition met! (DARK 모드: {isDarkMode}) Starting end sequence...");
@@ -749,7 +756,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
             else
             {
-                Debug.Log($"[LevelManager] Game End condition not met - Remaining objects: {remainingObjects}, ItemSet condition: {itemSetConditionMet} (DARK 모드: {isDarkMode})");
+                Debug.Log($"[LevelManager] Game End condition not met - Remaining objects: {remainingObjects}, ItemSet condition: {itemSetConditionMet} (Check ItemSet: {CheckItemSetCondition}, DARK 모드: {isDarkMode})");
             }
         }
 
@@ -766,6 +773,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             EndTime = DateTime.Now;
             var timeUsed = EndTime.Subtract(StartTime);
+            
+            // 현재 씬을 clearedStages에 추가
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            if (!string.IsNullOrEmpty(currentSceneName))
+            {
+                Global.UserDataManager.SetStageClear(currentSceneName);
+            }
 
             int totalObjects = TargetObjDic.Sum(x => x.Value.TotalCount);
             int foundObjects = TargetObjDic.Sum(x => x.Value.FoundCount);

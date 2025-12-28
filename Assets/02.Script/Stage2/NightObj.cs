@@ -23,6 +23,7 @@ namespace InGame
     }
     public class NightObj : FoundObj
     {
+        public static bool IsGlobalNight = false;
         private HiddenObj cachedHiddenObj;
         // Handler reference so we can unsubscribe cleanly
         private Action hiddenObjFoundHandler;
@@ -99,6 +100,11 @@ namespace InGame
 
             // Start delayed subscription (will be cancelled on disable/destroy)
             SubscribeAfterDelayAsync(subscribeDelayFrames, subscribeCts.Token).Forget();
+
+            if (IsGlobalNight)
+            {
+                OnNight();
+            }
         }
 
         private void OnDisable()
@@ -145,8 +151,10 @@ namespace InGame
                 // ignore
             }
         }
+
         public void OnNight()
         {
+            IsGlobalNight = true;
             foreach (var obj in dayNightObj)
             {
                 obj.DayObjs.sprite = obj.NightObjs.sprite;
@@ -154,6 +162,9 @@ namespace InGame
                 obj.DayObjs.flipY = obj.NightObjs.flipY;
                 if (obj.DayObjs != null)
                 {
+                    obj.DayObjs.DOKill();
+                    obj.DayObjs.color = Color.white;
+
                     if (!isNoFade)
                     {
                         obj.DayObjs.DOFade(0, 0);
@@ -167,6 +178,9 @@ namespace InGame
                 obj.NightObjs.gameObject.SetActive(true);
                 if (obj.NightObjs != null)
                 {
+                    obj.NightObjs.DOKill();
+                    obj.NightObjs.color = Color.white;
+
                     obj.NightObjs.DOFade(0, 0);
                     if (!isNoFade)
                         obj.NightObjs.DOFade(1, 4f).SetEase(Ease.OutQuart);

@@ -4353,6 +4353,7 @@ GameObject:
   - component: {fileID: 7539860153431212181}
   - component: {fileID: 6088087165353427616}
   - component: {fileID: 6719389067104233917}
+  - component: {fileID: 3830574812631440775}
   m_Layer: 0
   m_Name: ModeManager
   m_TagString: Untagged
@@ -4481,6 +4482,43 @@ MonoBehaviour:
   minFogAlpha: 1
   maxFogAlpha: 1
   boundaryMargin: 0.5
+--- !u!114 &3830574812631440775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3035670538811384902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bbf4bdac0914234f888dcd88fe35062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinRushModeManager
+  currentMode: 3
+  rushDuration: 40
+  usePresetCoins: 0
+  presetCoins: []
+  spawnAllCoinsAtStart: 1
+  coinPrefab: {fileID: 7546995733187749340, guid: b14027e5112d36145af61aea1ca88b6d, type: 3}
+  maxCoinsOnScreen: 20
+  coinSpawnInterval: 0
+  spawnAreaPadding: 3
+  useMinimumSpacing: 1
+  minimumCoinDistance: 1.5
+  maxSpawnAttempts: 30
+  useRandomSize: 0
+  minSizeScale: 0.7
+  maxSizeScale: 1.3
+  fixedSizeScale: 0.5
+  coinValue: 1
+  coinLifetime: 40
+  DefaultBgAnimation: {fileID: 7532000456490516641, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+  timerText: {fileID: 0}
+  coinsCollectedText: {fileID: 0}
+  totalScoreText: {fileID: 0}
+  doubleRewardButton: {fileID: 0}
+  rushEndUI: {fileID: 0}
+  coinFoundFx: {fileID: 8233476207855779298}
 --- !u!1 &3265423010400807954
 GameObject:
   m_ObjectHideFlags: 0
@@ -12084,6 +12122,7 @@ MonoBehaviour:
   GameEndEvent:
     m_PersistentCalls:
       m_Calls: []
+  CheckItemSetCondition: 0
 --- !u!1 &8233476206330110207
 GameObject:
   m_ObjectHideFlags: 0
