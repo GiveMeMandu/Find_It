@@ -381,6 +381,39 @@ namespace UnityWeld
         }
 
         /// <summary>
+        /// 모든 챕터의 모든 스테이지 씬 이름을 반환합니다.
+        /// </summary>
+        public List<string> GetAllStageSceneNames()
+        {
+            List<string> allScenes = new List<string>();
+            foreach (var chapter in chapters)
+            {
+                foreach (var stage in chapter.stages)
+                {
+                    if (!string.IsNullOrEmpty(stage.sceneName))
+                    {
+                        allScenes.Add(stage.sceneName);
+                    }
+                }
+            }
+            return allScenes;
+        }
+
+        /// <summary>
+        /// Static 메서드: 씬에서 ChapterSelectView를 찾아 모든 스테이지 씬 이름을 반환합니다.
+        /// </summary>
+        public static List<string> GetAllStageSceneNamesStatic()
+        {
+            ChapterSelectView view = FindObjectOfType<ChapterSelectView>();
+            if (view != null)
+            {
+                return view.GetAllStageSceneNames();
+            }
+            Debug.LogWarning("ChapterSelectView를 찾을 수 없습니다.");
+            return new List<string>();
+        }
+
+        /// <summary>
         /// 특정 스테이지가 잠겨있는지 확인
         /// </summary>
         /// <param name="stageIndex">확인할 스테이지 인덱스</param>
