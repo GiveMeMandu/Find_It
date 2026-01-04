@@ -15,6 +15,7 @@ namespace Util.CameraSetting
         [SerializeField] private bool _mouseCurrentAvailable = false;
         [SerializeField] private float _lastScrollValue = 0f;
         [SerializeField] private string _lastInputMethod = "None";
+        [SerializeField] private bool _forceDisabledDebug = false; // _forceDisabled 상태 디버깅용
 
         [Header("---Zoom---")]
         public bool _enableZoom;
@@ -191,8 +192,11 @@ namespace Util.CameraSetting
 
         private void HandleMouseWheelInput()
         {
-            if (!_enableZoom) 
+            // 카메라 이동 중이거나 강제 비활성화 상태면 입력 무시
+            if (_isMovingCamera || _forceDisabled || !_enableZoom) 
             {
+                if (_showDebugInfo && !_enableZoom)
+                    Debug.Log($"[Zoom Disabled] _enableZoom={_enableZoom}, _forceDisabled={_forceDisabled}, _isMovingCamera={_isMovingCamera}");
                 return;
             }
 
@@ -200,39 +204,39 @@ namespace Util.CameraSetting
             float finalScroll = 0f;
             Vector2 finalMousePos = Vector2.zero;
 
-            // Method 1: PlayerAction을 이용한 마우스 휠 입력 (가장 안정적)
-            if (_mouseWheelAction != null)
-            {
-                var scrollValue = _mouseWheelAction.ReadValue<Vector2>();
-                var scroll = scrollValue.y;
-                // 0이 아닌 모든 값 감지
-                if (scroll != 0f)
-                {
-                    // if (_showDebugInfo)
-                        // Debug.Log($"[PlayerAction] 마우스 휠 감지: scroll={scroll}");
-                    
-                    finalScroll = scroll;
-                    finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
-                    inputDetected = true;
-                    _lastInputMethod = "PlayerAction";
-                }
-            }
-
-            // Method 2: 기존 New Input System (백업)
-            if (!inputDetected && Mouse.current != null)
+            // Method 1: 기존 New Input System (가장 직접적이고 안정적)
+            if (Mouse.current != null)
             {
                 var scrollVector = Mouse.current.scroll.ReadValue();
                 var scroll = scrollVector.y;
                 
                 if (scroll != 0f)
                 {
-                    // if (_showDebugInfo)
-                        // Debug.Log($"[Mouse.current] 마우스 휠 감지: scroll={scroll}");
+                    if (_showDebugInfo)
+                        Debug.Log($"[Mouse.current] 마우스 휠 감지: scroll={scroll}");
                     
                     finalScroll = scroll;
                     finalMousePos = Mouse.current.position.ReadValue();
                     inputDetected = true;
                     _lastInputMethod = "Mouse.current";
+                }
+            }
+
+            // Method 2: PlayerAction을 이용한 마우스 휠 입력 (백업)
+            if (!inputDetected && _mouseWheelAction != null)
+            {
+                var scrollValue = _mouseWheelAction.ReadValue<Vector2>();
+                var scroll = scrollValue.y;
+                // 0이 아닌 모든 값 감지
+                if (scroll != 0f)
+                {
+                    if (_showDebugInfo)
+                        Debug.Log($"[PlayerAction] 마우스 휠 감지: scroll={scroll}");
+                    
+                    finalScroll = scroll;
+                    finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
+                    inputDetected = true;
+                    _lastInputMethod = "PlayerAction";
                 }
             }
 
@@ -282,6 +286,14 @@ namespace Util.CameraSetting
         private void Update()
         {
             if (backgroundSprite == null) return;
+            
+            // 디버그 정보 업데이트
+            if (_showDebugInfo)
+            {
+                _mouseCurrentAvailable = Mouse.current != null;
+                _forceDisabledDebug = _forceDisabled; // 인스펙터에서 확인용
+            }
+            
             if (!_enablePan && !_enableZoom) return;
             
             // 카메라가 자동 이동 중일 때는 사용자 입력 무시
@@ -486,7 +498,17 @@ namespace Util.CameraSetting
         /// </summary>
         public static void SetForceDisabled(bool value)
         {
-            if (Instance == null) return;
+            if (Instance == null) 
+            {
+                Debug.LogWarning("[CameraView2D] SetForceDisabled: Instance is null!");
+                return;
+            }
+            
+            if (Instance._showDebugInfo)
+            {
+                Debug.Log($"[CameraView2D] SetForceDisabled: {Instance._forceDisabled} -> {value}");
+            }
+            
             Instance._forceDisabled = value;
             
             if (value)

@@ -57,21 +57,45 @@ namespace UI.Page
 
         private void OnDisable()
         {
+            // 항상 입력을 먼저 활성화 (안전장치)
+            try
+            {
+                Global.InputManager?.EnableAllInput();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[InGameIntroPage] Error enabling input in OnDisable: {ex.Message}");
+            }
+            
+            // CancellationToken 정리
             _cts?.Cancel();
             _cts?.Dispose();
             _cts = null;
-
-            Global.InputManager.EnableAllInput();
         }
 
         private async UniTaskVoid DisableInputAndDestroyAsync(CancellationToken cancellationToken)
         {
-            Global.InputManager.DisableAllInput();
+            try
+            {
+                Global.InputManager.DisableAllInput();
 
-            await UniTask.WaitForSeconds(3, cancellationToken: cancellationToken);
-            Global.InputManager.EnableAllInput();
-            Global.UIManager.ClosePage();
-            Global.UIManager.OpenPage<InGameTutorialPage>();
+                await UniTask.WaitForSeconds(3, cancellationToken: cancellationToken);
+                
+                Global.InputManager.EnableAllInput();
+                Global.UIManager.ClosePage();
+                Global.UIManager.OpenPage<InGameTutorialPage>();
+            }
+            catch (OperationCanceledException)
+            {
+                // CancellationToken이 취소된 경우 (OnDisable에서 이미 처리됨)
+                Debug.Log("[InGameIntroPage] DisableInputAndDestroyAsync cancelled");
+            }
+            catch (Exception ex)
+            {
+                // 예외 발생 시에도 입력 복구
+                Debug.LogError($"[InGameIntroPage] Error in DisableInputAndDestroyAsync: {ex.Message}");
+                Global.InputManager.EnableAllInput();
+            }
         }
 
         [Binding]
