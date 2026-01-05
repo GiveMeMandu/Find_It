@@ -53,6 +53,12 @@ public class FogModeManager : ModeManager
 
         if (levelManager != null)
         {
+            // TargetObjDic이 비어있는지 체크
+            if (levelManager.TargetObjDic == null || levelManager.TargetObjDic.Count == 0)
+            {
+                Debug.LogWarning("[FogModeManager] TargetObjDic이 비어있습니다. 초기화 타이밍 문제일 수 있습니다.");
+            }
+            
             levelManager.OnFoundObj += OnHiddenObjectFound;
             
             // 전체 숨겨진 오브젝트 수 계산
@@ -89,6 +95,9 @@ public class FogModeManager : ModeManager
     {
         if (CameraView2D.Instance == null) return;
         
+        // 카메라 이동 중 입력 강제 비활성화
+        CameraView2D.SetForceDisabled(true);
+        
         // 왼쪽 경계 계산
         Bounds backgroundBounds = CameraView2D.Instance.backgroundSprite.bounds;
         float leftBoundary = backgroundBounds.min.x + boundaryMargin;
@@ -104,6 +113,10 @@ public class FogModeManager : ModeManager
         
         // 부드럽게 이동 (2초)
         await CameraView2D.Instance.MoveCameraToPositionAsync(targetPosition, 2f);
+        
+        // 카메라 이동 완료 후 입력 활성화
+        CameraView2D.SetForceDisabled(false);
+        Debug.Log("[FogModeManager] 카메라 이동 완료, 입력 활성화");
     }
 
     /// <summary>

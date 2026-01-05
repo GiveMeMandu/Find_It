@@ -113,8 +113,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         [Label("게임 종료 시 아이템 세트 미션 체크 여부")]
         public bool CheckItemSetCondition = true;
 
-        public Dictionary<Guid, HiddenObjGroup> TargetObjDic;
-        public Dictionary<Guid, HiddenObj> RabbitObjDic;
+        public Dictionary<Guid, HiddenObjGroup> TargetObjDic = new Dictionary<Guid, HiddenObjGroup>();
+        public Dictionary<Guid, HiddenObj> RabbitObjDic = new Dictionary<Guid, HiddenObj>();
         private DateTime StartTime;
         private DateTime EndTime;
 
@@ -334,12 +334,25 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public void ToggleScrollView()
         {
+            if (TargetObjDic == null)
+            {
+                Debug.LogWarning("[LevelManager] TargetObjDic is null. Cannot toggle scroll view.");
+                return;
+            }
+            
             UIScrollType = (UIScrollType == UIScrollType.Vertical) ? UIScrollType.Horizontal : UIScrollType.Vertical;
             ScrollViewTrigger();
         }
 
         private void ScrollViewTrigger()
         {
+            // TargetObjDic 초기화 확인
+            if (TargetObjDic == null)
+            {
+                Debug.LogWarning("[LevelManager] TargetObjDic is null. Skipping ScrollViewTrigger.");
+                return;
+            }
+            
             // ScrollView들이 null인지 체크
             if (HorizontalScrollView == null || VerticalScrollView == null)
             {

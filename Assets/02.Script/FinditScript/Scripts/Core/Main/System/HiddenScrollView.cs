@@ -41,6 +41,25 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             Action<Guid> regionToggle, 
             Action uiClick)
         {
+            // Null 체크 추가
+            if (contentContainer == null)
+            {
+                Debug.LogError("[HiddenScrollView] contentContainer is null!");
+                return new List<HiddenObjUI>();
+            }
+
+            if (prefab == null)
+            {
+                Debug.LogError("[HiddenScrollView] prefab is null!");
+                return new List<HiddenObjUI>();
+            }
+
+            if (objDic == null)
+            {
+                Debug.LogError("[HiddenScrollView] objDic is null!");
+                return new List<HiddenObjUI>();
+            }
+
             foreach (Transform obj in contentContainer.transform)
             {
                 Destroy(obj.gameObject);
