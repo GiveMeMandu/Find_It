@@ -113,8 +113,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         [Label("게임 종료 시 아이템 세트 미션 체크 여부")]
         public bool CheckItemSetCondition = true;
 
-        public Dictionary<Guid, HiddenObjGroup> TargetObjDic = new Dictionary<Guid, HiddenObjGroup>();
-        public Dictionary<Guid, HiddenObj> RabbitObjDic = new Dictionary<Guid, HiddenObj>();
+        public Dictionary<Guid, HiddenObjGroup> TargetObjDic;
+        public Dictionary<Guid, HiddenObj> RabbitObjDic;
         private DateTime StartTime;
         private DateTime EndTime;
 
@@ -172,10 +172,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             // 시작 시 Hidden 태그를 가진 오브젝트들 수집
             CollectHiddenObjects();
             BuildDictionary();
-            
-            // Dictionary 초기화 확인 로그
-            Debug.Log($"[LevelManager] BuildDictionary complete. TargetObjDic count: {TargetObjDic?.Count ?? 0}");
-            
             ScrollViewTrigger();
 
             // 버튼들 null 체크
@@ -196,7 +192,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             modeSelector = FindAnyObjectByType<ModeSelector>();
             if (modeSelector != null)
             {
-                Debug.Log($"[LevelManager] Initializing mode. TargetObjDic count before mode init: {TargetObjDic?.Count ?? 0}");
                 modeSelector.InitializeSelectedMode();
             }
 
@@ -339,25 +334,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public void ToggleScrollView()
         {
-            if (TargetObjDic == null)
-            {
-                Debug.LogWarning("[LevelManager] TargetObjDic is null. Cannot toggle scroll view.");
-                return;
-            }
-            
             UIScrollType = (UIScrollType == UIScrollType.Vertical) ? UIScrollType.Horizontal : UIScrollType.Vertical;
             ScrollViewTrigger();
         }
 
         private void ScrollViewTrigger()
         {
-            // TargetObjDic 초기화 확인
-            if (TargetObjDic == null)
-            {
-                Debug.LogWarning("[LevelManager] TargetObjDic is null. Skipping ScrollViewTrigger.");
-                return;
-            }
-            
             // ScrollView들이 null인지 체크
             if (HorizontalScrollView == null || VerticalScrollView == null)
             {
