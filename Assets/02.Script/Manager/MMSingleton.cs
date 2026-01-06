@@ -68,8 +68,17 @@ public class MMSingleton<T> : MonoBehaviour where T : Component
 
         if (_instance != null && _instance != this)
         {
-            Debug.LogWarning($"[MMSingleton] Destroying duplicate instance of {typeof(T).Name} + 객체 이름은 {gameObject.name}");
-            Destroy(gameObject);
+            if (_instance.name.EndsWith("_AutoCreated"))
+            {
+                Debug.Log($"[MMSingleton] Auto-created instance of {typeof(T).Name} replaced by {gameObject.name}");
+                Destroy(_instance.gameObject);
+                _instance = this as T;
+            }
+            else
+            {
+                Debug.LogWarning($"[MMSingleton] Destroying duplicate instance of {typeof(T).Name} + 객체 이름은 {gameObject.name}");
+                Destroy(gameObject);
+            }
         }
         else
         {
