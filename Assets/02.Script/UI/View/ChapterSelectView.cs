@@ -436,6 +436,10 @@ namespace UnityWeld
             var chapter = CurrentChapter;
             if (chapter == null) return true;
 
+            // 이미 클리어한 스테이지는 무조건 해금
+            if (Global.UserDataManager.IsStageClear(stage.sceneName))
+                return false;
+
             // // 첫 번째 챕터의 첫 번째 스테이지만 항상 해금
             // if (_currentChapterIndex == 0 && stageIndex == 0)
             //     return false;
@@ -460,7 +464,7 @@ namespace UnityWeld
             }
             if (stageIndex == 0 && _currentChapterIndex > 0)
             {
-                return true;
+                return IsCurrentChapterLocked;
             }
 
             return false;

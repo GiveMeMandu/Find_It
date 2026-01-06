@@ -190,7 +190,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 if (!TryGetComponent<LeanClickEvent>(out leanClickEvent))
                 {
                     leanClickEvent = gameObject.AddComponent<LeanClickEvent>();
-                    Debug.Log($"[HiddenObj.Awake] {gameObject.name}: Added LeanClickEvent component");
+                    // Debug.Log($"[HiddenObj.Awake] {gameObject.name}: Added LeanClickEvent component");
                 }
 
                 if (UISprite == null)
