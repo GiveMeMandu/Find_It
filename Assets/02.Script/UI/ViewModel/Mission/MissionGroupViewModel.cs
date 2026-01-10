@@ -14,6 +14,10 @@ namespace UI
     {
         private void Start() {
             var itemSetDataList = ItemSetManager.Instance.GetItemSetDataList();
+            if (itemSetDataList == null)
+            {
+                return;
+            }
             if(itemSetDataList.Count == 0)
             {
                 return;

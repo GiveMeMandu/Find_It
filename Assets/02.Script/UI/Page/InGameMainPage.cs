@@ -122,11 +122,11 @@ namespace UI.Page
             if (ItemSetManager.Instance != null)
             {
                 ItemSetManager.Instance.OnSetCompleted += OnSetCompleted;
-                // 이미 완료된 미션이 있다면 버튼 활성화 및 미션 그룹 활성화
-                if (ItemSetManager.Instance.FoundSetsCount > 0)
-                {
-                    ShowMissionButton = true;
-                }
+                // itemSetList가 null이면 버튼 숨김, 아니면 미션 존재 여부 또는 이미 완료된 미션으로 결정
+                var itemSetList = ItemSetManager.Instance.GetItemSetDataList();
+                bool hasMissions = (itemSetList != null) && (itemSetList.Count > 0 || ItemSetManager.Instance.FoundSetsCount > 0);
+                ShowMissionButton = hasMissions;
+                MissionGroupEnabled = hasMissions;
             }
         }
 
@@ -146,6 +146,7 @@ namespace UI.Page
         private void OnSetCompleted(string setName)
         {
             ShowMissionButton = true;
+            MissionGroupEnabled = true;
         }
 
         private void Update()

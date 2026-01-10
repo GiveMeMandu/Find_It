@@ -104,7 +104,7 @@ namespace UI.Effect
             {
                 isResetedThisTime = false;
                 await UniTask.WhenAll(
-                    transform.DOLocalRotate(targetRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
+                    transform.DOLocalRotate(targetRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.Fast).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
                     isSmallOnEnd ? transform.DOScale(0, 0.5f).SetEase(Ease.OutCubic).SetDelay(1 * effectSpeed * smallTiming).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
                 );
             }
@@ -124,7 +124,7 @@ namespace UI.Effect
             else
             {
                 await UniTask.WhenAll(
-                    rectTransform.DOLocalRotate(targetRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
+                    rectTransform.DOLocalRotate(targetRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.Fast).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
                     isSmallOnEnd ? rectTransform.DOScale(0, 0.5f).SetEase(Ease.OutCubic).SetDelay(1 * effectSpeed * smallTiming).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
                 );
                 isResetedThisTime = false;
@@ -137,14 +137,14 @@ namespace UI.Effect
             {
                 var rectTransform = GetComponent<RectTransform>();
                 await UniTask.WhenAll(
-                    rectTransform.DOLocalRotate(startRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
+                    rectTransform.DOLocalRotate(startRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.Fast).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
                     isSmallOnEnd ? rectTransform.DOScale(1, 0.5f).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
                 );
             }
             else
             {
                 await UniTask.WhenAll(
-                    transform.DOLocalRotate(startRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.FastBeyond360).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
+                    transform.DOLocalRotate(startRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.Fast).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
                     isSmallOnEnd ? transform.DOScale(1, 0.5f).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
                 );
             }

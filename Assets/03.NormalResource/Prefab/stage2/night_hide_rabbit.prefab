@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 8003487426609518036}
   - component: {fileID: 7183168827749769474}
   - component: {fileID: 8818334720186277652}
+  - component: {fileID: 556539143033124483}
   m_Layer: 3
   m_Name: night_hide_rabbit
   m_TagString: Hidden
@@ -292,6 +293,10 @@ MonoBehaviour:
   OnPlayAudio2:
     m_PersistentCalls:
       m_Calls: []
+  subscribeDelayFrames: 2
+  onNightEvent:
+    m_PersistentCalls:
+      m_Calls: []
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
@@ -325,3 +330,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &556539143033124483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8136157705458965101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIChangeHelper
+  sprite: {fileID: 21300000, guid: 912aa11ccf4a31548ac98dc1aad539ec, type: 3}
