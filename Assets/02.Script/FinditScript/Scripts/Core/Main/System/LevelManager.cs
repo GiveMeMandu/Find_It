@@ -173,7 +173,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             CollectHiddenObjects();
             BuildDictionary();
             ScrollViewTrigger();
-
+DebugGameState();
             // 버튼들 null 체크
             if (ToggleBtn != null)
                 ToggleBtn.onClick.AddListener(ToggleScrollView);
@@ -722,7 +722,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
             // 디버그 로그 추가
             Debug.Log($"[LevelManager] DetectGameEnd - Remaining: {remainingObjects}, Total: {totalObjects}, Found: {foundObjects}");
-            Debug.Log($"[LevelManager] ItemSetManager - Found: {ItemSetManager.Instance?.FoundSetsCount}, Total: {ItemSetManager.Instance?.TotalSetsCount}");
+            Debug.Log($"[LevelManager] ItemSetManager - Found: {ItemSetManager.Instance?.FoundSetsCount}, Total: {ItemSetManager.Instance?.TotalSetsCount}" + "\n 아이템 매니저 객체" + gameObject.name);
 
             // DARK 모드인 경우 미션(ItemSet) 검사 제외
             bool isDarkMode = modeSelector != null && modeSelector.selectedMode == ModeManager.GameMode.DARK;
@@ -931,6 +931,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (ItemSetManager.Instance != null)
             {
                 Debug.Log($"[LevelManager] ItemSet - Found: {ItemSetManager.Instance.FoundSetsCount}, Total: {ItemSetManager.Instance.TotalSetsCount}");
+                Debug.Log("[LevelManager] 아이템 매니저 객체 이름 : " + ItemSetManager.Instance.gameObject.name);
             }
             else
             {
