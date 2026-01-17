@@ -1357,7 +1357,7 @@ MonoBehaviour:
   dayNightObj: []
   dayNightEnableObj: []
   nightDarkObj: []
-  nightColor: {r: 0.8039216, g: 0.8039216, b: 0.8980392, a: 1}
+  nightColor: {r: 0.5921569, g: 0.5921569, b: 0.5921569, a: 1}
   isHideOnDay: 0
   isActiveOnNight: 1
   isDisableOnNight: 0
@@ -14947,7 +14947,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       propertyPath: m_TagString
-      value: Hidden
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 6721378905438791085, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       propertyPath: m_IsActive
@@ -14975,33 +14975,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 870993022397449990, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+    - {fileID: 6120874204364091257, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 608470595612455202, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 266303}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 324705424}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 324705423}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 324705422}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 324705421}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 324705420}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 324705419}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 324705418}
     - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 324705417}
@@ -15051,214 +15031,6 @@ MonoBehaviour:
   TestEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &324705418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324705415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6f70c0df96a36e46bd3551379937a42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ClickTouchSound
-  clickSoundType: 1
-  playOnAwake: 0
-  useRandomSound: 1
---- !u!114 &324705419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324705415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Effect.StretchVFX
-  isPlayOnStart: 0
-  isPlayOnEnable: 0
-  isStopOtherEffect: 0
-  startDelay: 0
-  delay: 0
-  isLoopForce: 0
-  isUIEffect: 0
-  effectAddValue: 0
-  effectSpeed: 1
-  isPlayLock: 0
-  OnEffectStart:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 324705418}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PlayClickSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEffectEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  isPlaying: 0
-  stretchMultiplier: 1.1
-  xAnimDuration: 0.1
-  yRestoreDuration: 0.15
-  animationEase: 3
---- !u!114 &324705420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324705415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LeanClickEvent
-  selfSelected: 0
-  onSelected:
-    m_PersistentCalls:
-      m_Calls: []
-  onDeselected:
-    m_PersistentCalls:
-      m_Calls: []
-  use: 0
-  onSelectedFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 324705419}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PlayVFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _maxClickCount: -1
---- !u!114 &324705421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324705415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a209d8210ccc85418269a8e467afda6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StretchVFXGroupSetting
-  stretchMultiplier: 1.1
-  xAnimDuration: 0.1
-  yRestoreDuration: 0.15
-  animationEase: 3
-  useSpriteBounds: 1
-  colliderSize: {x: 1, y: 1}
-  colliderOffset: {x: 0, y: 0}
-  applyToChildren: 0
-  addClickSound: 1
-  clickSoundType: 1
---- !u!114 &324705422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324705415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4890b3765ac861d4aa57f968d66474fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: ac9079b4a12ba7143a9c2ad7dfa34ba0, type: 3}
---- !u!114 &324705423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324705415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbc1c9095f929e54ba2e924d1865a8c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!61 &324705424
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324705415}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0.046262443, y: 0.98705447}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 2.147737, y: 2.9741094}
-  m_EdgeRadius: 0
 --- !u!1 &325204912
 GameObject:
   m_ObjectHideFlags: 0
@@ -23645,7 +23417,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  _maxClickCount: -1
+  _maxClickCount: 1
 --- !u!114 &487594155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32082,7 +31854,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  _maxClickCount: -1
+  _maxClickCount: 1
 --- !u!114 &669744934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33417,6 +33189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 870993022397449990, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+    - {fileID: 6120874204364091257, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 608470595612455202, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
@@ -33425,22 +33198,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 700923168}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 700923167}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 700923166}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 700923165}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 700923164}
-    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 700923163}
     - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 700923162}
@@ -33493,143 +33251,6 @@ MonoBehaviour:
   TestEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &700923163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 700923160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6f70c0df96a36e46bd3551379937a42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ClickTouchSound
-  clickSoundType: 1
-  playOnAwake: 0
-  useRandomSound: 1
---- !u!114 &700923164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 700923160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Effect.StretchVFX
-  isPlayOnStart: 0
-  isPlayOnEnable: 0
-  isStopOtherEffect: 0
-  startDelay: 0
-  delay: 0
-  isLoopForce: 0
-  isUIEffect: 0
-  effectAddValue: 0
-  effectSpeed: 1
-  isPlayLock: 0
-  OnEffectStart:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 700923163}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PlayClickSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEffectEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  isPlaying: 0
-  stretchMultiplier: 1.1
-  xAnimDuration: 0.1
-  yRestoreDuration: 0.15
-  animationEase: 3
---- !u!114 &700923165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 700923160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LeanClickEvent
-  selfSelected: 0
-  onSelected:
-    m_PersistentCalls:
-      m_Calls: []
-  onDeselected:
-    m_PersistentCalls:
-      m_Calls: []
-  use: 0
-  onSelectedFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFinger:
-    m_PersistentCalls:
-      m_Calls: []
-  onSelectedSelectFingerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 700923164}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PlayVFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _maxClickCount: -1
---- !u!114 &700923166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 700923160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a209d8210ccc85418269a8e467afda6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StretchVFXGroupSetting
-  stretchMultiplier: 1.1
-  xAnimDuration: 0.1
-  yRestoreDuration: 0.15
-  animationEase: 3
-  useSpriteBounds: 1
-  colliderSize: {x: 1, y: 1}
-  colliderOffset: {x: 0, y: 0}
-  applyToChildren: 0
-  addClickSound: 1
-  clickSoundType: 1
 --- !u!114 &700923167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33643,18 +33264,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: ac9079b4a12ba7143a9c2ad7dfa34ba0, type: 3}
---- !u!114 &700923168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 700923160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbc1c9095f929e54ba2e924d1865a8c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &700923170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48898,7 +48507,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _maxClickCount: -1
+  _maxClickCount: 1
 --- !u!114 &1090670360
 MonoBehaviour:
   m_ObjectHideFlags: 0
