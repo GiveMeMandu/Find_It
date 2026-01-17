@@ -975,6 +975,24 @@ MonoBehaviour:
   isHorizontal: 0
   isReverse: 1
   ignoreFirstOnEnable: 0
+  onEnterComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  onExitComplete:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6638333080711081762}
+        m_TargetAssemblyTypeName: UI.Page.MapSelectPage, Assembly-CSharp
+        m_MethodName: ClosePage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2467655629471183436
 GameObject:
   m_ObjectHideFlags: 0
@@ -3340,7 +3358,6 @@ GameObject:
   - component: {fileID: 3932277357220722865}
   - component: {fileID: 4279162076199693666}
   - component: {fileID: 2596612336495871849}
-  - component: {fileID: 179417073879447206}
   m_Layer: 5
   m_Name: Close
   m_TagString: Untagged
@@ -3449,7 +3466,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3932277357220722865}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6636395535807156093}
+        m_TargetAssemblyTypeName: UI.Effect.PageScaleEffect, Assembly-CSharp
+        m_MethodName: PlayExitAnimation
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &2596612336495871849
 Animator:
   serializedVersion: 7
@@ -3472,21 +3501,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &179417073879447206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5453442579580824100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed406354527c60646af11d782e6dd994, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityWeld::UnityWeld.Binding.EventBinding
-  _isAutoConnection: 1
-  viewModelMethodName: UI.Page.MapSelectPage.ClosePage
-  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &5516909980866093659
 GameObject:
   m_ObjectHideFlags: 0

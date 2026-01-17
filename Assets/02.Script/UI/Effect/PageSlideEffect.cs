@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Events;
 using NaughtyAttributes;
 using System;
 namespace UI.Effect
@@ -17,6 +18,11 @@ namespace UI.Effect
 
         private RectTransform rectTransform;
         private Image image;
+        // Keep references to running sequences so we can kill/reuse them
+        private Sequence currentSequence;
+        // UnityEvents to notify when enter/exit animations complete
+        public UnityEvent onEnterComplete = new UnityEvent();
+        public UnityEvent onExitComplete = new UnityEvent();
 
         protected override void OnEnable()
         {
@@ -34,13 +40,15 @@ namespace UI.Effect
                 return;
             }
 
-            PlayScaleAnimation();
+            PlayEnterAnimation();
         }
 
-        private void PlayScaleAnimation()
+        // Play entry animation (called on enable or manually)
+        public void PlayEnterAnimation()
         {
             // 초기 설정
             rectTransform.localScale = Vector3.zero;
+            rectTransform.rotation = Quaternion.identity;
 
             // // 페이드 시퀀스
             // if (image != null)
@@ -87,6 +95,77 @@ namespace UI.Effect
             scaleSequence.SetUpdate(true);
             scaleSequence
                 .Append(rectTransform.DOScale(1, 0.35f).SetEase(Ease.OutBack));
+
+            // call UnityEvent when enter animation finishes
+            scaleSequence.OnComplete(() => { if (onEnterComplete != null) onEnterComplete.Invoke(); });
+
+            // store reference to last important sequence so we can stop it when exiting
+            currentSequence = scaleSequence;
+        }
+
+        // Play exit animation (moves the page back off-screen and scales out)
+        public void PlayExitAnimation(bool deactivateAfter = false)
+        {
+            if (rectTransform == null)
+                rectTransform = transform as RectTransform;
+
+            // stop any current tweens on this transform
+            rectTransform.DOKill();
+
+            int dir = isReverse ? -1 : 1;
+
+            // 이동 시퀀스 (Enter의 역순: 0 -> 중간 -> 화면 밖)
+            var moveSequence = CreateSequence();
+            moveSequence.SetUpdate(true);
+
+            if (isHorizontal)
+            {
+                moveSequence
+                    .AppendCallback(() => rectTransform.localPosition = new Vector3(0f, rectTransform.localPosition.y, 0))
+                    .Append(rectTransform.DOLocalMoveX(4f * dir, 0.2f).SetEase(Ease.Linear))
+                    .Append(rectTransform.DOLocalMoveX(1080f * dir, 0.7f).SetEase(Ease.InExpo));
+            }
+            else
+            {
+                moveSequence
+                    .AppendCallback(() => rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, 0f, 0))
+                    .Append(rectTransform.DOLocalMoveY(4f * dir, 0.2f).SetEase(Ease.Linear))
+                    .Append(rectTransform.DOLocalMoveY(1080f * dir, 0.7f).SetEase(Ease.InExpo));
+            }
+
+            // 회전 시퀀스 (Enter의 역순)
+            var rotateSequence = CreateSequence();
+            rotateSequence.SetUpdate(true);
+            rotateSequence
+                .Append(rectTransform.DORotate(new Vector3(0, 0, -2f * dir), 0.4f).SetEase(Ease.InOutQuad))
+                .Append(rectTransform.DORotate(Vector3.zero, 0.25f).SetEase(Ease.InOutQuad));
+
+            // 스케일 시퀀스 (독립적으로 실행)
+            var scaleSequence = CreateSequence();
+            scaleSequence.SetUpdate(true);
+            scaleSequence
+                .AppendInterval(0.05f) // 약간 늦게 시작
+                .Append(rectTransform.DOScale(0f, 0.35f).SetEase(Ease.InBack));
+
+            // 항상 Exit 완료 이벤트 호출, 필요 시 비활성화도 처리
+            scaleSequence.OnComplete(() =>
+            {
+                if (onExitComplete != null) onExitComplete.Invoke();
+                if (deactivateAfter) gameObject.SetActive(false);
+            });
+
+            currentSequence = scaleSequence;
+        }
+
+        // Convenience methods to show/hide from other scripts
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide(bool deactivateAfter = true)
+        {
+            PlayExitAnimation(deactivateAfter);
         }
     }
 }
