@@ -86,6 +86,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
                     ToScale = Vector3.one;
                 }
             }else
+            if(UseCustomScale == true)
+            {
+            }else
             {
                 ToScale = transform.localScale;
             }
