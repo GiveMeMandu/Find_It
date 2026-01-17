@@ -443,7 +443,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 		});
 
 		// 디버그 로그: 겹치는 모든 객체와 우선순위 표시
-		Debug.Log($"[{gameObject.name}] CheckHierarchyPriority - Overlapping objects at touch position:");
+		// Debug.Log($"[{gameObject.name}] CheckHierarchyPriority - Overlapping objects at touch position:");
 		for (int i = 0; i < overlappingClickEvents.Count; i++)
 		{
 			var obj = overlappingClickEvents[i];
@@ -458,11 +458,11 @@ public class LeanClickEvent : LeanSelectableByFinger
 
 		if (!isTopMost)
 		{
-			Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
+			// Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
 		}
 		else
 		{
-			Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
+			// Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
 		}
 
 		return isTopMost;
