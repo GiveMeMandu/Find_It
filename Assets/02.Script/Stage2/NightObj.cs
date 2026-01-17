@@ -24,6 +24,13 @@ namespace InGame
     public class NightObj : FoundObj
     {
         public static bool IsGlobalNight = false;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatic()
+        {
+            IsGlobalNight = false;
+        }
+
         private HiddenObj cachedHiddenObj;
         // Handler reference so we can unsubscribe cleanly
         private Action hiddenObjFoundHandler;
