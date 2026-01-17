@@ -37,7 +37,7 @@ namespace OutGame
             if(_levelManager != null) {
                 _levelManager.gameObject.SetActive(true);
             }
-            Global.UIManager.OpenPage<InGameIntroPage>();
+            // Global.UIManager.OpenPage<InGameIntroPage>();
         }
 
         protected virtual async UniTask ClearStageTask()
