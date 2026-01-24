@@ -15,7 +15,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         // Public reference to the HiddenObj this UI represents
         public HiddenObj RepresentedHiddenObj;
 
-        [LabelText("찾았을 때 배경이 바뀔 이미지")] [SerializeField] private Sprite backGroundToChange;
+        [LabelText("찾았을 때 배경이 바뀔 이미지")][SerializeField] private Sprite backGroundToChange;
         [LabelText("실루엣 모드용 이미지")] public Image silhouetteImage;
         public Image backGround;
         public Image targetSprite;
@@ -29,10 +29,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private List<MultiLanguageTextListModel> uiTooltipsListModel;
         private TooltipsType tooltipsType;
         private int clickCount = 0;
-        
+
         public UnityEvent OnUIClickEvent;
-        public Action<List<MultiLanguageTextListModel>,TooltipsType, int, Transform> UIClickEvent;
-        
+        public Action<List<MultiLanguageTextListModel>, TooltipsType, int, Transform> UIClickEvent;
+
         public void Initialize(Sprite sprite)
         {
             targetSprite.sprite = sprite;
@@ -50,7 +50,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             this.foundCount = foundCount;
             this.totalCount = totalCount;
             UpdateCountUI();
-            
+
             // 남은 개수가 0이면 Found 상태로 변경
             if (foundCount >= totalCount)
             {
@@ -69,39 +69,43 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 countSprite.gameObject.SetActive(foundCount < totalCount);
             }
+
+            SetSilhouetteMode(foundCount < totalCount);
         }
-        
+
         public void InitializeTooltips(List<MultiLanguageTextListModel> tooltipsList, TooltipsType type)
         {
             isEnableTooltips = true;
             tooltipsType = type;
             uiTooltipsListModel = tooltipsList;
         }
-        
+
         public void Click()
         {
             OnUIClickEvent?.Invoke();
-            if (isEnableTooltips) {
+            if (isEnableTooltips)
+            {
                 UIClickEvent?.Invoke(uiTooltipsListModel, tooltipsType, clickCount++, transform);
             }
         }
-        
+
         public void Found()
         {
             if (FoundSprite.gameObject.activeSelf) return; // 이미 Found 상태면 무시
-            
+
             FoundSprite.gameObject.SetActive(true);
-            if(backGround != null && backGroundToChange != null) {
+            if (backGround != null && backGroundToChange != null)
+            {
                 backGround.sprite = backGroundToChange;
             }
-            
+
             // 실루엣 모드에서 찾았을 때 원본 이미지로 복원
             if (silhouetteImage)
             {
-                SetSilhouetteMode(false);
+                // SetSilhouetteMode(false);
             }
         }
-        
+
         /// <summary>
         /// 실루엣 모드 활성화/비활성화
         /// </summary>
@@ -111,7 +115,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 silhouetteImage.gameObject.SetActive(isActive);
                 targetSprite.gameObject.SetActive(!isActive);
-                
+
                 if (isActive && targetSprite.sprite != null)
                 {
                     // 원본 스프라이트를 실루엣 이미지에 복사하고 검은색으로 변경
@@ -129,4 +133,4 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         //     }
         // }
     }
-} 
+}
