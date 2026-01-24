@@ -81,7 +81,7 @@ public class DarkModeManager : ModeManager
 
         // 손전등 효과 (찾았을 때 잠깐 밝아지는 효과 + 크기 증가)
         FlashlightFoundEffectAsync().Forget();
-        IncreaseFlashlightSizeAsync().Forget();
+        // IncreaseFlashlightSizeAsync().Forget();
 
         Debug.Log($"[DarkModeManager] 어둠 속 오브젝트 발견: {foundObj.name}");
     }
