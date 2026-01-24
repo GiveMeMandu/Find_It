@@ -51,39 +51,41 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
                     var hintSprite = GetComponent<SpriteRenderer>();
                     if (hintSprite != null)
                     {
-                        if (hiddenObj.spriteRenderer != null && hiddenObj.spriteRenderer.sprite != null)
+                        // Ensure prefab's local scale is neutral for consistent size calculations
+                        transform.localScale = Vector3.one;
+                        // 우선 콜라이더(InitialBounds)가 있으면 이를 사용
+                        if (InitialBounds.size != Vector3.zero)
                         {
-                            // 스프라이트 실제 크기 기준으로 힌트 크기 설정
-                            float targetWidth = hiddenObj.spriteRenderer.sprite.bounds.size.x;
-                            float targetHeight = hiddenObj.spriteRenderer.sprite.bounds.size.y;
-                            float hintWidth = hintSprite.sprite.bounds.size.x;
-                            float hintHeight = hintSprite.sprite.bounds.size.y;
-                            
-                            float scaleX = targetWidth / hintWidth;
-                            float scaleY = targetHeight / hintHeight;
-                            float baseScale = Mathf.Max(scaleX, scaleY) * 1.0f; // 기본 크기
-                            
-                            // 펄스 효과: 기본 크기에서 약간 작게/크게
-                            MinScale = new Vector3(baseScale * 0.85f, baseScale * 0.85f, 1f);
-                            MaxScale = new Vector3(baseScale * 1.25f, baseScale * 1.25f, 1f);
-                            
-                            // sorting order 설정 (대상보다 위에 보이도록)
-                            hintSprite.sortingOrder = hiddenObj.spriteRenderer.sortingOrder + 1;
-                        }
-                        else if (InitialBounds.size != Vector3.zero)
-                        {
-                            // sprite가 없으면 collider 크기 사용
                             float targetWidth = InitialBounds.size.x;
                             float targetHeight = InitialBounds.size.y;
                             float hintWidth = hintSprite.sprite.bounds.size.x;
                             float hintHeight = hintSprite.sprite.bounds.size.y;
-                            
+
                             float scaleX = targetWidth / hintWidth;
                             float scaleY = targetHeight / hintHeight;
                             float baseScale = Mathf.Max(scaleX, scaleY) * 1.0f;
-                            
+
                             MinScale = new Vector3(baseScale * 0.85f, baseScale * 0.85f, 1f);
                             MaxScale = new Vector3(baseScale * 1.25f, baseScale * 1.25f, 1f);
+                        }
+                        else if (hiddenObj.spriteRenderer != null && hiddenObj.spriteRenderer.sprite != null)
+                        {
+                            // 콜라이더가 없으면 스프라이트 실제 크기 기준으로 힌트 크기 설정
+                            float targetWidth = hiddenObj.spriteRenderer.sprite.bounds.size.x;
+                            float targetHeight = hiddenObj.spriteRenderer.sprite.bounds.size.y;
+                            float hintWidth = hintSprite.sprite.bounds.size.x;
+                            float hintHeight = hintSprite.sprite.bounds.size.y;
+
+                            float scaleX = targetWidth / hintWidth;
+                            float scaleY = targetHeight / hintHeight;
+                            float baseScale = Mathf.Max(scaleX, scaleY) * 1.0f; // 기본 크기
+
+                            // 펄스 효과: 기본 크기에서 약간 작게/크게
+                            MinScale = new Vector3(baseScale * 0.85f, baseScale * 0.85f, 1f);
+                            MaxScale = new Vector3(baseScale * 1.25f, baseScale * 1.25f, 1f);
+
+                            // sorting order 설정 (대상보다 위에 보이도록)
+                            hintSprite.sortingOrder = hiddenObj.spriteRenderer.sortingOrder + 1;
                         }
                         else
                         {

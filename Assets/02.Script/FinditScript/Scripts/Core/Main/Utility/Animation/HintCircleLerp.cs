@@ -20,7 +20,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
         public Bounds InitialBounds { get; private set; }
         
         private Vector3 centerPosition;
-        private float circleRadius;
+        public float circleRadius;
         private float currentAngle = 0f;
         private Vector3 originalPosition;
 
@@ -79,6 +79,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
                 AutoRestart = true; // PlayOnEnable일 때만 무한 반복 활성화
                 StartHintEffect();
             }
+            
+            transform.parent = null; // 부모에서 분리하여 독립적으로 스케일 조정
+            transform.localScale = Vector3.one;
         }
 
         private void Update()
@@ -114,16 +117,18 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
             // 대상 오브젝트의 크기에 따라 반지름 계산
             if (transform.parent != null && transform.parent.TryGetComponent<HiddenObj>(out var hiddenObj))
             {
-                if (hiddenObj.spriteRenderer != null && hiddenObj.spriteRenderer.sprite != null)
+                // 우선 콜라이더(InitialBounds)가 있으면 이를 사용
+                if (InitialBounds.size != Vector3.zero)
                 {
-                    // 스프라이트 크기 기준
+                    Debug.Log($"InitialBounds Size: {InitialBounds.size} for {hiddenObj.name}");
+                    circleRadius = Mathf.Max(InitialBounds.size.x, InitialBounds.size.y) * 0.5f * RadiusMultiplier;
+                }
+                else if (hiddenObj.spriteRenderer != null && hiddenObj.spriteRenderer.sprite != null)
+                {
+                    // 콜라이더가 없으면 스프라이트 크기 사용
+                    Debug.Log($"Sprite Size: {hiddenObj.spriteRenderer.sprite.bounds.size} for {hiddenObj.name}");
                     var spriteSize = hiddenObj.spriteRenderer.sprite.bounds.size;
                     circleRadius = Mathf.Max(spriteSize.x, spriteSize.y) * 0.5f * RadiusMultiplier;
-                }
-                else if (InitialBounds.size != Vector3.zero)
-                {
-                    // Collider 크기 기준
-                    circleRadius = Mathf.Max(InitialBounds.size.x, InitialBounds.size.y) * 0.5f * RadiusMultiplier;
                 }
                 else
                 {
