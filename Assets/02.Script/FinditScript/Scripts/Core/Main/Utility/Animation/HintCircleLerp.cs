@@ -80,7 +80,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
                 StartHintEffect();
             }
             
-            transform.parent = null; // 부모에서 분리하여 독립적으로 스케일 조정
+            transform.parent.parent = null; // 부모에서 분리하여 독립적으로 스케일 조정
+            transform.parent.localScale = Vector3.one;
             transform.localScale = Vector3.one;
         }
 

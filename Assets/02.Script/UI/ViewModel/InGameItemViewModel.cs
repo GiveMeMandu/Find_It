@@ -7,6 +7,7 @@ using DeskCat.FindIt.Scripts.Core.Main.System;
 using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
 using UnityWeld;
 using UniRx.Triggers;
+using SnowRabbit.Utility;
 
 namespace UI
 {
@@ -641,6 +642,10 @@ namespace UI
             _currentMagnifierUI = Instantiate(magnifierUIPrefab, _currentMagnifierTarget.transform);
             _currentMagnifierUI.transform.parent = null;
             _currentMagnifierUI.gameObject.SetActive(true);
+            if(_currentMagnifierUI.transform.gameObject.TryGetComponent(out FakeChild fakeChild))
+            {
+                fakeChild.TargetParent = _currentMagnifierTarget.transform;
+            }
 
             Debug.Log($"돋보기 UI 생성: {_currentMagnifierTarget.name}");
             _currentMagnifierUI.SetActive(true);
