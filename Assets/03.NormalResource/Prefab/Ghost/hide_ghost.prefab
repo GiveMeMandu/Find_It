@@ -371,13 +371,17 @@ GameObject:
   - component: {fileID: 1120139932286884284}
   - component: {fileID: 1860548190988247485}
   - component: {fileID: 8064014265622214978}
-  - component: {fileID: 4864034567849505439}
   - component: {fileID: 701951891365969882}
-  - component: {fileID: 7611745713703434948}
   - component: {fileID: 4509182514996878204}
-  m_Layer: 0
+  - component: {fileID: 6872525474559689857}
+  - component: {fileID: 1487616765653764501}
+  - component: {fileID: 2974187095133961313}
+  - component: {fileID: 8903196311226639116}
+  - component: {fileID: 6624766273019397932}
+  - component: {fileID: 7548229113937436532}
+  m_Layer: 3
   m_Name: hide_ghost
-  m_TagString: Untagged
+  m_TagString: Hidden
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -399,6 +403,7 @@ Transform:
   - {fileID: 2457756850735914827}
   - {fileID: 4242508031610590661}
   - {fileID: 8250303102075549022}
+  - {fileID: 1932804847917777917}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1860548190988247485
@@ -481,41 +486,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4864034567849505439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7661511552356015657}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 807028ef82816d64188923619d90a57d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Enable: 1
-  OnMouseDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7611745713703434948}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PlayVFX
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _maxClickCount: -1
 --- !u!114 &701951891365969882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -538,39 +508,6 @@ MonoBehaviour:
   applyToChildren: 0
   addClickSound: 1
   clickSoundType: 1
---- !u!114 &7611745713703434948
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7661511552356015657}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlayOnStart: 0
-  isPlayOnEnable: 0
-  isStopOtherEffect: 0
-  startDelay: 0
-  delay: 0
-  isLoopForce: 0
-  isUIEffect: 0
-  effectAddValue: 0
-  effectSpeed: 1
-  isPlayLock: 0
-  OnEffectStart:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEffectEnd:
-    m_PersistentCalls:
-      m_Calls: []
-  isPlaying: 0
-  stretchMultiplier: 1.1
-  xAnimDuration: 0.1
-  yRestoreDuration: 0.15
-  animationEase: 3
 --- !u!61 &4509182514996878204
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -617,3 +554,275 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 4.18, y: 6.2}
   m_EdgeRadius: 0
+--- !u!114 &6872525474559689857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661511552356015657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fde72043aeb481e85fd14e2ff2a5c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeskCat.FindIt.Scripts.Core.Main.System.HiddenObj
+  hiddenObjFoundType: 0
+  UISprite: {fileID: 21300000, guid: 05057e2dafbb1e742a9fb251d35d2f11, type: 3}
+  uiChangeHelper: {fileID: 0}
+  HideOnStart: 0
+  EnableTooltip: 0
+  TooltipsType: 0
+  Tooltips: []
+  EnableBGAnimation: 1
+  BGAnimationPrefab: {fileID: 7532000456490516641, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+  BgAnimationTransform: {fileID: 1932804847917777917}
+  BgAnimationLerp: {fileID: 0}
+  BgAnimationSpriteRenderer: {fileID: 0}
+  HideWhenFound: 0
+  PlaySoundWhenFound: 1
+  clickPriority: 0
+  AudioWhenClick: {fileID: 0}
+  whenFoundEventHelper: {fileID: 0}
+  IsFound: 0
+  baseInfoBool: 1
+  tooltipsBool: 1
+  bgAnimBool: 1
+  actionFoldoutBool: 1
+  spriteRenderer: {fileID: 0}
+--- !u!114 &1487616765653764501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661511552356015657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6637298f65604624a6714dad27759832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction.AfterAnimationFunction
+  AfterAnimationEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7661511552356015657}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2974187095133961313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661511552356015657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eac0546ad5eeb58469d4e6c40e1a80ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HideWhenFoundHelper
+  hideWhenFound: 0
+--- !u!114 &8903196311226639116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661511552356015657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeanClickEvent
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6624766273019397932}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayVFX
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8064014265622214978}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: surprised
+          m_BoolArgument: 0
+        m_CallState: 2
+  _maxClickCount: 1
+--- !u!114 &6624766273019397932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661511552356015657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Effect.StretchVFX
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7548229113937436532}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayClickSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  stretchMultiplier: 1.1
+  xAnimDuration: 0.1
+  yRestoreDuration: 0.15
+  animationEase: 3
+--- !u!114 &7548229113937436532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7661511552356015657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6f70c0df96a36e46bd3551379937a42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickTouchSound
+  clickSoundType: 1
+  playOnAwake: 0
+  useRandomSound: 1
+--- !u!1001 &8238694805882291037
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1120139932286884284}
+    m_Modifications:
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516641, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_Name
+      value: BGAnimPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516654, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516655, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: HideHiddenObjAfterDone
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+--- !u!4 &1932804847917777917 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+  m_PrefabInstance: {fileID: 8238694805882291037}
+  m_PrefabAsset: {fileID: 0}

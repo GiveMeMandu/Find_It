@@ -274,6 +274,7 @@ DebugGameState();
                             if (hiddenObj.BgAnimationTransform == null)
                             {
                                 bgObj = Instantiate(DefaultBgAnimation, hiddenObj.transform);
+                                Debug.Log($"Added BGAnimation to {hiddenObj.gameObject.name}");
                                 hiddenObj.BgAnimationTransform = bgObj.transform;
                                 hiddenObj.SetBgAnimation(bgObj);
                             }
