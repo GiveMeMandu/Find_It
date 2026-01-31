@@ -12,7 +12,7 @@ namespace Effect
     public class ShakeVFX : VFXObject
     {
         [Header("흔들림 설정")]
-        [Tooltip("Z축 최대 회전 각도 (도)"), Range(1f, 30f)]
+        [Tooltip("Z축 최대 회전 각도 (도)"), Range(0f, 360f)]
         [SerializeField] private float maxRotationAngle = 2f;
         
         [Tooltip("흔들림 횟수"), Range(1, 10)]
@@ -84,20 +84,23 @@ namespace Effect
                     // 감쇠 적용
                     currentAngle *= (1f - (decayFactor * i / shakeCount));
                     
+                    Vector3 leftRot = (originalRotation * Quaternion.Euler(0, 0, currentAngle)).eulerAngles;
+                    Vector3 rightRot = (originalRotation * Quaternion.Euler(0, 0, -currentAngle)).eulerAngles;
+
                     // 왼쪽으로 회전
-                    await transform.DORotate(new Vector3(0, 0, currentAngle), shakeDuration * effectSpeed)
+                    await transform.DORotate(leftRot, shakeDuration * effectSpeed)
                         .SetEase(animationEase)
                         .WithCancellation(destroyCancellation.Token);
                     
                     // 오른쪽으로 회전
-                    await transform.DORotate(new Vector3(0, 0, -currentAngle), shakeDuration * effectSpeed * 2)
+                    await transform.DORotate(rightRot, shakeDuration * effectSpeed * 2)
                         .SetEase(animationEase)
                         .WithCancellation(destroyCancellation.Token);
                     
                     // 다시 왼쪽으로 회전 (마지막이 아닌 경우만)
                     if (i < shakeCount - 1)
                     {
-                        await transform.DORotate(new Vector3(0, 0, currentAngle), shakeDuration * effectSpeed)
+                        await transform.DORotate(leftRot, shakeDuration * effectSpeed)
                             .SetEase(animationEase)
                             .WithCancellation(destroyCancellation.Token);
                     }
@@ -138,20 +141,23 @@ namespace Effect
                     // 감쇠 적용
                     currentAngle *= (1f - (decayFactor * i / shakeCount));
                     
+                    Vector3 leftRot = (originalUIRotation * Quaternion.Euler(0, 0, currentAngle)).eulerAngles;
+                    Vector3 rightRot = (originalUIRotation * Quaternion.Euler(0, 0, -currentAngle)).eulerAngles;
+
                     // 왼쪽으로 회전
-                    await rectTransform.DORotate(new Vector3(0, 0, currentAngle), shakeDuration * effectSpeed)
+                    await rectTransform.DORotate(leftRot, shakeDuration * effectSpeed)
                         .SetEase(animationEase)
                         .WithCancellation(destroyCancellation.Token);
                     
                     // 오른쪽으로 회전
-                    await rectTransform.DORotate(new Vector3(0, 0, -currentAngle), shakeDuration * effectSpeed * 2)
+                    await rectTransform.DORotate(rightRot, shakeDuration * effectSpeed * 2)
                         .SetEase(animationEase)
                         .WithCancellation(destroyCancellation.Token);
                     
                     // 다시 왼쪽으로 회전 (마지막이 아닌 경우만)
                     if (i < shakeCount - 1)
                     {
-                        await rectTransform.DORotate(new Vector3(0, 0, currentAngle), shakeDuration * effectSpeed)
+                        await rectTransform.DORotate(leftRot, shakeDuration * effectSpeed)
                             .SetEase(animationEase)
                             .WithCancellation(destroyCancellation.Token);
                     }
@@ -246,7 +252,8 @@ namespace Effect
                         {
                             float t = _editorAnimTimer / (shakeDuration * effectSpeed);
                             float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
-                            Vector3 newRotation = Vector3.Lerp(originalRotation.eulerAngles, new Vector3(0, 0, currentShakeAngle), easedT);
+                            Vector3 targetRot = (originalRotation * Quaternion.Euler(0, 0, currentShakeAngle)).eulerAngles;
+                            Vector3 newRotation = Vector3.Lerp(originalRotation.eulerAngles, targetRot, easedT);
                             transform.localRotation = Quaternion.Euler(newRotation);
                         }
                         else
@@ -261,8 +268,8 @@ namespace Effect
                         {
                             float t = _editorAnimTimer / (shakeDuration * effectSpeed * 2);
                             float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
-                            Vector3 startRot = new Vector3(0, 0, currentShakeAngle);
-                            Vector3 endRot = new Vector3(0, 0, -currentShakeAngle);
+                            Vector3 startRot = (originalRotation * Quaternion.Euler(0, 0, currentShakeAngle)).eulerAngles;
+                            Vector3 endRot = (originalRotation * Quaternion.Euler(0, 0, -currentShakeAngle)).eulerAngles;
                             Vector3 newRotation = Vector3.Lerp(startRot, endRot, easedT);
                             transform.localRotation = Quaternion.Euler(newRotation);
                         }
@@ -280,8 +287,8 @@ namespace Effect
                             {
                                 float t = _editorAnimTimer / (shakeDuration * effectSpeed);
                                 float easedT = DOVirtual.EasedValue(0, 1, t, animationEase);
-                                Vector3 startRot = new Vector3(0, 0, -currentShakeAngle);
-                                Vector3 endRot = new Vector3(0, 0, currentShakeAngle);
+                                Vector3 startRot = (originalRotation * Quaternion.Euler(0, 0, -currentShakeAngle)).eulerAngles;
+                                Vector3 endRot = (originalRotation * Quaternion.Euler(0, 0, currentShakeAngle)).eulerAngles;
                                 Vector3 newRotation = Vector3.Lerp(startRot, endRot, easedT);
                                 transform.localRotation = Quaternion.Euler(newRotation);
                             }
@@ -311,7 +318,7 @@ namespace Effect
                     float period = 0.2f;
                     float easedT = DOVirtual.EasedValue(0, 1, t, Ease.OutElastic, overshoot, period);
                     
-                    Vector3 startRot = new Vector3(0, 0, -_currentAngle * (1f - (decayFactor * (shakeCount - 1) / shakeCount)));
+                    Vector3 startRot = (originalRotation * Quaternion.Euler(0, 0, -_currentAngle * (1f - (decayFactor * (shakeCount - 1) / shakeCount)))).eulerAngles;
                     Vector3 endRot = originalRotation.eulerAngles;
                     Vector3 newRotation = Vector3.Lerp(startRot, endRot, easedT);
                     transform.localRotation = Quaternion.Euler(newRotation);
