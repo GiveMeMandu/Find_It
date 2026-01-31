@@ -14,7 +14,10 @@ namespace Effect
         [FoldoutGroup("세부 설정")] [LabelText("활성화시 재생")] [SerializeField] private bool isPlayOnEnable = false;
         [FoldoutGroup("세부 설정")] [LabelText("재생시 다른 이펙트 멈춤")] [SerializeField] private bool isStopOtherEffect = false;
         [FoldoutGroup("세부 설정")] [LabelText("재생 시작 전 딜레이 (초)")] [SerializeField] private float startDelay = 0;
-        [FoldoutGroup("세부 설정")] [LabelText("반복 재생시 딜레이 (초)")] [SerializeField] private float delay = 0;
+        [FoldoutGroup("세부 설정")] [LabelText("반복 재생시 딜레이 (초)")] [HideIf("isRandomDelay")] [SerializeField] private float delay = 0;
+        [FoldoutGroup("세부 설정")] [LabelText("반복 딜레이 랜덤 사용")] [SerializeField] private bool isRandomDelay = false;
+        [FoldoutGroup("세부 설정")] [ShowIf("isRandomDelay")] [LabelText("최소 랜덤 딜레이")] [SerializeField] private float minRandomDelay = 0f;
+        [FoldoutGroup("세부 설정")] [ShowIf("isRandomDelay")] [LabelText("최대 랜덤 딜레이")] [SerializeField] private float maxRandomDelay = 1f;
         [FoldoutGroup("세부 설정")] [LabelText("재생시 무조건 무한루프")] [SerializeField] private bool isLoopForce = false;
         [FoldoutGroup("세부 설정")] [LabelText("UI 이펙트인가")] [SerializeField] protected bool isUIEffect = false;
         [FoldoutGroup("세부 설정")] [LabelText("효과 정도 가중치")] [SerializeField] protected float effectAddValue = 0;
@@ -127,7 +130,8 @@ namespace Effect
                     if(!isLoop) break;
                     if(loopCount > 0 && loop >= loopCount) break;
                     
-                    await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: destroyCancellation.Token);
+                    float currentDelay = isRandomDelay ? UnityEngine.Random.Range(minRandomDelay, maxRandomDelay) : delay;
+                    await UniTask.Delay(TimeSpan.FromSeconds(currentDelay), cancellationToken: destroyCancellation.Token);
                 } while (true);
             }
             catch (OperationCanceledException)
