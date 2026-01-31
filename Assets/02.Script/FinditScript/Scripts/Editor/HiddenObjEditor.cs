@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using DeskCat.FindIt.Scripts.Core.Main.System;
 using DeskCat.FindIt.Scripts.Core.Main.Utility.ClickedFunction;
 using DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj;
@@ -20,18 +20,59 @@ namespace DeskCat.FindIt.Scripts.Editor
         private Sprite DefaultSprite;
 
         private AnimBool baseInfoAnimBool;
-
         private AnimBool tooltipsAnimBool;
-        SerializedProperty tooltipsProperty;
-
         private AnimBool actionAnimBool;
         private AnimBool bgAnimBool;
         
         private int actionToolbarInt = 0;
 
+        // Serialized Properties
+        SerializedProperty hiddenObjFoundTypeProp;
+        SerializedProperty UISpriteProp;
+        SerializedProperty uiChangeHelperProp;
+        SerializedProperty HideOnStartProp;
+        SerializedProperty HideWhenFoundProp;
+        SerializedProperty PlaySoundWhenFoundProp;
+        SerializedProperty AudioWhenClickProp;
+        
+        SerializedProperty EnableTooltipProp;
+        SerializedProperty TooltipsTypeProp;
+        SerializedProperty tooltipsProperty;
+
+        SerializedProperty EnableBGAnimationProp;
+        SerializedProperty BGAnimationPrefabProp;
+        SerializedProperty BgAnimationTransformProp;
+        
+        SerializedProperty baseInfoBoolProp;
+        SerializedProperty tooltipsBoolProp;
+        SerializedProperty bgAnimBoolProp;
+        SerializedProperty actionFoldoutBoolProp;
+
         private void OnEnable()
         {
             HiddenObjTarget = (HiddenObj)target;
+
+            // Initialize Properties
+            hiddenObjFoundTypeProp = serializedObject.FindProperty("hiddenObjFoundType");
+            UISpriteProp = serializedObject.FindProperty("UISprite");
+            uiChangeHelperProp = serializedObject.FindProperty("uiChangeHelper");
+            HideOnStartProp = serializedObject.FindProperty("HideOnStart");
+            HideWhenFoundProp = serializedObject.FindProperty("HideWhenFound");
+            PlaySoundWhenFoundProp = serializedObject.FindProperty("PlaySoundWhenFound");
+            AudioWhenClickProp = serializedObject.FindProperty("AudioWhenClick");
+            
+            EnableTooltipProp = serializedObject.FindProperty("EnableTooltip");
+            TooltipsTypeProp = serializedObject.FindProperty("TooltipsType");
+            tooltipsProperty = serializedObject.FindProperty("Tooltips");
+            
+            EnableBGAnimationProp = serializedObject.FindProperty("EnableBGAnimation");
+            BGAnimationPrefabProp = serializedObject.FindProperty("BGAnimationPrefab");
+            BgAnimationTransformProp = serializedObject.FindProperty("BgAnimationTransform");
+            
+            baseInfoBoolProp = serializedObject.FindProperty("baseInfoBool");
+            tooltipsBoolProp = serializedObject.FindProperty("tooltipsBool");
+            bgAnimBoolProp = serializedObject.FindProperty("bgAnimBool");
+            actionFoldoutBoolProp = serializedObject.FindProperty("actionFoldoutBool");
 
             // 레이어가 HiddenObjectLayer가 아니면 자동으로 설정
             if (HiddenObjTarget.gameObject.layer != LayerManager.HiddenObjectLayer)
@@ -41,81 +82,75 @@ namespace DeskCat.FindIt.Scripts.Editor
                 EditorUtility.SetDirty(HiddenObjTarget.gameObject);
             }
 
-            baseInfoAnimBool = new AnimBool(true);
+            baseInfoAnimBool = new AnimBool(baseInfoBoolProp.boolValue);
             baseInfoAnimBool.valueChanged.AddListener(Repaint);
 
-            tooltipsAnimBool = new AnimBool(true);
+            tooltipsAnimBool = new AnimBool(tooltipsBoolProp.boolValue);
             tooltipsAnimBool.valueChanged.AddListener(Repaint);
-            tooltipsProperty = serializedObject.FindProperty("Tooltips");
 
-            bgAnimBool = new AnimBool(true);
+            bgAnimBool = new AnimBool(bgAnimBoolProp.boolValue);
             bgAnimBool.valueChanged.AddListener(Repaint);
 
-            actionAnimBool = new AnimBool(true);
+            actionAnimBool = new AnimBool(actionFoldoutBoolProp.boolValue);
             actionAnimBool.valueChanged.AddListener(Repaint);
 
             HiddenObjTarget.TryGetComponent<SpriteRenderer>(out var defaultSprite);
             if (defaultSprite != null)
             {
                 DefaultSprite = defaultSprite.sprite;
-                if (HiddenObjTarget.UISprite == null)
+                if (UISpriteProp.objectReferenceValue == null)
                 {
-                    HiddenObjTarget.UISprite = DefaultSprite;
+                    UISpriteProp.objectReferenceValue = DefaultSprite;
+                    serializedObject.ApplyModifiedPropertiesWithoutUndo();
                 }
             }
         }
 
         public override void OnInspectorGUI()
         {
+            serializedObject.Update();
+
             // 레이어 상태 확인 및 정보 표시
             if (HiddenObjTarget.gameObject.layer != LayerManager.HiddenObjectLayer)
             {
                 EditorGUILayout.HelpBox($"HiddenObj는 자동으로 HiddenObjectLayer({LayerManager.HiddenObjectLayer})로 설정됩니다.", MessageType.Info);
                 
                 // 자동으로 레이어 설정
-                Undo.RecordObject(HiddenObjTarget.gameObject, "Set HiddenObject Layer");
-                HiddenObjTarget.gameObject.layer = LayerManager.HiddenObjectLayer;
-                EditorUtility.SetDirty(HiddenObjTarget.gameObject);
+                if (GUILayout.Button("Fix Layer"))
+                {
+                    Undo.RecordObject(HiddenObjTarget.gameObject, "Set HiddenObject Layer");
+                    HiddenObjTarget.gameObject.layer = LayerManager.HiddenObjectLayer;
+                    EditorUtility.SetDirty(HiddenObjTarget.gameObject);
+                }
             }
 
             DrawBaseInfo();
             DrawTooltips();
             DrawBGAnimation();
             DrawActionUtility();
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void DrawBaseInfo()
         {
-            HiddenObjTarget.baseInfoBool = EditorGUILayout.BeginFoldoutHeaderGroup(HiddenObjTarget.baseInfoBool, "General Setting");
-            baseInfoAnimBool.target = HiddenObjTarget.baseInfoBool;
+            baseInfoBoolProp.boolValue = EditorGUILayout.BeginFoldoutHeaderGroup(baseInfoBoolProp.boolValue, "General Setting");
+            baseInfoAnimBool.target = baseInfoBoolProp.boolValue;
 
             if (EditorGUILayout.BeginFadeGroup(baseInfoAnimBool.faded))
             {
                 EditorGUI.indentLevel++;
                 {
-                    HiddenObjTarget.hiddenObjFoundType = (HiddenObjFoundType)EditorGUILayout.EnumPopup("Found Type",
-                        HiddenObjTarget.hiddenObjFoundType);
+                    EditorGUILayout.PropertyField(hiddenObjFoundTypeProp, new GUIContent("Found Type"));
+                    EditorGUILayout.PropertyField(UISpriteProp, new GUIContent("UI Sprite"));
+                    EditorGUILayout.PropertyField(uiChangeHelperProp, new GUIContent("UI Change Helper"));
+                    EditorGUILayout.PropertyField(HideOnStartProp, new GUIContent("Hide Object On Start"));
+                    EditorGUILayout.PropertyField(HideWhenFoundProp, new GUIContent("Hide Object When Found"));
+                    EditorGUILayout.PropertyField(PlaySoundWhenFoundProp, new GUIContent("Play Sound When Found"));
 
-                    HiddenObjTarget.UISprite = (Sprite)EditorGUILayout.ObjectField("UI Sprite",
-                        HiddenObjTarget.UISprite, typeof(Sprite), true);
-
-                    // UIChangeHelper 필드 추가
-                    HiddenObjTarget.uiChangeHelper = (UIChangeHelper)EditorGUILayout.ObjectField("UI Change Helper",
-                        HiddenObjTarget.uiChangeHelper, typeof(UIChangeHelper), true);
-
-                    HiddenObjTarget.HideOnStart =
-                        EditorGUILayout.ToggleLeft("Hide Object On Start", HiddenObjTarget.HideOnStart);
-
-                    HiddenObjTarget.HideWhenFound =
-                        EditorGUILayout.ToggleLeft("Hide Object When Found", HiddenObjTarget.HideWhenFound);
-
-                    HiddenObjTarget.PlaySoundWhenFound = EditorGUILayout.ToggleLeft("Play Sound When Found",
-                        HiddenObjTarget.PlaySoundWhenFound);
-
-                    if (HiddenObjTarget.PlaySoundWhenFound)
+                    if (PlaySoundWhenFoundProp.boolValue)
                     {
-                        HiddenObjTarget.AudioWhenClick = (AudioClip)EditorGUILayout.ObjectField("Specified Sound",
-                            HiddenObjTarget.AudioWhenClick, typeof(AudioClip), true);
+                        EditorGUILayout.PropertyField(AudioWhenClickProp, new GUIContent("Specified Sound"));
                     }
                 }
                 EditorGUI.indentLevel--;
@@ -127,39 +162,38 @@ namespace DeskCat.FindIt.Scripts.Editor
 
         private void DrawTooltips()
         {
-            HiddenObjTarget.tooltipsBool = EditorGUILayout.BeginFoldoutHeaderGroup(HiddenObjTarget.tooltipsBool, "Tooltips Setting");
-            tooltipsAnimBool.target = HiddenObjTarget.tooltipsBool;
+            tooltipsBoolProp.boolValue = EditorGUILayout.BeginFoldoutHeaderGroup(tooltipsBoolProp.boolValue, "Tooltips Setting");
+            tooltipsAnimBool.target = tooltipsBoolProp.boolValue;
             EditorGUILayout.EndFoldoutHeaderGroup();
-
 
             if (EditorGUILayout.BeginFadeGroup(tooltipsAnimBool.faded))
             {
                 EditorGUI.indentLevel++;
                 {
-                    HiddenObjTarget.EnableTooltip =
-                        EditorGUILayout.ToggleLeft("Enable Tooltips", HiddenObjTarget.EnableTooltip);
+                    EditorGUILayout.PropertyField(EnableTooltipProp, new GUIContent("Enable Tooltips"));
 
-                    if (HiddenObjTarget.EnableTooltip)
+                    if (EnableTooltipProp.boolValue)
                     {
-                        HiddenObjTarget.TooltipsType = (TooltipsType)EditorGUILayout.EnumPopup("Tooltips Type",
-                            HiddenObjTarget.TooltipsType);
+                        EditorGUILayout.PropertyField(TooltipsTypeProp, new GUIContent("Tooltips Type"));
 
                         EditorGUILayout.BeginHorizontal();
                         {
                             GUILayout.Space(EditorGUIUtility.labelWidth);
                             if (GUILayout.Button("Generate Default Tooltips", EditorStyles.miniButtonRight))
                             {
+                                Undo.RecordObject(HiddenObjTarget, "Generate Default Tooltips");
                                 HiddenObjTarget.Tooltips =
                                     GlobalSetting.GetDefaultLanguageKey<MultiLanguageTextListModel>();
                                 foreach (var tooltip in HiddenObjTarget.Tooltips)
                                 {
                                     tooltip.Value ??= new List<string>() { "" };
                                 }
+                                EditorUtility.SetDirty(HiddenObjTarget);
+                                serializedObject.Update(); // Update serializedObject to reflect changes
                             }
                         }
                         EditorGUILayout.EndHorizontal();
                         EditorGUILayout.PropertyField(tooltipsProperty, new GUIContent("Tooltips Value"));
-                        serializedObject.ApplyModifiedProperties();
                     }
                 }
                 EditorGUI.indentLevel--;
@@ -170,8 +204,8 @@ namespace DeskCat.FindIt.Scripts.Editor
 
         private void DrawBGAnimation()
         {
-            HiddenObjTarget.bgAnimBool = EditorGUILayout.BeginFoldoutHeaderGroup(HiddenObjTarget.bgAnimBool, "Clicked Background Animation");
-            bgAnimBool.target = HiddenObjTarget.bgAnimBool;
+            bgAnimBoolProp.boolValue = EditorGUILayout.BeginFoldoutHeaderGroup(bgAnimBoolProp.boolValue, "Clicked Background Animation");
+            bgAnimBool.target = bgAnimBoolProp.boolValue;
 
             if (EditorGUILayout.BeginFadeGroup(bgAnimBool.faded))
             {
@@ -179,66 +213,86 @@ namespace DeskCat.FindIt.Scripts.Editor
                 
                 EditorGUILayout.BeginHorizontal();
                 {
-                    HiddenObjTarget.EnableBGAnimation =
-                        EditorGUILayout.ToggleLeft("Enable Background Animation", HiddenObjTarget.EnableBGAnimation);
+                    EditorGUILayout.PropertyField(EnableBGAnimationProp, new GUIContent("Enable Background Animation"));
                     
                     if (GUILayout.Button("Clean", EditorStyles.miniButtonRight))
                     {
-                        HiddenObjTarget.BGAnimationPrefab = null;
-                        if(HiddenObjTarget.BgAnimationTransform) DestroyImmediate(HiddenObjTarget.BgAnimationTransform.gameObject);
-                        HiddenObjTarget.BgAnimationTransform = null;
+                        Undo.RecordObject(HiddenObjTarget, "Clean BG Animation");
+                        BGAnimationPrefabProp.objectReferenceValue = null;
+                        if(HiddenObjTarget.BgAnimationTransform) 
+                        {
+                            Undo.DestroyObjectImmediate(HiddenObjTarget.BgAnimationTransform.gameObject);
+                        }
+                        BgAnimationTransformProp.objectReferenceValue = null;
+                        // No SetDirty needed as we updated properties, but DestroyObjectImmediate handles scene dirtying
                     }
                 }
                 EditorGUILayout.EndHorizontal();
                 
                 
-                if (HiddenObjTarget.EnableBGAnimation)
+                if (EnableBGAnimationProp.boolValue)
                 {
                     EditorGUILayout.BeginHorizontal();
                     {
-                        HiddenObjTarget.BGAnimationPrefab = (GameObject)EditorGUILayout.ObjectField("Background Prefab", 
-                            HiddenObjTarget.BGAnimationPrefab, typeof(GameObject), false);
+                        EditorGUILayout.PropertyField(BGAnimationPrefabProp, new GUIContent("Background Prefab"));
                         
                         if (GUILayout.Button("Use Default", EditorStyles.miniButtonRight))
                         {
-                            HiddenObjTarget.BGAnimationPrefab = (GameObject) Resources.Load("Prefabs/BGAnimPrefab");
+                            BGAnimationPrefabProp.objectReferenceValue = (GameObject) Resources.Load("Prefabs/BGAnimPrefab");
                         }
                     }
                     EditorGUILayout.EndHorizontal();
                     
                     EditorGUILayout.BeginHorizontal();
                     {
-                        
-                        HiddenObjTarget.BgAnimationTransform = (Transform)EditorGUILayout.ObjectField("BG Object", 
-                            HiddenObjTarget.BgAnimationTransform, typeof(Transform), true);
+                        EditorGUILayout.PropertyField(BgAnimationTransformProp, new GUIContent("BG Object"));
                         
                         if (GUILayout.Button("Add BG Object", EditorStyles.miniButtonRight))
                         {
-                            var obj = Instantiate(HiddenObjTarget.BGAnimationPrefab, HiddenObjTarget.transform);
-                            obj.GetComponent<SpriteRenderer>().sortingOrder =
-                                HiddenObjTarget.GetComponent<SpriteRenderer>().sortingOrder - 1;
-                            HiddenObjTarget.BgAnimationTransform = obj.transform;
+                            // Need to handle object instantiation which isn't a property change
+                            if (BGAnimationPrefabProp.objectReferenceValue != null)
+                            {
+                                GameObject prefab = (GameObject)BGAnimationPrefabProp.objectReferenceValue;
+                                GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(prefab, HiddenObjTarget.transform);
+                                Undo.RegisterCreatedObjectUndo(obj, "Create BG Animation Object");
+                                
+                                SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+                                SpriteRenderer targetSr = HiddenObjTarget.GetComponent<SpriteRenderer>();
+                                if (sr != null && targetSr != null)
+                                {
+                                    Undo.RecordObject(sr, "Set Sorting Order");
+                                    sr.sortingOrder = targetSr.sortingOrder - 1;
+                                }
+                                
+                                BgAnimationTransformProp.objectReferenceValue = obj.transform;
+                            }
                         }
                         
                         if (GUILayout.Button("Hide/Show", EditorStyles.miniButtonRight))
                         {
-                            HiddenObjTarget.BgAnimationTransform.gameObject.SetActive(
-                                !HiddenObjTarget.BgAnimationTransform.gameObject.activeSelf);
+                            Transform t = (Transform)BgAnimationTransformProp.objectReferenceValue;
+                            if (t != null)
+                            {
+                                Undo.RecordObject(t.gameObject, "Toggle Active");
+                                t.gameObject.SetActive(!t.gameObject.activeSelf);
+                            }
                         }
                         
                         if (GUILayout.Button("AutoScale", EditorStyles.miniButtonRight))
                         {
-                            if (HiddenObjTarget.BgAnimationTransform != null)
+                            Transform t = (Transform)BgAnimationTransformProp.objectReferenceValue;
+                            if (t != null)
                             {
-                                var currentScale = HiddenObjTarget.BgAnimationTransform.localScale;
+                                Undo.RecordObject(t, "Auto Scale");
+                                var currentScale = t.localScale;
                                 float maxScale = Mathf.Max(currentScale.x, currentScale.y);
-                                HiddenObjTarget.BgAnimationTransform.localScale = new Vector3(maxScale, maxScale, currentScale.z);
+                                t.localScale = new Vector3(maxScale, maxScale, currentScale.z);
                             }
                         }
                     }
                     EditorGUILayout.EndHorizontal();
                     
-                    if (HiddenObjTarget.HideWhenFound)
+                    if (HideWhenFoundProp.boolValue)
                     {
                         EditorGUILayout.HelpBox("Background animation may not work properly when 'Hide When Found' is enabled.", MessageType.Warning);
                     }
@@ -251,13 +305,12 @@ namespace DeskCat.FindIt.Scripts.Editor
 
             EditorGUILayout.EndFadeGroup();
             EditorGUILayout.EndFoldoutHeaderGroup();
-        
         }
 
         private void DrawActionUtility()
         {
-            HiddenObjTarget.actionFoldoutBool = EditorGUILayout.BeginFoldoutHeaderGroup(HiddenObjTarget.actionFoldoutBool, "Show Action Utility");
-            actionAnimBool.target = HiddenObjTarget.actionFoldoutBool;
+            actionFoldoutBoolProp.boolValue = EditorGUILayout.BeginFoldoutHeaderGroup(actionFoldoutBoolProp.boolValue, "Show Action Utility");
+            actionAnimBool.target = actionFoldoutBoolProp.boolValue;
 
             if (EditorGUILayout.BeginFadeGroup(actionAnimBool.faded))
             {
@@ -269,22 +322,22 @@ namespace DeskCat.FindIt.Scripts.Editor
                 {
                     if (GUILayout.Button("Add Click Event"))
                     {
-                        HiddenObjTarget.AddComponent<ClickEvent>();
+                        Undo.AddComponent<ClickEvent>(HiddenObjTarget.gameObject);
                     }
 
                     if (GUILayout.Button("Add Multiple Click Event"))
                     {
-                        HiddenObjTarget.AddComponent<MultipleClickEvent>();
+                        Undo.AddComponent<MultipleClickEvent>(HiddenObjTarget.gameObject);
                     }
 
                     if (GUILayout.Button("Add Drag Event"))
                     {
-                        HiddenObjTarget.AddComponent<DragObj>();
+                        Undo.AddComponent<DragObj>(HiddenObjTarget.gameObject);
                     }
 
                     if (GUILayout.Button("Add Clickable Function"))
                     {
-                        HiddenObjTarget.AddComponent<ClickableFunction>();
+                        Undo.AddComponent<ClickableFunction>(HiddenObjTarget.gameObject);
                     }
                 }
 
@@ -295,10 +348,9 @@ namespace DeskCat.FindIt.Scripts.Editor
                         HiddenObjTarget.TryGetComponent(typeof(BoxCollider2D), out var boxCollider2D);
                         if (boxCollider2D != null)
                         {
-                            DestroyImmediate(boxCollider2D);
+                            Undo.DestroyObjectImmediate(boxCollider2D);
                         }
-
-                        HiddenObjTarget.AddComponent<BoxCollider2D>();
+                        Undo.AddComponent<BoxCollider2D>(HiddenObjTarget.gameObject);
                     }
                 }
 
@@ -309,10 +361,9 @@ namespace DeskCat.FindIt.Scripts.Editor
                         HiddenObjTarget.TryGetComponent(typeof(MeshCollider), out var meshCollider);
                         if (meshCollider != null)
                         {
-                            DestroyImmediate(meshCollider);
+                            Undo.DestroyObjectImmediate(meshCollider);
                         }
-
-                        HiddenObjTarget.AddComponent<MeshCollider>();
+                        Undo.AddComponent<MeshCollider>(HiddenObjTarget.gameObject);
                     }
                 }
 
