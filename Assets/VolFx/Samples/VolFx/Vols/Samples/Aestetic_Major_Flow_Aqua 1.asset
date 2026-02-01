@@ -1,0 +1,156 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8883239782837547526
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba95ee541be4fe3b76c758f1424e975, type: 3}
+  m_Name: FlowVol
+  m_EditorClassIdentifier: 
+  active: 1
+  m_Fade:
+    m_OverrideState: 1
+    m_Value: 1
+  m_Strain:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Samples:
+    m_OverrideState: 0
+    m_Value: 2
+  m_Angle:
+    m_OverrideState: 1
+    m_Value: 0.51
+  m_Flow:
+    m_OverrideState: 1
+    m_Value: {x: 0, y: 0, z: -0.37}
+  m_Tint:
+    m_OverrideState: 1
+    m_Value: {r: 0.5518868, g: 0.7373984, b: 1, a: 0.043137256}
+  m_Print:
+    m_OverrideState: 0
+    m_Value: 0
+  m_Adaptive:
+    m_OverrideState: 0
+    m_Value: 1
+  m_Focus:
+    m_OverrideState: 0
+    m_Value: 0
+  m_Fps:
+    m_OverrideState: 1
+    m_Value: 21.3
+  m_MotionTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: b1c7309882c891a428473b704c301ae9, type: 3}
+  m_MotionPower:
+    m_OverrideState: 1
+    m_Value: 0.056
+--- !u!114 &-4672811987779846105
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29fa0085f50d5e54f8144f766051a691, type: 3}
+  m_Name: FilmGrain
+  m_EditorClassIdentifier: 
+  active: 1
+  type:
+    m_OverrideState: 1
+    m_Value: 10
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  response:
+    m_OverrideState: 1
+    m_Value: 0.926
+  texture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: e4677840f22c49041a27c0681c42ee94, type: 3}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Aestetic_Major_Flow_Aqua 1
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: -8883239782837547526}
+  - {fileID: 199881112481111584}
+  - {fileID: 5152545223545434404}
+  - {fileID: -4672811987779846105}
+--- !u!114 &199881112481111584
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
+  m_Name: Bloom
+  m_EditorClassIdentifier: 
+  active: 0
+  skipIterations:
+    m_OverrideState: 0
+    m_Value: 1
+  threshold:
+    m_OverrideState: 1
+    m_Value: 0.96
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.48
+  scatter:
+    m_OverrideState: 1
+    m_Value: 0.06
+  clamp:
+    m_OverrideState: 0
+    m_Value: 65472
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  highQualityFiltering:
+    m_OverrideState: 0
+    m_Value: 0
+  downscale:
+    m_OverrideState: 0
+    m_Value: 0
+  maxIterations:
+    m_OverrideState: 0
+    m_Value: 6
+  dirtTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  dirtIntensity:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &5152545223545434404
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81180773991d8724ab7f2d216912b564, type: 3}
+  m_Name: ChromaticAberration
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.289

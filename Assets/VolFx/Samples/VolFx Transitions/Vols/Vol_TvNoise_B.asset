@@ -1,0 +1,201 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9032042954134720519
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 772ef47f3fce34346bbb42fb4f5434b8, type: 3}
+  m_Name: PixelationVol
+  m_EditorClassIdentifier: 
+  active: 1
+  m_Scale:
+    m_OverrideState: 1
+    m_Value: 0.859
+  m_Grid:
+    m_OverrideState: 0
+    m_Value: 1
+  m_Roundness:
+    m_OverrideState: 0
+    m_Value: 0
+  m_Color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
+    hdr: 0
+  m_Palette:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  m_Impact:
+    m_OverrideState: 0
+    m_Value: 0
+  m_Crisp:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-1820886380247331694
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 811610bff6fc5af458d2f8870606b8d0, type: 3}
+  m_Name: JpegVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: -5
+  _blockSize:
+    m_OverrideState: 1
+    m_Value: 7
+  _quantization:
+    m_OverrideState: 1
+    m_Value: 15
+  _distortionScale:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToY:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToChroma:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToGlitch:
+    m_OverrideState: 1
+    m_Value: 0
+  _fps:
+    m_OverrideState: 1
+    m_Value: 0
+  _fpsBreak:
+    m_OverrideState: 1
+    m_Value: 0
+  _fpsLag:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  _fpsBlending:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+  _quantSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _scanlineDrift:
+    m_OverrideState: 1
+    m_Value: 0
+  _scanlineRes:
+    m_OverrideState: 1
+    m_Value: 720
+  _scanlinesFps:
+    m_OverrideState: 1
+    m_Value: 120
+  _channelShiftPow:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftX:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftY:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _noise:
+    m_OverrideState: 1
+    m_Value: 0
+  _noiseBilinear:
+    m_OverrideState: 1
+    m_Value: 0
+  _distortionTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Vol_TvNoise_B
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: 3043158828146338367}
+  - {fileID: -1820886380247331694}
+  - {fileID: -9032042954134720519}
+--- !u!114 &3043158828146338367
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96468967439741488ad1b1af1ab44b9b, type: 3}
+  m_Name: ScanlinesVol
+  m_EditorClassIdentifier: 
+  active: 1
+  m_Intensity:
+    m_OverrideState: 1
+    m_Value: 0.407
+  m_Count:
+    m_OverrideState: 1
+    m_Value: 570
+  m_Speed:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Color:
+    m_OverrideState: 1
+    m_Value: 1
+  m_Flicker:
+    m_OverrideState: 1
+    m_Value: 0.572
+  m_Grad:
+    m_OverrideState: 1
+    m_Value: 0.21
+  m_Animation:
+    m_OverrideState: 1
+    m_Value: 0.207
+  m_GradSpeed:
+    m_OverrideState: 1
+    m_Value: 0.2
+  m_Flip:
+    m_OverrideState: 1
+    m_Value: 1.99
+  m_GradColor:
+    m_OverrideState: 1
+    m_Value: {r: 0.3915094, g: 0.643415, b: 1, a: 0.07}

@@ -1,0 +1,193 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7209665098235251746
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
+  m_Name: ColorAdjustments
+  m_EditorClassIdentifier: 
+  active: 0
+  postExposure:
+    m_OverrideState: 0
+    m_Value: 0.54
+  contrast:
+    m_OverrideState: 1
+    m_Value: 10
+  colorFilter:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  hueShift:
+    m_OverrideState: 0
+    m_Value: 15
+  saturation:
+    m_OverrideState: 1
+    m_Value: 45
+--- !u!114 &-6752931230509960712
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
+  m_Name: Bloom
+  m_EditorClassIdentifier: 
+  active: 0
+  skipIterations:
+    m_OverrideState: 1
+    m_Value: 1
+  threshold:
+    m_OverrideState: 1
+    m_Value: 0.9
+  intensity:
+    m_OverrideState: 1
+    m_Value: 10.43
+  scatter:
+    m_OverrideState: 1
+    m_Value: 0.7
+  clamp:
+    m_OverrideState: 1
+    m_Value: 65472
+  tint:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  highQualityFiltering:
+    m_OverrideState: 1
+    m_Value: 0
+  downscale:
+    m_OverrideState: 0
+    m_Value: 0
+  maxIterations:
+    m_OverrideState: 0
+    m_Value: 6
+  dirtTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+  dirtIntensity:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Aestetic_Major_Outline 0
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: -7209665098235251746}
+  - {fileID: 5573561397365031128}
+  - {fileID: -6752931230509960712}
+--- !u!114 &5573561397365031128
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2303f781f6c04e428d9eb352fa4be37e, type: 3}
+  m_Name: OutlineVol
+  m_EditorClassIdentifier: 
+  active: 1
+  m_Sensitive:
+    m_OverrideState: 1
+    m_Value: 0.041
+  m_Thickness:
+    m_OverrideState: 1
+    m_Value: 0.096
+  m_Color:
+    m_OverrideState: 1
+    m_Value:
+      _grad:
+        serializedVersion: 2
+        key0: {r: 0, g: 0.07537851, b: 0.4716981, a: 1}
+        key1: {r: 1, g: 0, b: 0.6551275, a: 0.38039216}
+        key2: {r: 1, g: 0, b: 0.08203983, a: 0.67058825}
+        key3: {r: 0.99769527, g: 1, b: 0.07843137, a: 0}
+        key4: {r: 1, g: 1, b: 1, a: 0}
+        key5: {r: 1, g: 0.6839622, b: 0.6839622, a: 0}
+        key6: {r: 0, g: 0, b: 0, a: 0}
+        key7: {r: 0, g: 0, b: 0, a: 0}
+        ctime0: 0
+        ctime1: 15728
+        ctime2: 35576
+        ctime3: 55424
+        ctime4: 65535
+        ctime5: 65535
+        ctime6: 0
+        ctime7: 0
+        atime0: 0
+        atime1: 65535
+        atime2: 65535
+        atime3: 65535
+        atime4: 0
+        atime5: 0
+        atime6: 0
+        atime7: 0
+        m_Mode: 2
+        m_ColorSpace: 0
+        m_NumColorKeys: 5
+        m_NumAlphaKeys: 2
+      _pixels:
+      - {r: 0, g: 0.07450981, b: 0.47058827, a: 1}
+      - {r: 0.16470589, g: 0.12941177, b: 0.5019608, a: 0.98001266}
+      - {r: 0.2901961, g: 0.16470589, b: 0.5294118, a: 0.9600253}
+      - {r: 0.4156863, g: 0.18823531, b: 0.5529412, a: 0.94003797}
+      - {r: 0.5411765, g: 0.19607845, b: 0.5803922, a: 0.9200506}
+      - {r: 0.67058825, g: 0.18823531, b: 0.6039216, a: 0.9000633}
+      - {r: 0.80392164, g: 0.16078432, b: 0.62352943, a: 0.88007593}
+      - {r: 0.94117653, g: 0.09019608, b: 0.64705884, a: 0.8600886}
+      - {r: 1, g: 0.023529414, b: 0.6313726, a: 0.84010124}
+      - {r: 1, g: 0.050980397, b: 0.58431375, a: 0.8201139}
+      - {r: 1, g: 0.06666667, b: 0.5372549, a: 0.80012655}
+      - {r: 1, g: 0.07450981, b: 0.48627454, a: 0.7801392}
+      - {r: 1, g: 0.078431375, b: 0.43921572, a: 0.7601518}
+      - {r: 1, g: 0.07450981, b: 0.38431376, a: 0.7401645}
+      - {r: 1, g: 0.06666667, b: 0.32941177, a: 0.7201771}
+      - {r: 1, g: 0.050980397, b: 0.2627451, a: 0.70018977}
+      - {r: 1, g: 0.027450982, b: 0.18431373, a: 0.6802024}
+      - {r: 1.0028973, g: 0.09019608, b: 0.08235294, a: 0.6602151}
+      - {r: 1.017992, g: 0.28235295, b: 0.08627451, a: 0.64022774}
+      - {r: 1.0298901, g: 0.40000004, b: 0.09019608, a: 0.62024033}
+      - {r: 1.0383978, g: 0.49411768, b: 0.09019608, a: 0.60025305}
+      - {r: 1.043292, g: 0.58431375, b: 0.09019608, a: 0.58026564}
+      - {r: 1.0443125, g: 0.6666667, b: 0.09019608, a: 0.56027836}
+      - {r: 1.0411501, g: 0.7490196, b: 0.09019608, a: 0.54029095}
+      - {r: 1.033432, g: 0.82745105, b: 0.08627451, a: 0.5203036}
+      - {r: 1.0207033, g: 0.9058824, b: 0.08627451, a: 0.50031626}
+      - {r: 1.0023985, g: 0.9843138, b: 0.078431375, a: 0.48032898}
+      - {r: 0.9960785, g: 1.0035334, b: 0.38823533, a: 0.46034157}
+      - {r: 0.9960785, g: 1.0061884, b: 0.58431375, a: 0.44035423}
+      - {r: 0.9960785, g: 1.0066061, b: 0.7372549, a: 0.42036688}
+      - {r: 0.9960785, g: 1.004611, b: 0.8705883, a: 0.40037954}
+      - {r: 1, g: 1, b: 1, a: 0.3803922}
+  m_Fill:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 0}
+  m_Mode:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Sharp:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Adaptive:
+    m_OverrideState: 1
+    m_Value: 1
+  m_Remap:
+    m_OverrideState: 1
+    m_Value: 0

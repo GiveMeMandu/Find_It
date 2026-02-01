@@ -1,0 +1,237 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3755374650962872538
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 811610bff6fc5af458d2f8870606b8d0, type: 3}
+  m_Name: JpegVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: -4.37
+  _blockSize:
+    m_OverrideState: 1
+    m_Value: 3.1
+  _quantization:
+    m_OverrideState: 1
+    m_Value: 24.8
+  _distortionScale:
+    m_OverrideState: 1
+    m_Value: 0.03
+  _applyToY:
+    m_OverrideState: 1
+    m_Value: 3.78
+  _applyToChroma:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToGlitch:
+    m_OverrideState: 1
+    m_Value: 0
+  _fps:
+    m_OverrideState: 1
+    m_Value: 4.1
+  _fpsBreak:
+    m_OverrideState: 1
+    m_Value: 0
+  _fpsLag:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.072631836
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  _fpsBlending:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+  _quantSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _scanlineDrift:
+    m_OverrideState: 1
+    m_Value: 0.642
+  _scanlineRes:
+    m_OverrideState: 1
+    m_Value: 369
+  _scanlinesFps:
+    m_OverrideState: 1
+    m_Value: 120
+  _channelShiftPow:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftX:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftY:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _noise:
+    m_OverrideState: 1
+    m_Value: 0
+  _noiseBilinear:
+    m_OverrideState: 1
+    m_Value: 0
+  _distortionTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+--- !u!114 &-3039294788303907392
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
+  m_Name: Bloom
+  m_EditorClassIdentifier: 
+  active: 1
+  skipIterations:
+    m_OverrideState: 0
+    m_Value: 1
+  threshold:
+    m_OverrideState: 1
+    m_Value: 0.96
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.48
+  scatter:
+    m_OverrideState: 1
+    m_Value: 0.06
+  clamp:
+    m_OverrideState: 0
+    m_Value: 65472
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  highQualityFiltering:
+    m_OverrideState: 0
+    m_Value: 0
+  downscale:
+    m_OverrideState: 0
+    m_Value: 0
+  maxIterations:
+    m_OverrideState: 0
+    m_Value: 6
+  dirtTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  dirtIntensity:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Aestetic_Major_Jpeg_Glitch
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: -3039294788303907392}
+  - {fileID: -3755374650962872538}
+--- !u!114 &4956482779447301916
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b92b6b40be8f645b8b9775076b7fb3, type: 3}
+  m_Name: JpegVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: -0.4
+  _blockSize:
+    m_OverrideState: 1
+    m_Value: 0.6
+  _quantization:
+    m_OverrideState: 1
+    m_Value: 19
+  _distortionScale:
+    m_OverrideState: 1
+    m_Value: 0.08
+  _applyToY:
+    m_OverrideState: 1
+    m_Value: 4.35
+  _applyToChroma:
+    m_OverrideState: 1
+    m_Value: 12.62
+  _applyToGlitch:
+    m_OverrideState: 1
+    m_Value: 0.19
+  _fps:
+    m_OverrideState: 1
+    m_Value: 4.3
+  _fpsBreak:
+    m_OverrideState: 1
+    m_Value: 0.037
+  _quantSpread:
+    m_OverrideState: 1
+    m_Value: 3
+  _scanlineDrift:
+    m_OverrideState: 1
+    m_Value: 1
+  _scanlineRes:
+    m_OverrideState: 1
+    m_Value: 322
+  _channelShiftPow:
+    m_OverrideState: 1
+    m_Value: 1.28
+  _channelShiftX:
+    m_OverrideState: 1
+    m_Value: -0.037
+  _channelShiftY:
+    m_OverrideState: 1
+    m_Value: 0
+  _noise:
+    m_OverrideState: 1
+    m_Value: -0.06
+  _noiseBilinear:
+    m_OverrideState: 1
+    m_Value: 0
+  _distortionTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 6c300c83b53ba4b4a95ba864ff19393a, type: 3}
+    dimension: 1
