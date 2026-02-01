@@ -1,0 +1,203 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5175568700175740162
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f87d2427ed3459e8c4345aacc689427, type: 3}
+  m_Name: BlurVol
+  m_EditorClassIdentifier: 
+  active: 0
+  m_Radius:
+    m_OverrideState: 1
+    m_Value: 0.34
+  m_Radial:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Samples:
+    m_OverrideState: 1
+    m_Value: 11
+  m_Aspect:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Angle:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-5164604349976601290
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96468967439741488ad1b1af1ab44b9b, type: 3}
+  m_Name: ScanlinesVol
+  m_EditorClassIdentifier: 
+  active: 0
+  m_Intensity:
+    m_OverrideState: 1
+    m_Value: 1.2
+  m_Count:
+    m_OverrideState: 1
+    m_Value: 185
+  m_Speed:
+    m_OverrideState: 1
+    m_Value: 0.027
+  m_Flicker:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-3135342060347895008
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b447969f02741db89b76840f68e7812, type: 3}
+  m_Name: DistortVol
+  m_EditorClassIdentifier: 
+  active: 0
+  m_Weight:
+    m_OverrideState: 1
+    m_Value: 1
+  m_Value:
+    m_OverrideState: 1
+    m_Value: 0.167
+  m_Tiling:
+    m_OverrideState: 1
+    m_Value: 0.206
+  m_Angle:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Motion:
+    m_OverrideState: 1
+    m_Value: 0.529
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Mask - Mask content rendered in pool and used via Volume Profile
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: -5175568700175740162}
+  - {fileID: -3135342060347895008}
+  - {fileID: 5549696841165043187}
+  - {fileID: -5164604349976601290}
+--- !u!114 &5549696841165043187
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03592b0b6d784e6da6ea74233ca33d52, type: 3}
+  m_Name: GrainVol
+  m_EditorClassIdentifier: 
+  active: 0
+  m_Grain:
+    m_OverrideState: 1
+    m_Value: 3
+  m_Response:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      _pixels:
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+      - {r: 1, g: 1, b: 1, a: 1}
+  m_Brightness:
+    m_OverrideState: 1
+    m_Value: -0.9
+  m_Hue:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Saturation:
+    m_OverrideState: 1
+    m_Value: 0
+  m_GainTex:
+    m_OverrideState: 1
+    m_Value: 1
+  m_Alpha:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Color:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 0}
+  m_Fps:
+    m_OverrideState: 1
+    m_Value: 3
+  m_Scale:
+    m_OverrideState: 1
+    m_Value: -0.685
+  m_Texture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}

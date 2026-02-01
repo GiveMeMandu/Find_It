@@ -1,0 +1,303 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3039294788303907392
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
+  m_Name: Bloom
+  m_EditorClassIdentifier: 
+  active: 0
+  skipIterations:
+    m_OverrideState: 0
+    m_Value: 1
+  threshold:
+    m_OverrideState: 1
+    m_Value: 0.96
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.48
+  scatter:
+    m_OverrideState: 1
+    m_Value: 0.06
+  clamp:
+    m_OverrideState: 0
+    m_Value: 65472
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  highQualityFiltering:
+    m_OverrideState: 0
+    m_Value: 0
+  downscale:
+    m_OverrideState: 0
+    m_Value: 0
+  maxIterations:
+    m_OverrideState: 0
+    m_Value: 6
+  dirtTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  dirtIntensity:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Aestetic_Major_Jpeg_Compression
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: -3039294788303907392}
+  - {fileID: 4173832888826162377}
+  - {fileID: 8790107036623252116}
+--- !u!114 &4173832888826162377
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
+  m_Name: ColorAdjustments
+  m_EditorClassIdentifier: 
+  active: 0
+  postExposure:
+    m_OverrideState: 1
+    m_Value: -0.06
+  contrast:
+    m_OverrideState: 1
+    m_Value: 0
+  colorFilter:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  hueShift:
+    m_OverrideState: 1
+    m_Value: 0
+  saturation:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &6993865391496678056
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b92b6b40be8f645b8b9775076b7fb3, type: 3}
+  m_Name: JpegVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: -0.32
+  _blockSize:
+    m_OverrideState: 1
+    m_Value: 0.1
+  _quantization:
+    m_OverrideState: 1
+    m_Value: 23.6
+  _distortionScale:
+    m_OverrideState: 1
+    m_Value: 0.96
+  _applyToY:
+    m_OverrideState: 1
+    m_Value: 0.2
+  _applyToChroma:
+    m_OverrideState: 1
+    m_Value: 1.36
+  _applyToGlitch:
+    m_OverrideState: 1
+    m_Value: 0.13
+  _fps:
+    m_OverrideState: 1
+    m_Value: 3.7
+  _fpsBreak:
+    m_OverrideState: 1
+    m_Value: 0
+  _fpsLag:
+    m_OverrideState: 0
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  _fpsBlending:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  _quantSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _scanlineDrift:
+    m_OverrideState: 0
+    m_Value: 0
+  _scanlineRes:
+    m_OverrideState: 0
+    m_Value: 720
+  _scanlinesFps:
+    m_OverrideState: 0
+    m_Value: 120
+  _channelShiftPow:
+    m_OverrideState: 0
+    m_Value: 1.86
+  _channelShiftX:
+    m_OverrideState: 1
+    m_Value: -0.016
+  _channelShiftY:
+    m_OverrideState: 1
+    m_Value: 0.01
+  _channelShiftSpread:
+    m_OverrideState: 0
+    m_Value: 0
+  _noise:
+    m_OverrideState: 1
+    m_Value: -0.01
+  _noiseBilinear:
+    m_OverrideState: 0
+    m_Value: 0
+  _distortionTex:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+--- !u!114 &8790107036623252116
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 811610bff6fc5af458d2f8870606b8d0, type: 3}
+  m_Name: JpegVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _intensity:
+    m_OverrideState: 1
+    m_Value: -0.93
+  _blockSize:
+    m_OverrideState: 1
+    m_Value: 0.1
+  _quantization:
+    m_OverrideState: 1
+    m_Value: 14.7
+  _distortionScale:
+    m_OverrideState: 1
+    m_Value: 0.35
+  _applyToY:
+    m_OverrideState: 1
+    m_Value: 0
+  _applyToChroma:
+    m_OverrideState: 1
+    m_Value: 0.44
+  _applyToGlitch:
+    m_OverrideState: 1
+    m_Value: 0
+  _fps:
+    m_OverrideState: 1
+    m_Value: 3.5
+  _fpsBreak:
+    m_OverrideState: 1
+    m_Value: 0.013
+  _fpsLag:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  _fpsBlending:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  _quantSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _scanlineDrift:
+    m_OverrideState: 1
+    m_Value: 0.378
+  _scanlineRes:
+    m_OverrideState: 1
+    m_Value: 673
+  _scanlinesFps:
+    m_OverrideState: 1
+    m_Value: 120
+  _channelShiftPow:
+    m_OverrideState: 1
+    m_Value: 0.35
+  _channelShiftX:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftY:
+    m_OverrideState: 1
+    m_Value: 0
+  _channelShiftSpread:
+    m_OverrideState: 1
+    m_Value: 0
+  _noise:
+    m_OverrideState: 1
+    m_Value: 0
+  _noiseBilinear:
+    m_OverrideState: 1
+    m_Value: 1
+  _distortionTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1

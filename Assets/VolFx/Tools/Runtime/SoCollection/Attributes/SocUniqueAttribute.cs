@@ -1,0 +1,17 @@
+using System;
+using UnityEngine;
+
+//  VolFx © NullTale - https://x.com/NullTale
+namespace VolFx.Tools
+{
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    public class SocUniqueAttribute : PropertyAttribute
+    {
+        public Type[] _except;
+        
+        public SocUniqueAttribute(params Type[] except)
+        {
+            _except = except;
+        }
+    }
+}

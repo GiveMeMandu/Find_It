@@ -1,0 +1,183 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8599750709589509135
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba95ee541be4fe3b76c758f1424e975, type: 3}
+  m_Name: FlowVol
+  m_EditorClassIdentifier: 
+  active: 1
+  m_Fade:
+    m_OverrideState: 1
+    m_Value: 0.562
+  m_Strain:
+    m_OverrideState: 1
+    m_Value: 0.718
+  m_Samples:
+    m_OverrideState: 1
+    m_Value: 1
+  m_Angle:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Flow:
+    m_OverrideState: 1
+    m_Value: {x: 0, y: 0, z: -0.12}
+  m_Tint:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 0}
+  m_Print:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Adaptive:
+    m_OverrideState: 1
+    m_Value: 0
+  m_Focus:
+    m_OverrideState: 1
+    m_Value: 0.073
+  m_Fps:
+    m_OverrideState: 1
+    m_Value: 60
+  m_MotionTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+  m_MotionPower:
+    m_OverrideState: 1
+    m_Value: 0
+  m_MotionMove:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-3348058803554035190
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 584f4d053daa4e17a331821f306111c9, type: 3}
+  m_Name: ChromaticVol
+  m_EditorClassIdentifier: 
+  active: 1
+  _Weight:
+    m_OverrideState: 1
+    m_Value: 1
+  _Intensity:
+    m_OverrideState: 1
+    m_Value: 0
+  _Radial:
+    m_OverrideState: 1
+    m_Value: 0.3
+  _Alpha:
+    m_OverrideState: 1
+    m_Value: 0
+  _Angle:
+    m_OverrideState: 1
+    m_Value: 0
+  _Split:
+    m_OverrideState: 1
+    m_Value: 0
+  _Sat:
+    m_OverrideState: 1
+    m_Value: 1
+  _Mono:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-1141854948734865720
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a10f618ab8a42b54a8aa755b345798c0, type: 3}
+  m_Name: InvertVol
+  m_EditorClassIdentifier: 
+  active: 1
+  m_Weight:
+    m_OverrideState: 1
+    m_Value: 1
+  m_Value:
+    m_OverrideState: 1
+    m_Value:
+      _curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 0.8375015
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      _pixels:
+      - {r: 0, g: 0, b: 0, a: 0}
+      - {r: 0.0025582435, g: 0.0025582435, b: 0.0025582435, a: 0.0025582435}
+      - {r: 0.010008074, g: 0.010008074, b: 0.010008074, a: 0.010008074}
+      - {r: 0.02201214, g: 0.02201214, b: 0.02201214, a: 0.02201214}
+      - {r: 0.038233094, g: 0.038233094, b: 0.038233094, a: 0.038233094}
+      - {r: 0.058333576, g: 0.058333576, b: 0.058333576, a: 0.058333576}
+      - {r: 0.08197624, g: 0.08197624, b: 0.08197624, a: 0.08197624}
+      - {r: 0.10882375, g: 0.10882375, b: 0.10882375, a: 0.10882375}
+      - {r: 0.13853872, g: 0.13853872, b: 0.13853872, a: 0.13853872}
+      - {r: 0.17078383, g: 0.17078383, b: 0.17078383, a: 0.17078383}
+      - {r: 0.20522174, g: 0.20522174, b: 0.20522174, a: 0.20522174}
+      - {r: 0.24151509, g: 0.24151509, b: 0.24151509, a: 0.24151509}
+      - {r: 0.27932647, g: 0.27932647, b: 0.27932647, a: 0.27932647}
+      - {r: 0.3183186, g: 0.3183186, b: 0.3183186, a: 0.3183186}
+      - {r: 0.3581541, g: 0.3581541, b: 0.3581541, a: 0.3581541}
+      - {r: 0.39849564, g: 0.39849564, b: 0.39849564, a: 0.39849564}
+      - {r: 0.43900585, g: 0.43900585, b: 0.43900585, a: 0.43900585}
+      - {r: 0.47934744, g: 0.47934744, b: 0.47934744, a: 0.47934744}
+      - {r: 0.5191829, g: 0.5191829, b: 0.5191829, a: 0.5191829}
+      - {r: 0.558175, g: 0.558175, b: 0.558175, a: 0.558175}
+      - {r: 0.5959864, g: 0.5959864, b: 0.5959864, a: 0.5959864}
+      - {r: 0.63227975, g: 0.63227975, b: 0.63227975, a: 0.63227975}
+      - {r: 0.66671765, g: 0.66671765, b: 0.66671765, a: 0.66671765}
+      - {r: 0.6989628, g: 0.6989628, b: 0.6989628, a: 0.6989628}
+      - {r: 0.72867775, g: 0.72867775, b: 0.72867775, a: 0.72867775}
+      - {r: 0.7555253, g: 0.7555253, b: 0.7555253, a: 0.7555253}
+      - {r: 0.779168, g: 0.779168, b: 0.779168, a: 0.779168}
+      - {r: 0.7992685, g: 0.7992685, b: 0.7992685, a: 0.7992685}
+      - {r: 0.81548935, g: 0.81548935, b: 0.81548935, a: 0.81548935}
+      - {r: 0.82749337, g: 0.82749337, b: 0.82749337, a: 0.82749337}
+      - {r: 0.8349433, g: 0.8349433, b: 0.8349433, a: 0.8349433}
+      - {r: 0.8375015, g: 0.8375015, b: 0.8375015, a: 0.8375015}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Vol_DigitalFlash
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: -8599750709589509135}
+  - {fileID: -3348058803554035190}
+  - {fileID: -1141854948734865720}
