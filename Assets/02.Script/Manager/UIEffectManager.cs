@@ -2,7 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
-
+using UI.Effect;
 namespace Manager
 {
     public class UIEffectManager : MonoBehaviour
@@ -14,12 +14,14 @@ namespace Manager
             (eyeBlinkScreen != null && eyeBlinkScreen.IsPlaying) || 
             (letterBox != null && letterBox.IsPlaying);
 
+        public BlurController BlurController => blurController;
         private bool _isEffectPlaying;
 
         [SerializeField] private RectTransform _Fader;
         [SerializeField] private FadeScript _WhiteOut;
         [SerializeField] private EyeBlinkScreen eyeBlinkScreen;
         [SerializeField] private LetterBox letterBox;
+        [SerializeField] private BlurController blurController;
 
         private CancellationTokenSource _fadeToken;
 

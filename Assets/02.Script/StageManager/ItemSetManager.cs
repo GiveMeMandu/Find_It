@@ -120,9 +120,78 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     // Debug.Log($"SetCompletionObject notification shown for: {setData.SetName}");
                 }
                 foundSets.Add(setData.SetName);
+                
+                // 세트 완성 시 미션 완료 페이지와 연출 페이지 동시 오픈
+                ShowSetCompletePages(setData).Forget();
+
                 OnSetCompleted?.Invoke(setData.SetName);
                 CheckAllSetsFound();
             }
+        }
+
+        private async UniTaskVoid ShowSetCompletePages(ItemSetData setData)
+        {
+            // 미션 완료 페이지 (재료 표시)
+            var infoPage = Global.UIManager.OpenPage<InGameMissionCompletePage>();
+            
+            // 정보 초기화 (아이콘은 첫 번째 그룹이나 null 처리)
+            int currentFound = setData.RequiredGroups.Count;
+            int totalNeeded = setData.RequiredGroups.Count;
+            
+            infoPage.Initialize(
+                missionName: setData.SetName,
+                missionNameDivider: string.Format("<alpha=#00>{0}", setData.SetName),
+                missionSetIcon: null, 
+                missionSetFoundLeft: $"({currentFound} / {totalNeeded})",
+                isSetFoundComplete: true,
+                isGroupComplete: true,
+                missionStatus: "Mission Complete!",
+                missionNameAlpha: 1f
+            );
+
+            // 연출 페이지 동시 오픈
+            var visualPage = Global.UIManager.OpenPage<IngameMissionCompleteVisualPage>();
+            if (visualPage != null)
+            {
+                // CompletionObject가 있으면 그 위치로 카메라 이동, 없으면 null 전달 (연출 페이지에서 예외처리됨)
+                GameObject target = setData.CompletionObject != null ? setData.CompletionObject.gameObject : null;
+                visualPage.Initialize(setData.SetName, target);
+            }
+
+            await infoPage.WaitForClose();
+        }
+
+        // SetCompletionObject에서 호출: 미션 현황판 보기
+        public void ShowMissionIngredientsPage(string setName)
+        {
+            var setData = itemSetDataList.Find(x => x.SetName == setName);
+            if (setData != null)
+            {
+                ShowMissionStatusPage(setData).Forget();
+            }
+        }
+
+        protected virtual async UniTask ShowMissionStatusPage(ItemSetData setData)
+        {
+            var page = Global.UIManager.OpenPage<InGameMissionCompletePage>();
+            
+            // 현재 진행도 계산
+            int currentFound = completedGroups.ContainsKey(setData.SetName) ? completedGroups[setData.SetName].Count : 0;
+            int totalNeeded = setData.RequiredGroups.Count;
+            bool isSetComplete = currentFound >= totalNeeded;
+
+            page.Initialize(
+                missionName: setData.SetName,
+                missionNameDivider: string.Format("<alpha=#00>{0}", setData.SetName),
+                missionSetIcon: null, 
+                missionSetFoundLeft: $"({currentFound} / {totalNeeded})",
+                isSetFoundComplete: isSetComplete,
+                isGroupComplete: false,
+                missionStatus: $"Mission! ({FoundSetsCount}/{TotalSetsCount})",
+                missionNameAlpha: 1f
+            );
+            
+            await page.WaitForClose();
         }
 
         private void CheckAllSetsFound()

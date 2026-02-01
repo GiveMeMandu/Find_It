@@ -19,6 +19,7 @@ namespace UI
             {
                 var missionItemViewModel = GetViewModels()[i] as MissionItemViewMdoel;
                 missionItemViewModel.Initialize(itemSetData.RequiredGroups[i]);
+                missionItemViewModel.gameObject.SetActive(true);
             }
         }
     }

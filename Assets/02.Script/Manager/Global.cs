@@ -37,6 +37,7 @@ namespace Manager
         public static QuestManager QuestManager { get; set; }
         public static RewardManager RewardManager { get; set; }
         public static int StageTimer { get; set; } = 600;
+        public static UIEffectManager UIEffectManager { get; set; }
 
         protected override void Awake()
         {
@@ -84,6 +85,10 @@ namespace Manager
                     UIManager = Instantiate(Resources.Load<UIManager>(prefixManager + nameof(UIManager)), transform);
                     UIManager.name = nameof(UIManager);
                     Debug.Log("UIManager loaded successfully");
+                }
+                if (UIEffectManager == null)
+                {
+                    UIEffectManager = UIManager.GetComponent<UIEffectManager>();
                 }
             }
             catch (Exception e)
