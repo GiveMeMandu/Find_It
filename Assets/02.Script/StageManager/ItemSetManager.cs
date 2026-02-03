@@ -84,6 +84,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     {
                         // 세트에 속한 물건을 찾았을 때 알림 페이지 표시
                         ShowTaskAlertPage(setData, obj).Forget();
+
+                        // CompletionObject에 알림 (찾음 표시 등)
+                        if (setData.CompletionObject != null)
+                        {
+                            setData.CompletionObject.OnIngredientFound();
+                        }
                     }
                     if (exists && isComplete)
                     {

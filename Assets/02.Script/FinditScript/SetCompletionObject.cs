@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
+using System.Linq;
 using DeskCat.FindIt.Scripts.Core.Main.System;
 using UnityEngine.Events;
 using NaughtyAttributes;
@@ -10,6 +11,7 @@ using UI.Page;
 using Cysharp.Threading.Tasks;
 using Manager;
 using UI;
+using @Button = Sirenix.OdinInspector.ButtonAttribute;
 
 public class SetCompletionObject : MonoBehaviour
 {
@@ -22,8 +24,14 @@ public class SetCompletionObject : MonoBehaviour
     public string SetName;
 
     [Header("Mission Alert Settings")]
-    [Label("미션 알림 말풍선")]
-    public GameObject AlertBubbleObject;
+    [Label("미션 알림 말풍선 (미수락 상태)")]
+    public GameObject questionAlertObject;
+
+    [Label("발견 알림 말풍선 (재료 찾음)")]
+    public GameObject foundAlertObject;
+
+    [Label("미션 완료 체크 아이콘")]
+    public GameObject foundCheckIcon;
     
     [Label("화면 밖 알림 인디케이터")]
     public RectTransform OffScreenIndicator;
@@ -54,7 +62,7 @@ public class SetCompletionObject : MonoBehaviour
     private Canvas _indicatorCanvas;
     
     // 자식으로 있는 미션 아이템 그룹 뷰모델 캐싱
-    [SerializeField] private MissionItemGorupViewModel _missionItemGroup;
+    [SerializeField] private MissionElementViewModel _missionItemGroup;
     public Canvas MissionItemGroupCanvas;
 
     private void Awake()
@@ -74,12 +82,20 @@ public class SetCompletionObject : MonoBehaviour
             _indicatorCanvas = OffScreenIndicator.GetComponentInParent<Canvas>();
         }
         
-        if (AlertBubbleObject != null)
+        if (questionAlertObject != null)
         {
-            AlertBubbleObject.SetActive(true);
+            questionAlertObject.SetActive(true);
+        }
+        if (foundAlertObject != null)
+        {
+            foundAlertObject.SetActive(false);
+        }
+        if (foundCheckIcon != null)
+        {
+            foundCheckIcon.SetActive(false);
         }
         if(_missionItemGroup == null)
-            _missionItemGroup = GetComponentInChildren<MissionItemGorupViewModel>(true);
+            _missionItemGroup = GetComponentInChildren<MissionElementViewModel>(true);
         if(MissionItemGroupCanvas == null)
             MissionItemGroupCanvas = _missionItemGroup.GetComponentInChildren<Canvas>(true);
     }
@@ -93,8 +109,8 @@ public class SetCompletionObject : MonoBehaviour
         {
             if (OffScreenIndicator != null && OffScreenIndicator.gameObject.activeSelf)
                 OffScreenIndicator.gameObject.SetActive(false);
-            if (AlertBubbleObject != null && AlertBubbleObject.activeSelf)
-                AlertBubbleObject.SetActive(false);
+            if (questionAlertObject != null && questionAlertObject.activeSelf)
+                questionAlertObject.SetActive(false);
             return;
         }
 
@@ -113,7 +129,8 @@ public class SetCompletionObject : MonoBehaviour
         if (isOffScreen)
         {
             // 화면 밖: 말풍선 끄고 인디케이터 켜기
-            if (AlertBubbleObject != null) AlertBubbleObject.SetActive(false);
+            if (questionAlertObject != null) questionAlertObject.SetActive(false);
+            if (foundAlertObject != null) foundAlertObject.SetActive(false);
             
             if (OffScreenIndicator != null)
             {
@@ -176,8 +193,16 @@ public class SetCompletionObject : MonoBehaviour
         }
         else
         {
-            // 화면 안: 말풍선 켜기, 인디케이터 끄기
-            if (AlertBubbleObject != null && !AlertBubbleObject.activeSelf) AlertBubbleObject.SetActive(true);
+            // 화면 안: 말풍선 켜기 (상태에 따라), 인디케이터 끄기
+            // 아직 수락 안했고, 발견된 상태도 아니면 물음표 띄우기
+            if (!IsAccepted && !IsFound)
+            {
+                // 재료를 찾아서 foundAlert가 떠있는 상태가 아닐 때만 물음표 표시
+                bool isFoundAlertActive = foundAlertObject != null && foundAlertObject.activeSelf;
+                if (questionAlertObject != null && !questionAlertObject.activeSelf && !isFoundAlertActive) 
+                    questionAlertObject.SetActive(true);
+            }
+            
             if (OffScreenIndicator != null && OffScreenIndicator.gameObject.activeSelf) OffScreenIndicator.gameObject.SetActive(false);
         }
     }
@@ -185,11 +210,12 @@ public class SetCompletionObject : MonoBehaviour
     // LeanClick 등을 통해 Inspector에서 연결할 Public 함수
     public void OnClickMission()
     {
-        if (IsAccepted || IsFound) return;
+        if (IsAccepted) return;
 
         IsAccepted = true;
 
-        if (AlertBubbleObject != null) AlertBubbleObject.SetActive(false);
+        if (questionAlertObject != null) questionAlertObject.SetActive(false);
+        if (foundAlertObject != null) foundAlertObject.SetActive(false);
         if (OffScreenIndicator != null) OffScreenIndicator.gameObject.SetActive(false);
 
         // 오디오 재생
@@ -214,12 +240,6 @@ public class SetCompletionObject : MonoBehaviour
                     _missionItemGroup.Initialize(setData);
                 }
             }
-        }
-        else
-        {
-            // 뷰모델이 없는 경우 기존 팝업 방식 사용 (백업)
-            // 미션 페이지 열기 (재료 표시)
-            OpenMissionPage().Forget();
         }
     }
 
@@ -260,6 +280,10 @@ public class SetCompletionObject : MonoBehaviour
         if (!IsFound)
         {
             IsFound = true;
+            
+            // 모든 알림 끄기
+            if (questionAlertObject != null) questionAlertObject.SetActive(false);
+            if (foundAlertObject != null) foundAlertObject.SetActive(false);
             if (AudioWhenClick != null && PlaySoundWhenFound)
             {
                 LevelManager.PlayItemFx(AudioWhenClick);
@@ -273,27 +297,77 @@ public class SetCompletionObject : MonoBehaviour
             }
 
             // 미션 완료 페이지 (재료 표시) - 완료 상태로 표시됨
-            OpenMissionPage().Forget();
-
-            // 동시에 비주얼 연출 페이지 오픈
-            OpenVisualPage().Forget();
+            if (!IsAccepted)
+            {
+                OnClickMission();
+                OpenMissionPage().Forget();
+            }
         }
+
+        // 완료 체크 아이콘 활성화 (수락 여부 무관)
+        if (foundCheckIcon != null)
+        {
+            foundCheckIcon.SetActive(true);
+        }
+
         // gameObject.SetActive(true);  // 세트가 완성되면 알림 표시
         OnSetComplete?.Invoke();
         
         // Debug.Log($"SetCompletionObject {SetName} is now active and ready to be clicked!");
     }
 
-    private async UniTaskVoid OpenVisualPage()
+
+    // 아이템을 찾았을 때 ItemSetManager에서 호출
+    public void OnIngredientFound()
     {
-        var visualPage = Global.UIManager.OpenPage<IngameMissionCompleteVisualPage>();
-        
-        // ItemSetManager를 통해 타겟 객체 전달 (현재 객체)
-        if (visualPage != null)
+        if (IsFound) return; // 이미 세트가 완성되었으면 무시
+
+        // foundAlertObject 활성화
+        if (foundAlertObject != null)
         {
-            visualPage.Initialize(SetName, this.gameObject);
+            foundAlertObject.SetActive(true);
         }
-        
-        await UniTask.Delay(1);
+
+        // 수락 안했었다면 questionAlertObject 비활성화
+        if (questionAlertObject != null)
+        {
+            questionAlertObject.SetActive(false);
+        }
+    }
+
+    [@Button("테스트 : 이 세트의 모든 물건 찾기")]
+    public void ForceCompleteMissionItems()
+    {
+        if (ItemSetManager.Instance == null || LevelManager.Instance == null) return;
+
+        var itemSetDataList = ItemSetManager.Instance.GetItemSetDataList();
+        var setData = itemSetDataList.Find(x => x.SetName == SetName);
+
+        if (setData == null)
+        {
+            Debug.LogWarning($"[SetCompletionObject] SetName '{SetName}' not found in ItemSetManager.");
+            return;
+        }
+
+        foreach (var groupName in setData.RequiredGroups)
+        {
+            var groupPair = LevelManager.Instance.TargetObjDic.FirstOrDefault(x => x.Value.BaseGroupName == groupName);
+
+            if (groupPair.Value == null) continue;
+
+            var guid = groupPair.Key;
+            var group = groupPair.Value;
+
+            var objectsToCheck = group.Objects.ToList();
+
+            foreach (var obj in objectsToCheck)
+            {
+                if (!group.IsObjectFound(obj))
+                {
+                    group.LastClickedObject = obj;
+                    LevelManager.Instance.FoundObjAction(guid);
+                }
+            }
+        }
     }
 }

@@ -62,7 +62,7 @@ namespace UI
             // LevelManager가 아직 초기화되지 않았으면 기본값 설정
             if (LevelManager.Instance == null || LevelManager.Instance.TargetObjDic == null)
             {
-                MissionItemCount = "0 / 0";
+                MissionItemCount = "0/0";
                 return;
             }
             
@@ -76,7 +76,7 @@ namespace UI
             else
             {
                 // 일치하는 그룹이 없을 경우 기본값 설정
-                MissionItemCount = "0 / 0";
+                MissionItemCount = "0/0";
             }
         }
         private void OnDestroy()
@@ -104,7 +104,7 @@ namespace UI
             // LevelManager가 초기화되지 않았거나 TargetObjDic이 없으면 조기 반환
             if (LevelManager.Instance == null || LevelManager.Instance.TargetObjDic == null)
             {
-                MissionItemCount = "0 / 0";
+                MissionItemCount = "0/0";
                 return;
             }
             
@@ -118,7 +118,7 @@ namespace UI
             int foundCount = hiddenObjs.Count(obj => obj.IsFound);
 
             // "찾은 수 / 전체 수" 형식으로 설정
-            MissionItemCount = string.Format("{0} / {1}", foundCount, totalCount);
+            MissionItemCount = string.Format("{0}/{1}", foundCount, totalCount);
 
             // 대표 HiddenObj를 사용하여 아이콘 설정 (첫 번째 아이템 사용)
             if (hiddenObjs.Count > 0 && hiddenObjs[0].UISprite != null)

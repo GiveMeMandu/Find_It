@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -601,7 +601,7 @@ DebugGameState();
             FoundObjAction(guid);
         }
 
-        private void FoundObjAction(Guid guid)
+        public void FoundObjAction(Guid guid)
         {
             if (TargetObjDic == null)
             {
