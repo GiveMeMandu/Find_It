@@ -240,6 +240,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -852,6 +855,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -7290,6 +7296,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -7697,6 +7706,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0.04
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -9663,6 +9675,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -10265,6 +10280,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -10511,6 +10529,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -10579,14 +10600,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 156868bbc5ca8054cafcd37a02a4e834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsHideOnStart: 1
+  hideOnStart: 0
   SetName: "\uB2F9\uADFC \uB514\uC800\uD2B8 \uC138\uD2B8 \uC644\uC131"
+  questionAlertObject: {fileID: 0}
+  foundAlertObject: {fileID: 0}
+  foundCheckIcon: {fileID: 0}
+  OffScreenIndicator: {fileID: 0}
+  IndicatorPadding: 50
   CompletionView: {fileID: 77706562}
   PlaySoundWhenFound: 0
   AudioWhenClick: {fileID: 0}
   OnSetComplete:
     m_PersistentCalls:
       m_Calls: []
+  _missionItemGroup: {fileID: 0}
+  MissionItemGroupCanvas: {fileID: 0}
 --- !u!61 &1090708755
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10718,6 +10746,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -10977,6 +11008,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0.02
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -11667,6 +11701,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -12282,6 +12319,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -12764,6 +12804,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -13565,6 +13608,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0.08
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -13815,6 +13861,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -14202,6 +14251,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -15904,22 +15956,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8233476207588720699, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 5044890385312571970, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 5044890385312571970, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 2665231050527092968, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 4176382925518705785, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3966b132c92fe434097979961b6c444d, type: 3}
 --- !u!1 &1763890549
 GameObject:
@@ -16181,6 +16218,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -16502,6 +16542,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0.01
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -16968,6 +17011,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -18459,6 +18505,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0.06
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -19266,6 +19315,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -20330,6 +20382,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -20507,6 +20562,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -21602,6 +21660,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -22105,6 +22166,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -22602,6 +22666,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -23095,6 +23162,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -23841,6 +23911,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -23971,6 +24044,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -24446,6 +24522,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -24704,6 +24783,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -24924,6 +25006,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -26022,6 +26107,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -26612,6 +26700,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -26977,6 +27068,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -27681,6 +27775,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -28143,6 +28240,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -28502,6 +28602,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -28654,6 +28757,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -28699,6 +28805,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -29179,6 +29288,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -29476,6 +29588,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -29926,6 +30041,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -29966,6 +30084,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -30952,6 +31073,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -31430,6 +31554,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -31662,6 +31789,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -31712,7 +31842,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.515, y: -4.476, z: 0}
-  m_LocalScale: {x: 0.14, y: 0.14, z: 0.14}
+  m_LocalScale: {x: 0.16, y: 0.16, z: 0.16}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1231884971}
@@ -31941,6 +32071,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -32055,6 +32188,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -32319,6 +32455,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -32474,6 +32613,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -32630,6 +32772,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -32842,6 +32987,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -33027,6 +33175,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -33395,6 +33546,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -33763,6 +33917,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -33861,6 +34018,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -34150,6 +34310,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -34612,7 +34775,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -15.905001, y: 7.8299994, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.23, y: 0.23, z: 0.23}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1231884971}
@@ -34626,7 +34789,7 @@ Transform:
   m_GameObject: {fileID: 8109358607238671463}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -19.655, y: -5.762, z: 0}
+  m_LocalPosition: {x: -23.97, y: -4.49, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -34664,6 +34827,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -34883,6 +35049,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -35196,6 +35365,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -35327,6 +35499,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -36050,6 +36225,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -36320,6 +36498,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -36915,6 +37096,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
@@ -37052,6 +37236,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 0
   effectAddValue: 0
