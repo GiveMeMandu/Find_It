@@ -91,14 +91,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                             setData.CompletionObject.OnIngredientFound();
                         }
                     }
-                    if (exists && isComplete)
-                    {
-                        if (completedGroups.ContainsKey(setData.SetName))
-                        {
-                            completedGroups[setData.SetName].Add(groupName);
-                            CheckSetCompletion(setData);
-                        }
-                    }
                 }
             }
         }
@@ -161,7 +153,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 // CompletionObject가 있으면 그 위치로 카메라 이동, 없으면 null 전달 (연출 페이지에서 예외처리됨)
                 GameObject target = setData.CompletionObject != null ? setData.CompletionObject.gameObject : null;
-                visualPage.Initialize(setData.SetName, target);
+                bool enableCameraEffect = setData.CompletionObject != null && setData.CompletionObject.enableCameraEffect;
+                visualPage.Initialize(setData.SetName, target, enableCameraEffect);
             }
 
             await infoPage.WaitForClose();

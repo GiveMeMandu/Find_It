@@ -43,7 +43,7 @@ namespace UI.Effect
                 return profile != null && profile.TryGet(out _blurVol);
             }
 
-            Volume = FindFirstObjectByType<Volume>();
+            Volume = FindFirstObjectByType<Volume>(FindObjectsInactive.Exclude);
             if (Volume)
             {
                 profile = Volume.profile;
@@ -102,7 +102,8 @@ namespace UI.Effect
         // 먼저 게임오브젝트를 활성화한 뒤 블러 값을 적용합니다.
         public void TurnOnBlur(float targetRadius = .11f)
         {
-            gameObject.SetActive(true);
+            Volume.gameObject.SetActive(true);
+            
             if (!TryFindVolume()) return;
             // 블러 적용시 Radial 값은 0으로 유지
             _enforceZeroRadial = true;
@@ -118,7 +119,7 @@ namespace UI.Effect
             _enforceZeroRadial = false;
             if (TryFindVolume())
                 ResetBlur();
-            gameObject.SetActive(false);
+            Volume.gameObject.SetActive(false);
         }
 
         // 블러 상태를 토글하는 메서드
@@ -131,7 +132,7 @@ namespace UI.Effect
         public async UniTaskVoid BlurFadeIn(float duration, float targetRadius = .11f, CancellationToken cancellationToken = default)
         {
             // 활성화 후 페이드인 진행
-            gameObject.SetActive(true);
+            Volume.gameObject.SetActive(true);
             if (!TryFindVolume()) return;
 
             // 페이드인 중에는 Radial을 0으로 유지
@@ -170,7 +171,7 @@ namespace UI.Effect
             SetRadius(0f);
             // 페이드아웃 완료 후 강제 Radial 해제 및 게임오브젝트 비활성화
             _enforceZeroRadial = false;
-            gameObject.SetActive(false);
+            Volume.gameObject.SetActive(false);
         }
     }
 }

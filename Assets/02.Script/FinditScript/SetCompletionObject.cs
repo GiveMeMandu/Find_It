@@ -58,6 +58,11 @@ public class SetCompletionObject : MonoBehaviour
     [InfoBox("세트가 완성되었을 때 실행할 이벤트를 연결하세요. 예: UI 알림, 애니메이션 재생 등.")]
     public UnityEvent OnSetComplete;
     
+    [Header("Camera Effect Settings")]
+    [Label("카메라 연출 활성화")]
+    [InfoBox("세트 완성 시 카메라 연출 및 사진 촬영을 수행할지 여부를 설정합니다.")]
+    public bool enableCameraEffect = false;
+    
     private Camera _mainCamera;
     private Canvas _indicatorCanvas;
     
@@ -243,38 +248,6 @@ public class SetCompletionObject : MonoBehaviour
         }
     }
 
-    private async UniTaskVoid OpenMissionPage()
-    {
-        // ItemSetManager를 통해 데이터 가져오기
-        var itemSetDataList = ItemSetManager.Instance.GetItemSetDataList();
-        var setData = itemSetDataList.Find(x => x.SetName == SetName);
-
-        if (setData != null)
-        {
-            var page = Global.UIManager.OpenPage<InGameMissionCompletePage>();
-            
-            // 현재 진행 상황 파악
-            var (completedCount, totalCount) = ItemSetManager.Instance.GetSetProgress(SetName);
-            bool isComplete = completedCount >= totalCount;
-
-            // TODO: 아이콘 이미지를 어디서 가져올지 명확하지 않으므로 null 혹은 CompletionView의 스프라이트 등을 사용 고려
-            Sprite icon = null; 
-            
-            page.Initialize(
-                missionName: SetName,
-                missionNameDivider: string.Format("<alpha=#00>{0}", SetName),
-                missionSetIcon: icon, 
-                missionSetFoundLeft: $"({completedCount} / {totalCount})",
-                isSetFoundComplete: isComplete,
-                isGroupComplete: false, 
-                missionStatus: $"Mission! ({ItemSetManager.Instance.FoundSetsCount}/{ItemSetManager.Instance.TotalSetsCount})",
-                missionNameAlpha: 1f
-            );
-            
-            await page.WaitForClose();
-        }
-    }
-
     public void ShowSetCompletionNotification()
     {
         if (!IsFound)
@@ -300,7 +273,6 @@ public class SetCompletionObject : MonoBehaviour
             if (!IsAccepted)
             {
                 OnClickMission();
-                OpenMissionPage().Forget();
             }
         }
 

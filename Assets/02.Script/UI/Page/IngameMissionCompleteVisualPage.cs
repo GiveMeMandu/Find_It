@@ -35,96 +35,66 @@ namespace UI.Page
             }
         }
 
-        private bool _isFocusIconActive;
+        private GameObject _targetObject;
+        private bool _enableCameraEffect;
         [Binding]
-        public bool IsFocusIconActive
+        public bool EnableCameraEffect
         {
-            get => _isFocusIconActive;
+            get => _enableCameraEffect;
             set
             {
-                _isFocusIconActive = value;
-                OnPropertyChanged(nameof(IsFocusIconActive));
+                _enableCameraEffect = value;
+                OnPropertyChanged(nameof(EnableCameraEffect));
             }
         }
-
-        private GameObject _targetObject;
 
         [Binding]
         public void OnClickClose()
         {
-            // 연출 중에는 닫기 불가하도록 할 수도 있음
             Global.UIManager.ClosePage(this);
         }
 
-        public void Initialize(string missionSetName, GameObject targetObject)
+        public void Initialize(string missionSetName, GameObject targetObject, bool enableCameraEffect)
         {
             MissionSetName = missionSetName;
             _targetObject = targetObject;
-            TitleText = "Mission Found"; // 기본값 설정
-            IsFocusIconActive = false;
+            EnableCameraEffect = enableCameraEffect;
+            TitleText = "Mission Found";
 
             PlaySequence().Forget();
         }
 
         private async UniTaskVoid PlaySequence()
         {
-            // 1. 카메라 이동 & 블러 세팅
-            if (_targetObject != null && Util.CameraSetting.CameraView2D.Instance != null)
+            // 카메라 연출이 활성화된 경우
+            if (EnableCameraEffect)
             {
-                // 블러 시작 (흐리게)
-                if (Global.UIEffectManager != null && Global.UIEffectManager.BlurController != null)
+                // ItemSetCameraViewModel 찾아서 연출 시작
+                var cameraViewModel = GetComponentInChildren<ItemSetCameraViewModel>(true);
+                if (cameraViewModel != null)
                 {
-                    Global.UIEffectManager.BlurController.TurnOnBlur(1f); // 강한 블러
+                    cameraViewModel.gameObject.SetActive(true);
+                    cameraViewModel.ItemSetName = MissionSetName;
+                    
+                    // 카메라 연출 시작 및 완료 대기
+                    await cameraViewModel.PlayCameraEffect(_targetObject, () =>
+                    {
+                        // 연출 완료 후 페이지 닫기
+                        Global.UIManager.ClosePage(this);
+                    });
                 }
-
-                // 카메라 이동 (1초)
-                await Util.CameraSetting.CameraView2D.Instance.MoveCameraToPositionAsync(_targetObject.transform.position, 1f);
-            }
-
-            // 2. 초점 맞추기 (블러 1 -> 0) & 초점 아이콘 활성화
-            IsFocusIconActive = true;
-            if (Global.UIEffectManager != null && Global.UIEffectManager.BlurController != null)
-            {
-                // 1초 동안 블러 해제 (초점 맞추는 연출)
-                Global.UIEffectManager.BlurController.BlurFadeOut(1f).Forget();
-                await UniTask.Delay(1000);
+                else
+                {
+                    Debug.LogWarning("[IngameMissionCompleteVisualPage] ItemSetCameraViewModel not found. Closing page immediately.");
+                    Global.UIManager.ClosePage(this);
+                }
             }
             else
             {
-                await UniTask.Delay(1000);
+                // 기본 연출: 블러 없이 3초 후 자동 닫기
+                await UniTask.Delay(3000);
+                Global.UIManager.ClosePage(this);
             }
-
-            // 3. 2초 대기
-            await UniTask.Delay(2000);
-
-            // 4. 사진 찍기 및 저장
-            await CaptureAndSaveScreenshot();
-
-            // 연출 종료 후 페이지 닫기? (기획에 명시되진 않았으나 보통 닫음)
-            // Global.UIManager.ClosePage(this); 
-        }
-
-        private async UniTask CaptureAndSaveScreenshot()
-        {
-            // UI 숨기기 처리가 필요하다면 여기서 수행 (Canvas 끄기 등)
-            // 여기서는 UI 포함해서 찍는다고 가정하거나, 기획 의도에 맞게 구현
-
-            string timestamp = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string filename = $"Mission_{MissionSetName}_{timestamp}.png";
-            
-            // 에디터/PC 저장
-            ScreenCapture.CaptureScreenshot(filename);
-            
-            Debug.Log($"[Screenshot] Saved to {filename}");
-
-            // 모바일 갤러리 갱신 등은 별도 처리가 필요함
-            // 여기서는 캡처 완료를 알리는 찰칵 소리 등을 추가할 수 있음
-            if (Global.SoundManager != null)
-            {
-                // Global.SoundManager.PlaySFX(SFXEnum.CameraShutter); // 예시
-            }
-
-            await UniTask.Yield();
         }
     }
 }
