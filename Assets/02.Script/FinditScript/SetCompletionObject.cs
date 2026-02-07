@@ -63,6 +63,12 @@ public class SetCompletionObject : MonoBehaviour
     [InfoBox("세트 완성 시 카메라 연출 및 사진 촬영을 수행할지 여부를 설정합니다.")]
     public bool enableCameraEffect = false;
     
+    [Label("카메라 확대 크기 (Orthographic Size)")]
+    [InfoBox("카메라 연출 시 확대할 Orthographic Size 값입니다. 값이 작을수록 더 많이 확대됩니다. 기즈모로 확대 범위를 미리 확인할 수 있습니다.")]
+    [ShowIf("enableCameraEffect")]
+    [Range(0.5f, 10f)]
+    public float defaultCameraZoomSize = 3f;
+    
     private Camera _mainCamera;
     private Canvas _indicatorCanvas;
     
@@ -107,8 +113,20 @@ public class SetCompletionObject : MonoBehaviour
 
     private void Update()
     {
-        if(IsAccepted) 
-            MissionItemGroupCanvas.gameObject.SetActive(true);
+        // 카메라 연출 중이면 MissionItemGroupCanvas 비활성화
+        bool isCameraEffectPlaying = ItemSetManager.Instance != null && ItemSetManager.Instance.IsPlayingCameraEffect;
+        
+        if (isCameraEffectPlaying)
+        {
+            if (MissionItemGroupCanvas != null && MissionItemGroupCanvas.gameObject.activeSelf)
+                MissionItemGroupCanvas.gameObject.SetActive(false);
+        }
+        else if (IsAccepted)
+        {
+            if (MissionItemGroupCanvas != null && !MissionItemGroupCanvas.gameObject.activeSelf)
+                MissionItemGroupCanvas.gameObject.SetActive(true);
+        }
+        
         // 미션이 이미 수락되었거나, 완료되었거나, 인디케이터가 없으면 업데이트 안 함
         if (IsAccepted || IsFound || _mainCamera == null)
         {
@@ -306,6 +324,41 @@ public class SetCompletionObject : MonoBehaviour
             questionAlertObject.SetActive(false);
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        if (!enableCameraEffect) return;
+        
+        // 카메라 확대 영역을 와이어프레임 박스로 시각화
+        float aspect = Camera.main != null ? Camera.main.aspect : 16f / 9f;
+        float height = defaultCameraZoomSize * 2f;
+        float width = height * aspect;
+        
+        // 초록색 와이어프레임: 확대 시 보이는 영역
+        Gizmos.color = new Color(0f, 1f, 0f, 0.8f);
+        Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0f));
+        
+        // 반투명 초록색 면: 확대 영역 채우기
+        Gizmos.color = new Color(0f, 1f, 0f, 0.1f);
+        Gizmos.DrawCube(transform.position, new Vector3(width, height, 0f));
+        
+        // 중앙 십자 표시
+        Gizmos.color = Color.yellow;
+        float crossSize = Mathf.Min(width, height) * 0.05f;
+        Gizmos.DrawLine(transform.position - Vector3.right * crossSize, transform.position + Vector3.right * crossSize);
+        Gizmos.DrawLine(transform.position - Vector3.up * crossSize, transform.position + Vector3.up * crossSize);
+        
+#if UNITY_EDITOR
+        // 라벨 표시
+        UnityEditor.Handles.Label(
+            transform.position + Vector3.up * (defaultCameraZoomSize + 0.3f),
+            $"Zoom: {defaultCameraZoomSize:F1} (w:{width:F1} x h:{height:F1})",
+            new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, normal = { textColor = Color.green } }
+        );
+#endif
+    }
+#endif
 
     [@Button("테스트 : 이 세트의 모든 물건 찾기")]
     public void ForceCompleteMissionItems()

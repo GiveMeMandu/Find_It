@@ -49,6 +49,19 @@ namespace UI.Page
             }
         }
 
+        private bool _settingGroupEnabled;
+
+        [Binding]
+        public bool SettingGroupEnabled
+        {
+            get => _settingGroupEnabled;
+            set
+            {
+                _settingGroupEnabled = value;
+                OnPropertyChanged(nameof(SettingGroupEnabled));
+            }
+        }
+
         private bool _showFoundObjToolTip;
 
         [Binding]
@@ -148,7 +161,19 @@ namespace UI.Page
             ShowMissionButton = true;
             MissionGroupEnabled = true;
         }
+        public void HideAllGroup()
+        {
+            ShowMissionButton = false;
+            MissionGroupEnabled = false;
+            SettingGroupEnabled = false;
+        }
 
+        public void ShowAllGroup()
+        {
+            ShowMissionButton = true;
+            MissionGroupEnabled = true;
+            SettingGroupEnabled = true;
+        }
         private void Update()
         {
             if (ShowFoundObjToolTip && _currentFoundObj != null)
@@ -323,6 +348,16 @@ namespace UI.Page
             if (LevelManager.Instance != null)
             {
                 LevelManager.Instance.ToggleScrollView();
+            }
+        }
+
+        [Binding]
+        public void OnClickHideUIButton()
+        {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.ToggleUIVisibility();
             }
         }
 

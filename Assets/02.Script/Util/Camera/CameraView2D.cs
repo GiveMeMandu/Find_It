@@ -657,6 +657,77 @@ namespace Util.CameraSetting
         }
         
         /// <summary>
+        /// 지정된 Orthographic Size로 카메라를 부드럽게 줌합니다.
+        /// </summary>
+        /// <param name="targetSize">목표 Orthographic Size</param>
+        /// <param name="duration">줌 시간 (초)</param>
+        public async UniTask ZoomCameraToSizeAsync(float targetSize, float duration = 1f)
+        {
+            if (_camera == null) return;
+            
+            float startSize = _camera.orthographicSize;
+            float clampedTargetSize = Mathf.Clamp(targetSize, zoomMin, zoomMax);
+            float elapsedTime = 0f;
+            
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / duration;
+                
+                // 부드러운 줌을 위한 이징 함수 (ease-in-out)
+                t = t < 0.5f ? 2f * t * t : 1f - Mathf.Pow(-2f * t + 2f, 2f) / 2f;
+                
+                _camera.orthographicSize = Mathf.Lerp(startSize, clampedTargetSize, t);
+                await UniTask.Yield();
+            }
+            
+            _camera.orthographicSize = clampedTargetSize;
+        }
+        
+        /// <summary>
+        /// 지정된 위치로 카메라를 이동하면서 동시에 줌합니다.
+        /// </summary>
+        public async UniTask MoveCameraAndZoomAsync(Vector3 targetPosition, float targetZoomSize, float duration = 1f)
+        {
+            if (_isMovingCamera) return;
+            
+            _isMovingCamera = true;
+            
+            var startPosition = _camera.transform.position;
+            var startSize = _camera.orthographicSize;
+            var clampedTargetSize = Mathf.Clamp(targetZoomSize, zoomMin, zoomMax);
+            
+            // 목표 위치의 Z좌표는 유지
+            var clampedTargetPosition = targetPosition;
+            clampedTargetPosition.z = startPosition.z;
+            
+            float elapsedTime = 0f;
+            
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / duration;
+                
+                // 부드러운 이동 + 줌을 위한 이징 함수 (ease-out)
+                t = 1f - Mathf.Pow(1f - t, 3f);
+                
+                _camera.transform.position = Vector3.Lerp(startPosition, clampedTargetPosition, t);
+                _camera.orthographicSize = Mathf.Lerp(startSize, clampedTargetSize, t);
+                
+                await UniTask.Yield();
+            }
+            
+            _camera.transform.position = clampedTargetPosition;
+            _camera.orthographicSize = clampedTargetSize;
+            _isMovingCamera = false;
+        }
+        
+        /// <summary>
+        /// 현재 카메라의 Orthographic Size를 반환합니다.
+        /// </summary>
+        public float CurrentOrthographicSize => _camera != null ? _camera.orthographicSize : 5.4f;
+
+        /// <summary>
         /// 카메라가 현재 이동 중인지 확인합니다.
         /// </summary>
         public bool IsMovingCamera => _isMovingCamera;

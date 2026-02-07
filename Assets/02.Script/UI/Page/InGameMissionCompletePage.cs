@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 using System.Threading;
 using System.Threading.Tasks;
 using Data;
+using DeskCat.FindIt.Scripts.Core.Main.System;
 
 namespace UI.Page
 {
@@ -160,7 +161,14 @@ namespace UI.Page
             }
             finally
             {
-                Global.InputManager.EnableAllInput();
+                // 카메라 연출 중이면 입력 복원을 하지 않음 (연출 종료 시 ItemSetCameraViewModel에서 복원함)
+                bool isCameraEffectPlaying = ItemSetManager.Instance != null 
+                    && ItemSetManager.Instance.IsPlayingCameraEffect;
+                
+                if (!isCameraEffectPlaying)
+                {
+                    Global.InputManager.EnableAllInput();
+                }
             }
 
             Global.UIManager.ClosePage(this);

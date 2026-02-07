@@ -15,6 +15,7 @@ using Data;
 using OutGame;
 using Manager;
 using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
+using DG.Tweening;
 using UI;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
@@ -80,6 +81,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public int MaxRandomItem;
 
         public GameObject Canvas;
+
+        [Header("UI Visibility (Hide/Show)")]
+        [Tooltip("페이드 인/아웃으로 숨김 처리할 CanvasGroup 목록")]
+        public CanvasGroup[] UICanvasGroups;
+        [Tooltip("UI 페이드 애니메이션 지속 시간")]
+        public float UIFadeDuration = 0.3f;
+        private bool _isUIVisible = true;
+        public bool IsUIVisible => _isUIVisible;
 
         [Header("Scroll View Options")]
         public UIScrollType UIScrollType;
@@ -785,6 +794,12 @@ DebugGameState();
         }
         public void DefaultGameEndFunc()
         {
+            // 게임 종료 시 UI가 숨겨진 상태면 다시 표시
+            if (!_isUIVisible)
+            {
+                ShowUI();
+            }
+
             EndTime = DateTime.Now;
             var timeUsed = EndTime.Subtract(StartTime);
             
@@ -916,6 +931,77 @@ DebugGameState();
         {
             return allHiddenObjUIs;
         }
+
+        #region UI Visibility (Hide / Show with Fade)
+
+        /// <summary>
+        /// UI 표시 상태를 토글합니다. (숨김 ↔ 표시)
+        /// </summary>
+        public void ToggleUIVisibility()
+        {
+            if (_isUIVisible)
+                HideUI();
+            else
+                ShowUI();
+        }
+
+        /// <summary>
+        /// LevelManager의 UI들을 페이드 아웃하여 숨깁니다.
+        /// </summary>
+        public void HideUI()
+        {
+            if (!_isUIVisible) return;
+            _isUIVisible = false;
+            FadeUICanvasGroups(0f, UIFadeDuration);
+        }
+
+        /// <summary>
+        /// LevelManager의 UI들을 페이드 인하여 다시 표시합니다.
+        /// </summary>
+        public void ShowUI()
+        {
+            if (_isUIVisible) return;
+            _isUIVisible = true;
+            FadeUICanvasGroups(1f, UIFadeDuration);
+        }
+
+        /// <summary>
+        /// 모든 UICanvasGroups의 alpha를 targetAlpha로 페이드합니다.
+        /// 페이드 완료 시 interactable/blocksRaycasts도 함께 설정합니다.
+        /// </summary>
+        private void FadeUICanvasGroups(float targetAlpha, float duration)
+        {
+            if (UICanvasGroups == null || UICanvasGroups.Length == 0) return;
+
+            foreach (var cg in UICanvasGroups)
+            {
+                if (cg == null) continue;
+
+                // 진행 중인 트윈 정리
+                cg.DOKill();
+
+                // 페이드 시작 전에 보이도록 설정 (Show일 때 즉시 raycast 차단 해제)
+                if (targetAlpha > 0f)
+                {
+                    cg.interactable = true;
+                    cg.blocksRaycasts = true;
+                }
+
+                cg.DOFade(targetAlpha, duration)
+                    .SetEase(Ease.InOutSine)
+                    .OnComplete(() =>
+                    {
+                        // Hide 완료 시 상호작용 차단
+                        if (targetAlpha <= 0f)
+                        {
+                            cg.interactable = false;
+                            cg.blocksRaycasts = false;
+                        }
+                    });
+            }
+        }
+
+        #endregion
         // 디버깅을 위한 게임 상태 확인 메서드
         public void DebugGameState()
         {

@@ -10,6 +10,9 @@ using UnityWeld;
 using UnityWeld.Binding;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using DeskCat.FindIt.Scripts.Core.Main.System;
+using UI.Page;
+using TMPro;
 
 
 namespace UI
@@ -25,6 +28,7 @@ namespace UI
             set
             {
                 _itemSetName = value;
+                itemSetNameText.text = _itemSetName;
                 OnPropertyChanged(nameof(ItemSetName));
             }
         }
@@ -48,28 +52,71 @@ namespace UI
 
         [SerializeField] private RectTransform captureArea; // 캡처 영역 (선택사항)
         [SerializeField] private GameObject focusIcon; // 포커스 아이콘 (선택사항)
+        [SerializeField] private TextMeshProUGUI itemSetNameText;
 
         private GameObject _targetObject;
 
+        private float _originalCameraSize; // 연출 전 카메라 크기 저장
+        
         /// <summary>
         /// 카메라 연출 시작
         /// </summary>
-        public async UniTask PlayCameraEffect(GameObject targetObject, Action onComplete = null)
+        /// <param name="targetObject">카메라가 이동할 대상 오브젝트</param>
+        /// <param name="zoomSize">확대할 Orthographic Size (0 이하이면 줌 안 함)</param>
+        /// <param name="onComplete">연출 완료 콜백</param>
+        public async UniTask PlayCameraEffect(GameObject targetObject, float zoomSize = 0f, Action onComplete = null)
         {
             _targetObject = targetObject;
             IsFocusIconActive = false;
+            
+            // 터치 입력 차단 (카메라 연출 동안 터치 방지)
+            if (Global.InputManager != null)
+            {
+                Global.InputManager.DisableGameInputOnly();
+            }
+            
+            // 카메라 연출 중 플래그 설정
+            if (ItemSetManager.Instance != null)
+            {
+                ItemSetManager.Instance.IsPlayingCameraEffect = true;
+            }
 
-            // 1. 카메라 이동 & 블러 시작
+            // 1. 카메라 이동 & 줌 & 블러 시작
             if (_targetObject != null && Util.CameraSetting.CameraView2D.Instance != null)
             {
+                // 원래 카메라 크기 저장 (복원용)
+                _originalCameraSize = Util.CameraSetting.CameraView2D.Instance.CurrentOrthographicSize;
+                
                 // 블러 시작 (흐리게)
                 if (Global.UIEffectManager != null && Global.UIEffectManager.BlurController != null)
                 {
-                    Global.UIEffectManager.BlurController.TurnOnBlur(.2f); // 강한 블러
+                    Global.UIEffectManager.BlurController.TurnOnBlur(.1f); // 강한 블러
                 }
 
-                // 카메라 이동 (1초)
-                await Util.CameraSetting.CameraView2D.Instance.MoveCameraToPositionAsync(_targetObject.transform.position, 1f);
+                // 카메라 이동 + 줌 (1초) - zoomSize가 유효하면 이동과 줌을 동시에
+                if (zoomSize > 0f)
+                {
+                    await Util.CameraSetting.CameraView2D.Instance.MoveCameraAndZoomAsync(
+                        _targetObject.transform.position, zoomSize, 1f);
+                }
+                else
+                {
+                    await Util.CameraSetting.CameraView2D.Instance.MoveCameraToPositionAsync(
+                        _targetObject.transform.position, 1f);
+                }
+            }
+            
+            // LevelManager UI 숨기기
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.HideUI();
+            }
+
+            // InGameMainPage 버튼들 숨기기
+            var inGamePages = Global.UIManager.GetPages<InGameMainPage>();
+            foreach (var page in inGamePages)
+            {
+                page.HideAllGroup();
             }
 
             // 2. 블러 유지한 채로 1초 대기
@@ -85,7 +132,7 @@ namespace UI
             if (Global.UIEffectManager != null && Global.UIEffectManager.BlurController != null)
             {
                 // 1초 동안 블러 해제 (초점 맞추는 연출)
-                Global.UIEffectManager.BlurController.BlurFadeOut(.2f).Forget();
+                Global.UIEffectManager.BlurController.BlurFadeOut(.75f).Forget();
                 await UniTask.Delay(1000);
             }
             else
@@ -115,6 +162,10 @@ namespace UI
                 whiteColor.a = 0f;
                 whiteoutImage.color = whiteColor;
             }
+            if(focusIcon != null)
+            {
+                focusIcon.SetActive(false);
+            }
 
             // 5. 사진 찍기
             await CaptureAndSaveScreenshot();
@@ -136,11 +187,42 @@ namespace UI
                 whiteoutImage.gameObject.SetActive(false);
             }
 
-            // 7. 1초 대기
-            await UniTask.Delay(1000);
+            // 7. 2초 대기
+            await UniTask.Delay(2000);
 
+            // 카메라 줌 복원 (원래 크기로 되돌리기)
+            if (Util.CameraSetting.CameraView2D.Instance != null && _originalCameraSize > 0f)
+            {
+                await Util.CameraSetting.CameraView2D.Instance.ZoomCameraToSizeAsync(_originalCameraSize, 0.5f);
+            }
+            
             // 완료 콜백 호출
             onComplete?.Invoke();
+
+            // LevelManager UI 복원
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.ShowUI();
+            }
+
+            // InGameMainPage 버튼들 복원
+            var restorePages = Global.UIManager.GetPages<InGameMainPage>();
+            foreach (var page in restorePages)
+            {
+                page.ShowAllGroup();
+            }
+            
+            // 카메라 연출 중 플래그 해제
+            if (ItemSetManager.Instance != null)
+            {
+                ItemSetManager.Instance.IsPlayingCameraEffect = false;
+            }
+            
+            // 터치 입력 복원
+            if (Global.InputManager != null)
+            {
+                Global.InputManager.EnableGameInputOnly();
+            }
         }
 
         private async UniTask CaptureAndSaveScreenshot()
