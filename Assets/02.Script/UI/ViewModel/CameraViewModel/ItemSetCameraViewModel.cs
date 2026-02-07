@@ -57,7 +57,7 @@ namespace UI
         private GameObject _targetObject;
 
         private float _originalCameraSize; // 연출 전 카메라 크기 저장
-        
+
         /// <summary>
         /// 카메라 연출 시작
         /// </summary>
@@ -68,13 +68,13 @@ namespace UI
         {
             _targetObject = targetObject;
             IsFocusIconActive = false;
-            
+
             // 터치 입력 차단 (카메라 연출 동안 터치 방지)
             if (Global.InputManager != null)
             {
                 Global.InputManager.DisableGameInputOnly();
             }
-            
+
             // 카메라 연출 중 플래그 설정
             if (ItemSetManager.Instance != null)
             {
@@ -86,7 +86,7 @@ namespace UI
             {
                 // 원래 카메라 크기 저장 (복원용)
                 _originalCameraSize = Util.CameraSetting.CameraView2D.Instance.CurrentOrthographicSize;
-                
+
                 // 블러 시작 (흐리게)
                 if (Global.UIEffectManager != null && Global.UIEffectManager.BlurController != null)
                 {
@@ -105,7 +105,7 @@ namespace UI
                         _targetObject.transform.position, 1f);
                 }
             }
-            
+
             // LevelManager UI 숨기기
             if (LevelManager.Instance != null)
             {
@@ -119,8 +119,6 @@ namespace UI
                 page.HideAllGroup();
             }
 
-            // 2. 블러 유지한 채로 1초 대기
-            await UniTask.Delay(1000);
 
             // 3. 초점 맞추기 (블러 1 -> 0) & 초점 아이콘 활성화
             IsFocusIconActive = true;
@@ -128,16 +126,19 @@ namespace UI
             {
                 focusIcon.SetActive(true);
             }
-            
+
+            // 2. 블러 유지한 채로 1초 대기
+            await UniTask.Delay(1000);
+
             if (Global.UIEffectManager != null && Global.UIEffectManager.BlurController != null)
             {
-                // 1초 동안 블러 해제 (초점 맞추는 연출)
+                // 0.75초 동안 블러 해제 (초점 맞추는 연출)
                 Global.UIEffectManager.BlurController.BlurFadeOut(.75f).Forget();
-                await UniTask.Delay(1000);
+                await UniTask.Delay(750);
             }
             else
             {
-                await UniTask.Delay(1000);
+                await UniTask.Delay(750);
             }
 
             // 4. 화이트아웃 효과 (흰색 60% 불투명도)
@@ -162,7 +163,7 @@ namespace UI
                 whiteColor.a = 0f;
                 whiteoutImage.color = whiteColor;
             }
-            if(focusIcon != null)
+            if (focusIcon != null)
             {
                 focusIcon.SetActive(false);
             }
@@ -179,7 +180,7 @@ namespace UI
                 while (elapsed < duration)
                 {
                     elapsed += Time.deltaTime;
-                    float alpha = Mathf.Lerp(0.6f, 0f, elapsed / duration);
+                    float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
                     whiteColor.a = alpha;
                     whiteoutImage.color = whiteColor;
                     await UniTask.Yield();
@@ -187,15 +188,24 @@ namespace UI
                 whiteoutImage.gameObject.SetActive(false);
             }
 
-        // 7. 2초 대기
+            // 블러 시작 (흐리게)
+            if (Global.UIEffectManager != null && Global.UIEffectManager.BlurController != null)
+            {
+                Global.UIEffectManager.BlurController.TurnOnBlur(.05f); // 약한 블러
+            }
+
+            // 7. 2초 대기
             await UniTask.Delay(3500);
+
+
+            Global.UIEffectManager.BlurController.BlurFadeOut(.75f).Forget();
 
             // 카메라 줌 복원 (원래 크기로 되돌리기)
             if (Util.CameraSetting.CameraView2D.Instance != null && _originalCameraSize > 0f)
             {
                 await Util.CameraSetting.CameraView2D.Instance.ZoomCameraToSizeAsync(_originalCameraSize, 0.5f);
             }
-            
+
             // 완료 콜백 호출
             onComplete?.Invoke();
 
@@ -211,13 +221,13 @@ namespace UI
             {
                 page.ShowAllGroup();
             }
-            
+
             // 카메라 연출 중 플래그 해제
             if (ItemSetManager.Instance != null)
             {
                 ItemSetManager.Instance.IsPlayingCameraEffect = false;
             }
-            
+
             // 터치 입력 복원
             if (Global.InputManager != null)
             {
@@ -229,7 +239,7 @@ namespace UI
         {
             // 캡처 영역이 지정된 경우 해당 영역만 캡처, 아니면 전체 화면 캡처
             Texture2D screenshot = null;
-            
+
             if (captureArea != null)
             {
                 // 지정된 영역만 캡처
@@ -249,7 +259,7 @@ namespace UI
                 string filename = $"Mission_{ItemSetName}_{timestamp}.png";
                 byte[] bytes = screenshot.EncodeToPNG();
                 System.IO.File.WriteAllBytes(filename, bytes);
-                
+
                 Debug.Log($"[Screenshot] Saved to {filename}");
 
                 // 사진 이미지 객체에 sprite로 할당
@@ -281,7 +291,7 @@ namespace UI
             // RectTransform의 화면 좌표 계산
             Vector3[] corners = new Vector3[4];
             rectTransform.GetWorldCorners(corners);
-            
+
             // 화면 좌표로 변환
             Vector2 min = RectTransformUtility.WorldToScreenPoint(null, corners[0]);
             Vector2 max = RectTransformUtility.WorldToScreenPoint(null, corners[2]);
@@ -294,7 +304,7 @@ namespace UI
 
             // 전체 화면 캡처
             Texture2D fullScreenshot = ScreenCapture.CaptureScreenshotAsTexture();
-            
+
             // 지정된 영역만 추출
             Texture2D croppedTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
             Color[] pixels = fullScreenshot.GetPixels(x, y, width, height);
