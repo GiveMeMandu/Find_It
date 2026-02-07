@@ -1,171 +1,90 @@
-using UnityEngine;
-using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
-using UnityEngine.Events;
+using UnityEngine.UI;
+using UnityEngine;
 using NaughtyAttributes;
-using System;
+
 namespace UI.Effect
 {
-    public class PageScaleEffect : UIDotweenEffect
+    public class PageSlideEffect : UIDotweenEffect
     {
-        [Label("행 방향으로 들어오는가")]
-        [SerializeField] private bool isHorizontal = false; // 행(가로)으로 이동할지 여부
-        [Label("역방향으로 들어오는가")]
-        [SerializeField] private bool isReverse = false;    // 역방향으로 들어올지 여부
+        [Label("슬라이드 될 방향이 행인가")]
+        [SerializeField] private bool isSlideHorizontal = true;
+        [Label("역으로 오는가")]
+        [SerializeField] private bool isReverse = false;
         [Label("첫 OnEnable 무시할까")]
-        [SerializeField] private bool ignoreFirstOnEnable = false; // 첫 OnEnable 시 애니메이션을 실행하지 않을지
+        [SerializeField] private bool ignoreFirstOnEnable = false;
         private bool hasEnabledOnce = false;
+        [Label("회전할건가")]
+        [SerializeField] private bool isRotate = false;
+        [Label("회전 정도")] [ShowIf("isRotate")]
+        [SerializeField] private float rotationAngle = 2f;
+
+        [Space(10)]
+        [Label("첫 번째 슬라이드 시간")]
+        [SerializeField] private float firstSlideDuration = 0.5f;
+        [Label("두 번째 슬라이드 시간")]
+        [SerializeField] private float secondSlideDuration = 0.2f;
+        [Label("두 번째 슬라이드 딜레이")]
+        [SerializeField] private float secondSlideDelay = 0.1f;
+
+        [Label("도착 지점")]
+        [SerializeField] private float arrivePosition = 0f;
 
         private RectTransform rectTransform;
-        private Image image;
-        // Keep references to running sequences so we can kill/reuse them
-        private Sequence currentSequence;
-        // UnityEvents to notify when enter/exit animations complete
-        public UnityEvent onEnterComplete = new UnityEvent();
-        public UnityEvent onExitComplete = new UnityEvent();
 
         protected override void OnEnable()
         {
             base.OnEnable();
             rectTransform = transform as RectTransform;
-            image = GetComponent<Image>();
-
             if (rectTransform == null)
                 return;
 
-            // 첫 OnEnable을 무시하도록 설정된 경우, 최초 진입에서는 애니메이션을 실행하지 않고 플래그만 설정
+            // 최초 OnEnable을 무시하도록 설정된 경우, 첫 호출에서는 애니메이션을 실행하지 않고 플래그만 설정
             if (ignoreFirstOnEnable && !hasEnabledOnce)
             {
                 hasEnabledOnce = true;
                 return;
             }
 
-            PlayEnterAnimation();
+            PlaySlideAnimation();
+            if (isRotate) PlayRotateAnimation();
         }
 
-        // Play entry animation (called on enable or manually)
-        public void PlayEnterAnimation()
+        private void PlaySlideAnimation()
         {
-            // 초기 설정
-            rectTransform.localScale = Vector3.zero;
-            rectTransform.rotation = Quaternion.identity;
+            var slideSequence = CreateSequence();
+            int isReverseValue = isReverse ? -1 : 1;
 
-            // // 페이드 시퀀스
-            // if (image != null)
-            // {
-            //     var fadeSequence = CreateSequence();
-            //     fadeSequence.SetUpdate(true);
-            //     fadeSequence
-            //         .AppendCallback(() => image.color = new Color(0, 0, 0, 0))
-            //         .Append(image.DOColor(new Color(1, 1, 1, 1), 0.2f).SetEase(Ease.InSine));
-            // }
-
-            // 이동 시퀀스 (가로/세로 분기)
-            var moveSequence = CreateSequence();
-            moveSequence.SetUpdate(true);
-            int dir = isReverse ? -1 : 1;
-
-            if (isHorizontal)
+            if (isSlideHorizontal)
             {
-                // 가로로 들어오는 경우: 화면 밖 X 위치 -> 중간 X -> 최종 0
-                moveSequence
-                    .AppendCallback(() => rectTransform.localPosition = new Vector3(1080f * dir, rectTransform.localPosition.y, 0))
-                    .Append(rectTransform.DOLocalMoveX(4f * dir, 0.7f).SetEase(Ease.OutExpo))
-                    .Append(rectTransform.DOLocalMoveX(0f, 0.2f).SetEase(Ease.Linear));
+                rectTransform.localPosition = new Vector3(1080f * isReverseValue, rectTransform.localPosition.y, 0);
+                
+                slideSequence
+                    .Append(rectTransform.DOLocalMoveX(arrivePosition - 100, firstSlideDuration).SetEase(Ease.OutExpo))
+                    .AppendInterval(secondSlideDelay)
+                    .Append(rectTransform.DOLocalMoveX(arrivePosition, secondSlideDuration).SetEase(Ease.Linear));
             }
             else
             {
-                // 세로로 들어오는 기존 동작과 동일하게 동작하도록 유지
-                moveSequence
-                    .AppendCallback(() => rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, 1080f * dir, 0))
-                    .Append(rectTransform.DOLocalMoveY(4f * dir, 0.7f).SetEase(Ease.OutExpo))
-                    .Append(rectTransform.DOLocalMoveY(0f, 0.2f).SetEase(Ease.Linear));
+                rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, 1920f * isReverseValue, 0);
+                
+                slideSequence
+                    .Append(rectTransform.DOLocalMoveY(arrivePosition - 4, firstSlideDuration).SetEase(Ease.OutExpo))
+                    .AppendInterval(secondSlideDelay)
+                    .Append(rectTransform.DOLocalMoveY(arrivePosition, secondSlideDuration).SetEase(Ease.Linear));
             }
+        }
 
-            // 회전 시퀀스 (진입 방향에 따라 회전 방향을 약간 반전)
+        private void PlayRotateAnimation()
+        {
             var rotateSequence = CreateSequence();
-            rotateSequence.SetUpdate(true);
-            rotateSequence
-                .AppendCallback(() => rectTransform.rotation = Quaternion.identity)
-                .Append(rectTransform.DORotate(new Vector3(0, 0, -2f * dir), 0.25f).SetEase(Ease.InOutQuad))
-                .Append(rectTransform.DORotate(Vector3.zero, 0.4f).SetEase(Ease.InOutQuad));
-
-            // 스케일 시퀀스 (독립적으로 실행)
-            var scaleSequence = CreateSequence();
-            scaleSequence.SetUpdate(true);
-            scaleSequence
-                .Append(rectTransform.DOScale(1, 0.35f).SetEase(Ease.OutBack));
-
-            // call UnityEvent when enter animation finishes
-            scaleSequence.OnComplete(() => { if (onEnterComplete != null) onEnterComplete.Invoke(); });
-
-            // store reference to last important sequence so we can stop it when exiting
-            currentSequence = scaleSequence;
-        }
-
-        // Play exit animation (moves the page back off-screen and scales out)
-        public void PlayExitAnimation(bool deactivateAfter = false)
-        {
-            if (rectTransform == null)
-                rectTransform = transform as RectTransform;
-
-            // stop any current tweens on this transform
-            rectTransform.DOKill();
-
-            int dir = isReverse ? -1 : 1;
-
-            // 이동 시퀀스 (Enter의 역순: 0 -> 중간 -> 화면 밖)
-            var moveSequence = CreateSequence();
-            moveSequence.SetUpdate(true);
-
-            if (isHorizontal)
-            {
-                moveSequence
-                    .AppendCallback(() => rectTransform.localPosition = new Vector3(0f, rectTransform.localPosition.y, 0))
-                    .Append(rectTransform.DOLocalMoveX(4f * dir, 0.2f).SetEase(Ease.Linear))
-                    .Append(rectTransform.DOLocalMoveX(1080f * dir, 0.7f).SetEase(Ease.InExpo));
-            }
-            else
-            {
-                moveSequence
-                    .AppendCallback(() => rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, 0f, 0))
-                    .Append(rectTransform.DOLocalMoveY(4f * dir, 0.2f).SetEase(Ease.Linear))
-                    .Append(rectTransform.DOLocalMoveY(1080f * dir, 0.7f).SetEase(Ease.InExpo));
-            }
-
-            // 회전 시퀀스 (Enter의 역순)
-            var rotateSequence = CreateSequence();
-            rotateSequence.SetUpdate(true);
-            rotateSequence
-                .Append(rectTransform.DORotate(new Vector3(0, 0, -2f * dir), 0.4f).SetEase(Ease.InOutQuad))
-                .Append(rectTransform.DORotate(Vector3.zero, 0.25f).SetEase(Ease.InOutQuad));
-
-            // 스케일 시퀀스 (독립적으로 실행)
-            var scaleSequence = CreateSequence();
-            scaleSequence.SetUpdate(true);
-            scaleSequence
-                .AppendInterval(0.05f) // 약간 늦게 시작
-                .Append(rectTransform.DOScale(0f, 0.35f).SetEase(Ease.InBack));
-
-            // 항상 Exit 완료 이벤트 호출, 필요 시 비활성화도 처리
-            scaleSequence.OnComplete(() =>
-            {
-                if (onExitComplete != null) onExitComplete.Invoke();
-                if (deactivateAfter) gameObject.SetActive(false);
-            });
-
-            currentSequence = scaleSequence;
-        }
-
-        // Convenience methods to show/hide from other scripts
-        public void Show()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void Hide(bool deactivateAfter = true)
-        {
-            PlayExitAnimation(deactivateAfter);
+            rotateSequence.AppendCallback(() => rectTransform.DORotate(Vector3.zero, 0))
+                .Append(rectTransform.DORotate(new Vector3(0, 0, -rotationAngle), 0.25f).SetEase(Ease.InOutQuad))
+                .AppendInterval(0.25f)
+                .Append(rectTransform.DORotate(Vector3.zero, 0.4f).SetEase(Ease.InOutQuad))
+                .Join(rectTransform.DOScale(1, 0.35f).SetEase(Ease.OutBack));
         }
     }
 }

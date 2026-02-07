@@ -187,8 +187,8 @@ namespace UI
                 whiteoutImage.gameObject.SetActive(false);
             }
 
-            // 7. 2초 대기
-            await UniTask.Delay(2000);
+        // 7. 2초 대기
+            await UniTask.Delay(3500);
 
             // 카메라 줌 복원 (원래 크기로 되돌리기)
             if (Util.CameraSetting.CameraView2D.Instance != null && _originalCameraSize > 0f)

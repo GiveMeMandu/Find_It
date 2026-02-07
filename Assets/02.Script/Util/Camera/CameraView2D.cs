@@ -26,6 +26,8 @@ namespace Util.CameraSetting
         public float touchPinchZoomSpeed = 0.005f;
         [Tooltip("마우스 휠 줌 속도")]
         public float mouseWheelZoomSpeed = 2f;
+        [Tooltip("비모바일 플랫폼에서 부드러운 줌 보간 속도")]
+        public float smoothZoomLerpSpeed = 10f;
         public float zoomPan = 0f;
 
         [Header("---Pan---")]
@@ -53,6 +55,11 @@ namespace Util.CameraSetting
         // 카메라 이동 관련 변수들
         private bool _isMovingCamera = false;
         
+        // 부드러운 줌 관련 변수들 (비모바일 플랫폼)
+        private float _targetOrthographicSize;
+        private Vector2 _zoomFocusScreenPoint;
+        private bool _isSmoothZooming = false;
+        
         // Input Action 관련 변수들
         private PlayerAction _playerInputActions;
         private InputAction _mouseWheelAction;
@@ -61,6 +68,7 @@ namespace Util.CameraSetting
         {
             base.Awake();
             _camera = UnityEngine.Camera.main;
+            _targetOrthographicSize = _camera.orthographicSize;
             
             // PlayerAction 초기화
             _playerInputActions = new PlayerAction();
@@ -268,18 +276,52 @@ namespace Util.CameraSetting
                 }
             }
 
-            // 실제 줌 실행
+            // 실제 줌 실행 (부드러운 줌을 위해 타겟만 설정)
             if (inputDetected)
             {
                 var zoomDelta = finalScroll * mouseWheelZoomSpeed;
-                HandleZoom(zoomDelta, finalMousePos);
+                _targetOrthographicSize = Mathf.Clamp(_targetOrthographicSize - zoomDelta, zoomMin, zoomMax);
+                _zoomFocusScreenPoint = finalMousePos;
+                _isSmoothZooming = true;
                 
                 // 디버그 정보 업데이트
                 _lastScrollValue = finalScroll;
                 
                 if (_showDebugInfo)
-                    Debug.Log($"[Zoom Execute] delta={zoomDelta}, method={_lastInputMethod}");
+                    Debug.Log($"[Zoom Execute] targetSize={_targetOrthographicSize}, method={_lastInputMethod}");
             }
+        }
+        
+        /// <summary>
+        /// 비모바일 플랫폼에서 부드러운 줌을 처리합니다.
+        /// 매 프레임 현재 줌 값을 타겟 값으로 보간합니다.
+        /// </summary>
+        private void UpdateSmoothZoom()
+        {
+            if (!_isSmoothZooming || !_enableZoom || _isMovingCamera || _forceDisabled) return;
+            
+            float currentSize = _camera.orthographicSize;
+            
+            // 타겟에 충분히 가까우면 스냅
+            if (Mathf.Abs(currentSize - _targetOrthographicSize) < 0.001f)
+            {
+                _camera.orthographicSize = _targetOrthographicSize;
+                _isSmoothZooming = false;
+                return;
+            }
+            
+            // 줌 포인트 기준 위치 보정을 위해 줌 전 월드 좌표 저장
+            var worldPointBeforeZoom = _camera.ScreenToWorldPoint(new Vector3(_zoomFocusScreenPoint.x, _zoomFocusScreenPoint.y, 0));
+            
+            // 부드러운 보간
+            _camera.orthographicSize = Mathf.Lerp(currentSize, _targetOrthographicSize, Time.deltaTime * smoothZoomLerpSpeed);
+            
+            // 줌 포인트를 기준으로 카메라 위치 조정
+            var worldPointAfterZoom = _camera.ScreenToWorldPoint(new Vector3(_zoomFocusScreenPoint.x, _zoomFocusScreenPoint.y, 0));
+            var offset = worldPointBeforeZoom - worldPointAfterZoom;
+            
+            var newPosition = _camera.transform.position + offset;
+            _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
         }
 #endif
 
@@ -313,6 +355,7 @@ namespace Util.CameraSetting
             // 마우스 휠 입력을 LateUpdate에서 별도로 처리
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
             HandleMouseWheelInput();
+            UpdateSmoothZoom();
             
             // Unity 에디터에서 추가 입력 처리
 #if UNITY_EDITOR
@@ -338,7 +381,9 @@ namespace Util.CameraSetting
                     {
                         Debug.Log("[Editor Shortcut] Ctrl + = 로 줌인");
                         var mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
-                        HandleZoom(1f * mouseWheelZoomSpeed, mousePos);
+                        _targetOrthographicSize = Mathf.Clamp(_targetOrthographicSize - 1f * mouseWheelZoomSpeed, zoomMin, zoomMax);
+                        _zoomFocusScreenPoint = mousePos;
+                        _isSmoothZooming = true;
                         _lastScrollValue = 1f;
                         _lastInputMethod = "Editor Shortcut";
                     }
@@ -346,7 +391,9 @@ namespace Util.CameraSetting
                     {
                         Debug.Log("[Editor Shortcut] Ctrl + - 로 줌아웃");
                         var mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
-                        HandleZoom(-1f * mouseWheelZoomSpeed, mousePos);
+                        _targetOrthographicSize = Mathf.Clamp(_targetOrthographicSize + 1f * mouseWheelZoomSpeed, zoomMin, zoomMax);
+                        _zoomFocusScreenPoint = mousePos;
+                        _isSmoothZooming = true;
                         _lastScrollValue = -1f;
                         _lastInputMethod = "Editor Shortcut";
                     }
@@ -464,6 +511,7 @@ namespace Util.CameraSetting
 
             var prevSize = _camera.orthographicSize;
             _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize - zoomDelta, zoomMin, zoomMax);
+            _targetOrthographicSize = _camera.orthographicSize; // 부드러운 줌 타겟 동기화
 
             if (!Mathf.Approximately(prevSize, _camera.orthographicSize))
             {
@@ -651,6 +699,8 @@ namespace Util.CameraSetting
             
             // 최종 위치 설정
             _camera.transform.position = clampedTargetPosition;
+            _targetOrthographicSize = _camera.orthographicSize;
+            _isSmoothZooming = false;
             _isMovingCamera = false;
             
             // Debug.Log($"카메라 이동 완료: {clampedTargetPosition}");
@@ -682,6 +732,8 @@ namespace Util.CameraSetting
             }
             
             _camera.orthographicSize = clampedTargetSize;
+            _targetOrthographicSize = clampedTargetSize;
+            _isSmoothZooming = false;
         }
         
         /// <summary>
@@ -719,6 +771,8 @@ namespace Util.CameraSetting
             
             _camera.transform.position = clampedTargetPosition;
             _camera.orthographicSize = clampedTargetSize;
+            _targetOrthographicSize = clampedTargetSize;
+            _isSmoothZooming = false;
             _isMovingCamera = false;
         }
         
