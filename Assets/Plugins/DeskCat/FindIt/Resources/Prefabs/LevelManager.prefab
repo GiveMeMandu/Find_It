@@ -4546,6 +4546,7 @@ GameObject:
   - component: {fileID: 6088087165353427616}
   - component: {fileID: 6719389067104233917}
   - component: {fileID: 3830574812631440775}
+  - component: {fileID: 6816039773182362812}
   m_Layer: 0
   m_Name: ModeManager
   m_TagString: Untagged
@@ -4714,6 +4715,31 @@ MonoBehaviour:
   ingameCoinLayers:
   - {fileID: 1142933001690103025}
   - {fileID: 4312267278696465957}
+  coinFlyEffect: {fileID: 6816039773182362812}
+--- !u!114 &6816039773182362812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3035670538811384902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbb4f305dc0ad4f4cb245cc327609e89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinFlyEffect
+  coinEffectPrefab: {fileID: 7629339275278359847, guid: d63ee34dd545933448e654c8096f7abb, type: 3}
+  flyDuration: 1
+  startScale: 1
+  endScale: 0.3
+  moveEase: 26
+  scaleEase: 8
+  useScatter: 0
+  scatterRadius: 1.5
+  scatterDuration: 0.15
+  scatterEase: 9
+  coinCount: 1
+  coinDelay: 0.05
 --- !u!1 &3432996873655955137
 GameObject:
   m_ObjectHideFlags: 0
@@ -4856,6 +4882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnowRabbit.IngameCoinLayer
   animationObj: {fileID: 2922896022968832132}
+  iconObj: {fileID: 3929491449593817038}
   showAnimation: HUD_Resource_Show
   updateAnimation: HUD_Resource_Update
   idleAnimation: HUD_Resource_Idle
@@ -10103,6 +10130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnowRabbit.IngameCoinLayer
   animationObj: {fileID: 4626489726875668853}
+  iconObj: {fileID: 3693253568726717338}
   showAnimation: HUD_Resource_Show
   updateAnimation: HUD_Resource_Update
   idleAnimation: HUD_Resource_Idle
@@ -15762,6 +15790,11 @@ MonoBehaviour:
   OnAnimationCompleteWithName:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &3693253568726717338 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1773545597843222990, guid: 745f408bad94a1d44b62a8fd5b01a76e, type: 3}
+  m_PrefabInstance: {fileID: 3160951750169551444}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &5970178513180440512 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8721116669307213204, guid: 745f408bad94a1d44b62a8fd5b01a76e, type: 3}
@@ -16088,6 +16121,11 @@ MonoBehaviour:
   OnAnimationCompleteWithName:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &3929491449593817038 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1773545597843222990, guid: 745f408bad94a1d44b62a8fd5b01a76e, type: 3}
+  m_PrefabInstance: {fileID: 3320487682703775232}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6259661953583601405 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8703897416870297853, guid: 745f408bad94a1d44b62a8fd5b01a76e, type: 3}

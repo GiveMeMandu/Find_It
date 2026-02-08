@@ -15,6 +15,8 @@ public class IngameCoinLayer : AutoTaskControl
 {
     [Header("애니메이션 오브젝트")]
     [SerializeField] private AnimationObj animationObj;
+    [Label("아이콘 오브젝트")]
+    public GameObject iconObj;
 
     [Header("애니메이션 상태명")]
     [SerializeField] private string showAnimation = "HUD_Resource_Show";
