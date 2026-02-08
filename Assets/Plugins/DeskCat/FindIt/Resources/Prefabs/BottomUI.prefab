@@ -39,9 +39,9 @@ RectTransform:
   - {fileID: 8151998093346028160}
   m_Father: {fileID: 1780539776621033594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 115, y: -57.5}
   m_SizeDelta: {x: 115, y: 115}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6940959588676872936
@@ -212,8 +212,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 297.21875, y: 0}
-  m_SizeDelta: {x: -317.02, y: 0}
+  m_AnchoredPosition: {x: 88.82007, y: 0}
+  m_SizeDelta: {x: -419.6022, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &397624483868279098
 CanvasRenderer:
@@ -465,7 +465,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 397624484877271511}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -714,6 +714,9 @@ MonoBehaviour:
   isStopOtherEffect: 1
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 1
   effectAddValue: 0
@@ -2181,7 +2184,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 162, y: 161}
+  m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7002726184631847604
 CanvasRenderer:
@@ -2353,9 +2356,9 @@ RectTransform:
   - {fileID: 5842136449372160990}
   m_Father: {fileID: 1780539776621033594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 115, y: -192.5}
   m_SizeDelta: {x: 115, y: 115}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8794596332801364457
@@ -2581,7 +2584,7 @@ GameObject:
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1780539776621033594
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2854,11 +2857,11 @@ RectTransform:
   - {fileID: 1350073894923754990}
   m_Father: {fileID: 397624485727753905}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 297.22, y: 224}
-  m_Pivot: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0.000061035156, y: 0}
+  m_SizeDelta: {x: 297.21997, y: 224}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &5846563595760150602
 GameObject:
   m_ObjectHideFlags: 0
@@ -3061,7 +3064,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 162, y: 161}
+  m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1190831606450167720
 CanvasRenderer:
@@ -3401,6 +3404,9 @@ MonoBehaviour:
   isStopOtherEffect: 1
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 1
   effectAddValue: 0
@@ -3772,6 +3778,10 @@ PrefabInstance:
     - target: {fileID: 2090508982929956283, guid: eb0339dbdf45c4b49891a1e69db56f01, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3532546912930736174, guid: eb0339dbdf45c4b49891a1e69db56f01, type: 3}
+      propertyPath: m_fontSize
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4171,7 +4181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_Pivot.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_Pivot.y
@@ -4179,7 +4189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4187,7 +4197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_AnchorMin.y
@@ -4243,11 +4253,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 225
+      value: -245
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 34.8
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6316392347584788348, guid: 18662bde314358e4dba9151cd1e8ff81, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4328,6 +4338,9 @@ MonoBehaviour:
   isStopOtherEffect: 1
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 1
   effectAddValue: 0
@@ -4347,7 +4360,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
-  targetPosition: {x: 225, y: 68, z: 0}
+  targetPosition: {x: -245, y: -156.9, z: 0}
   isResetOnNext: 1
   isResetedThisTime: 1
   isResetOnStart: 0
@@ -4708,7 +4721,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7349128579056624320, guid: 29dad18e890149b429a5853e7fb9f6fc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 120.1
       objectReference: {fileID: 0}
     - target: {fileID: 7349128579056624320, guid: 29dad18e890149b429a5853e7fb9f6fc, type: 3}
       propertyPath: m_SizeDelta.y
@@ -4766,13 +4779,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeadLine1
       objectReference: {fileID: 0}
+    - target: {fileID: 7349128579056624321, guid: 29dad18e890149b429a5853e7fb9f6fc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7349128579056624323, guid: 29dad18e890149b429a5853e7fb9f6fc, type: 3}
       propertyPath: m_text
       value: 20/40
       objectReference: {fileID: 0}
     - target: {fileID: 7349128579056624323, guid: 29dad18e890149b429a5853e7fb9f6fc, type: 3}
       propertyPath: m_fontSize
-      value: 50
+      value: 62
       objectReference: {fileID: 0}
     - target: {fileID: 7349128579056624323, guid: 29dad18e890149b429a5853e7fb9f6fc, type: 3}
       propertyPath: m_fontAsset
@@ -4796,7 +4813,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7349128579056624323, guid: 29dad18e890149b429a5853e7fb9f6fc, type: 3}
       propertyPath: m_fontSizeBase
-      value: 50
+      value: 62
       objectReference: {fileID: 0}
     - target: {fileID: 7349128579056624323, guid: 29dad18e890149b429a5853e7fb9f6fc, type: 3}
       propertyPath: m_sharedMaterial
