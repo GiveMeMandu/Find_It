@@ -14,7 +14,7 @@ namespace Manager
         {
             sceneData = new List<SceneData>();
             recipeUpgradeData = new List<UpgradeData>();
-            GoldData = "0";
+            CoinData = "0";
             CashData = "0";
             SpinTicketData = "0";
             EPS = "0";
@@ -33,7 +33,7 @@ namespace Manager
         public List<SceneData> sceneData;
         public SceneName curScene;
         public List<UpgradeData> recipeUpgradeData;
-        public string GoldData;
+        public string CoinData;
         public string CashData;
         public string SpinTicketData;
         public DailyRewardData dailyRewardData;

@@ -53,7 +53,7 @@ namespace Manager
         public void GiveRewardByType(RewardSO rewardSO)
         {
             string rewardValue = CalculateRewardByType(rewardSO);
-            BigInteger rewardAmount = Global.GoldManager.GetGoldUnitValue(rewardValue);
+            BigInteger rewardAmount = Global.CoinManager.GetCoinUnitValue(rewardValue);
             AddReward(rewardSO.moneyType, rewardAmount);
         }
 
@@ -66,13 +66,13 @@ namespace Manager
         private string CalculateMultipleReward(RewardSO rewardSO)
         {
             int value = rewardSO.multipleAmount;
-            BigInteger rewardValue = Global.GoldManager.Gold * value;
+            BigInteger rewardValue = Global.CoinManager.Coin * value;
             return rewardValue.ToString();
         }
 
         private string CalculateTimeProfitReward(RewardSO rewardSO)
         {
-            return Global.GoldManager.GetGoldEPS(rewardSO.timeReward);
+            return Global.CoinManager.GetCoinEPS(rewardSO.timeReward);
         }
 
         private void AddReward(MoneyType moneyType, BigInteger value)
@@ -82,7 +82,7 @@ namespace Manager
             switch (moneyType)
             {
                 case MoneyType.Gold:
-                    Global.GoldManager.AddGold(value, false, particleCount);
+                    Global.CoinManager.AddCoin(value, false, particleCount);
                     break;
                 case MoneyType.Cash:
                     Global.CashManager.AddCash(value, particleCount);

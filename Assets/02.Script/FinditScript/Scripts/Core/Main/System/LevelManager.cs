@@ -275,15 +275,22 @@ DebugGameState();
                         boxCollider.size = new Vector2(boxCollider.size.x * 1.5f, boxCollider.size.y * 1.5f);
 
                         // 배경 애니메이션 설정
+                        // BGAnimationHelper가 있으면 해당 설정을 우선 적용
+                        BGAnimationHelper bgAnimHelper = child.GetComponent<BGAnimationHelper>();
+                        bool useBgAnim = bgAnimHelper == null || bgAnimHelper.UseBgAnimation;
+                        GameObject bgAnimPrefab = bgAnimHelper != null && bgAnimHelper.CustomBgAnimationPrefab != null
+                            ? bgAnimHelper.CustomBgAnimationPrefab
+                            : DefaultBgAnimation;
 
-                        // BG Object 생성 및 설정
-                        if (DefaultBgAnimation != null)
+                        // BG Object 생성 및 설정 (UseBgAnimation이 false면 스킵)
+                        if (useBgAnim && bgAnimPrefab != null)
                         {
                             GameObject bgObj = null;
                             if (hiddenObj.BgAnimationTransform == null)
                             {
-                                bgObj = Instantiate(DefaultBgAnimation, hiddenObj.transform);
-                                Debug.Log($"Added BGAnimation to {hiddenObj.gameObject.name}");
+                                bgObj = Instantiate(bgAnimPrefab, hiddenObj.transform);
+                                Debug.Log($"Added BGAnimation to {hiddenObj.gameObject.name}" +
+                                    (bgAnimHelper != null ? " (custom)" : " (default)"));
                                 hiddenObj.BgAnimationTransform = bgObj.transform;
                                 hiddenObj.SetBgAnimation(bgObj);
                             }
@@ -803,6 +810,12 @@ DebugGameState();
             EndTime = DateTime.Now;
             var timeUsed = EndTime.Subtract(StartTime);
             
+            // 게임 종료 시 코인 데이터 저장
+            if (Global.CoinManager != null)
+            {
+                Global.CoinManager.SaveCoinData();
+            }
+
             // 현재 씬을 clearedStages에 추가
             string currentSceneName = SceneManager.GetActiveScene().name;
             if (!string.IsNullOrEmpty(currentSceneName))

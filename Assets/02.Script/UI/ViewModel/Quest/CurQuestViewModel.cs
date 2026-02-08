@@ -22,12 +22,12 @@ namespace UI
             }
         }
         private void OnEnable() {
-            Global.GoldManager.OnGoldValueChanged += OnGoldValueChange;
-            Gold = Global.GoldManager.GetGoldText();
+            Global.CoinManager.OnCoinValueChanged += OnGoldValueChange;
+            Gold = Global.CoinManager.GetCoinText();
 
         }
         private void OnDisable() {
-            Global.GoldManager.OnGoldValueChanged -= OnGoldValueChange;
+            Global.CoinManager.OnCoinValueChanged -= OnGoldValueChange;
         }
 
         private void OnGoldValueChange(object sender, string e) => Gold = e;
