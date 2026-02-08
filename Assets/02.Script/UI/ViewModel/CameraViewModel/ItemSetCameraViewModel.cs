@@ -90,7 +90,7 @@ namespace UI
                 // 블러 시작 (흐리게)
                 if (Global.UIEffectManager != null && Global.UIEffectManager.BlurController != null)
                 {
-                    Global.UIEffectManager.BlurController.TurnOnBlur(.1f); // 강한 블러
+                    Global.UIEffectManager.BlurController.TurnOnBlur(.05f); // 강한 블러
                 }
 
                 // 카메라 이동 + 줌 (1초) - zoomSize가 유효하면 이동과 줌을 동시에
