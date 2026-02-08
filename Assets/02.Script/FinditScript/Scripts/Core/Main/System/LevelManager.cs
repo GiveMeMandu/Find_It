@@ -945,9 +945,7 @@ DebugGameState();
                 ShowUI();
         }
 
-        /// <summary>
-        /// LevelManager의 UI들을 페이드 아웃하여 숨깁니다.
-        /// </summary>
+        [Button("Hide UI")]
         public void HideUI()
         {
             if (!_isUIVisible) return;
@@ -955,9 +953,7 @@ DebugGameState();
             FadeUICanvasGroups(0f, UIFadeDuration);
         }
 
-        /// <summary>
-        /// LevelManager의 UI들을 페이드 인하여 다시 표시합니다.
-        /// </summary>
+        [Button("Show UI")]
         public void ShowUI()
         {
             if (_isUIVisible) return;

@@ -33,6 +33,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public UnityEvent OnUIClickEvent;
         public Action<List<MultiLanguageTextListModel>, TooltipsType, int, Transform> UIClickEvent;
 
+        private bool isSilhouetteMode = false;
+
         public void Initialize(Sprite sprite)
         {
             targetSprite.sprite = sprite;
@@ -69,8 +71,11 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 countSprite.gameObject.SetActive(foundCount < totalCount);
             }
-
-            SetSilhouetteMode(foundCount < totalCount);
+            
+            if (isSilhouetteMode)
+            {
+                SetSilhouetteMode(foundCount < totalCount);
+            }
         }
 
         public void InitializeTooltips(List<MultiLanguageTextListModel> tooltipsList, TooltipsType type)
@@ -111,12 +116,18 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         /// </summary>
         public void SetSilhouetteMode(bool isActive)
         {
+            isSilhouetteMode = isActive;
+            SilhoutteModeImageSetup();
+        }
+
+        private void SilhoutteModeImageSetup()
+        {
             if (silhouetteImage != null)
             {
-                silhouetteImage.gameObject.SetActive(isActive);
-                targetSprite.gameObject.SetActive(!isActive);
+                silhouetteImage.gameObject.SetActive(isSilhouetteMode);
+                targetSprite.gameObject.SetActive(!isSilhouetteMode);
 
-                if (isActive && targetSprite.sprite != null)
+                if (isSilhouetteMode && targetSprite.sprite != null)
                 {
                     // 원본 스프라이트를 실루엣 이미지에 복사하고 검은색으로 변경
                     silhouetteImage.sprite = targetSprite.sprite;
