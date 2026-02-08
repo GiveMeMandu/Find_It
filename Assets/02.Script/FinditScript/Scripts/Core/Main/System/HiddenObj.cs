@@ -115,10 +115,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
 
             // 객체가 활성화되어 있으면 실시간으로 체크하고 캐시 업데이트
-            Sprite currentSprite = (uiChangeHelper != null && uiChangeHelper.sprite != null) 
-                ? uiChangeHelper.sprite 
+            Sprite currentSprite = (uiChangeHelper != null && uiChangeHelper.sprite != null)
+                ? uiChangeHelper.sprite
                 : UISprite;
-            
+
             // 캐시 업데이트
             if (currentSprite != null)
             {
@@ -163,13 +163,13 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     gameObject.SetActive(false);
                 }
 
-                    // Raise the public found event for subscribers
-                    OnFound?.Invoke();
+                // Raise the public found event for subscribers
+                OnFound?.Invoke();
 
-                    // WhenFoundEventHelper 이벤트 호출
-                    whenFoundEventHelper?.onFoundEvent?.Invoke();
+                // WhenFoundEventHelper 이벤트 호출
+                whenFoundEventHelper?.onFoundEvent?.Invoke();
 
-                    TargetClickAction?.Invoke();
+                TargetClickAction?.Invoke();
             }
         }
 

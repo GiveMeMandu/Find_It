@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Util.CameraSetting;
 using Sirenix.OdinInspector;
+using Manager;
 
 using Random = UnityEngine.Random;
 
@@ -20,7 +21,7 @@ public class CoinRushModeManager : ModeManager
     [Header("Coin Rush Settings")]
     [LabelText("러쉬 지속시간 (초)")]
     public float rushDuration = 60f;
-    
+
     [Header("Coin Generation")]
     [Tooltip("미리 배치된 코인들을 사용할지 여부")]
     [LabelText("프리셋 코인 사용")]
@@ -28,11 +29,11 @@ public class CoinRushModeManager : ModeManager
     [Tooltip("미리 배치된 코인 오브젝트들 (usePresetCoins=true 일 때 사용)")]
     [LabelText("프리셋 코인들")]
     public HiddenObj[] presetCoins;
-    
+
     [Tooltip("게임 시작시 모든 코인을 한번에 생성할지 여부 (usePresetCoins=false 일 때만 유효)")]
     [LabelText("시작 시 전체 생성")]
     public bool spawnAllCoinsAtStart = false;
-    
+
     [Tooltip("런타임에 생성할 코인 프리팹 (usePresetCoins=false 일 때 사용)")]
     [LabelText("코인 프리팹")]
     public GameObject coinPrefab;
@@ -43,7 +44,7 @@ public class CoinRushModeManager : ModeManager
     [Tooltip("배경 스프라이트 경계로부터의 안쪽 여백")]
     [LabelText("배경으로부터 스폰 영역 패딩")]
     public float spawnAreaPadding = 0.5f;
-    
+
     [Header("Coin Spacing")]
     [Tooltip("코인 소환 시 다른 코인과의 최소 거리를 체크할지 여부")]
     [LabelText("코인 최소 간격 사용")]
@@ -56,7 +57,7 @@ public class CoinRushModeManager : ModeManager
     [LabelText("최대 소환 시도 횟수")]
     [Tooltip("최소 거리 체크 최대 시도 횟수")]
     public int maxSpawnAttempts = 30;
-    
+
     [Header("Coin Size")]
     [Tooltip("코인 크기를 랜덤으로 설정할지 여부")]
     [LabelText("랜덤 코인 크기 사용")]
@@ -73,13 +74,13 @@ public class CoinRushModeManager : ModeManager
     [LabelText("고정 크기 배율")]
     [Tooltip("고정 크기 배율")]
     public float fixedSizeScale = 1.0f;
-    
+
     [Header("Coin Properties")]
     [LabelText("코인 가치")]
     public int coinValue = 10;
     [LabelText("코인 수명 (초)")]
     public float coinLifetime = 8f;
-    
+
     [Header("Background Animation")]
     [LabelText("기본 배경 애니메이션")]
     public GameObject DefaultBgAnimation;
@@ -95,10 +96,13 @@ public class CoinRushModeManager : ModeManager
     public Button doubleRewardButton;
     [LabelText("러시 종료 UI")]
     public GameObject rushEndUI;
-    
+
     [Header("Sound Effects")]
     [LabelText("코인 발견 SFX")]
     public AudioSource coinFoundFx;
+
+    [Header("coin ui들")]
+    public List<IngameCoinLayer> ingameCoinLayers;
 
     private float remainingTime;
     private int coinsCollected = 0;
@@ -119,7 +123,7 @@ public class CoinRushModeManager : ModeManager
         coinsCollected = 0;
         totalScore = 0;
         rushActive = true;
-        
+
         // 미리 세팅된 코인들 초기화
         if (usePresetCoins)
         {
@@ -133,6 +137,15 @@ public class CoinRushModeManager : ModeManager
 
         UpdateUI();
         SetupDoubleRewardButton();
+        // 활성화된 모드일 때 인게임 코인 UI 레이어들 활성화
+        if (ingameCoinLayers != null)
+        {
+            foreach (var layer in ingameCoinLayers)
+            {
+                if (layer != null && layer.gameObject != null)
+                    layer.gameObject.SetActive(true);
+            }
+        }
     }
 
     private Vector3 GetRandomSpawnPosition()
@@ -170,7 +183,7 @@ public class CoinRushModeManager : ModeManager
                     return position;
                 }
             }
-            
+
             Debug.LogWarning($"[CoinRushModeManager] 최소 거리를 만족하는 위치를 찾지 못했습니다. ({maxSpawnAttempts}회 시도)");
         }
 
@@ -181,7 +194,7 @@ public class CoinRushModeManager : ModeManager
             0f
         );
     }
-    
+
     /// <summary>
     /// 해당 위치가 다른 코인들과 최소 거리를 유지하는지 확인
     /// </summary>
@@ -210,22 +223,25 @@ public class CoinRushModeManager : ModeManager
         }
 
         Debug.Log($"[CoinRushModeManager] Initializing {presetCoins.Length} preset coins");
-        
+
         foreach (var coinObj in presetCoins)
         {
             if (coinObj == null) continue;
 
             // HiddenObj 기본 설정
             coinObj.PlaySoundWhenFound = true;
-            coinObj.HideWhenFound = true;
+            if (coinObj.TryGetComponent(out HideWhenFoundHelper hideWhenFoundHelper))
+                coinObj.HideWhenFound = hideWhenFoundHelper.hideWhenFound;
+            else
+                coinObj.HideWhenFound = true;
             coinObj.hiddenObjFoundType = HiddenObjFoundType.Click;
-            
+
             // 사운드 설정 (coinFoundFx를 AudioWhenClick으로 설정)
             if (coinFoundFx != null)
             {
                 coinObj.AudioWhenClick = coinFoundFx.clip;
             }
-            
+
             // BoxCollider2D 확인 및 추가
             if (!coinObj.TryGetComponent<BoxCollider2D>(out var boxCollider))
             {
@@ -233,11 +249,18 @@ public class CoinRushModeManager : ModeManager
                 boxCollider.isTrigger = false;
                 boxCollider.size = new Vector2(boxCollider.size.x * 1.5f, boxCollider.size.y * 1.5f);
             }
-            
+
             // 배경 애니메이션 설정
-            if (DefaultBgAnimation != null && coinObj.BgAnimationTransform == null)
+            // BGAnimationHelper가 있으면 해당 설정을 우선 적용
+            BGAnimationHelper bgAnimHelper = coinObj.GetComponent<BGAnimationHelper>();
+            bool useBgAnim = bgAnimHelper == null || bgAnimHelper.UseBgAnimation;
+            GameObject bgAnimPrefab = bgAnimHelper != null && bgAnimHelper.CustomBgAnimationPrefab != null
+                ? bgAnimHelper.CustomBgAnimationPrefab
+                : DefaultBgAnimation;
+
+            if (useBgAnim && bgAnimPrefab != null && coinObj.BgAnimationTransform == null)
             {
-                GameObject bgObj = Instantiate(DefaultBgAnimation, coinObj.transform);
+                GameObject bgObj = Instantiate(bgAnimPrefab, coinObj.transform);
                 coinObj.BgAnimationTransform = bgObj.transform;
                 coinObj.SetBgAnimation(bgObj);
             }
@@ -245,16 +268,16 @@ public class CoinRushModeManager : ModeManager
             // Dictionary에 추가 및 클릭 이벤트 연결
             Guid guid = Guid.NewGuid();
             coinObjDic.Add(guid, coinObj);
-            
+
             coinObj.TargetClickAction = () => { OnCoinClick(guid); };
             coinObj.IsFound = false;
-            
+
             activeCoinObjects.Add(coinObj.gameObject);
         }
-        
+
         Debug.Log($"[CoinRushModeManager] {coinObjDic.Count} preset coins initialized");
     }
-    
+
     /// <summary>
     /// 게임 시작시 모든 코인을 한번에 생성
     /// </summary>
@@ -265,17 +288,17 @@ public class CoinRushModeManager : ModeManager
             Debug.LogWarning("[CoinRushModeManager] spawnAllCoinsAtStart is true but coinPrefab is not assigned!");
             return;
         }
-        
+
         Debug.Log($"[CoinRushModeManager] Spawning {maxCoinsOnScreen} coins at start");
-        
+
         for (int i = 0; i < maxCoinsOnScreen; i++)
         {
             SpawnSingleCoin();
         }
-        
+
         Debug.Log($"[CoinRushModeManager] {coinObjDic.Count} coins spawned at start");
     }
-    
+
     /// <summary>
     /// 코인 하나를 생성 (SpawnCoin 로직을 재사용)
     /// </summary>
@@ -294,9 +317,12 @@ public class CoinRushModeManager : ModeManager
 
         // HiddenObj 기본 설정 (LevelManager 방식)
         hiddenObj.PlaySoundWhenFound = true;
-        hiddenObj.HideWhenFound = true;
+        if (hiddenObj.TryGetComponent(out HideWhenFoundHelper hideWhenFoundHelper))
+            hiddenObj.HideWhenFound = hideWhenFoundHelper.hideWhenFound;
+        else
+            hiddenObj.HideWhenFound = true;
         hiddenObj.hiddenObjFoundType = HiddenObjFoundType.Click;
-        
+
         // 사운드 설정 (coinFoundFx를 AudioWhenClick으로 설정)
         if (coinFoundFx != null)
         {
@@ -309,11 +335,18 @@ public class CoinRushModeManager : ModeManager
             boxCollider = coin.AddComponent<BoxCollider2D>();
             boxCollider.isTrigger = false;
         }
-        
+
         // 배경 애니메이션 설정
-        if (DefaultBgAnimation != null)
+        // BGAnimationHelper가 있으면 해당 설정을 우선 적용
+        BGAnimationHelper bgAnimHelper = coin.GetComponent<BGAnimationHelper>();
+        bool useBgAnim = bgAnimHelper == null || bgAnimHelper.UseBgAnimation;
+        GameObject bgAnimPrefab = bgAnimHelper != null && bgAnimHelper.CustomBgAnimationPrefab != null
+            ? bgAnimHelper.CustomBgAnimationPrefab
+            : DefaultBgAnimation;
+
+        if (useBgAnim && bgAnimPrefab != null)
         {
-            GameObject bgObj = Instantiate(DefaultBgAnimation, hiddenObj.transform);
+            GameObject bgObj = Instantiate(bgAnimPrefab, hiddenObj.transform);
             hiddenObj.BgAnimationTransform = bgObj.transform;
             hiddenObj.SetBgAnimation(bgObj);
         }
@@ -332,24 +365,25 @@ public class CoinRushModeManager : ModeManager
         // Dictionary에 추가 및 클릭 이벤트 연결
         Guid guid = Guid.NewGuid();
         coinObjDic.Add(guid, hiddenObj);
-        
+
         // HiddenObj의 클릭 액션 설정 (LevelManager 방식)
-        hiddenObj.TargetClickAction = () => {
-            coinComponent.CollectCoin(); 
-            OnCoinClick(guid); 
+        hiddenObj.TargetClickAction = () =>
+        {
+            coinComponent.CollectCoin();
+            OnCoinClick(guid);
         };
         hiddenObj.IsFound = false;
 
         activeCoinObjects.Add(coin);
     }
-    
+
     /// <summary>
     /// 코인의 크기를 설정합니다. (랜덤 또는 고정)
     /// </summary>
     private void ApplyCoinSize(Transform coinTransform)
     {
         float scale;
-        
+
         if (useRandomSize)
         {
             scale = Random.Range(minSizeScale, maxSizeScale);
@@ -358,10 +392,10 @@ public class CoinRushModeManager : ModeManager
         {
             scale = fixedSizeScale;
         }
-        
+
         coinTransform.localScale = Vector3.one * scale;
     }
-    
+
     private void SetupDoubleRewardButton()
     {
         if (doubleRewardButton != null)
@@ -399,7 +433,7 @@ public class CoinRushModeManager : ModeManager
     {
         // 수명이 다한 코인들을 찾아서 제거
         List<Guid> coinsToRemove = new List<Guid>();
-        
+
         foreach (var kvp in coinObjDic)
         {
             var coinObj = kvp.Value;
@@ -417,7 +451,7 @@ public class CoinRushModeManager : ModeManager
         {
             coinObjDic.Remove(guid);
         }
-        
+
         // 오브젝트 리스트 정리
         activeCoinObjects.RemoveAll(obj => obj == null);
     }
@@ -426,10 +460,10 @@ public class CoinRushModeManager : ModeManager
     {
         // 미리 세팅된 코인을 사용하는 경우 런타임 생성 안 함
         if (usePresetCoins) return;
-        
+
         // 게임 시작시 모든 코인 생성 옵션이 켜져있으면 개별 스폰 안 함
         if (spawnAllCoinsAtStart) return;
-        
+
         if (coinObjDic.Count >= maxCoinsOnScreen) return;
 
         if (coinPrefab != null)
@@ -457,15 +491,22 @@ public class CoinRushModeManager : ModeManager
     {
         // HitHiddenObject에서 이미 IsFound를 true로 설정하므로 여기서는 체크하지 않음
         // 사운드는 HiddenObj.HitHiddenObject에서 재생됨
-        
+
         coinsCollected++;
         totalScore += coinValue;
 
         // Dictionary에서 제거
         coinObjDic.Remove(guid);
 
+        // 코인 획득 즉시 CoinManager에 추가 및 저장
+        if (Global.CoinManager != null)
+        {
+            Global.CoinManager.AddCoin(new System.Numerics.BigInteger(coinValue));
+            Global.CoinManager.SaveCoinData();
+        }
+
         Debug.Log($"[CoinRushModeManager] 코인 획득! 가치: {coinValue}, 총점: {totalScore}, 남은 코인: {coinObjDic.Count}");
-        
+
         UpdateUI();
     }
 
@@ -530,6 +571,16 @@ public class CoinRushModeManager : ModeManager
             doubleRewardButton.gameObject.SetActive(true);
         }
 
+        // 모드 종료 시 인게임 코인 UI 레이어들 비활성화
+        if (ingameCoinLayers != null)
+        {
+            foreach (var layer in ingameCoinLayers)
+            {
+                if (layer != null && layer.gameObject != null)
+                    layer.gameObject.SetActive(false);
+            }
+        }
+
         OnGameEnd();
     }
 
@@ -560,13 +611,15 @@ public class CoinRushModeManager : ModeManager
     public override void OnGameEnd()
     {
         base.OnGameEnd();
-        Debug.Log($"[CoinRushModeManager] 최종 점수: {totalScore} 코인 획득");
+
+        // 코인은 획득할 때마다 실시간으로 저장되므로 여기서는 로그만 출력
+        Debug.Log($"[CoinRushModeManager] 게임 종료 - 최종 점수: {totalScore}");
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        
+
         // 생성된 코인들 정리
         foreach (GameObject coin in activeCoinObjects)
         {
@@ -583,18 +636,18 @@ public class CoinRushModeManager : ModeManager
             doubleRewardButton.onClick.RemoveListener(WatchAdForDoubleReward);
         }
     }
-    
+
     // 디버깅 및 접근용 메서드들
     public int GetCoinsCollected() => coinsCollected;
     public int GetActiveCoinCount() => coinObjDic.Count;
     public bool IsRushActive() => rushActive;
     public float GetRemainingTime() => remainingTime;
-    
+
     /// <summary>
     /// LevelManager가 코인들을 인식할 수 있도록 Dictionary를 반환
     /// </summary>
     public Dictionary<Guid, HiddenObj> GetCoinDictionary() => coinObjDic;
-    
+
     /// <summary>
     /// LevelManager에서 코인들을 포함해야 하는지 여부
     /// (미리 세팅된 코인 또는 시작시 모든 코인 생성)

@@ -18,7 +18,7 @@ namespace Manager
         public static UserDataManager UserDataManager { get; set; }
         public static SoundManager SoundManager { get; set; }
         public static GoogleMobileAdsManager GoogleMobileAdsManager { get; set; }
-        public static GoldManager GoldManager { get; set; }
+        public static CoinManager CoinManager { get; set; }
         public static CashManager CashManager { get; set; }
         public static SpinTicketManager SpinTicketManager { get; set; }
         public static ItemManager ItemManager { get; set; }
@@ -50,14 +50,14 @@ namespace Manager
 
             LoadManagerPrefabs();
 
-            // GoldManager = new();
-            // GoldManager.Initial();
+            CoinManager = new();
+            CoinManager.Initial();
 
             // CashManager = new();
             // CashManager.Initial();
 
-            SpinTicketManager = new();
-            SpinTicketManager.Initial();
+            // SpinTicketManager = new();
+            // SpinTicketManager.Initial();
 
             // ItemManager는 이제 LoadManagerPrefabs에서 로드됨
             // ItemManager = new();

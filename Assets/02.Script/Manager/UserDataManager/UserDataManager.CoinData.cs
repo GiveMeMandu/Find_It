@@ -7,29 +7,29 @@ namespace Manager
 {
     public partial class UserDataManager
     {
-        public string GetGoldDataString()
+        public string GetCoinDataString()
         {
             //* 돈 데이터 있으면 그냥 리턴하고
-            if(userStorage.GoldData != "") return userStorage.GoldData;
+            if(userStorage.CoinData != "") return userStorage.CoinData;
             //* 아니면 새로 생성하고
             string startGold = "0";
-            userStorage.GoldData = startGold;
+            userStorage.CoinData = startGold;
             Save();
             return startGold;
         }
-        public BigInteger GetGoldDataBigInteger()
+        public BigInteger GetCoinDataBigInteger()
         {
-            return Global.GoldManager.GetGoldUnitValue(GetGoldDataString());
+            return Global.CoinManager.GetCoinUnitValue(GetCoinDataString());
         }
 
-        public void SetGoldData(string value)
+        public void SetCoinData(string value)
         {
-            userStorage.GoldData = value;
+            userStorage.CoinData = value;
             Save();
         }
-        public void SetGoldData(BigInteger value)
+        public void SetCoinData(BigInteger value)
         {
-            userStorage.GoldData = value.ToString();
+            userStorage.CoinData = value.ToString();
             Save();
         }
     }

@@ -32,7 +32,7 @@ namespace Manager
         }
 
         private BigInteger EPS = 0;
-        private BigInteger storeEPS = Global.GoldManager.GetGoldUnitValue(Global.UserDataManager.userStorage.EPS);
+        private BigInteger storeEPS = Global.CoinManager.GetCoinUnitValue(Global.UserDataManager.userStorage.EPS);
 
         // EPS 값을 설정하는 메서드
         public void AddToEPS(BigInteger amt)
