@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Util.CameraSetting;
 using Sirenix.OdinInspector;
 using Manager;
+using DG.Tweening;
 
 using Random = UnityEngine.Random;
 
@@ -64,7 +65,7 @@ public class CoinRushModeManager : ModeManager
     public bool useRandomSize = false;
     [ShowIf("useRandomSize")]
     [LabelText("최소 크기 배율")]
-    [Tooltip("최소 크기 배율")]
+    /// [Tooltip("최소 크기 배율")]
     public float minSizeScale = 0.7f;
     [ShowIf("useRandomSize")]
     [LabelText("최대 크기 배율")]
@@ -103,6 +104,11 @@ public class CoinRushModeManager : ModeManager
 
     [Header("coin ui들")]
     public List<IngameCoinLayer> ingameCoinLayers;
+
+    [Header("코인 획득 이펙트")]
+    [LabelText("코인 날아가는 이펙트")]
+    [Tooltip("코인 획득 시 UI로 날아가는 이펙트 컴포넌트")]
+    public CoinFlyEffect coinFlyEffect;
 
     private float remainingTime;
     private int coinsCollected = 0;
@@ -492,6 +498,9 @@ public class CoinRushModeManager : ModeManager
         // HitHiddenObject에서 이미 IsFound를 true로 설정하므로 여기서는 체크하지 않음
         // 사운드는 HiddenObj.HitHiddenObject에서 재생됨
 
+        // 코인 날아가는 이펙트 재생 (코인이 숨겨지기 전 위치 저장)
+        PlayCoinFlyToUI(hiddenObj);
+
         coinsCollected++;
         totalScore += coinValue;
 
@@ -508,6 +517,44 @@ public class CoinRushModeManager : ModeManager
         Debug.Log($"[CoinRushModeManager] 코인 획득! 가치: {coinValue}, 총점: {totalScore}, 남은 코인: {coinObjDic.Count}");
 
         UpdateUI();
+    }
+
+    /// <summary>
+    /// 코인 획득 시 활성화된 IngameCoinLayer 방향으로 코인이 날아가는 이펙트를 재생합니다.
+    /// </summary>
+    private void PlayCoinFlyToUI(HiddenObj hiddenObj)
+    {
+        if (coinFlyEffect == null || ingameCoinLayers == null) return;
+
+        // 활성화된 IngameCoinLayer 찾기
+        IngameCoinLayer activeLayer = null;
+        foreach (var layer in ingameCoinLayers)
+        {
+            if (layer != null && layer.gameObject != null && layer.gameObject.activeInHierarchy)
+            {
+                activeLayer = layer;
+                break;
+            }
+        }
+
+        if (activeLayer == null) return;
+
+        // 코인의 월드 좌표
+        Vector3 coinWorldPos = hiddenObj.transform.position;
+
+        // 원본 스프라이트 가져오기
+        Sprite coinSprite = null;
+        var spriteRenderer = hiddenObj.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            coinSprite = spriteRenderer.sprite;
+        }
+
+        // 타겟 UI의 RectTransform
+        RectTransform targetRect = activeLayer.iconObj.GetComponent<RectTransform>();
+
+        // 이펙트 재생
+        coinFlyEffect.PlayFlyEffect(coinWorldPos, targetRect, coinSprite);
     }
 
     private void UpdateUI()
