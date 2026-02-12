@@ -9,6 +9,7 @@ using Util.CameraSetting;
 using Sirenix.OdinInspector;
 using Manager;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 using Random = UnityEngine.Random;
 
@@ -498,8 +499,8 @@ public class CoinRushModeManager : ModeManager
         // HitHiddenObject에서 이미 IsFound를 true로 설정하므로 여기서는 체크하지 않음
         // 사운드는 HiddenObj.HitHiddenObject에서 재생됨
 
-        // 코인 날아가는 이펙트 재생 (코인이 숨겨지기 전 위치 저장)
-        PlayCoinFlyToUI(hiddenObj);
+        // 코인 날아가는 이펙트를 1초 뒤에 재생
+        PlayCoinFlyToUIDelayed(hiddenObj);
 
         coinsCollected++;
         totalScore += coinValue;
@@ -517,6 +518,20 @@ public class CoinRushModeManager : ModeManager
         Debug.Log($"[CoinRushModeManager] 코인 획득! 가치: {coinValue}, 총점: {totalScore}, 남은 코인: {coinObjDic.Count}");
 
         UpdateUI();
+    }
+
+    /// <summary>
+    /// 코인 획득 후 1초 후에 UI로 날아가는 이펙트를 UniTask로 호출합니다.
+    /// </summary>
+    private void PlayCoinFlyToUIDelayed(HiddenObj hiddenObj)
+    {
+        if (hiddenObj == null) return;
+
+        UniTask.Void(async () =>
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(1.4f));
+            PlayCoinFlyToUI(hiddenObj);
+        });
     }
 
     /// <summary>

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using Manager;
 
 /// <summary>
 /// 코인을 찾았을 때 월드 좌표에서 UI(IngameCoinLayer) 방향으로 
@@ -90,7 +91,7 @@ public class CoinFlyEffect : MonoBehaviour
         Canvas canvas = effectCanvas;
         if (canvas == null)
         {
-            canvas = targetUI.GetComponentInParent<Canvas>();
+            canvas = Global.UIManager.uiCanvas;
         }
         if (canvas == null)
         {
