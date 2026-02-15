@@ -191,6 +191,9 @@ namespace UI.Page
             if (modeSelector != null && modeSelector.selectedMode == ModeManager.GameMode.TIME_CHALLENGE)
             {
                 ShowRotateButton = false;
+            }else
+            {
+                ShowRotateButton = true;
             }
         }
 

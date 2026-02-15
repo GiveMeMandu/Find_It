@@ -8203,6 +8203,7 @@ MonoBehaviour:
   zoomMax: 5.4
   touchPinchZoomSpeed: 0.005
   mouseWheelZoomSpeed: 2
+  smoothZoomLerpSpeed: 10
   zoomPan: 0
   _enablePan: 1
   pcCamPanSpeed: 5
@@ -49458,6 +49459,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3924203144788950616}
   - component: {fileID: 8621528536563884323}
+  - component: {fileID: 8621528536563884324}
   m_Layer: 0
   m_Name: day_hide_bottle2_1
   m_TagString: Hidden
@@ -51658,6 +51660,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5148951382567257234}
   - component: {fileID: 5373155263160669995}
+  - component: {fileID: 6905999759619216933}
   m_Layer: 0
   m_Name: day_hide_bottle2
   m_TagString: Hidden
@@ -51665,6 +51668,49 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6905999759619216933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6905999759619216932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 458a2d0a3aebc1d4ca28aadd8c2b3412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effect.FloatingEffect
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
+  floatingDirection: 0
+  floatingDistance: 0.01
+  floatingSpeed: 2
+  customDirection: {x: 0, y: 1, z: 0}
+  easeType: 4
+  autoStart: 1
 --- !u!4 &6923791128646392379
 Transform:
   m_ObjectHideFlags: 0
@@ -61050,6 +61096,49 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8621528536563884324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6476573250674317480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 458a2d0a3aebc1d4ca28aadd8c2b3412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effect.FloatingEffect
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
+  floatingDirection: 0
+  floatingDistance: 0.01
+  floatingSpeed: 2
+  customDirection: {x: 0, y: 1, z: 0}
+  easeType: 4
+  autoStart: 1
 --- !u!114 &8622575056233624103
 MonoBehaviour:
   m_ObjectHideFlags: 0

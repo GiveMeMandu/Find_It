@@ -25,10 +25,15 @@ public class TimeChallengeModeManager : ModeManager
 
     [Header("Timer ViewModels")]
     [Tooltip("List of TimerCountViewModel instances to start when the level begins (seconds)")]
-    public List<TimerCountViewModel> TimerViewModels;
+    public List<TimerCountViewModel> ScrollviewTimerViewModels;
+    public List<TimerCountViewModel> noScrollviewTimerViewModels;
     public int defaultSeconds = 600; // 기본 타이머 시간 (초)
     private int timersCompleted = 0;
     private bool forcedEndTriggered = false;
+
+    // 현재 활성화된 타이머 뷰모델 리스트
+    private List<TimerCountViewModel> ActiveTimerViewModels => 
+        hideScrollView ? noScrollviewTimerViewModels : ScrollviewTimerViewModels;
 
     [Header("UI References")]
     public TextMeshProUGUI timerText;
@@ -71,13 +76,31 @@ public class TimeChallengeModeManager : ModeManager
 
     private void InitializeTimers()
     {
-        // Start timers for all assigned TimerCountViewModel instances (default 10 minutes = 600 seconds)
-        if (TimerViewModels != null)
+        // hideScrollView 상태에 따라 적절한 타이머 뷰모델 활성화
+        // ScrollView를 숨기는 경우: noScrollviewTimerViewModels 사용
+        // ScrollView를 보여주는 경우: ScrollviewTimerViewModels 사용
+        
+        // 비활성화할 리스트 처리
+        var inactiveList = hideScrollView ? ScrollviewTimerViewModels : noScrollviewTimerViewModels;
+        if (inactiveList != null)
         {
-            foreach (var timerVm in TimerViewModels)
+            foreach (var timerVm in inactiveList)
             {
-                timerVm.gameObject.SetActive(true);
+                if (timerVm != null)
+                {
+                    timerVm.gameObject.SetActive(false);
+                }
+            }
+        }
+
+        // 활성화할 리스트 처리
+        if (ActiveTimerViewModels != null)
+        {
+            foreach (var timerVm in ActiveTimerViewModels)
+            {
                 if (timerVm == null) continue;
+                
+                timerVm.gameObject.SetActive(true);
                 // Subscribe to completion event
                 timerVm.OnTimerComplete += OnSingleTimerComplete;
                 // defaultSeconds = Global.StageTimer;
@@ -96,11 +119,11 @@ public class TimeChallengeModeManager : ModeManager
     {
         timersCompleted++;
 
-        Debug.Log($"[TimeChallengeModeManager] Timer completed ({timersCompleted}/{(TimerViewModels?.Count ?? 0)})");
+        Debug.Log($"[TimeChallengeModeManager] Timer completed ({timersCompleted}/{(ActiveTimerViewModels?.Count ?? 0)})");
 
         if (forcedEndTriggered) return;
 
-        if (TimerViewModels != null && timersCompleted >= TimerViewModels.Count)
+        if (ActiveTimerViewModels != null && timersCompleted >= ActiveTimerViewModels.Count)
         {
             forcedEndTriggered = true;
             Debug.Log("[TimeChallengeModeManager] All timers finished — forcing game end sequence.");
@@ -318,9 +341,9 @@ public class TimeChallengeModeManager : ModeManager
         }
 
         // Unsubscribe from timer events to avoid leaks
-        if (TimerViewModels != null)
+        if (ActiveTimerViewModels != null)
         {
-            foreach (var timerVm in TimerViewModels)
+            foreach (var timerVm in ActiveTimerViewModels)
             {
                 if (timerVm == null) continue;
                 timerVm.OnTimerComplete -= OnSingleTimerComplete;
