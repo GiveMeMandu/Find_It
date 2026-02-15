@@ -4690,9 +4690,9 @@ RectTransform:
   - {fileID: 2671818181952511674}
   m_Father: {fileID: 2443891500416782746}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 40, y: -31.866798}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &504596650280315484
@@ -5947,6 +5947,7 @@ GameObject:
   - component: {fileID: 2325689593030314878}
   - component: {fileID: 7604794091822480543}
   - component: {fileID: 6183796894287109564}
+  - component: {fileID: 6170955935593143073}
   m_Layer: 5
   m_Name: SettingBtnBG
   m_TagString: Untagged
@@ -6106,6 +6107,23 @@ MonoBehaviour:
   _isAutoConnection: 1
   viewModelMethodName: UI.Page.InGameMainPage.OnClickRotateUIButton
   viewEventName: UnityEngine.UI.Button.onClick
+--- !u!114 &6170955935593143073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8525239375575482841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43352902310e02e4895b9d70a80c740e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityWeld::UnityWeld.Binding.OneWayPropertyBinding
+  _isAutoConnection: 1
+  viewAdapterId: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: UI.Page.InGameMainPage.ShowSettingButton
+  viewPropertyName: UnityEngine.UI.Button.interactable
 --- !u!1 &8790460496139306010
 GameObject:
   m_ObjectHideFlags: 0
@@ -7040,7 +7058,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6618287776917572775, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6618287776917572775, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       propertyPath: m_AnchorMin.x
@@ -7048,15 +7066,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6618287776917572775, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6618287776917572775, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 6618287776917572775, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 6618287776917572775, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7088,7 +7106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6618287776917572775, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 201.25584
       objectReference: {fileID: 0}
     - target: {fileID: 6618287776917572775, guid: 9c99ea263e851e84b8f014d25dd4afd7, type: 3}
       propertyPath: m_AnchoredPosition.y

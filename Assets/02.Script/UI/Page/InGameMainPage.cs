@@ -62,6 +62,51 @@ namespace UI.Page
             }
         }
 
+        private bool _showTutorialButton;
+        [Binding]
+        public bool ShowTutorialButton
+        {
+            get => _showTutorialButton;
+            set
+            {
+                _showTutorialButton = value;
+                OnPropertyChanged(nameof(ShowTutorialButton));
+            }
+        }
+
+        private bool _showRotateButton;
+        [Binding]
+        public bool ShowRotateButton
+        {
+            get => _showRotateButton;
+            set
+            {
+                _showRotateButton = value;
+                OnPropertyChanged(nameof(ShowRotateButton));
+            }
+        }
+        private bool _showTutorialBtn;
+        [Binding]
+        public bool ShowTutorialBtn
+        {
+            get => _showTutorialBtn;
+            set
+            {
+                _showTutorialBtn = value;
+                OnPropertyChanged(nameof(ShowTutorialBtn));
+            }
+        }
+        private bool _showSettingButton;
+        [Binding]
+        public bool ShowSettingButton
+        {
+            get => _showSettingButton;
+            set
+            {
+                _showSettingButton = value;
+                OnPropertyChanged(nameof(ShowSettingButton));
+            }
+        }
         private bool _showFoundObjToolTip;
 
         [Binding]
@@ -131,7 +176,7 @@ namespace UI.Page
             {
                 LevelManager.Instance.OnFoundObj += OnFoundObj;
             }
-            
+
             if (ItemSetManager.Instance != null)
             {
                 ItemSetManager.Instance.OnSetCompleted += OnSetCompleted;
@@ -141,6 +186,12 @@ namespace UI.Page
                 ShowMissionButton = hasMissions;
                 MissionGroupEnabled = hasMissions;
             }
+
+            var modeSelector = FindObjectOfType<ModeSelector>();
+            if (modeSelector != null && modeSelector.selectedMode == ModeManager.GameMode.TIME_CHALLENGE)
+            {
+                ShowRotateButton = false;
+            }
         }
 
         private void OnDestroy()
@@ -149,7 +200,7 @@ namespace UI.Page
             {
                 LevelManager.Instance.OnFoundObj -= OnFoundObj;
             }
-            
+
             if (ItemSetManager.Instance != null)
             {
                 ItemSetManager.Instance.OnSetCompleted -= OnSetCompleted;

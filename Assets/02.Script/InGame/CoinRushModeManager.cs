@@ -80,9 +80,14 @@ public class CoinRushModeManager : ModeManager
     [Header("Coin Properties")]
     [LabelText("코인 가치")]
     public int coinValue = 10;
+    
+    [Tooltip("코인에 수명을 줄지 여부 (false면 무제한)")]
+    [LabelText("코인 수명 사용")]
+    public bool useCoinLifetime = false;
+    [ShowIf("useCoinLifetime")]
     [LabelText("코인 수명 (초)")]
-    public float coinLifetime = 8f;
-
+    [Tooltip("코인이 자동으로 사라지는 시간")]
+    public float coinLifetime = 10f;
     [Header("Background Animation")]
     [LabelText("기본 배경 애니메이션")]
     public GameObject DefaultBgAnimation;
@@ -364,7 +369,9 @@ public class CoinRushModeManager : ModeManager
         {
             coinComponent = coin.AddComponent<CoinRushCoin>();
         }
-        coinComponent.Initialize(coinValue, coinLifetime, null); // 콜백은 HiddenObj에서 처리
+        // 수명 사용 여부에 따라 lifetime 값 전달 (0 이하면 무제한)
+        float lifetimeToUse = useCoinLifetime ? coinLifetime : 0f;
+        coinComponent.Initialize(coinValue, lifetimeToUse, null); // 콜백은 HiddenObj에서 처리
 
         // 코인 크기 설정
         ApplyCoinSize(coin.transform);
@@ -569,7 +576,13 @@ public class CoinRushModeManager : ModeManager
         RectTransform targetRect = activeLayer.iconObj.GetComponent<RectTransform>();
 
         // 이펙트 재생
-        coinFlyEffect.PlayFlyEffect(coinWorldPos, targetRect, coinSprite);
+        coinFlyEffect.PlayFlyEffect(coinWorldPos, targetRect, coinSprite, () => 
+        {
+            if (activeLayer != null && activeLayer.playUpdateAnimOnFlyComplete)
+            {
+                activeLayer.PlayUpdateAnimation();
+            }
+        });
     }
 
     private void UpdateUI()

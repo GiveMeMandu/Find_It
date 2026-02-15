@@ -37,10 +37,26 @@ public class CoinFlyEffect : MonoBehaviour
     public Vector2 coinUISize = new Vector2(80f, 80f);
 
     [LabelText("이동 Ease")]
+    [HideIf("useCustomMoveCurve")]
     public Ease moveEase = Ease.InBack;
 
+    [LabelText("이동 커스텀 커브 사용")]
+    public bool useCustomMoveCurve = false;
+
+    [ShowIf("useCustomMoveCurve")]
+    [LabelText("이동 커스텀 커브")]
+    public AnimationCurve customMoveCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
     [LabelText("크기 Ease")]
+    [HideIf("useCustomScaleCurve")]
     public Ease scaleEase = Ease.InCubic;
+
+    [LabelText("크기 커스텀 커브 사용")]
+    public bool useCustomScaleCurve = false;
+
+    [ShowIf("useCustomScaleCurve")]
+    [LabelText("크기 커스텀 커브")]
+    public AnimationCurve customScaleCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     [Header("흩어짐 효과")]
     [LabelText("흩어짐 사용")]
@@ -81,7 +97,8 @@ public class CoinFlyEffect : MonoBehaviour
     /// <param name="worldPosition">코인의 월드 좌표</param>
     /// <param name="targetUI">목표 UI RectTransform (활성화된 IngameCoinLayer)</param>
     /// <param name="sourceSprite">원본 코인 스프라이트 (프리팹이 없을 때 Image에 사용)</param>
-    public void PlayFlyEffect(Vector3 worldPosition, RectTransform targetUI, Sprite sourceSprite = null)
+    /// <param name="onComplete">이펙트 완료 시 호출될 콜백</param>
+    public void PlayFlyEffect(Vector3 worldPosition, RectTransform targetUI, Sprite sourceSprite = null, System.Action onComplete = null)
     {
         if (targetUI == null) return;
         if (_mainCamera == null) _mainCamera = Camera.main;
@@ -105,11 +122,13 @@ public class CoinFlyEffect : MonoBehaviour
         for (int i = 0; i < coinCount; i++)
         {
             float delay = i * coinDelay;
-            CreateAndFlyCoinUI(worldPosition, targetUI, sourceSprite, delay, rootCanvas);
+            // 마지막 코인이 도착했을 때만 콜백 호출
+            System.Action callback = (i == coinCount - 1) ? onComplete : null;
+            CreateAndFlyCoinUI(worldPosition, targetUI, sourceSprite, delay, rootCanvas, callback);
         }
     }
 
-    private void CreateAndFlyCoinUI(Vector3 worldPosition, RectTransform targetUI, Sprite sourceSprite, float delay, Canvas rootCanvas)
+    private void CreateAndFlyCoinUI(Vector3 worldPosition, RectTransform targetUI, Sprite sourceSprite, float delay, Canvas rootCanvas, System.Action onComplete)
     {
         RectTransform canvasRect = rootCanvas.GetComponent<RectTransform>();
 
@@ -172,14 +191,39 @@ public class CoinFlyEffect : MonoBehaviour
             seq.Append(flyRect.DOAnchorPos(scatterPos, scatterDuration).SetEase(scatterEase));
 
             // 2단계: 타겟 UI로 이동
-            seq.Append(flyRect.DOAnchorPos(targetAnchoredPos, flyDuration).SetEase(moveEase));
-            seq.Join(flyRect.DOScale(endScale, flyDuration).SetEase(scaleEase));
+            var moveTween = flyRect.DOAnchorPos(targetAnchoredPos, flyDuration);
+            if (useCustomMoveCurve)
+                moveTween.SetEase(customMoveCurve);
+            else
+                moveTween.SetEase(moveEase);
+
+            var scaleTween = flyRect.DOScale(endScale, flyDuration);
+            if (useCustomScaleCurve)
+                scaleTween.SetEase(customScaleCurve);
+            else
+                scaleTween.SetEase(scaleEase);
+
+            seq.Append(moveTween);
+            seq.Join(scaleTween);
         }
         else
         {
             seq.AppendInterval(delay);
-            seq.Append(flyRect.DOAnchorPos(targetAnchoredPos, flyDuration).SetEase(moveEase));
-            seq.Join(flyRect.DOScale(endScale, flyDuration).SetEase(scaleEase));
+
+            var moveTween = flyRect.DOAnchorPos(targetAnchoredPos, flyDuration);
+            if (useCustomMoveCurve)
+                moveTween.SetEase(customMoveCurve);
+            else
+                moveTween.SetEase(moveEase);
+
+            var scaleTween = flyRect.DOScale(endScale, flyDuration);
+            if (useCustomScaleCurve)
+                scaleTween.SetEase(customScaleCurve);
+            else
+                scaleTween.SetEase(scaleEase);
+
+            seq.Append(moveTween);
+            seq.Join(scaleTween);
         }
 
         // 이펙트 완료 후 오브젝트 제거
@@ -187,6 +231,7 @@ public class CoinFlyEffect : MonoBehaviour
         {
             if (flyObj != null)
             {
+            onComplete?.Invoke();
                 Destroy(flyObj);
             }
         });

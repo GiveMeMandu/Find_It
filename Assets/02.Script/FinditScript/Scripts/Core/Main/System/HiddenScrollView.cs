@@ -12,6 +12,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public GameObject mainPanel;
         public Transform contentContainer;
 
+        [Header("Time Challenge")]
+        [Tooltip("타임챌린지 모드에서 표시할 시간 패널")]
+        public GameObject TimeChallengePanel;
+        [Tooltip("찾은 개수 표시 UI (비활성화 대상)")]
+        public GameObject CountCircle;
+
         public DialogToast dialogToast;
 
         public Animator scrollAnimator;
@@ -21,6 +27,23 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private bool _isHiding;
 
         public Action UIClickAction;
+
+        /// <summary>
+        /// 타임챌린지 모드 전환: contentContainer와 CountCircle을 숨기고 TimeChallengePanel을 표시합니다.
+        /// </summary>
+        public void SetTimeChallengeMode(bool enabled)
+        {
+            if (contentContainer != null)
+                contentContainer.gameObject.SetActive(!enabled);
+
+            if (CountCircle != null)
+                CountCircle.SetActive(!enabled);
+
+            if (TimeChallengePanel != null)
+                TimeChallengePanel.SetActive(enabled);
+
+            Debug.Log($"[HiddenScrollView] TimeChallengeMode: {enabled}");
+        }
 
         public void Initialize()
         {

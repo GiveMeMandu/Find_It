@@ -18,6 +18,9 @@ public class IngameCoinLayer : AutoTaskControl
     [Label("아이콘 오브젝트")]
     public GameObject iconObj;
 
+    [Label("CoinFlyEffect 도착 시 업데이트 애니메이션 재생")]
+    public bool playUpdateAnimOnFlyComplete = false;
+
     [Header("애니메이션 상태명")]
     [SerializeField] private string showAnimation = "HUD_Resource_Show";
     [SerializeField] private string updateAnimation = "HUD_Resource_Update";
@@ -110,7 +113,10 @@ public class IngameCoinLayer : AutoTaskControl
         _accumulatedGainedMoney += gainedAmount;
 
         // 업데이트 애니메이션을 강제로 처음부터 재생
-        animationObj.ChangeAnimation(updateAnimation, force: true);
+        if (!playUpdateAnimOnFlyComplete)
+        {
+            animationObj.ChangeAnimation(updateAnimation, force: true);
+        }
 
         // 누적금액이 있다면 UI 활성화 및 애니메이션 재생
         if (_accumulatedGainedMoney > BigInteger.Zero)
@@ -252,5 +258,13 @@ public class IngameCoinLayer : AutoTaskControl
     private string FormatMoney(BigInteger amount)
     {
         return Global.CoinManager.GetCoinUnitText(amount);
+    }
+
+    /// <summary>
+    /// 외부에서 업데이트 애니메이션을 강제로 재생할 때 호출 (예: CoinFlyEffect 도착 시)
+    /// </summary>
+    public void PlayUpdateAnimation()
+    {
+        animationObj.ChangeAnimation(updateAnimation, force: true);
     }
 }

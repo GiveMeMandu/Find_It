@@ -32,6 +32,10 @@ public class CoinRushCoin : MonoBehaviour
 
     private void Update()
     {
+        // 수명이 0 이하면 무제한 (수명 체크 안 함)
+        if (lifetime <= 0f)
+            return;
+            
         // 수명 체크
         if (Time.time - spawnTime >= lifetime)
         {

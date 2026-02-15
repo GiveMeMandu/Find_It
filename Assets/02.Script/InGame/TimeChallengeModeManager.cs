@@ -20,6 +20,9 @@ public class TimeChallengeModeManager : ModeManager
     public int maxHints = 3;
     public float bonusTimePerObject = 5f;
 
+    [Tooltip("체크 시 레벨매니저의 ScrollView(찾을 물건 목록 UI)를 숨깁니다")]
+    public bool hideScrollView = false;
+
     [Header("Timer ViewModels")]
     [Tooltip("List of TimerCountViewModel instances to start when the level begins (seconds)")]
     public List<TimerCountViewModel> TimerViewModels;
@@ -51,6 +54,12 @@ public class TimeChallengeModeManager : ModeManager
         if (levelManager != null)
         {
             levelManager.OnFoundObj += OnHiddenObjectFound;
+        }
+
+        // ScrollView 숨김 처리
+        if (hideScrollView)
+        {
+            HideScrollView();
         }
 
         // TimerViewModels 초기화 및 시작
@@ -271,6 +280,27 @@ public class TimeChallengeModeManager : ModeManager
         {
             Debug.Log("[TimeChallengeModeManager] 챌린지 실패 - 시간이 모두 소진되었습니다!");
         }
+    }
+
+    /// <summary>
+    /// 레벨매니저의 ScrollView를 타임챌린지 모드로 전환합니다.
+    /// contentContainer와 CountCircle을 숨기고 TimeChallengePanel을 표시합니다.
+    /// </summary>
+    private void HideScrollView()
+    {
+        if (levelManager == null) return;
+
+        if (levelManager.HorizontalScrollView != null)
+        {
+            levelManager.HorizontalScrollView.SetTimeChallengeMode(true);
+        }
+
+        if (levelManager.VerticalScrollView != null)
+        {
+            levelManager.VerticalScrollView.SetTimeChallengeMode(true);
+        }
+
+        Debug.Log("[TimeChallengeModeManager] ScrollView가 타임챌린지 모드로 전환되었습니다");
     }
 
     protected override void OnDestroy()
