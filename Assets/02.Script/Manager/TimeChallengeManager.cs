@@ -645,7 +645,7 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
         foreach (var rabbit in generatedRabbits)
         {
             if (rabbit != null)
-            {
+            {          
                 DestroyImmediate(rabbit);
             }
         }
@@ -686,7 +686,20 @@ public class TimeChallengeManager : MMSingleton<TimeChallengeManager>
         CurrentScrollView.Initialize();
 
         var rabbitGroups = ConvertRabbitDictToGroups();
-        CurrentScrollView.UpdateScrollView(rabbitGroups, TargetImagePrefab, RabbitClick, RabbitRegionToggle, UIClick);
+        var createdUIs = CurrentScrollView.UpdateScrollView(rabbitGroups, TargetImagePrefab, RabbitClick, RabbitRegionToggle, UIClick);
+        
+        // LevelManager에 생성된 UI들을 등록하여 다른 모드 매니저들이 접근할 수 있도록 함
+        if (LevelManager.Instance != null)
+        {
+            var levelManagerUIs = LevelManager.Instance.GetAllHiddenObjUIs();
+            foreach (var ui in createdUIs)
+            {
+                if (!levelManagerUIs.Contains(ui))
+                {
+                    levelManagerUIs.Add(ui);
+                }
+            }
+        }
     }
 
     private Dictionary<Guid, HiddenObjGroup> ConvertRabbitDictToGroups()

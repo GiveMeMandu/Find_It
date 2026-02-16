@@ -17,12 +17,15 @@ public class ModeSelector : MonoBehaviour
     private Dictionary<ModeManager.GameMode, ModeManager> modeMap = new Dictionary<ModeManager.GameMode, ModeManager>();
 
     [Header("초기 선택 모드")]
+    [InfoBox("기본 모드 (항상 적용됨)")]
     public ModeManager.GameMode selectedMode = ModeManager.GameMode.CLASSIC;
 
     [LabelText("다중 모드 선택을 허용합니다.")]
+    [InfoBox("다중 모드 활성화시 selectedMode와 함께 추가로 적용할 모드들")]
     public bool allowMultipleSelection = false;
     [ShowIf("allowMultipleSelection")]
-    public List<ModeManager.GameMode> selectedModes = new List<ModeManager.GameMode>() { ModeManager.GameMode.CLASSIC };
+    [LabelText("추가 모드 (selectedMode와 함께 적용)")]
+    public List<ModeManager.GameMode> selectedModes = new List<ModeManager.GameMode>();
 
     private void Awake()
     {
@@ -70,21 +73,26 @@ public class ModeSelector : MonoBehaviour
     public List<ModeManager> GetSelectedModeManagers()
     {
         var list = new List<ModeManager>();
-        if (allowMultipleSelection)
+        
+        // 항상 selectedMode를 먼저 추가
+        var mainManager = GetSelectedModeManager();
+        if (mainManager != null)
+            list.Add(mainManager);
+        
+        // 다중 선택 모드라면 추가 모드들도 함께 적용
+        if (allowMultipleSelection && selectedModes != null)
         {
             foreach (var mode in selectedModes)
             {
+                // selectedMode와 중복되지 않도록 체크
+                if (mode == selectedMode) continue;
+                
                 var m = GetModeManager(mode);
-                if (m != null)
+                if (m != null && !list.Contains(m))
                     list.Add(m);
             }
         }
-        else
-        {
-            var m = GetSelectedModeManager();
-            if (m != null)
-                list.Add(m);
-        }
+        
         return list;
     }
 
@@ -93,30 +101,23 @@ public class ModeSelector : MonoBehaviour
     /// </summary>
     public void InitializeSelectedMode()
     {
-        if (allowMultipleSelection)
+        var managers = GetSelectedModeManagers();
+        if (managers.Count == 0)
         {
-            var managers = GetSelectedModeManagers();
-            if (managers.Count == 0)
+            if (allowMultipleSelection)
             {
-                Debug.LogWarning($"[ModeSelector] 선택된 모드들({string.Join(", ", selectedModes.ConvertAll(s => s.ToString()).ToArray())})에 해당하는 ModeManager를 찾을 수 없습니다.");
-                return;
-            }
-            foreach (var mm in managers)
-            {
-                mm.InitializeMode();
-            }
-        }
-        else
-        {
-            var m = GetSelectedModeManager();
-            if (m != null)
-            {
-                m.InitializeMode();
+                Debug.LogWarning($"[ModeSelector] 선택된 모드들(기본: {selectedMode}, 추가: {string.Join(", ", selectedModes.ConvertAll(s => s.ToString()).ToArray())})에 해당하는 ModeManager를 찾을 수 없습니다.");
             }
             else
             {
                 Debug.LogWarning($"[ModeSelector] 선택된 모드({selectedMode})에 해당하는 ModeManager를 찾을 수 없습니다.");
             }
+            return;
+        }
+        
+        foreach (var mm in managers)
+        {
+            mm.InitializeMode();
         }
     }
 
@@ -125,30 +126,18 @@ public class ModeSelector : MonoBehaviour
     /// </summary>
     public void SetSelectedMode(ModeManager.GameMode mode, bool initializeNow = false)
     {
-        if (allowMultipleSelection)
-        {
-            selectedModes = new List<ModeManager.GameMode> { mode };
-        }
-        else
-        {
-            selectedMode = mode;
-        }
+        selectedMode = mode;
         if (initializeNow)
             InitializeSelectedMode();
     }
 
     /// <summary>
-    /// 다중 선택 모드에서 한 번에 선택할 모드들을 설정합니다.
-    /// 다중 선택이 비활성화된 경우 첫 요소를 `selectedMode`로 사용합니다.
+    /// 다중 선택 모드에서 추가로 선택할 모드들을 설정합니다.
+    /// 이 모드들은 selectedMode와 함께 적용됩니다.
     /// </summary>
     public void SetSelectedModes(List<ModeManager.GameMode> modes, bool initializeNow = false)
     {
         selectedModes = modes != null ? new List<ModeManager.GameMode>(modes) : new List<ModeManager.GameMode>();
-        if (!allowMultipleSelection)
-        {
-            if (selectedModes.Count > 0)
-                selectedMode = selectedModes[0];
-        }
         if (initializeNow)
             InitializeSelectedMode();
     }
