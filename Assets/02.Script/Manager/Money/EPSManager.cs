@@ -23,12 +23,8 @@ namespace Manager
 
         private void SaveEPS()
         {
-            if(storeEPS == 0) ResetEPS();
-            else if (storeEPS != 0)
-            {
-                Global.UserDataManager.userStorage.EPS = storeEPS.ToString();
-                Global.UserDataManager.Save();
-            }
+            Global.UserDataManager.userStorage.EPS = storeEPS.ToString();
+            Global.UserDataManager.Save();
         }
 
         private BigInteger EPS = 0;
