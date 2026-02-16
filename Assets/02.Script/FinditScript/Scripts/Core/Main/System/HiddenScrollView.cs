@@ -97,7 +97,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 var imgObj = img.GetComponent<HiddenObjUI>();
                 // UIChangeHelper의 스프라이트를 우선적으로 사용
                 // Debug.Log("<color=green>GetUISprite called for: " + obj.GetUISprite() + " on object: " + obj.name + " is object active in hierarchy: " + obj.gameObject.activeInHierarchy + "</color>");
-                imgObj.Initialize(obj.GetUISprite());
+                imgObj.Initialize(obj.GetUISprite(), obj.GetUIColor());
                 // Assign the represented HiddenObj so the UI knows which object it corresponds to
                 imgObj.SetRepresentedHiddenObj(obj);
                 

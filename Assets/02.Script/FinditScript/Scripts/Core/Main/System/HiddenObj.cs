@@ -128,6 +128,28 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             return currentSprite;
         }
 
+        /// <summary>
+        /// UI에 표시할 색깔을 반환합니다. SpriteRenderer가 있으면 그 색깔을, 없으면 흰색을 반환합니다.
+        /// </summary>
+        public Color GetUIColor()
+        {
+            if (spriteRenderer != null)
+            {
+                return spriteRenderer.color;
+            }
+            
+            // spriteRenderer가 없으면 자식에서 찾기
+            var childSr = GetComponentInChildren<SpriteRenderer>();
+            if (childSr != null)
+            {
+                spriteRenderer = childSr;
+                return childSr.color;
+            }
+            
+            // 기본값으로 흰색 반환
+            return Color.white;
+        }
+
         // Call to refresh the cached UI sprite if components change at runtime
         public void RefreshCachedUISprite()
         {

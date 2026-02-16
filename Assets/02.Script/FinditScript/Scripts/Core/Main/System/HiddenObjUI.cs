@@ -35,9 +35,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private bool isSilhouetteMode = false;
 
-        public void Initialize(Sprite sprite)
+        public void Initialize(Sprite sprite, Color color)
         {
             targetSprite.sprite = sprite;
+            targetSprite.color = color;
 
             FoundSprite.gameObject.SetActive(false);
         }
