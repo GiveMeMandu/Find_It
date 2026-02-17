@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DeskCat.FindIt.Scripts.Core.Main.System;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 
 /// <summary>
@@ -20,19 +20,26 @@ public class ShadowModeManager : ModeManager
             levelManager.OnFoundObj += OnHiddenObjectFound;
         }
 
+        if (TimeChallengeManager.Instance != null)
+        {
+            TimeChallengeManager.Instance.OnFoundRabbit += OnHiddenObjectFound;
+        }
+
         SetupShadowMode();
     }
 
     private void SetupShadowMode()
     {
-        // 약간의 지연을 두고 실루엣 모드 활성화 (다른 매니저들이 UI를 생성할 시간 확보)
-        StartCoroutine(EnableSilhouetteModeDelayed());
+        // UI가 생성된 직후 즉시 실루엣 모드를 적용하여 깜빡임 방지
+        // 만약 초기화 시점에 UI가 아직 없다면 약간의 지연 후에 재시도
+        EnableSilhouetteModeAsync().Forget();
     }
 
-    private System.Collections.IEnumerator EnableSilhouetteModeDelayed()
+    private async UniTaskVoid EnableSilhouetteModeAsync()
     {
-        // 1프레임 대기하여 다른 매니저들(예: TimeChallengeManager)이 UI를 생성하고 등록할 시간을 줌
-        yield return null;
+        // 초기화 시점에는 다른 매니저들이 UI를 생성 중일 수 있으므로 
+        // 1프레임 대기 후 적용 (초기 진입 시 깜빡임은 허용)
+        await UniTask.Yield(PlayerLoopTiming.Update);
         
         EnableSilhouetteMode();
     }
@@ -58,6 +65,11 @@ public class ShadowModeManager : ModeManager
         OnObjectFound(foundObj);
         
         // 찾은 오브젝트에 해당하는 UI의 실루엣 모드 해제는 HiddenObjUI.Found()에서 자동으로 처리됨
+        // 하지만 UI 리스트가 재생성될 수 있으므로 실루엣 모드를 다시 적용해야 함
+        
+        // 중요: UI 업데이트 이벤트는 동기적으로 호출되므로, 즉시 실루엣 모드를 적용하여 깜빡임을 방지
+        EnableSilhouetteMode();
+
         Debug.Log($"[ShadowModeManager] 실루엣으로부터 오브젝트 발견: {foundObj.name}");
     }
 
@@ -86,6 +98,11 @@ public class ShadowModeManager : ModeManager
         if (levelManager != null)
         {
             levelManager.OnFoundObj -= OnHiddenObjectFound;
+        }
+
+        if (TimeChallengeManager.Instance != null)
+        {
+            TimeChallengeManager.Instance.OnFoundRabbit -= OnHiddenObjectFound;
         }
     }
 }
