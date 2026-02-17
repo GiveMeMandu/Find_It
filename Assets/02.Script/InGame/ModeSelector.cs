@@ -114,7 +114,19 @@ public class ModeSelector : MonoBehaviour
             }
             return;
         }
-        
+
+        // If CoinRush is among the selected modes, ensure TimeChallenge hides the ScrollView
+        bool coinRushSelected = managers.Exists(m => m != null && m.currentMode == ModeManager.GameMode.COIN_RUSH);
+        if (coinRushSelected)
+        {
+            var timeManager = GetModeManager(ModeManager.GameMode.TIME_CHALLENGE) as TimeChallengeModeManager;
+            if (timeManager != null)
+            {
+                timeManager.hideScrollView = true;
+                Debug.Log($"[ModeSelector] CoinRush selected — set {nameof(TimeChallengeModeManager)}.hideScrollView = true");
+            }
+        }
+
         foreach (var mm in managers)
         {
             mm.InitializeMode();
