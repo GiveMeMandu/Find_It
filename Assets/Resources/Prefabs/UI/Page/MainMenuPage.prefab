@@ -3407,6 +3407,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 1
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 1
   isUIEffect: 1
   effectAddValue: 0
@@ -3567,6 +3570,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 1
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 1
   isUIEffect: 1
   effectAddValue: 0
@@ -3599,7 +3605,7 @@ GameObject:
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6034698994752921926
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3670,7 +3676,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3937288068136529654}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8401934047050331582}
+        m_TargetAssemblyTypeName: UI.Effect.MoveEffect, Assembly-CSharp
+        m_MethodName: PlayVFX
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2330638386525763129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3697,7 +3715,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAutoConnection: 1
-  viewModelMethodName: UI.Page.MainMenuPage.OnClickMapButton
+  viewModelMethodName: UI.Page.MainMenuPage.OnClickHomeButton
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!114 &8937216909888851841
 MonoBehaviour:
@@ -3824,6 +3842,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 1.5
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 1
   isUIEffect: 1
   effectAddValue: 0
@@ -3909,6 +3930,9 @@ MonoBehaviour:
   isStopOtherEffect: 1
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 1
   effectAddValue: 0
@@ -3958,6 +3982,8 @@ GameObject:
   - component: {fileID: 2602295526303073695}
   - component: {fileID: 7360110436598693377}
   - component: {fileID: 2858738019303608600}
+  - component: {fileID: 1412344511890427647}
+  - component: {fileID: 8401934047050331582}
   m_Layer: 5
   m_Name: MainMenuPage
   m_TagString: Untagged
@@ -4018,6 +4044,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60ecccbd4c9a7c942ad09146ef60b0bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1412344511890427647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8152263072086268902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c30ee6a4b84ed04d8c49b5eb72aeb20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effect.PageSlideEffect
+  isSlideHorizontal: 1
+  isReverse: 0
+  ignoreFirstOnEnable: 1
+  isRotate: 0
+  rotationAngle: 2
+  firstSlideDuration: 0.5
+  secondSlideDuration: 0.2
+  secondSlideDelay: 0.1
+  arrivePosition: 0
+--- !u!114 &8401934047050331582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8152263072086268902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824354d0dadb6d4429f22c4092145e43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effect.MoveEffect
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 0
+  isUIEffect: 1
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
+  resetPosOnDisable: 0
+  isSmallOnEnd: 0
+  smallTiming: 1
+  useXAxis: 1
+  useYAxis: 1
+  useZAxis: 1
+  useRandomPosition: 0
+  minPosition: {x: 0, y: 0, z: 0}
+  maxPosition: {x: 100, y: 100, z: 100}
+  targetPosition: {x: -1920, y: 0, z: 0}
+  isResetOnNext: 0
+  isResetedThisTime: 0
+  isResetOnStart: 0
+  useAnchorReference: 1
+  moveEase: 9
+  moveDuration: 1
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8263413838667179403
 GameObject:
   m_ObjectHideFlags: 0
@@ -4114,6 +4215,9 @@ MonoBehaviour:
   isStopOtherEffect: 0
   startDelay: 0
   delay: 1.5
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 1
   isUIEffect: 1
   effectAddValue: 0
@@ -4199,6 +4303,9 @@ MonoBehaviour:
   isStopOtherEffect: 1
   startDelay: 0
   delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
   isLoopForce: 0
   isUIEffect: 1
   effectAddValue: 0

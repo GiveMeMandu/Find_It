@@ -12,6 +12,8 @@ using UI.Effect;
 using System;
 using Data;
 using UnityWeld;
+using Sirenix.OdinInspector;
+using UnityWeld.Binding;
 
 namespace OutGame
 {
@@ -21,7 +23,9 @@ namespace OutGame
         private PageSlideEffect pageSlideEffect = null;
         [SerializeField] private MapSelectView mapSelectView;
         public bool CanPlay = false;
-        bool isMapButtonClicked = false;
+        private bool isMapButtonClicked = false;
+        private bool isHomeClicked = false;
+        private MoveEffect moveEffect;
         protected override void Start()
         {
             base.Start();
@@ -30,6 +34,7 @@ namespace OutGame
             if (mainMenuPage != null)
             {
                 pageSlideEffect = mainMenuPage.GetComponent<PageSlideEffect>();
+                moveEffect = mainMenuPage.GetComponent<MoveEffect>();
             }
             CanPlay = true;
             
@@ -59,9 +64,21 @@ namespace OutGame
 
         public void OnClickStartButton(int stageIndex = 0)
         {
-            Debug.Log($"[MainMenu] OnClickStartButton called with stageIndex: {stageIndex}");
-            if(CanPlay)
-                LoadingSceneManager.LoadScene(stageIndex);
+            // Debug.Log($"[MainMenu] OnClickStartButton called with stageIndex: {stageIndex}");
+            // if(CanPlay)
+            //     LoadingSceneManager.LoadScene(stageIndex);
+            // isMapButtonClicked = false;
+            // isHomeClicked = false;
+            // Camera.main.transform.DOLocalMoveX(0f, 1f).SetEase(Ease.OutQuint);
+        }
+
+        [Button("테스트용: 홈버튼")]
+        public void OnClickHomeButton()
+        {
+            if(isHomeClicked) return;
+            isHomeClicked = true;
+            Camera.main.transform.DOLocalMoveX(19.86f, 1f).SetEase(Ease.OutQuint);
+            moveEffect.PlayVFX();
         }
     }
 }

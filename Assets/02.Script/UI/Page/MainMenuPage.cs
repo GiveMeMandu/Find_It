@@ -72,6 +72,14 @@ namespace UI.Page
             main.OnClickStartButton();
         }
         [Binding]
+        public void OnClickHomeButton()
+        {
+            Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
+            var main = Global.CurrentScene as OutGame.MainMenu;
+            main.OnClickHomeButton();
+        }
+
+        [Binding]
         public void OnClickOptionButton()
         {
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);

@@ -52,7 +52,7 @@ namespace UI.Effect
             if (isRotate) PlayRotateAnimation();
         }
 
-        private void PlaySlideAnimation()
+        public void PlaySlideAnimation()
         {
             var slideSequence = CreateSequence();
             int isReverseValue = isReverse ? -1 : 1;
@@ -77,7 +77,55 @@ namespace UI.Effect
             }
         }
 
-        private void PlayRotateAnimation()
+        /// <summary>
+        /// 화면 밖에서 안으로 슬라이드
+        /// </summary>
+        /// <param name="horizontal">true면 가로, false면 세로</param>
+        /// <param name="duration">슬라이드 시간</param>
+        public void SlideIn(bool horizontal, float duration)
+        {
+            if (rectTransform == null) rectTransform = transform as RectTransform;
+            if (rectTransform == null) return;
+
+            var sequence = CreateSequence();
+            int reverseValue = isReverse ? -1 : 1;
+
+            if (horizontal)
+            {
+                rectTransform.localPosition = new Vector3(1080f * reverseValue, rectTransform.localPosition.y, 0);
+                sequence.Append(rectTransform.DOLocalMoveX(arrivePosition, duration).SetEase(Ease.OutExpo));
+            }
+            else
+            {
+                rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, 1920f * reverseValue, 0);
+                sequence.Append(rectTransform.DOLocalMoveY(arrivePosition, duration).SetEase(Ease.OutExpo));
+            }
+        }
+
+        /// <summary>
+        /// 현재 위치에서 화면 밖으로 슬라이드
+        /// </summary>
+        /// <param name="horizontal">true면 가로, false면 세로</param>
+        /// <param name="duration">슬라이드 시간</param>
+        public void SlideOut(bool horizontal, float duration)
+        {
+            if (rectTransform == null) rectTransform = transform as RectTransform;
+            if (rectTransform == null) return;
+
+            var sequence = CreateSequence();
+            int reverseValue = isReverse ? -1 : 1;
+
+            if (horizontal)
+            {
+                sequence.Append(rectTransform.DOLocalMoveX(-1080f * reverseValue, duration).SetEase(Ease.InExpo));
+            }
+            else
+            {
+                sequence.Append(rectTransform.DOLocalMoveY(-1920f * reverseValue, duration).SetEase(Ease.InExpo));
+            }
+        }
+
+        public void PlayRotateAnimation()
         {
             var rotateSequence = CreateSequence();
             rotateSequence.AppendCallback(() => rectTransform.DORotate(Vector3.zero, 0))
