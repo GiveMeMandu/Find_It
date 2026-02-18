@@ -285,6 +285,18 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 Debug.LogWarning($"[HiddenObj.Start] {gameObject.name}: leanClickEvent or OnClickEvent is NULL!");
             }
+
+            if(TryGetComponent(out BGAnimationHelper bGAnimationHelper))
+            {
+                if(!bGAnimationHelper.UseBgAnimation)
+                {
+                    EnableBGAnimation = false;
+                    if (BgAnimationTransform != null)
+                    {
+                        BgAnimationTransform.gameObject.SetActive(false);
+                    }
+                }
+            }
         }
 
         // Unity 에디터에서 컴포넌트가 추가되거나 Reset 버튼을 눌렀을 때 호출됩니다

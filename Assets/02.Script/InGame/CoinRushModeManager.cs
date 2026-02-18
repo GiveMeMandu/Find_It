@@ -140,6 +140,7 @@ public class CoinRushModeManager : ModeManager
         if (usePresetCoins)
         {
             InitializePresetCoins();
+            SpawnAllCoinsAtStart();
         }
         // 게임 시작시 모든 코인을 한번에 생성
         else if (spawnAllCoinsAtStart)
@@ -228,9 +229,36 @@ public class CoinRushModeManager : ModeManager
 
     private void InitializePresetCoins()
     {
+        // presetCoins가 비어있으면 씬에서 CoinRushCoin 컴포넌트를 가진 오브젝트를 자동 탐색 (비활성 포함)
         if (presetCoins == null || presetCoins.Length == 0)
         {
-            Debug.LogWarning("[CoinRushModeManager] usePresetCoins is true but no coins are assigned!");
+            var foundCoins = FindObjectsByType<CoinRushCoin>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            if (foundCoins.Length == 0)
+            {
+                Debug.LogWarning("[CoinRushModeManager] usePresetCoins is true but no CoinRushCoin found in scene!");
+                return;
+            }
+
+            var hiddenObjList = new List<HiddenObj>();
+            foreach (var coin in foundCoins)
+            {
+                var hiddenObj = coin.GetComponent<HiddenObj>();
+                if (hiddenObj != null)
+                {
+                    hiddenObjList.Add(hiddenObj);
+                }
+                else
+                {
+                    Debug.LogWarning($"[CoinRushModeManager] CoinRushCoin '{coin.name}' has no HiddenObj — skipped.");
+                }
+            }
+            presetCoins = hiddenObjList.ToArray();
+            Debug.Log($"[CoinRushModeManager] Auto-found {presetCoins.Length} CoinRushCoin(s) in scene (including inactive)");
+        }
+
+        if (presetCoins.Length == 0)
+        {
+            Debug.LogWarning("[CoinRushModeManager] No valid preset coins to initialize.");
             return;
         }
 
@@ -275,6 +303,14 @@ public class CoinRushModeManager : ModeManager
                 GameObject bgObj = Instantiate(bgAnimPrefab, coinObj.transform);
                 coinObj.BgAnimationTransform = bgObj.transform;
                 coinObj.SetBgAnimation(bgObj);
+            }
+
+            // CoinRushCoin 컴포넌트가 있으면 Initialize 호출
+            CoinRushCoin coinComponent = coinObj.GetComponent<CoinRushCoin>();
+            if (coinComponent != null)
+            {
+                float lifetimeToUse = useCoinLifetime ? coinLifetime : 0f;
+                coinComponent.Initialize(coinValue, lifetimeToUse, null);
             }
 
             // Dictionary에 추가 및 클릭 이벤트 연결

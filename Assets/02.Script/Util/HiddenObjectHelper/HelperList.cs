@@ -74,6 +74,16 @@ public class HelperList : MonoBehaviour
         }
     }
 
+    [Button("위치 설정 오브젝트 설정")]
+    public void SetPositionHelperSetting()
+    {
+        SetPositionHelper setPositionHelper = GetComponent<SetPositionHelper>();
+        if (setPositionHelper == null)
+        {
+            setPositionHelper = gameObject.AddComponent<SetPositionHelper>();
+        }
+    }
+
     [Button("전체 지우기")]
     public void RemoveAllHelper()
     {
@@ -151,6 +161,17 @@ public class HelperList : MonoBehaviour
         UnityEditor.Undo.RecordObject(gameObject, "Remove AnimationObj");
         UnityEditor.Undo.DestroyObjectImmediate(animationObj);
         animationObj = null;
+#endif
+    }
+
+    // Remove SetPositionHelper if present
+    SetPositionHelper setPositionHelper = GetComponent<SetPositionHelper>();
+    if (setPositionHelper != null)
+    {
+#if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(gameObject, "Remove SetPositionHelper");
+        UnityEditor.Undo.DestroyObjectImmediate(setPositionHelper);
+        setPositionHelper = null;
 #endif
     }
     }

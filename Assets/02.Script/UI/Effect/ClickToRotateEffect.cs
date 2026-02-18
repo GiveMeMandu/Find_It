@@ -15,6 +15,7 @@ namespace UI.Effect
         [LabelText("작아지는 시점 (1이면 회전 끝나고 나서, 0이면 시작시 바로 작아짐)")]
         [EnableIf("isSmallOnEnd")]
         [SerializeField] private float smallTiming = 1;
+        [BoxGroup("회전 이펙트 설정")][LabelText("회전 완료 후 대기 시간 (초)")][SerializeField] private float waitTimeAfterEffect = 0f;
         [BoxGroup("회전 이펙트 설정")][LabelText("대상 회전값")][SerializeField] private Vector3 targetRotation;
         [BoxGroup("회전 이펙트 설정")][LabelText("다음 실행시 복귀 효과 재생")][SerializeField] private bool isResetOnNext = false;
         [BoxGroup("회전 이펙트 설정")][LabelText("이미 복귀 효과가 재생되었는지 체크")][SerializeField] private bool isResetedThisTime = false;
@@ -79,11 +80,11 @@ namespace UI.Effect
             {
                 if (isUIEffect)
                 {
-                    startRotation = GetComponent<RectTransform>().localRotation.eulerAngles;
+                    startRotation = GetComponent<RectTransform>().localEulerAngles;
                 }
                 else
                 {
-                    startRotation = transform.localRotation.eulerAngles;
+                    startRotation = transform.localEulerAngles;
                 }
                 isInitialized = true;
             }
@@ -107,6 +108,12 @@ namespace UI.Effect
                     transform.DOLocalRotate(targetRotation * (effectAddValue + 1), 1 * effectSpeed, RotateMode.Fast).SetEase(Ease.OutCubic).WithCancellation(destroyCancellation.Token),
                     isSmallOnEnd ? transform.DOScale(0, 0.5f).SetEase(Ease.OutCubic).SetDelay(1 * effectSpeed * smallTiming).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
                 );
+                
+                // 이펙트 완료 후 대기
+                if (waitTimeAfterEffect > 0)
+                {
+                    await UniTask.Delay(System.TimeSpan.FromSeconds(waitTimeAfterEffect), cancellationToken: destroyCancellation.Token);
+                }
             }
         }
         
@@ -128,6 +135,12 @@ namespace UI.Effect
                     isSmallOnEnd ? rectTransform.DOScale(0, 0.5f).SetEase(Ease.OutCubic).SetDelay(1 * effectSpeed * smallTiming).WithCancellation(destroyCancellation.Token) : UniTask.CompletedTask
                 );
                 isResetedThisTime = false;
+                
+                // 이펙트 완료 후 대기
+                if (waitTimeAfterEffect > 0)
+                {
+                    await UniTask.Delay(System.TimeSpan.FromSeconds(waitTimeAfterEffect), cancellationToken: destroyCancellation.Token);
+                }
             }
         }
         
