@@ -57254,6 +57254,7 @@ GameObject:
   - component: {fileID: 1262482350}
   - component: {fileID: 1262482351}
   - component: {fileID: 1262482352}
+  - component: {fileID: 1262482353}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -57304,7 +57305,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.4
+  orthographic size: 5.04
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -57409,6 +57410,75 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraPosDownRate: -0.64
   targetObj: {fileID: 2083256923}
+--- !u!114 &1262482353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262482346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e38feeb8faff8b429d0da2ce8847629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SnowRabbit.CameraRootPanning
+  cameraPanningHorizontalCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  cameraPanningVerticalCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panningSpeed: 1
+  enableCameraPanning: 1
+  maxHorizontalPanning: 0.5
+  maxVerticalPanning: 0.25
+  invertHorizontalPanning: 0
+  invertVerticalPanning: 0
+  cameraRoot: {fileID: 0}
+  targetCamera: {fileID: 1262482348}
+  panningBaselineOffset: {x: 0, y: 0}
 --- !u!1 &1287625359
 GameObject:
   m_ObjectHideFlags: 0

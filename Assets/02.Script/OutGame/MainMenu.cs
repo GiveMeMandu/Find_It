@@ -26,6 +26,7 @@ namespace OutGame
         private bool isMapButtonClicked = false;
         private bool isHomeClicked = false;
         private MoveEffect moveEffect;
+        private CameraRootPanning cameraRootPanning;
         protected override void Start()
         {
             base.Start();
@@ -36,6 +37,10 @@ namespace OutGame
                 pageSlideEffect = mainMenuPage.GetComponent<PageSlideEffect>();
                 moveEffect = mainMenuPage.GetComponent<MoveEffect>();
             }
+            
+            // CameraRootPanning 컴포넌트 찾기
+            cameraRootPanning = FindAnyObjectByType<CameraRootPanning>();
+            
             CanPlay = true;
             Global.UIManager.mouseUIController.FadeIn();
             // 인게임 스테이지에서 Start 씬으로 전환된 경우 리뷰 페이지 열기
@@ -51,14 +56,38 @@ namespace OutGame
             if(isMapButtonClicked) return;
             isMapButtonClicked = true;
             mapSelectView.Refresh();
-            Camera.main.transform.DOLocalMoveX(-19.86f, 1f).SetEase(Ease.OutQuint);
+            
+            // 카메라 패닝 비활성화
+            if (cameraRootPanning != null)
+                cameraRootPanning.DisablePanningForCameraMove();
+            
+            Camera.main.transform.DOLocalMoveX(-19.86f, 1f)
+                .SetEase(Ease.OutQuint)
+                .OnComplete(() => 
+                {
+                    // 카메라 이동 완료 후 패닝 재활성화 및 baseline 업데이트
+                    if (cameraRootPanning != null)
+                        cameraRootPanning.EnablePanningAfterCameraMove();
+                });
             // pageSlideEffect.SlideOut(true, 0.8f);
         }
 
         public void OnClickMainMenuButton()
         {
             isMapButtonClicked = false;
-            Camera.main.transform.DOLocalMoveX(0f, 1f).SetEase(Ease.OutQuint);
+            
+            // 카메라 패닝 비활성화
+            if (cameraRootPanning != null)
+                cameraRootPanning.DisablePanningForCameraMove();
+            
+            Camera.main.transform.DOLocalMoveX(0f, 1f)
+                .SetEase(Ease.OutQuint)
+                .OnComplete(() => 
+                {
+                    // 카메라 이동 완료 후 패닝 재활성화 및 baseline 업데이트
+                    if (cameraRootPanning != null)
+                        cameraRootPanning.EnablePanningAfterCameraMove();
+                });
             // pageSlideEffect.SlideIn(true, 0.8f);
         }
 
@@ -77,7 +106,19 @@ namespace OutGame
         {
             if(isHomeClicked) return;
             isHomeClicked = true;
-            Camera.main.transform.DOLocalMoveX(19.86f, 1f).SetEase(Ease.OutCubic);
+            
+            // 카메라 패닝 비활성화
+            if (cameraRootPanning != null)
+                cameraRootPanning.DisablePanningForCameraMove();
+            
+            Camera.main.transform.DOLocalMoveX(19.86f, 1f)
+                .SetEase(Ease.OutCubic)
+                .OnComplete(() => 
+                {
+                    // 카메라 이동 완료 후 패닝 재활성화 및 baseline 업데이트
+                    if (cameraRootPanning != null)
+                        cameraRootPanning.EnablePanningAfterCameraMove();
+                });
             moveEffect.PlayVFX();
         }
     }
