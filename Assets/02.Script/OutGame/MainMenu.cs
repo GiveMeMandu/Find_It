@@ -77,7 +77,7 @@ namespace OutGame
         {
             if(isHomeClicked) return;
             isHomeClicked = true;
-            Camera.main.transform.DOLocalMoveX(19.86f, 1f).SetEase(Ease.OutQuint);
+            Camera.main.transform.DOLocalMoveX(19.86f, 1f).SetEase(Ease.OutCubic);
             moveEffect.PlayVFX();
         }
     }
