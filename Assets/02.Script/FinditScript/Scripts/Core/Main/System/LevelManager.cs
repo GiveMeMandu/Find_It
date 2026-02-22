@@ -732,6 +732,14 @@ DebugGameState();
         //* 김일 수정 : 게임 종료 조건 = 숨긴 물건만 찾고 추가 조건은 태스크로 관리
         private async void DetectGameEnd()
         {
+            // 코인러쉬 모드에서는 LevelManager 기본 종료 조건을 사용하지 않음
+            // (CoinRushModeManager에서 코인을 다 찾거나 시간이 다 됐을 때 별도로 종료 처리)
+            if (modeSelector != null && modeSelector.selectedMode == ModeManager.GameMode.COIN_RUSH)
+            {
+                Debug.Log("[LevelManager] DetectGameEnd skipped - CoinRush mode manages its own end condition.");
+                return;
+            }
+
             // 실제 남은 오브젝트 수 계산
             int remainingObjects = GetLeftHiddenObjCount();
             int totalObjects = GetTotalHiddenObjCount();
@@ -878,6 +886,42 @@ DebugGameState();
             }
 
             GameEndUI.SetActive(true);
+        }
+
+        /// <summary>
+        /// 남은 오브젝트 수와 관계없이 즉시 게임 종료 시퀀스를 실행합니다.
+        /// CoinRushModeManager 등 외부 모드에서 직접 게임을 끝낼 때 호출하세요.
+        /// </summary>
+        public async void TriggerGameEnd()
+        {
+            Debug.Log("[LevelManager] TriggerGameEnd called.");
+
+            if (IsOverwriteGameEnd)
+            {
+                if (OnEndEvent.Count > 0)
+                {
+                    foreach (var func in OnEndEvent)
+                    {
+                        Debug.Log("[LevelManager] Awaiting OnEndEvent function..." + func.Method.Name);
+                        await func();
+                    }
+                }
+                GameEndEvent?.Invoke();
+                DefaultGameEndFunc();
+                return;
+            }
+
+            if (OnEndEvent.Count > 0)
+            {
+                foreach (var func in OnEndEvent)
+                {
+                    Debug.Log("[LevelManager] Awaiting OnEndEvent function..." + func.Method.Name);
+                    await func();
+                }
+            }
+
+            GameEndEvent?.Invoke();
+            DefaultGameEndFunc();
         }
 
         // 그룹 상태를 확인하기 위한 public 메서드 추가

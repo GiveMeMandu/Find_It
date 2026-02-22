@@ -560,11 +560,20 @@ public class CoinRushModeManager : ModeManager
 
         Debug.Log($"[CoinRushModeManager] 코인 획득! 가치: {coinValue}, 총점: {totalScore}, 남은 코인: {coinObjDic.Count}");
 
+        // 프리셋 또는 시작 시 전체 생성 모드에서 모든 코인을 다 찾으면 즉시 종료
+        if ((usePresetCoins || spawnAllCoinsAtStart) && rushActive && coinObjDic.Count == 0)
+        {
+            Debug.Log("[CoinRushModeManager] 모든 코인 획득 완료! 코인러쉬 종료.");
+            UpdateUI();
+            EndCoinRush();
+            return;
+        }
+
         UpdateUI();
     }
 
     /// <summary>
-    /// 코인 획득 후 1초 후에 UI로 날아가는 이펙트를 UniTask로 호출합니다.
+    /// 코인 획득 후 1초 뒤에 UI로 날아가는 이펙트를 UniTask로 호출합니다.
     /// </summary>
     private void PlayCoinFlyToUIDelayed(HiddenObj hiddenObj)
     {
@@ -572,7 +581,7 @@ public class CoinRushModeManager : ModeManager
 
         UniTask.Void(async () =>
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(1.4f));
+            await UniTask.Delay(System.TimeSpan.FromSeconds(1.4f));
             PlayCoinFlyToUI(hiddenObj);
         });
     }
@@ -584,7 +593,6 @@ public class CoinRushModeManager : ModeManager
     {
         if (coinFlyEffect == null || ingameCoinLayers == null) return;
 
-        // 활성화된 IngameCoinLayer 찾기
         IngameCoinLayer activeLayer = null;
         foreach (var layer in ingameCoinLayers)
         {
@@ -612,7 +620,7 @@ public class CoinRushModeManager : ModeManager
         RectTransform targetRect = activeLayer.iconObj.GetComponent<RectTransform>();
 
         // 이펙트 재생
-        coinFlyEffect.PlayFlyEffect(coinWorldPos, targetRect, coinSprite, () => 
+        coinFlyEffect.PlayFlyEffect(coinWorldPos, targetRect, coinSprite, () =>
         {
             if (activeLayer != null && activeLayer.playUpdateAnimOnFlyComplete)
             {
@@ -657,42 +665,49 @@ public class CoinRushModeManager : ModeManager
 
     private void EndCoinRush()
     {
-        rushActive = false;
+            if (!rushActive) return; // 중복 호출 방지
+            rushActive = false;
 
-        // 남은 코인들 제거
-        foreach (GameObject coin in activeCoinObjects)
-        {
-            if (coin != null)
+            // 남은 코인들 제거
+            foreach (GameObject coin in activeCoinObjects)
             {
-                Destroy(coin);
+                if (coin != null)
+                {
+                    Destroy(coin);
+                }
             }
-        }
-        activeCoinObjects.Clear();
-        coinObjDic.Clear();
+            activeCoinObjects.Clear();
+            coinObjDic.Clear();
 
-        Debug.Log($"[CoinRushModeManager] 코인러쉬 종료! 획득 코인: {coinsCollected}, 최종 점수: {totalScore}");
+            Debug.Log($"[CoinRushModeManager] 코인러쉬 종료! 획득 코인: {coinsCollected}, 최종 점수: {totalScore}");
 
-        if (rushEndUI != null)
-        {
-            rushEndUI.SetActive(true);
-        }
-
-        if (doubleRewardButton != null)
-        {
-            doubleRewardButton.gameObject.SetActive(true);
-        }
-
-        // 모드 종료 시 인게임 코인 UI 레이어들 비활성화
-        if (ingameCoinLayers != null)
-        {
-            foreach (var layer in ingameCoinLayers)
+            if (rushEndUI != null)
             {
-                if (layer != null && layer.gameObject != null)
-                    layer.gameObject.SetActive(false);
+                rushEndUI.SetActive(true);
             }
-        }
 
-        OnGameEnd();
+            if (doubleRewardButton != null)
+            {
+                doubleRewardButton.gameObject.SetActive(true);
+            }
+
+            // 모드 종료 시 인게임 코인 UI 레이어들 비활성화
+            if (ingameCoinLayers != null)
+            {
+                foreach (var layer in ingameCoinLayers)
+                {
+                    if (layer != null && layer.gameObject != null)
+                        layer.gameObject.SetActive(false);
+                }
+            }
+
+            OnGameEnd();
+
+            // LevelManager의 게임 종료 시퀀스 실행 (스테이지 클리어 저장 등)
+            if (levelManager != null)
+            {
+                levelManager.TriggerGameEnd();
+            }
     }
 
     private void WatchAdForDoubleReward()
