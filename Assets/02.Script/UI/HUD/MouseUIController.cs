@@ -110,7 +110,7 @@ public class MouseUIController : MonoBehaviour
         if (MouseCursorUI != null)
         {
             MouseCursorUI.DOKill();
-            MouseCursorUI.DOScale(0.8f, ClickAnimationDuration)
+            MouseCursorUI.DOScale(0.9f, ClickAnimationDuration)
                 .SetEase(Ease.OutQuad);
         }
     }
