@@ -3409,6 +3409,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0.17, y: 0.7, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -6685,7 +6686,6 @@ Transform:
   - {fileID: 665270227}
   - {fileID: 886955239}
   - {fileID: 874195200}
-  - {fileID: 1834988710}
   - {fileID: 1717672819}
   - {fileID: 1065727856}
   - {fileID: 1205383912}
@@ -24827,7 +24827,8 @@ Transform:
   m_LocalPosition: {x: 7.29, y: 4.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1834988710}
   m_Father: {fileID: 192768848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &874195201
@@ -37370,6 +37371,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0.17, y: 0.7, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -46383,6 +46385,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 0.25
+  waitTimeAfterEffect: 0
   targetRotation: {x: 0, y: 0, z: 24.555}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -50729,21 +50732,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8233476206311598856, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1807700693}
-    - targetCorrespondingSourceObject: {fileID: 8233476207588720699, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 5044890385312571970, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 5044890385312571970, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 2665231050527092968, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 4176382925518705785, guid: 3966b132c92fe434097979961b6c444d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 3966b132c92fe434097979961b6c444d, type: 3}
 --- !u!1 &1760745988
 GameObject:
@@ -53373,11 +53361,11 @@ Transform:
   m_GameObject: {fileID: 1834988709}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.032, y: 4.559, z: 0}
+  m_LocalPosition: {x: -0.2579999, y: 0.028999805, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 192768848}
+  m_Father: {fileID: 874195200}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!60 &1834988711
 PolygonCollider2D:
@@ -59249,6 +59237,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0.49, y: 0.18, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
