@@ -14896,6 +14896,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 0.25
+  waitTimeAfterEffect: 0
   targetRotation: {x: 0, y: 0, z: -56}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -14941,6 +14942,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0.45, y: 0.23, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -24981,7 +24983,6 @@ GameObject:
   - component: {fileID: 915896989}
   - component: {fileID: 915896988}
   - component: {fileID: 915896987}
-  - component: {fileID: 915896986}
   - component: {fileID: 915896985}
   - component: {fileID: 915896984}
   - component: {fileID: 915896983}
@@ -25125,52 +25126,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
---- !u!61 &915896986
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 915896981}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.9, y: 2.39}
-    newSize: {x: 1.9, y: 2.39}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1.9, y: 2.39}
-  m_EdgeRadius: 0
 --- !u!60 &915896987
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -41228,6 +41183,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: -12.0075, y: 8.4025, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -41272,6 +41228,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 1
   smallTiming: 0.25
+  waitTimeAfterEffect: 0
   targetRotation: {x: 0, y: 0, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -47864,6 +47821,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -3.04
       objectReference: {fileID: 0}
+    - target: {fileID: 5516180250817459298, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      propertyPath: reverseLayerOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6234898700917636953, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -52353,6 +52314,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 1
   smallTiming: 0.25
+  waitTimeAfterEffect: 0
   targetRotation: {x: 0, y: 0, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -52398,6 +52360,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 6.805, y: 8.524, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0

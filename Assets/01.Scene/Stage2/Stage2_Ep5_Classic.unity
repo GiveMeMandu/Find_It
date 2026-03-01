@@ -4256,6 +4256,8 @@ MonoBehaviour:
   growthDuration: 0.5
   growthDelay: 0.7
   growthEase: 27
+  useFadeIn: 0
+  fadeInDuration: 0.3
 --- !u!1 &73167052
 GameObject:
   m_ObjectHideFlags: 0
@@ -25719,7 +25721,7 @@ MonoBehaviour:
         m_MethodName: set_sprite
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 21300000, guid: 5752d32be10dd6241b405eee18954cf7, type: 3}
+          m_ObjectArgument: {fileID: -7911106607132242587, guid: e891e648bf89faa4583416522c18deb5, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Sprite, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -32819,6 +32821,72 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &663578521
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 761863376}
+    m_Modifications:
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516641, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_Name
+      value: BGAnimPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516654, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_SortingOrder
+      value: 98
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+--- !u!4 &663578522 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+  m_PrefabInstance: {fileID: 663578521}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &670176246
 GameObject:
   m_ObjectHideFlags: 0
@@ -36756,7 +36824,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.01, y: 0.94}
+    oldSize: {x: 0.75, y: 0.63}
     newSize: {x: 1.01, y: 1.02}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -36783,12 +36851,12 @@ MonoBehaviour:
   EnableTooltip: 0
   TooltipsType: 0
   Tooltips: []
-  EnableBGAnimation: 0
-  BGAnimationPrefab: {fileID: 0}
-  BgAnimationTransform: {fileID: 0}
+  EnableBGAnimation: 1
+  BGAnimationPrefab: {fileID: 7532000456490516641, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+  BgAnimationTransform: {fileID: 663578522}
   BgAnimationLerp: {fileID: 0}
   BgAnimationSpriteRenderer: {fileID: 0}
-  HideWhenFound: 1
+  HideWhenFound: 0
   PlaySoundWhenFound: 1
   clickPriority: 0
   AudioWhenClick: {fileID: 0}
@@ -36846,7 +36914,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 99
-  m_Sprite: {fileID: 7821286382356755714, guid: fe9d0c0dc28fde24c8a0345ff002e145, type: 3}
+  m_Sprite: {fileID: 216654160901210687, guid: e36443225f83826468dae789334b535c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -36866,10 +36934,11 @@ Transform:
   m_GameObject: {fileID: 761863372}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.292, y: -2.0679986, z: 0}
+  m_LocalPosition: {x: 1.964, y: -1.926, z: 0}
   m_LocalScale: {x: -0.96000016, y: 0.96000016, z: 0.96000016}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 663578522}
   m_Father: {fileID: 1162909211}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &761863377
@@ -56983,6 +57052,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0.17, y: 0.7, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -64934,6 +65004,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0.17, y: 0.7, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -85151,7 +85222,6 @@ GameObject:
   - component: {fileID: 1755260292}
   - component: {fileID: 1755260299}
   - component: {fileID: 1755260298}
-  - component: {fileID: 1755260297}
   - component: {fileID: 1755260296}
   - component: {fileID: 1755260295}
   - component: {fileID: 1755260294}
@@ -85408,52 +85478,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
---- !u!61 &1755260297
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755260291}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.9, y: 2.39}
-    newSize: {x: 1.9, y: 2.39}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1.9, y: 2.39}
-  m_EdgeRadius: 0
 --- !u!114 &1755260298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85988,6 +86012,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -3.04
       objectReference: {fileID: 0}
+    - target: {fileID: 5516180250817459298, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      propertyPath: reverseLayerOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6234898700917636953, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -86104,6 +86132,10 @@ PrefabInstance:
       propertyPath: 'TargetObjs.Array.data[3]'
       value: 
       objectReference: {fileID: 128209955}
+    - target: {fileID: 8233476206311598857, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      propertyPath: 'TargetObjs.Array.data[4]'
+      value: 
+      objectReference: {fileID: 761863374}
     - target: {fileID: 8233476206597709868, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_Value
       value: 1
@@ -99543,6 +99575,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0.49, y: 0.18, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
@@ -105628,6 +105661,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0.49, y: 0.18, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
