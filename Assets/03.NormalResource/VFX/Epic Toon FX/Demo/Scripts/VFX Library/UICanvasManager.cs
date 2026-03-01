@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace ETFXPEL
 {
@@ -26,19 +29,31 @@ public class UICanvasManager : MonoBehaviour {
 	
 		// Mouse Click - Check if mouse over button to prevent spawning particle effects while hovering or using UI buttons.
 		if (!MouseOverButton) {
-			// Left Button Click
-			if (Input.GetMouseButtonUp (0)) {
-				// Spawn Currently Selected Particle System
+			// Left Button Click (new Input System guarded, fallback to legacy)
+			#if ENABLE_INPUT_SYSTEM
+			if (Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame) {
 				SpawnCurrentParticleEffect();
 			}
+			#else
+			if (Input.GetMouseButtonUp (0)) {
+				SpawnCurrentParticleEffect();
+			}
+			#endif
 		}
-
+		// Keyboard shortcuts (A/D)
+		#if ENABLE_INPUT_SYSTEM
+		if (Keyboard.current != null) {
+			if (Keyboard.current.aKey.wasReleasedThisFrame) SelectPreviousPE();
+			if (Keyboard.current.dKey.wasReleasedThisFrame) SelectNextPE();
+		}
+		#else
 		if (Input.GetKeyUp (KeyCode.A)) {
 			SelectPreviousPE ();
 		}
 		if (Input.GetKeyUp (KeyCode.D)) {
 			SelectNextPE ();
 		}
+		#endif
 	}
 
 	public void UpdateToolTip(ButtonTypes toolTipType) {
@@ -73,7 +88,18 @@ public class UICanvasManager : MonoBehaviour {
 	private RaycastHit rayHit;
 	private void SpawnCurrentParticleEffect() {
 		// Spawn Particle Effect
-		Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+		#if ENABLE_INPUT_SYSTEM
+		Vector3 screenPos;
+		if (Mouse.current != null) {
+			Vector2 mpos = Mouse.current.position.ReadValue();
+			screenPos = new Vector3(mpos.x, mpos.y, 0f);
+		} else {
+			screenPos = Input.mousePosition;
+		}
+		#else
+		Vector3 screenPos = Input.mousePosition;
+		#endif
+		Ray mouseRay = Camera.main.ScreenPointToRay(screenPos);
 		if (Physics.Raycast (mouseRay, out rayHit)) {
 			ParticleEffectsLibrary.GlobalAccess.SpawnParticleEffect (rayHit.point);
 		}
