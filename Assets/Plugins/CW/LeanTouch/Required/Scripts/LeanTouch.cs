@@ -138,6 +138,16 @@ namespace Lean.Touch
 				return Instances.Count > 0 ? Instances[0].guiLayers : (LayerMask)DEFAULT_GUI_LAYERS;
 			}
 		}
+		/// <summary>This allows you to reverse the layer priority check in LeanClickEvent.</summary>
+		public bool ReverseLayerOrder { set { reverseLayerOrder = value; } get { return reverseLayerOrder; } } [SerializeField] private bool reverseLayerOrder;
+
+		public static bool CurrentReverseLayerOrder
+		{
+			get
+			{
+				return Instances.Count > 0 ? Instances[0].reverseLayerOrder : false;
+			}
+		}
 
 		/// <summary>If you disable this then lean touch will act as if you stopped touching the screen.</summary>
 		public bool UseTouch { set { useTouch = value; } get { return useTouch; } } [SerializeField] private bool useTouch = true;
@@ -920,6 +930,7 @@ namespace Lean.Touch.Editor
 #endif
 			Draw("referenceDpi", "This allows you to set the default DPI you want the input scaling to be based on. For example, if you set this to 200 and your display has a DPI of 400, then the <b>ScaledDelta</b> finger value will be half the distance of the pixel space <b>ScreenDelta</b> value.");
 			Draw("guiLayers", "This allows you to set which layers your GUI is on, so it can be ignored by each finger.");
+			Draw("reverseLayerOrder", "This allows you to reverse the layer priority check in LeanClickEvent.");
 
 			Separator();
 

@@ -404,14 +404,28 @@ public class LeanClickEvent : LeanSelectableByFinger
 
 			if (depthA != depthB)
 			{
-				return depthB.CompareTo(depthA); // 더 깊은 계층이 우선 (내림차순)
+				if (LeanTouch.CurrentReverseLayerOrder)
+				{
+					return depthA.CompareTo(depthB); // 더 얕은 계층이 우선 (오름차순)
+				}
+				else
+				{
+					return depthB.CompareTo(depthA); // 더 깊은 계층이 우선 (내림차순)
+				}
 			}
 
 			// 같은 깊이라면 부모 계층의 sibling index로 비교
 			// 같은 부모를 가진 경우
 			if (a.transform.parent == b.transform.parent)
 			{
-				return b.transform.GetSiblingIndex().CompareTo(a.transform.GetSiblingIndex());
+				if (LeanTouch.CurrentReverseLayerOrder)
+				{
+					return a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex());
+				}
+				else
+				{
+					return b.transform.GetSiblingIndex().CompareTo(a.transform.GetSiblingIndex());
+				}
 			}
 
 			// 다른 부모를 가진 경우, 각각의 루트 부모의 sibling index 비교
@@ -421,6 +435,8 @@ public class LeanClickEvent : LeanSelectableByFinger
 			// 같은 조부모를 찾을 때까지 올라가기
 			while (aParent != null && bParent != null && aParent.parent != bParent.parent)
 			{
+				// 만약 어느 한쪽이 먼저 루트에 도달했다면, 그 쪽이 더 얕은 계층이므로 이미 depth 비교에서 걸러졌어야 함
+				// 하지만 depth가 같은 경우를 가정하고 있으므로, 이 while문은 안전함
 				if (aParent.parent == null || bParent.parent == null) break;
 				aParent = aParent.parent;
 				bParent = bParent.parent;
@@ -429,7 +445,14 @@ public class LeanClickEvent : LeanSelectableByFinger
 			// 같은 조부모를 가진 부모들의 sibling index 비교
 			if (aParent != null && bParent != null && aParent.parent == bParent.parent)
 			{
-				return bParent.GetSiblingIndex().CompareTo(aParent.GetSiblingIndex());
+				if (LeanTouch.CurrentReverseLayerOrder)
+				{
+					return aParent.GetSiblingIndex().CompareTo(bParent.GetSiblingIndex());
+				}
+				else
+				{
+					return bParent.GetSiblingIndex().CompareTo(aParent.GetSiblingIndex());
+				}
 			}
 
 			// 최종적으로 루트까지 올라가서 비교
@@ -439,7 +462,14 @@ public class LeanClickEvent : LeanSelectableByFinger
 			while (aRoot.parent != null) aRoot = aRoot.parent;
 			while (bRoot.parent != null) bRoot = bRoot.parent;
 
-			return bRoot.GetSiblingIndex().CompareTo(aRoot.GetSiblingIndex());
+			if (LeanTouch.CurrentReverseLayerOrder)
+			{
+				return aRoot.GetSiblingIndex().CompareTo(bRoot.GetSiblingIndex());
+			}
+			else
+			{
+				return bRoot.GetSiblingIndex().CompareTo(aRoot.GetSiblingIndex());
+			}
 		});
 
 		// 디버그 로그: 겹치는 모든 객체와 우선순위 표시

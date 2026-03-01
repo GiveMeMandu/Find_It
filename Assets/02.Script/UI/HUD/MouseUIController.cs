@@ -64,6 +64,7 @@ public class MouseUIController : MonoBehaviour
             SetState(EMouseState.Idle);
             _canvasGroup.alpha = 0f; // 시작은 투명하게
         }
+        FadeIn();
     }
 
     private void Update()

@@ -30,10 +30,6 @@ namespace OutGame
             } else {
                 _levelManager.OnEndEvent.Add(ClearStageTask);
             }
-
-            if(Global.UIManager.mouseUIController != null) {
-                Global.UIManager.mouseUIController.FadeIn();
-            }
         }
 
         protected virtual void StartStageBase()
