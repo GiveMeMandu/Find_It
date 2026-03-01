@@ -19,6 +19,8 @@ public class SpriteEffectMapSO : ScriptableObject
         FoodSweet,     // 케이크, 간식류 (하트나 달콤한 시각 효과)
         StoneCrunch,   // 돌길, 돌담 (돌 가루 효과)
         FabricSoft,    // 토끼 옷, 돗자리 (부드러운 실이나 솜 효과)
+        DustPuff,       // 먼지, 모래 (작은 먼지 구름 효과)
+        WaterSplash,    // 연못, 물웅덩이 (물 튀는 효과) bubbleBlastUnderWater, watersplashTinySharp
     }
 
     [System.Serializable]
