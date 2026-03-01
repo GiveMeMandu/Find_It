@@ -339,7 +339,6 @@ public class CoinRushModeManager : ModeManager
                                 Global.CoinManager.SaveCoinData();
                             }
                             UpdateUI();
-                            Destroy(coinComponent.gameObject, 1.5f);
                         }
                         else
                         {
@@ -363,7 +362,6 @@ public class CoinRushModeManager : ModeManager
                             Global.CoinManager.AddCoin(new System.Numerics.BigInteger(coinValue));
                             Global.CoinManager.SaveCoinData();
                         }
-                        Destroy(coinComponent.gameObject);
                         if ((usePresetCoins || spawnAllCoinsAtStart) && rushActive && coinObjDic.Count == 0 && _leanCoinDic.Count == 0)
                         {
                             Debug.Log("[CoinRushModeManager] 모든 코인 획득 완료! 코인러쉬 종료.");

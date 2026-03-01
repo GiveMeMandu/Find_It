@@ -97,5 +97,4 @@ public class CoinRushCoin : MonoBehaviour
     {
         Destroy(gameObject);
     }
-
 }
