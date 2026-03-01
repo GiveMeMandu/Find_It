@@ -11,9 +11,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 {
 	public bool Enable = true;
 
-	public UnityEvent OnMouseDownEvent;
-	public UnityEvent OnMouseUpEvent;
-	public UnityEvent OnClickEvent;
+	public UnityEvent OnMouseDownEvent =  new UnityEvent();
+	public UnityEvent OnMouseUpEvent = new UnityEvent();
+	public UnityEvent OnClickEvent = new UnityEvent();
 
 	private int _clickCount = 0;
 	public int _maxClickCount = -1;

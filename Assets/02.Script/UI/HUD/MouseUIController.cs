@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class MouseUIController : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class MouseUIController : MonoBehaviour
     private Image _cursorImage;
     private CanvasGroup _canvasGroup;
     public Vector2 MousePosition = new Vector2();
+
+    public UnityEvent OnMouseDownEvent = new UnityEvent();
 
     public void Init()
     {
@@ -113,6 +116,8 @@ public class MouseUIController : MonoBehaviour
             MouseCursorUI.DOScale(0.9f, ClickAnimationDuration)
                 .SetEase(Ease.OutQuad);
         }
+
+        OnMouseDownEvent.Invoke();
     }
 
     // 마우스 업 이벤트

@@ -963,6 +963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82276f88de6e6254d938ddefe10d2726, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinRushCoin
+  allowContinuousClick: 0
   onFound:
     m_PersistentCalls:
       m_Calls: []
@@ -2026,6 +2027,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1913059342}
     m_Modifications:
+    - target: {fileID: 2036920920141004755, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
+      propertyPath: allowContinuousClick
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2036920920141004755, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
+      propertyPath: onFound.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2036920920141004755, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
+      propertyPath: onFound.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2036920920141004755, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
+      propertyPath: onFound.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2694803089028834625, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: m_SortingOrder
       value: 2
@@ -2044,7 +2061,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6507339335702112229, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: OnClickEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6507339335702112229, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: OnClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2061,7 +2078,7 @@ PrefabInstance:
     - target: {fileID: 6507339335702112229, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: OnClickEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
-      objectReference: {fileID: 1656858507}
+      objectReference: {fileID: 0}
     - target: {fileID: 6507339335702112229, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: OnClickEvent.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
       value: 2
@@ -2076,7 +2093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6507339335702112229, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: OnClickEvent.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
-      value: Play
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6507339335702112229, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: OnClickEvent.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -2096,11 +2113,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6507339335702112229, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: OnClickEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_StringArgument
-      value: Raccon_Tail_in
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6507339335702112229, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: OnClickEvent.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6774001958771721057, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2146,13 +2163,11 @@ PrefabInstance:
       propertyPath: HideWhenFound
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2036920920141004755, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6173191097414621629, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1801524210}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
 --- !u!1 &379291980
 GameObject:
@@ -2249,6 +2264,15 @@ MonoBehaviour:
   enableScaleSync: 0
   scaleSyncMode: 1
   customScale: {x: 1, y: 1, z: 1}
+  isUIPosition: 0
+  uiWorldDepth: 10
+  enableRandomPosition: 0
+  randomPositionMin: {x: 0, y: 0, z: 0}
+  randomPositionMax: {x: 0, y: 0, z: 0}
+  enableRandomRotation: 0
+  randomRotationMode: 0
+  randomRotationMin: {x: 0, y: 0, z: 0}
+  randomRotationMax: {x: 360, y: 360, z: 360}
 --- !u!114 &405301213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11310,7 +11334,11 @@ GameObject:
   - component: {fileID: 1415915347}
   - component: {fileID: 1415915348}
   - component: {fileID: 1415915349}
-  m_Layer: 0
+  - component: {fileID: 1415915351}
+  - component: {fileID: 1415915350}
+  - component: {fileID: 1415915352}
+  - component: {fileID: 1415915353}
+  m_Layer: 7
   m_Name: Raccon_thiefFound (1)
   m_TagString: Untagged
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
@@ -11456,6 +11484,173 @@ MonoBehaviour:
   enableScaleSync: 0
   scaleSyncMode: 1
   customScale: {x: 1, y: 1, z: 1}
+  isUIPosition: 0
+  uiWorldDepth: 10
+  enableRandomPosition: 0
+  randomPositionMin: {x: 0, y: 0, z: 0}
+  randomPositionMax: {x: 0, y: 0, z: 0}
+  enableRandomRotation: 0
+  randomRotationMode: 0
+  randomRotationMin: {x: 0, y: 0, z: 0}
+  randomRotationMax: {x: 360, y: 360, z: 360}
+--- !u!61 &1415915350
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415915345}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.2552001, y: 0.38417834}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1.5104002, y: 1.7683574}
+  m_EdgeRadius: 0
+--- !u!114 &1415915351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415915345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeanClickEvent
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1415915352}
+        m_TargetAssemblyTypeName: CoinRushCoin, Assembly-CSharp
+        m_MethodName: CollectCoin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1415915353}
+        m_TargetAssemblyTypeName: InstantiateEffect, Assembly-CSharp
+        m_MethodName: PlayEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _maxClickCount: -1
+--- !u!114 &1415915352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415915345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82276f88de6e6254d938ddefe10d2726, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinRushCoin
+  allowContinuousClick: 1
+  onFound:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1415915353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415915345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf14a9fa317e6f84fbd7edf30c5fdfe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstantiateEffect
+  effectPrefabs:
+  - {fileID: 246530532847158554, guid: d4faa76021f448341845ad06e0751ba5, type: 3}
+  customTransformPosition: {fileID: 922294952}
+  positionOffset: {x: 0, y: 1, z: 0}
+  spawnTiming: 3
+  enableScaleSync: 0
+  scaleSyncMode: 1
+  customScale: {x: 1, y: 1, z: 1}
+  isUIPosition: 0
+  uiWorldDepth: 10
+  enableRandomPosition: 1
+  randomPositionMin: {x: -1, y: -1, z: 0}
+  randomPositionMax: {x: 1, y: 1, z: 0}
+  enableRandomRotation: 0
+  randomRotationMode: 0
+  randomRotationMin: {x: 0, y: 0, z: 0}
+  randomRotationMax: {x: 360, y: 360, z: 360}
 --- !u!1 &1437307483
 GameObject:
   m_ObjectHideFlags: 0
@@ -13529,7 +13724,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1404493902110619552, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000061035156
+      value: 0.000029325485
       objectReference: {fileID: 0}
     - target: {fileID: 1404493902704384360, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -13537,6 +13732,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1404493902704384360, guid: 3966b132c92fe434097979961b6c444d, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1404493902704384360, guid: 3966b132c92fe434097979961b6c444d, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1893834568072888112, guid: 3966b132c92fe434097979961b6c444d, type: 3}
@@ -14329,26 +14528,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ddcd9a3f11f8d84ba0dadd9e8829634, type: 3}
---- !u!1 &1801524202 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6173191097414621629, guid: 2d0877ad3ccc87a49a0644fed70dd607, type: 3}
-  m_PrefabInstance: {fileID: 375774287}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1801524210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801524202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82276f88de6e6254d938ddefe10d2726, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoinRushCoin
-  onFound:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1819379048
 GameObject:
   m_ObjectHideFlags: 0

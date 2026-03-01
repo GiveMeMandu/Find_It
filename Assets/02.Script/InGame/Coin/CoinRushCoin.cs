@@ -7,11 +7,27 @@ using UnityEngine.Events;
 /// </summary>
 public class CoinRushCoin : MonoBehaviour
 {
+    [Header("연속 클릭 옵션")]
+    [Tooltip("활성화 시 코인은 첫 클릭 후 정상적으로 사라지며, 사라지는 애니메이션 동안 추가 클릭마다 보상을 지급합니다.")]
+    public bool allowContinuousClick = false;
+
     private int value;
     private float lifetime;
     public UnityEvent onFound = new UnityEvent();
 
     private float spawnTime;
+    private System.Action _continuousCollectCallback;
+    // 첫 클릭은 HiddenObj의 TargetClickAction에서 처리하므로, 이후 클릭부터 연속 콜백 호출
+    private bool _firstClickHandled = false;
+    
+
+    /// <summary>
+    /// 연속 클릭 모드에서 클릭마다 호출할 콜백을 등록합니다.
+    /// </summary>
+    public void SetContinuousCollectCallback(System.Action callback)
+    {
+        _continuousCollectCallback = callback;
+    }
 
     public void Initialize(int coinValue, float coinLifetime, System.Action collectCallback)
     {
@@ -53,7 +69,23 @@ public class CoinRushCoin : MonoBehaviour
 
     private void OnMouseDown()
     {
-        CollectCoin();
+        if (allowContinuousClick)
+        {
+            // 첫 클릭은 HiddenObj의 TargetClickAction에서 보상 처리됨 → 여기서는 건너뜀
+            // 이후 클릭(사라지는 애니메이션 중)부터 연속 보상 지급
+            if (!_firstClickHandled)
+            {
+                _firstClickHandled = true;
+            }
+            else
+            {
+                _continuousCollectCallback?.Invoke();
+            }
+        }
+        else
+        {
+            CollectCoin();
+        }
     }
 
     public void CollectCoin()
@@ -65,4 +97,5 @@ public class CoinRushCoin : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
 }

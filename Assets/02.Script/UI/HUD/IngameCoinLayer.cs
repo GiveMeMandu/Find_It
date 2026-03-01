@@ -48,9 +48,14 @@ public class IngameCoinLayer : AutoTaskControl
     public UnityEvent OnGainedMoneyDisplayComplete; // 2초 후 획득 알림 완료 시
     public UnityEvent OnMoneyCountComplete; // MoneyText 카운트 연출 완료 시
 
+    [Header("코인러쉬 모드 설정")]
+    [Label("코인러쉬 모드 (세션 획득 코인만 표시, 자동 감지)")]
+    [ReadOnly] public bool isCoinRushMode = false;
+
     private BigInteger _previousCoinValue = BigInteger.Zero; // 이전 코인 값
     private bool _isCountingUp = false; // 카운트업 중인지 여부
     private BigInteger _accumulatedGainedMoney = BigInteger.Zero; // 누적된 획득 코인
+    private BigInteger _sessionCoinsCollected = BigInteger.Zero; // 코인러쉬 세션 동안 모은 코인
     private CancellationTokenSource _displayCancellation; // UI 표시용 토큰
     protected override void OnEnable()
     {
@@ -70,6 +75,12 @@ public class IngameCoinLayer : AutoTaskControl
 
         // 이전 코인 값 초기화
         _previousCoinValue = Global.CoinManager.GetCoinValue();
+
+        // ModeSelector로 코인러쉬 모드 자동 감지
+        isCoinRushMode = DetectCoinRushMode();
+
+        // 코인러쉬 모드: 세션 코인 초기화
+        _sessionCoinsCollected = BigInteger.Zero;
 
         // Subscribe to coin value changes
         Global.CoinManager.OnCoinValueChanged += OnCoinValueChanged;
@@ -111,6 +122,12 @@ public class IngameCoinLayer : AutoTaskControl
 
         _previousCoinValue = currentCoinValue;
         _accumulatedGainedMoney += gainedAmount;
+
+        // 코인러쉬 모드: 세션 코인 누적
+        if (isCoinRushMode)
+        {
+            _sessionCoinsCollected += gainedAmount;
+        }
 
         // 업데이트 애니메이션을 강제로 처음부터 재생
         if (!playUpdateAnimOnFlyComplete)
@@ -168,7 +185,8 @@ public class IngameCoinLayer : AutoTaskControl
 
         // 대기 완료 후 카운트업 시작
         _isCountingUp = true;
-        BigInteger targetCoinValue = Global.CoinManager.GetCoinValue();
+        // 코인러쉬 모드면 세션 누적 코인을, 일반 모드면 총 코인을 목표값으로 사용
+        BigInteger targetCoinValue = isCoinRushMode ? _sessionCoinsCollected : Global.CoinManager.GetCoinValue();
 
         // 카운트 연출
         await CountUpMoneyAsync(targetCoinValue, cancellationToken);
@@ -210,7 +228,7 @@ public class IngameCoinLayer : AutoTaskControl
         if (CountDuration <= 0)
         {
             // 카운트 시간이 0 이하면 즉시 목표값으로 설정
-            BigInteger currentTargetMoney = Global.CoinManager.GetCoinValue();
+            BigInteger currentTargetMoney = isCoinRushMode ? _sessionCoinsCollected : Global.CoinManager.GetCoinValue();
             MoneyText.text = FormatMoney(currentTargetMoney);
             OnMoneyCountComplete?.Invoke();
             return;
@@ -226,7 +244,8 @@ public class IngameCoinLayer : AutoTaskControl
             float progress = Mathf.Clamp01(elapsedTime / CountDuration);
 
             // 현재 실제 코인 값으로 목표값 업데이트 (카운트 중에 새로운 돈이 추가될 수 있음)
-            BigInteger currentTargetMoney = Global.CoinManager.GetCoinValue();
+            // 코인러쉬 모드면 세션 누적 코인을 기준으로 업데이트
+            BigInteger currentTargetMoney = isCoinRushMode ? _sessionCoinsCollected : Global.CoinManager.GetCoinValue();
 
             // 목표값이 변경되었으면 갱신
             if (currentTargetMoney != lastTargetMoney)
@@ -243,8 +262,8 @@ public class IngameCoinLayer : AutoTaskControl
             await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken);
         }
 
-        // 최종값 설정 (최신 코인 값으로 설정)
-        BigInteger finalTargetMoney = Global.CoinManager.GetCoinValue();
+        // 최종값 설정 (코인러쉬 모드면 세션 코인, 일반 모드면 총 코인)
+        BigInteger finalTargetMoney = isCoinRushMode ? _sessionCoinsCollected : Global.CoinManager.GetCoinValue();
         MoneyText.text = FormatMoney(finalTargetMoney);
         OnMoneyCountComplete?.Invoke();
     }
@@ -266,5 +285,29 @@ public class IngameCoinLayer : AutoTaskControl
     public void PlayUpdateAnimation()
     {
         animationObj.ChangeAnimation(updateAnimation, force: true);
+    }
+
+    /// <summary>
+    /// 씬의 ModeSelector를 찾아 코인러쉬 모드가 선택되어 있는지 확인합니다.
+    /// </summary>
+    private bool DetectCoinRushMode()
+    {
+        var modeSelector = FindAnyObjectByType<ModeSelector>();
+        if (modeSelector == null)
+            return false;
+
+        if (modeSelector.selectedMode == ModeManager.GameMode.COIN_RUSH)
+            return true;
+
+        if (modeSelector.allowMultipleSelection && modeSelector.selectedModes != null)
+        {
+            foreach (var mode in modeSelector.selectedModes)
+            {
+                if (mode == ModeManager.GameMode.COIN_RUSH)
+                    return true;
+            }
+        }
+
+        return false;
     }
 }
