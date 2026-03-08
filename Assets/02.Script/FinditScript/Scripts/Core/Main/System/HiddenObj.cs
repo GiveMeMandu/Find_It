@@ -137,7 +137,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             {
                 return spriteRenderer.color;
             }
-            
+
             // spriteRenderer가 없으면 자식에서 찾기
             var childSr = GetComponentInChildren<SpriteRenderer>();
             if (childSr != null)
@@ -145,7 +145,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 spriteRenderer = childSr;
                 return childSr.color;
             }
-            
+
             // 기본값으로 흰색 반환
             return Color.white;
         }
@@ -175,6 +175,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 {
                     LevelManager.PlayItemFx(AudioWhenClick);
                 }
+                // 이벤트 및 액션은 SetActive(false) 전에 먼저 호출
+                // (부모가 꺼지면 자식 컴포넌트 이벤트도 영향받을 수 있으므로)
+                OnFound?.Invoke();
+                whenFoundEventHelper?.onFoundEvent?.Invoke();
+                TargetClickAction?.Invoke();
+
                 if (EnableBGAnimation)
                 {
                     BgAnimationTransform.gameObject.SetActive(true);
@@ -182,16 +188,18 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
                 if (HideWhenFound)
                 {
-                    gameObject.SetActive(false);
+                    // BG 애니메이션이 있으면 즉시 부모를 끄지 않음
+                    // BgAnimationLerp의 HideHiddenObjAfterDone이 애니메이션 완료 후 부모를 비활성화함
+                    // (부모를 바로 끄면 자식인 BgAnimationTransform도 꺼져 코루틴이 중단됨)
+                    if (EnableBGAnimation && BgAnimationLerp != null)
+                    {
+                        BgAnimationLerp.HideHiddenObjAfterDone = true;
+                    }
+                    else
+                    {
+                        gameObject.SetActive(false);
+                    }
                 }
-
-                // Raise the public found event for subscribers
-                OnFound?.Invoke();
-
-                // WhenFoundEventHelper 이벤트 호출
-                whenFoundEventHelper?.onFoundEvent?.Invoke();
-
-                TargetClickAction?.Invoke();
             }
         }
 
@@ -286,9 +294,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 Debug.LogWarning($"[HiddenObj.Start] {gameObject.name}: leanClickEvent or OnClickEvent is NULL!");
             }
 
-            if(TryGetComponent(out BGAnimationHelper bGAnimationHelper))
+            if (TryGetComponent(out BGAnimationHelper bGAnimationHelper))
             {
-                if(!bGAnimationHelper.UseBgAnimation)
+                if (!bGAnimationHelper.UseBgAnimation)
                 {
                     EnableBGAnimation = false;
                     if (BgAnimationTransform != null)
