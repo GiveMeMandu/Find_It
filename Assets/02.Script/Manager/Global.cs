@@ -13,7 +13,12 @@ namespace Manager
     public class Global : MMSingleton<Global>
     {
         public EventHandler OnApplicationPauseEvt;
-        public static SceneBase CurrentScene { get; set; }
+        public static StageManager StageManager { get; set; }
+        public static SceneBase CurrentScene
+        {
+            get => StageManager?.CurrentScene;
+            set { if (StageManager != null) StageManager.CurrentScene = value; }
+        }
         public static UIManager UIManager { get; private set; }
         public static UserDataManager UserDataManager { get; set; }
         public static SoundManager SoundManager { get; set; }
@@ -76,6 +81,22 @@ namespace Manager
         private void LoadManagerPrefabs()
         {
             string prefixManager = "Prefabs/Manager/";
+            
+            // StageManager 로드
+            try
+            {
+                if (StageManager == null)
+                {
+                    StageManager = Instantiate(Resources.Load<StageManager>(prefixManager + nameof(StageManager)), transform);
+                    StageManager.name = nameof(StageManager);
+                    StageManager.Initialize();
+                    Debug.Log("StageManager loaded successfully");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load StageManager: {e.Message}");
+            }
             
             // UIManager 로드
             try

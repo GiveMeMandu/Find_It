@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Data;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using UnityEditor;
@@ -13,7 +12,9 @@ namespace SO
         [LabelText("이미지")] public Sprite collectionImage;
         [LabelText("이름")] [TermsPopup("Collection/Name/")] 
         public string collectionName;
-        [LabelText("해당 씬")] public SceneName scene;
+        [LabelText("챕터 인덱스")] 
+        [Tooltip("StageManager의 chapters 리스트 인덱스 (0부터 시작)")]
+        public int chapterIndex;
 
         [Button("자동으로 컬렉션 정보 설정")]
         public void SetCollectionInfo(){

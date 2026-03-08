@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using SO;
-using Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -33,14 +32,15 @@ namespace Manager
         }
 
         /// <summary>
-        /// Returns collections that belong to a specific scene.
+        /// Returns collections that belong to a specific chapter.
         /// </summary>
-        public List<CollectionSO> GetCollectionsForScene(SceneName scene)
+        /// <param name="chapterIndex">StageManager의 chapters 리스트 인덱스</param>
+        public List<CollectionSO> GetCollectionsForChapter(int chapterIndex)
         {
             List<CollectionSO> results = new List<CollectionSO>();
             foreach (var item in collectionSOList)
             {
-                if (item != null && item.scene == scene)
+                if (item != null && item.chapterIndex == chapterIndex)
                 {
                     results.Add(item);
                 }

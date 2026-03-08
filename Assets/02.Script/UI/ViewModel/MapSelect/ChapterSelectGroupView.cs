@@ -13,16 +13,16 @@ namespace UI
     [Binding]
     public class ChapterSelectGroupView : GroupView
     {
-        private ChapterSelectView _parentChapterView;
         private List<MapSelectElementView> _stageElements = new List<MapSelectElementView>();
         private int _currentSelectedIndex = -1;
 
+        private StageManager StageManager => Global.StageManager;
+
         private void Start() 
         {
-            _parentChapterView = GetComponentInParent<ChapterSelectView>();
-            if (_parentChapterView == null)
+            if (StageManager == null)
             {
-                Debug.LogError("ChapterSelectView를 찾을 수 없습니다!");
+                Debug.LogError("StageManager를 찾을 수 없습니다!");
                 return;
             }
 
@@ -34,9 +34,9 @@ namespace UI
         /// </summary>
         public void RefreshStages()
         {
-            if (_parentChapterView == null) return;
+            if (StageManager == null) return;
 
-            int stageCount = _parentChapterView.GetCurrentChapterStageCount();
+            int stageCount = StageManager.GetCurrentChapterStageCount();
             
             if (stageCount == 0)
             {
@@ -55,10 +55,9 @@ namespace UI
                 var stageElement = GetViewModels()[i] as MapSelectElementView;
                 if (stageElement != null)
                 {
-                    string sceneName = _parentChapterView.GetStageSceneName(i);
-                    bool isLocked = _parentChapterView.IsStageLockedByIndex(i);
-                    // Debug.Log($"Initializing stage {i}: SceneName={sceneName}, IsLocked={isLocked}");
-                    stageElement.Initialize(i, sceneName, _parentChapterView, isLocked);
+                    string sceneName = StageManager.GetStageSceneName(i);
+                    bool isLocked = StageManager.IsStageLockedByIndex(i);
+                    stageElement.Initialize(i, sceneName, isLocked);
                     _stageElements.Add(stageElement);
                     
                     // 해금된 첫 번째 스테이지 찾기
@@ -98,9 +97,9 @@ namespace UI
 
             // 새로운 스테이지 선택 (잠금 체크를 건너뛰고 직접 선택)
             _currentSelectedIndex = stageIndex;
-            if (_parentChapterView != null)
+            if (StageManager != null)
             {
-                _parentChapterView.SelectStage(stageIndex);
+                StageManager.SelectStage(stageIndex);
                 targetElement.IsSelected = true;
             }
         }

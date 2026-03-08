@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityWeld.Binding;
 using UI;
+using Manager;
 using Sirenix.OdinInspector;
 
 namespace UnityWeld
@@ -28,7 +29,6 @@ namespace UnityWeld
 
         private bool _isSelected;
         private bool _isLocked;
-        private ChapterSelectView _parentView;
         private ChapterSelectGroupView _groupView;
 
         private string _displayName;
@@ -83,13 +83,11 @@ namespace UnityWeld
         /// </summary>
         /// <param name="index">스테이지 인덱스</param>
         /// <param name="scene">씬 이름</param>
-        /// <param name="parentView">부모 ChapterSelectView</param>
         /// <param name="isLocked">잠금 상태</param>
-        public void Initialize(int index, string scene, ChapterSelectView parentView, bool isLocked = false)
+        public void Initialize(int index, string scene, bool isLocked = false)
         {
             stageIndex = index;
             sceneName = scene;
-            _parentView = parentView;
             _groupView = GetComponentInParent<ChapterSelectGroupView>();
             IsLocked = isLocked;
 
@@ -117,9 +115,9 @@ namespace UnityWeld
                 _groupView.SelectStage(stageIndex);
                 Debug.Log($"Selected Stage: {DisplayName} (Scene: {sceneName})");
             }
-            else if (_parentView != null)
+            else if (Global.StageManager != null)
             {
-                _parentView.SelectStage(stageIndex);
+                Global.StageManager.SelectStage(stageIndex);
                 IsSelected = true;
                 Debug.Log($"Selected Stage: {DisplayName} (Scene: {sceneName})");
             }

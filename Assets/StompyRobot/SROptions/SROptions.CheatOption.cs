@@ -14,12 +14,19 @@ public partial class SROptions
     [DisplayName("모든 챕터 클리어")]
     public void ClearAllChapters()
     {
-        // ChapterSelectView에서 모든 스테이지 씬 이름을 가져옴
-        var allSceneNames = UnityWeld.ChapterSelectView.GetAllStageSceneNamesStatic();
+        // StageManager에서 모든 스테이지 씬 이름을 가져옴
+        var stageManager = Manager.Global.StageManager;
+        if (stageManager == null)
+        {
+            Debug.LogWarning("StageManager를 찾을 수 없습니다.");
+            return;
+        }
+        
+        var allSceneNames = stageManager.GetAllStageSceneNames();
         
         if (allSceneNames.Count == 0)
         {
-            Debug.LogWarning("클리어할 스테이지를 찾을 수 없습니다. ChapterSelectView가 씬에 있는지 확인하세요.");
+            Debug.LogWarning("클리어할 스테이지를 찾을 수 없습니다.");
             return;
         }
         

@@ -13,6 +13,7 @@ namespace UI
     public class CollectionElementViewModel : ViewModel
     {
         public CollectionScrollViewModel CollectionScrollView;
+        public Image IconImage;
         private CollectionSO _collection;
         protected override void Awake() {
             base.Awake();
@@ -32,6 +33,25 @@ namespace UI
             CollectionScrollView = collectionScrollView;
             _collection = collection;
             Image = collection.collectionImage;
+            if (IconImage != null && Image != null)
+            {
+
+                Canvas.ForceUpdateCanvases();
+                LayoutRebuilder.ForceRebuildLayoutImmediate(IconImage.rectTransform);
+
+                var spriteRect = Image.rect;
+                float spriteW = spriteRect.width;
+                float spriteH = spriteRect.height;
+
+                float containerW = IconImage.rectTransform.rect.width;
+                float containerH = IconImage.rectTransform.rect.height;
+
+                if (spriteW > 0 && spriteH > 0 && containerW > 0 && containerH > 0)
+                {
+                    float scale = Mathf.Min(containerW / spriteW, containerH / spriteH);
+                    ImageSize = new Vector2(spriteW * scale, spriteH * scale);
+                }
+            }
             Name = LocalizationManager.GetTranslation(collection.collectionName);
             Count = Global.CollectionManager.GetCollectionCount(collection);
         }
@@ -46,6 +66,19 @@ namespace UI
             {
                 _image = value;
                 OnPropertyChanged(nameof(Image));
+            }
+        }
+
+        private Vector2 _imageSize;
+
+        [Binding]
+        public Vector2 ImageSize
+        {
+            get => _imageSize;
+            set
+            {
+                _imageSize = value;
+                OnPropertyChanged(nameof(ImageSize));
             }
         }
 
