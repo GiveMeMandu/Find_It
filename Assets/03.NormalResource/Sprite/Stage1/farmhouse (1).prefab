@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8407765002920328487}
   - component: {fileID: 7014699872517559239}
+  - component: {fileID: 6752731048299835918}
   m_Layer: 0
   m_Name: doorOpen
   m_TagString: Untagged
@@ -91,6 +92,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6752731048299835918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474070273173528325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f602ad08f056f4a86eb1b3df806ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToggleActiveHelper
+  OnToggleActive:
+    m_PersistentCalls:
+      m_Calls: []
+  OnToggleDeactive:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4039466167305163913
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,10 +328,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1474070273173528325}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 6752731048299835918}
+        m_TargetAssemblyTypeName: ToggleActiveHelper, Assembly-CSharp
+        m_MethodName: ToggleActive
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
