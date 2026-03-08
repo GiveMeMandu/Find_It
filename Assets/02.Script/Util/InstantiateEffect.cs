@@ -42,6 +42,7 @@ public class InstantiateEffect : MonoBehaviour
     [LabelText("카메라로부터 월드 거리")]
     [ShowIf("isUIPosition")]
     public float uiWorldDepth = 10f;
+    public bool isFirstCallIgnore = false; // 첫 호출 무시 여부 (OnEnable에서 자동 재생 방지용)
 
     [Header("Random Position")]
     [LabelText("랜덤 위치 활성화")]
@@ -96,6 +97,11 @@ public class InstantiateEffect : MonoBehaviour
     }
     public void PlayEffect()
     {
+        if (isFirstCallIgnore)
+        {
+            isFirstCallIgnore = false;
+            return;
+        }
         if (effectPrefabs != null && effectPrefabs.Count > 0)
         {
             Vector3 basePos = GetBasePosition();

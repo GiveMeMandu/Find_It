@@ -11,18 +11,18 @@ Shader "Custom/WaterShader_Mobile"
 {
 	Properties
 	{
-		_MainTex("Texture", 2D) = "white" {}
-		_DisplacementTex("Displacement Texture", 2D) = "white" {}
-		_DisplacementSpeedX("Displacement Speed X", Float) = 0.03
-		_DisplacementSpeedY("Displacement Speed Y", Float) = 0.0
-		_DisplacementAmountDivider("Displacement Amount Divider", Float) = 60
-		_Tint("Tint", Color) = (1,1,1,1)
-		_FoamThreshold("Foam Threshold", Float) = 0.022
-		_EdgeFoamThreshold("Edge Foam Threshold", Float) = 0.005
-		_FoamAlpha("Foam Alpha", Range(0,1)) = 1
+		_MainTex("텍스처", 2D) = "white" {}
+		_DisplacementTex("변위 텍스처", 2D) = "white" {}
+		_DisplacementSpeedX("변위 속도 X", Float) = 0.03
+		_DisplacementSpeedY("변위 속도 Y", Float) = 0.0
+		_DisplacementAmountDivider("변위량 분할값", Float) = 60
+		_Tint("틴트", Color) = (1,1,1,1)
+		_FoamThreshold("폼 임계값", Float) = 0.022
+		_EdgeFoamThreshold("에지 폼 임계값", Float) = 0.005
+		_FoamAlpha("폼 투명도", Range(0,1)) = 1
 		[Toggle(ENABLE_VERTEX_DISPLACEMENT)]
-		_VertexDisplacement("Enable Vertex Displacement (Higher Quality)", Float) = 0
-		_VertexDisplacementAmount("Vertex Displacement Amount", Range(0,0.1)) = 0.02
+		_VertexDisplacement("정점 변위 사용 (고품질)", Float) = 0
+		_VertexDisplacementAmount("정점 변위량", Range(0,0.1)) = 0.02
 	}
 	SubShader
 	{

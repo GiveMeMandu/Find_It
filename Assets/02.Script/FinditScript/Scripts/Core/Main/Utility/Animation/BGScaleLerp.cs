@@ -11,7 +11,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.Animation
 
         // 초기 bounds 정보 저장
         public Bounds InitialBounds { get; private set; }
-
         private void Awake()
         {
             // 부모에 HiddenObj가 있고, Collider가 있는지 확인하여 위치 설정
