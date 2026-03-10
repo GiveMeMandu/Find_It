@@ -56,6 +56,12 @@ public class IngameCoinLayer : AutoTaskControl
     private bool _isCountingUp = false; // 카운트업 중인지 여부
     private BigInteger _accumulatedGainedMoney = BigInteger.Zero; // 누적된 획득 코인
     private BigInteger _sessionCoinsCollected = BigInteger.Zero; // 코인러쉬 세션 동안 모은 코인
+
+    /// <summary>
+    /// 이번 세션에서 획득한 코인 총량 (읽기 전용)
+    /// </summary>
+    public BigInteger SessionCoinsCollected => _sessionCoinsCollected;
+
     private CancellationTokenSource _displayCancellation; // UI 표시용 토큰
     protected override void OnEnable()
     {

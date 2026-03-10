@@ -17,6 +17,7 @@ using Manager;
 using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
 using DG.Tweening;
 using UI;
+using UI.Page;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
@@ -190,6 +191,12 @@ DebugGameState();
                 GameEndBtn.onClick.AddListener(GoToNextLevel);
 
             StartTime = DateTime.Now;
+
+            // 스테이지 시작 시 컬렉션(스티커) 획득 목록 초기화
+            if (Global.CollectionManager != null)
+            {
+                Global.CollectionManager.ClearEarnedThisStage();
+            }
 
             if (Canvas != null)
             {
@@ -834,58 +841,71 @@ DebugGameState();
             int totalObjects = TargetObjDic.Sum(x => x.Value.TotalCount);
             int foundObjects = TargetObjDic.Sum(x => x.Value.FoundCount);
 
-            if (FoundObjCountText != null)
-            {
-                FoundObjCountText.text = $"{foundObjects} / {totalObjects}";
-            }
-            if (CurrentFoundObjCountText != null)
-            {
-                CurrentFoundObjCountText.text = $"{foundObjects} / {totalObjects}";
-            }
-            if (FoundObjCountFillImage != null)
-            {
-                FoundObjCountFillImage.fillAmount = (float)foundObjects / totalObjects;
-            }
-            if (FoundRabbitCountText != null)
-            {
-                FoundRabbitCountText.text = $"{rabbitObjCount} / {maxRabbitObjCount}";
-            }
-            if (StageCompleteText != null)
-            {
-                string levelName = "CLEAR!";
-                if (Global.CurrentScene != null)
-                {
-                    levelName = SceneHelper.GetFormattedStageName(Global.CurrentScene.SceneName);
-                }
-                StageCompleteText.text = levelName + " CLEAR!";
-            }
-
-            if (GameTimeText != null)
-            {
-                GameTimeText.text = timeUsed.Hours > 0
-                    ? timeUsed.ToString(@"hh\:mm\:ss")
-                    : timeUsed.ToString(@"mm\:ss");
-            }
-
+            // 별 계산
             var starCount = 0;
-
-            float foundObjRatio = (float)foundObjects / totalObjects;
-            float foundRabbitRatio = (float)rabbitObjCount / maxRabbitObjCount;
-            // 구름토끼
-            // float totalProgress = (foundObjRatio + foundRabbitRatio) / 2;
-
-            float totalProgress = foundObjRatio; // rabbit 점수 제외, 숨겨진 오브젝트만으로 계산
+            float foundObjRatio = totalObjects > 0 ? (float)foundObjects / totalObjects : 0f;
+            float totalProgress = foundObjRatio;
 
             if (totalProgress >= 0.9f) starCount = 3;
             else if (totalProgress >= 0.6f) starCount = 2;
             else if (totalProgress >= 0.3f) starCount = 1;
 
-            for (int i = 0; i < starCount; i++)
+            // 스테이지 이름
+            string stageName = "CLEAR!";
+            if (Global.CurrentScene != null)
             {
-                StarList[i].gameObject.SetActive(true);
+                stageName = SceneHelper.GetFormattedStageName(Global.CurrentScene.SceneName);
             }
 
-            GameEndUI.SetActive(true);
+            // GameEndPage를 열어서 게임 결과 표시
+            if (Global.UIManager != null)
+            {
+                var gameEndPage = Global.UIManager.OpenPage<GameEndPage>();
+                if (gameEndPage != null)
+                {
+                    gameEndPage.SetGameResult(timeUsed, foundObjects, totalObjects,
+                        rabbitObjCount, maxRabbitObjCount, stageName, starCount);
+
+                    // 결과 아이템 목록 생성 (스티커 + 코인)
+                    var resultItems = new List<UI.ResultItemData>();
+
+                    // 1. 획득한 스티커(컬렉션) 추가
+                    if (Global.CollectionManager != null)
+                    {
+                        var earnedStickers = Global.CollectionManager.GetEarnedThisStage();
+                        foreach (var collection in earnedStickers)
+                        {
+                            if (collection != null)
+                            {
+                                resultItems.Add(new UI.ResultItemData(
+                                    collection.collectionImage,
+                                    I2.Loc.LocalizationManager.GetTranslation(collection.collectionName)
+                                ));
+                            }
+                        }
+                    }
+
+                    // 2. 획득한 코인 추가
+                    var coinLayer = FindAnyObjectByType<IngameCoinLayer>();
+                    if (coinLayer != null && coinLayer.SessionCoinsCollected > global::System.Numerics.BigInteger.Zero)
+                    {
+                        Sprite coinSprite = null;
+                        var coinRushManager = FindAnyObjectByType<CoinRushModeManager>();
+                        if (coinRushManager != null && coinRushManager.coinSprite != null)
+                        {
+                            coinSprite = coinRushManager.coinSprite;
+                        }
+                        resultItems.Add(new UI.ResultItemData(
+                            coinSprite,
+                            "Coin",
+                            (int)coinLayer.SessionCoinsCollected
+                        ));
+                    }
+
+                    gameEndPage.SetResultItems(resultItems);
+                    Debug.Log($"[LevelManager] GameEnd - 결과 아이템 수: {resultItems.Count}");
+                }
+            }
         }
 
         /// <summary>
@@ -1087,6 +1107,98 @@ DebugGameState();
 
             Debug.Log($"[LevelManager] =========================");
         }
+        [Button("테스트 : 모든 물건 찾기")]
+        public void FindAllHidden()
+        {
+            if (TargetObjDic == null)
+            {
+                Debug.LogError("[LevelManager] TargetObjDic is not initialized. Please start the game first.");
+                return;
+            }
+
+            // 모든 그룹을 순회하면서 찾지 않은 물건들을 모두 찾은 상태로 변경
+            foreach (var kvp in TargetObjDic)
+            {
+                var group = kvp.Value;
+                var notFoundObjects = group.Objects.Where(obj => !group.IsObjectFound(obj)).ToList();
+
+                foreach (var obj in notFoundObjects)
+                {
+                    // 물건을 찾은 것으로 표시
+                    group.LastClickedObject = obj;
+                    group.MarkObjectAsFound(obj);
+
+                    // WhenFoundEventHelper 이벤트 호출
+                    if (obj.whenFoundEventHelper != null)
+                    {
+                        obj.whenFoundEventHelper.onFoundEvent?.Invoke();
+                    }
+
+                    // 사운드 재생
+                    if (group.Representative.PlaySoundWhenFound && FoundFx != null)
+                        FoundFx.Play();
+
+                    Debug.Log($"[LevelManager] 테스트로 찾은 오브젝트: {obj.name} (그룹: {group.BaseGroupName})");
+                }
+            }
+
+            // UI 업데이트 및 정렬
+            if (CurrentScrollView != null)
+            {
+                var createdUIs = CurrentScrollView.UpdateScrollView(TargetObjDic, TargetImagePrefab, TargetClick, RegionToggle, UIClick);
+
+                // LevelManager에서 관리하는 UI 리스트 갱신
+                allHiddenObjUIs.Clear();
+                allHiddenObjUIs.AddRange(createdUIs);
+
+                // 그룹과 UI 연결 (기존 순서 기준)
+                var groupList = TargetObjDic.Values.ToList();
+                for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
+                {
+                    groupList[i].AssociatedUI = createdUIs[i];
+                }
+
+                // 시각적 정렬: 이미 모두 찾은(완료된) 그룹들의 UI는 리스트의 마지막으로 보냅니다.
+                if (CurrentScrollView.contentContainer != null)
+                {
+                    var pairs = new List<(HiddenObjGroup group, HiddenObjUI ui)>();
+                    for (int i = 0; i < Math.Min(groupList.Count, createdUIs.Count); i++)
+                    {
+                        pairs.Add((groupList[i], createdUIs[i]));
+                    }
+
+                    var sorted = pairs.OrderBy(p => p.group.FoundCount >= p.group.TotalCount ? 1 : 0).ToList();
+
+                    for (int i = 0; i < sorted.Count; i++)
+                    {
+                        var uiTransform = sorted[i].ui != null ? sorted[i].ui.transform : null;
+                        if (uiTransform != null)
+                        {
+                            uiTransform.SetSiblingIndex(i);
+                        }
+
+                        // 정렬 후에도 그룹-UI 연결을 최신화
+                        sorted[i].group.AssociatedUI = sorted[i].ui;
+                    }
+
+                    // LevelManager에서 관리하는 UI 리스트도 새 순서로 갱신
+                    allHiddenObjUIs = sorted.Select(p => p.ui).ToList();
+                }
+            }
+
+            // 이벤트 발생
+            if (TargetObjDic != null)
+            {
+                OnFoundObjCountChanged?.Invoke(this, EventArgs.Empty);
+                UpdateFoundObjUI();
+            }
+
+            Debug.Log($"[LevelManager] 모든 물건을 찾았습니다!");
+
+            // 게임 종료 조건 확인
+            DetectGameEnd();
+        }
+
         [Button("테스트 : 아무 물건 찾기")]
         public void FindAnyHidden()
         {

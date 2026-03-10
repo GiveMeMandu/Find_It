@@ -181,6 +181,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 whenFoundEventHelper?.onFoundEvent?.Invoke();
                 TargetClickAction?.Invoke();
 
+                // 컬렉션 매칭 처리: 이름 또는 스프라이트가 일치하는 CollectionSO를 유저 데이터에 추가
+                if (Global.CollectionManager != null)
+                {
+                    Global.CollectionManager.TryCollectFromHiddenObj(this);
+                }
+
                 if (EnableBGAnimation)
                 {
                     BgAnimationTransform.gameObject.SetActive(true);
