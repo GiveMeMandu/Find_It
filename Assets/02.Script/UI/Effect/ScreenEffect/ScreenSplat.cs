@@ -4,22 +4,51 @@ using Kamgam.UGUIWorldImage;
 using UnityEngine.Rendering.Universal;
 using Manager;
 using Pooling;
+using Sirenix.OdinInspector;
+using ShowIf = Sirenix.OdinInspector.ShowIfAttribute;
 #if KAMGAM_RENDER_PIPELINE_URP
 using UnityEngine.Rendering.Universal;
 #endif
 
-public class ScreenSplat : MonoBehaviour
+[System.Serializable]
+    public class PreSpawnEntry
     {
+        [Tooltip("직접 할당할 프리팹")]
+        [LabelText("프리팹")]
+        public GameObject prefab;
+
+        [Tooltip("프리팹이 없을 때 Resources 폴더에서 로드할 경로 (예: Prefabs/Tutorial/MyObj)")]
+        [LabelText("Resources 경로")]
+        [ShowIf("@prefab == null")]
+        public string resourcePath;
+    }
+
+    public class ScreenSplat : MonoBehaviour
+    {
+        [LabelText("WorldImage 프리팹")]
         [SerializeField] private WorldImage worldImagePrefab;
-        [SerializeField] private int maxActiveCount = -1; // -1이면 제한 없음
+        [LabelText("최대 활성화 수 (-1: 무제한)")]
+        [SerializeField] private int maxActiveCount = -1;
+        [LabelText("WorldImage 풀")]
         [SerializeField] private List<WorldImage> worldImagePool = new List<WorldImage>();
+        [LabelText("스폰 플랫폼")]
         [SerializeField] private GameObject SpawnPlatform;
-        [SerializeField] private float minSpawnDistance = 2f; // 객체 간 최소 거리 (X축)
+        [LabelText("객체 간 최소 거리 (X축)")]
+        [SerializeField] private float minSpawnDistance = 2f;
         [Header("WorldImage UI 위치 설정")]
-        [SerializeField] private Vector2 minWorldImagePosition = new Vector2(-500f, -500f); // UI 최소 위치
-        [SerializeField] private Vector2 maxWorldImagePosition = new Vector2(500f, 500f); // UI 최대 위치
+        [LabelText("UI 최소 위치")]
+        [SerializeField] private Vector2 minWorldImagePosition = new Vector2(-500f, -500f);
+        [LabelText("UI 최대 위치")]
+        [SerializeField] private Vector2 maxWorldImagePosition = new Vector2(500f, 500f);
+
+        [Header("시작 시 자동 스폰")]
+        [SerializeField] private bool usePreSpawn = false;
+        [ShowIf("usePreSpawn")]
+        [LabelText("스폰 목록")]
+        [SerializeField] private List<PreSpawnEntry> preSpawnEntries = new List<PreSpawnEntry>();
 
         [Header("카메라 설정")]
+        [LabelText("URP 렌더러 인덱스")]
         [Tooltip("WorldImage 카메라에 적용할 URP 렌더러 인덱스 (Project Settings > Graphics > URP Global Settings)")]
         [SerializeField] private int cameraRendererIndex = 0;
 
@@ -28,6 +57,28 @@ public class ScreenSplat : MonoBehaviour
         // WorldImage별 onCameraReady 콜백 매핑 (ReleaseWorldImage 시 구독 해제용)
         private Dictionary<WorldImage, System.Action<WorldObjectCamera>> cameraReadyCallbacks = new Dictionary<WorldImage, System.Action<WorldObjectCamera>>();
         private int currentSpawnIndex = 0; // 현재 소환 인덱스 (X축 위치 계산용)
+
+        void Start()
+        {
+            if (!usePreSpawn) return;
+
+            foreach (var entry in preSpawnEntries)
+            {
+                GameObject prefab = entry.prefab;
+                if (prefab == null && !string.IsNullOrEmpty(entry.resourcePath))
+                {
+                    prefab = Resources.Load<GameObject>(entry.resourcePath);
+                    if (prefab == null)
+                    {
+                        Debug.LogWarning($"ScreenSplat: 프리팹을 찾을 수 없습니다: Resources/{entry.resourcePath}");
+                        continue;
+                    }
+                }
+
+                if (prefab != null)
+                    ShowWorldObject(prefab);
+            }
+        }
 
         void Awake()
         {
