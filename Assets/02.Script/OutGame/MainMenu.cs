@@ -27,6 +27,7 @@ namespace OutGame
         private bool isHomeClicked = false;
         private MoveEffect moveEffect;
         private CameraRootPanning cameraRootPanning;
+        private bool isCameraMoving = false;
         protected override void Start()
         {
             base.Start();
@@ -53,8 +54,10 @@ namespace OutGame
 
         public void OnClickMapButton()
         {
-            if(isMapButtonClicked) return;
+            if(isMapButtonClicked || isCameraMoving) return;
             isMapButtonClicked = true;
+            isHomeClicked = false;
+            isCameraMoving = true;
             mapSelectView.Refresh();
             
             // 카메라 패닝 비활성화
@@ -65,6 +68,7 @@ namespace OutGame
                 .SetEase(Ease.OutQuint)
                 .OnComplete(() => 
                 {
+                    isCameraMoving = false;
                     // 카메라 이동 완료 후 패닝 재활성화 및 baseline 업데이트
                     if (cameraRootPanning != null)
                         cameraRootPanning.EnablePanningAfterCameraMove();
@@ -74,7 +78,10 @@ namespace OutGame
 
         public void OnClickMainMenuButton()
         {
+            if(isCameraMoving) return;
             isMapButtonClicked = false;
+            isHomeClicked = false;
+            isCameraMoving = true;
             
             // 카메라 패닝 비활성화
             if (cameraRootPanning != null)
@@ -84,11 +91,12 @@ namespace OutGame
                 .SetEase(Ease.OutQuint)
                 .OnComplete(() => 
                 {
+                    isCameraMoving = false;
                     // 카메라 이동 완료 후 패닝 재활성화 및 baseline 업데이트
                     if (cameraRootPanning != null)
                         cameraRootPanning.EnablePanningAfterCameraMove();
                 });
-            // pageSlideEffect.SlideIn(true, 0.8f);
+            moveEffect.PlayVFX();
         }
 
         public void OnClickStartButton(int stageIndex = 0)
@@ -104,18 +112,22 @@ namespace OutGame
         [Button("테스트용: 홈버튼")]
         public void OnClickHomeButton()
         {
-            if(isHomeClicked) return;
-            isHomeClicked = true;
-            
-            // 카메라 패닝 비활성화
+            if(isCameraMoving) return;
+
+            isHomeClicked = !isHomeClicked;
+            isMapButtonClicked = false;
+            isCameraMoving = true;
+
             if (cameraRootPanning != null)
                 cameraRootPanning.DisablePanningForCameraMove();
-            
-            Camera.main.transform.DOLocalMoveX(19.86f, 1f)
-                .SetEase(Ease.OutCubic)
-                .OnComplete(() => 
+
+            float targetX = isHomeClicked ? 19.86f : 0f;
+            Camera.main.transform.DOKill();
+            Camera.main.transform.DOLocalMoveX(targetX, 1f)
+                .SetEase(isHomeClicked ? Ease.OutCubic : Ease.OutQuint)
+                .OnComplete(() =>
                 {
-                    // 카메라 이동 완료 후 패닝 재활성화 및 baseline 업데이트
+                    isCameraMoving = false;
                     if (cameraRootPanning != null)
                         cameraRootPanning.EnablePanningAfterCameraMove();
                 });
