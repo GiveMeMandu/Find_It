@@ -1,5 +1,6 @@
 using System;
 using OutGame;
+using Pooling;
 using UnityEngine;
 
 namespace Manager
@@ -43,7 +44,7 @@ namespace Manager
         public static RewardManager RewardManager { get; set; }
         public static int StageTimer { get; set; } = 600;
         public static UIEffectManager UIEffectManager { get; set; }
-
+        public static PoolManager PoolManager { get; set; }
         protected override void Awake()
         {
             base.Awake();
@@ -243,6 +244,21 @@ namespace Manager
                 CollectionManager = Instantiate(Resources.Load<CollectionManager>(prefixManager + nameof(CollectionManager)), transform);
                 CollectionManager.name = nameof(CollectionManager);
                 Debug.Log("CollectionManager loaded successfully");
+            }
+
+            // PoolManager 로드
+            try
+            {
+                if (PoolManager == null)
+                {
+                    PoolManager = Instantiate(Resources.Load<PoolManager>(prefixManager + nameof(PoolManager)), transform);
+                    PoolManager.name = nameof(PoolManager);
+                    Debug.Log("PoolManager loaded successfully");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load PoolManager: {e.Message}");
             }
             
             Debug.Log("LoadManagerPrefabs completed");
