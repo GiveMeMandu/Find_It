@@ -45,4 +45,19 @@ public partial class SROptions
             Debug.LogError("UserDataManager를 찾을 수 없습니다.");
         }
     }
+
+    [DisplayName("데이터 초기화")]
+    public void ResetData()
+    {
+        var userDataManager = Manager.Global.UserDataManager;
+        if (userDataManager != null)
+        {
+            userDataManager.Reset();
+            Debug.Log("모든 유저 데이터를 초기화했습니다.");
+        }
+        else
+        {
+            Debug.LogError("UserDataManager를 찾을 수 없습니다.");
+        }
+    }
 }
