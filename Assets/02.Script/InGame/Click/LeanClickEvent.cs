@@ -15,6 +15,8 @@ public class LeanClickEvent : LeanSelectableByFinger
 	public UnityEvent OnMouseUpEvent = new UnityEvent();
 	public UnityEvent OnClickEvent = new UnityEvent();
 
+	public static event System.Action<GameObject, Vector2> OnGlobalClickSuccess;
+
 	private int _clickCount = 0;
 	public int _maxClickCount = -1;
 
@@ -134,6 +136,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 		// Fire click event
 		// Debug.Log($"[LeanClickEvent] {gameObject.name}: About to invoke OnClickEvent. OnClickEvent is null: {OnClickEvent == null}, Listener count: {(OnClickEvent != null ? OnClickEvent.GetPersistentEventCount() : 0)}");
 		OnClickEvent?.Invoke();
+		OnGlobalClickSuccess?.Invoke(gameObject, finger.ScreenPosition);
 		_clickCount++;
 
 		// Debug.Log("LeanClickEvent OnFingerTap " + gameObject.name + " _clickCount: " + _clickCount);
@@ -488,11 +491,11 @@ public class LeanClickEvent : LeanSelectableByFinger
 
 		if (!isTopMost)
 		{
-			// Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
+			Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
 		}
 		else
 		{
-			// Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
+			Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
 		}
 
 		return isTopMost;

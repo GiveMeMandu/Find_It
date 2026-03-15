@@ -80,7 +80,10 @@ public class SpriteEffectAutoAssigner : EditorWindow
             switch (pType)
             {
                 case SpriteEffectMapSO.ParticleType.FruitJuicy:
-                    rule.keywords = "apple, cherry, strawberry, avocado, carrot, radish, fruit, food, lemon, jam, honey";
+                    rule.keywords = "apple, cherry, strawberry, strawberries, berry, berries, avocado, fruit, food, lemon, jam, honey, radish";
+                    break;
+                case SpriteEffectMapSO.ParticleType.Carrot:
+                    rule.keywords = "carrot";
                     break;
                 case SpriteEffectMapSO.ParticleType.Leaf:
                     rule.keywords = "tree, leaf, grass, flower, reed, dandelion, sunflower, clover, branch, liquid";

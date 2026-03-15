@@ -1,4 +1,4 @@
-using DeskCat.FindIt.Scripts.Core.Main.System;
+﻿using DeskCat.FindIt.Scripts.Core.Main.System;
 using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
 using NaughtyAttributes;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 using Pooling;
+using Lean.Touch;
 
 public class InstantiateClickEffect : MonoBehaviour
 {
@@ -49,133 +50,151 @@ public class InstantiateClickEffect : MonoBehaviour
     [Tooltip("클릭된 오브젝트의 스프라이트를 기준으로 파티클 타입을 결정합니다.")]
     public SpriteEffectMapSO spriteEffectMap;
 
+    [Header("디버깅")]
+    [Label("디버그 로그 활성화")]
+    public bool enableDebug = false;
+
     // ─── 내부 상태 ───────────────────────────────────────
-    private MouseUIController _mouseUIController;
     private bool _initialized = false;
+    private float _lastEffectTime; // 마지막 이펙트 생성 시간
+    private const float EFFECT_COOLDOWN = 0.1f; // 이펙트 생성 쿨다운
+
+    private bool _hitProcessedThisFrame = false;
+    private bool _tapDetectedThisFrame = false;
+    private Vector2 _lastTapPos;
 
     // ─── Unity 생명 주기 ──────────────────────────────────
 
-    private void Start()
-    {
-        if (enableClickEffect)
-        {
-            _mouseUIController = FindAnyObjectByType<MouseUIController>();
-            SubscribeClickEvents();
-        }
-
-        _initialized = true;
-    }
-
     private void OnEnable()
     {
-        // Start 이후 재활성화 시 재구독
-        if (_initialized && enableClickEffect)
-            SubscribeClickEvents();
+        LeanTouch.OnFingerTap += HandleFingerTap;
+        LeanClickEvent.OnGlobalClickSuccess += HandleHitFromLeanClickEvent;
     }
 
     private void OnDisable()
     {
-        UnsubscribeClickEvents();
+        LeanTouch.OnFingerTap -= HandleFingerTap;
+        LeanClickEvent.OnGlobalClickSuccess -= HandleHitFromLeanClickEvent;
     }
 
     private void OnDestroy()
     {
-        UnsubscribeClickEvents();
+        LeanTouch.OnFingerTap -= HandleFingerTap;
+        LeanClickEvent.OnGlobalClickSuccess -= HandleHitFromLeanClickEvent;
     }
 
-    // ─── 구독 관리 ───────────────────────────────────────
-
-    private void SubscribeClickEvents()
+    private void LateUpdate()
     {
-        if (_mouseUIController == null)
-            _mouseUIController = FindAnyObjectByType<MouseUIController>();
-
-        if (_mouseUIController != null)
-            _mouseUIController.OnMouseDownEvent.AddListener(HandleClick);
+        if (_tapDetectedThisFrame)
+        {
+            if (!_hitProcessedThisFrame)
+            {
+                // 히트가 없었으므로 Miss 처리
+                if (Time.time - _lastEffectTime >= EFFECT_COOLDOWN)
+                {
+                    _lastEffectTime = Time.time;
+                    HandleMissEffect(_lastTapPos);
+                }
+            }
+            
+            // 상태 초기화
+            _tapDetectedThisFrame = false;
+            _hitProcessedThisFrame = false;
+        }
+        else
+        {
+            _hitProcessedThisFrame = false;
+        }
     }
 
-    private void UnsubscribeClickEvents()
+    // ─── 이벤트 처리 ───────────────────────────────────────
+
+    private void HandleFingerTap(LeanFinger finger)
     {
-        if (_mouseUIController != null)
-            _mouseUIController.OnMouseDownEvent.RemoveListener(HandleClick);
+        if (!enableClickEffect) return;
+
+        if (enableDebug) Debug.Log("<b>[InstantiateClickEffect]</b> HandleFingerTap: Tap detected.");
+        _tapDetectedThisFrame = true;
+        _lastTapPos = finger.ScreenPosition;
     }
 
-    // ─── 클릭 이펙트 처리 ────────────────────────────────
+    private void HandleHitFromLeanClickEvent(GameObject hitObject, Vector2 screenPos)
+    {
+        if (!enableClickEffect) return;
 
-    /// <summary>
-    /// MouseUIController.OnMouseDownEvent 콜백 - 클릭 위치를 기준으로 히트/미스 이펙트를 생성합니다.
-    /// 스프라이트 매핑 SO가 있으면 클릭된 오브젝트의 스프라이트로 이펙트를 결정하고,
-    /// 없으면 hitEffectPrefabs / missEffectPrefabs로 폴백합니다.
-    /// </summary>
-    private void HandleClick()
+        // 히트 플래그 설정 (LateUpdate에서 Miss 발동을 막음)
+        _hitProcessedThisFrame = true;
+        _lastEffectTime = Time.time; // 마지막 이펙트 생성 시간 기록
+
+        Camera cam = clickCamera != null ? clickCamera : Camera.main;
+        if (cam == null)
+        {
+            if (enableDebug) Debug.LogError("<b>[InstantiateClickEffect]</b> HandleHitFromLeanClickEvent: Camera not found!");
+            return;
+        }
+
+        // 스크린 → 월드 변환 (z=0 평면 기준)
+        Vector3 worldPoint = cam.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, cam.nearClipPlane));
+        worldPoint.z = 0f;
+
+        if (enableDebug) Debug.Log($"<b>[InstantiateClickEffect]</b> HandleHit: Hit object reported by LeanClickEvent: '{hitObject.name}'");
+
+        // 스프라이트 매핑 SO가 있으면 매핑된 이펙트 프리팹 리스트 조회
+        if (spriteEffectMap != null)
+        {
+            Sprite sprite = GetSpriteFromObject(hitObject);
+            SpriteEffectMapSO.ParticleType pType = SpriteEffectMapSO.ParticleType.None;
+
+            if (sprite != null)
+            {
+                if (enableDebug) Debug.Log($"<b>[InstantiateClickEffect]</b> HandleHit: Sprite '{sprite.name}' successfully retrieved from '{hitObject.name}'.");
+                pType = spriteEffectMap.GetParticleType(sprite);
+            }
+            else
+            {
+                if (enableDebug) Debug.LogWarning($"<b>[InstantiateClickEffect]</b> HandleHit: Could not retrieve a sprite from '{hitObject.name}'. Attempting to find particle type by object name.");
+                pType = spriteEffectMap.GetParticleTypeByName(hitObject.name);
+            }
+
+            if (pType != SpriteEffectMapSO.ParticleType.None)
+            {
+                if (enableDebug) Debug.Log($"<b>[InstantiateClickEffect]</b> HandleHit: Resolved ParticleType is '{pType}'.");
+                
+                List<GameObject> mappedEffects = spriteEffectMap.GetEffectPrefabsByType(pType);
+                if (mappedEffects != null && mappedEffects.Count > 0)
+                {
+                    if (enableDebug) Debug.Log($"<b>[InstantiateClickEffect]</b> HandleHit: Found {mappedEffects.Count} mapped effect(s) for ParticleType '{pType}'. Spawning effects.");
+                    SpawnEffectsAtPosition(mappedEffects, worldPoint);
+                    return;
+                }
+                else
+                {
+                    if (enableDebug) Debug.LogWarning($"<b>[InstantiateClickEffect]</b> HandleHit: No effect prefabs mapped for ParticleType '{pType}'. Falling back to default hit effects.");
+                }
+            }
+            else
+            {
+                if (enableDebug) Debug.LogWarning($"<b>[InstantiateClickEffect]</b> HandleHit: ParticleType could not be resolved. Falling back to default hit effects.");
+            }
+        }
+
+        // 폴백: 기존 hitEffectPrefabs
+        if (enableDebug) Debug.Log("<b>[InstantiateClickEffect]</b> HandleHit: Spawning default hit effects.");
+        SpawnEffectsAtPosition(hitEffectPrefabs, worldPoint);
+    }
+
+    private void HandleMissEffect(Vector2 screenPos)
     {
         if (!enableClickEffect) return;
 
         Camera cam = clickCamera != null ? clickCamera : Camera.main;
         if (cam == null) return;
 
-        // 현재 마우스/터치 스크린 좌표 취득
-        Vector2 screenPos = Mouse.current?.position.value ?? (Vector2)Input.mousePosition;
-
-        // 스크린 → 월드 변환 (z=0 평면 기준)
-        Vector3 worldPoint = cam.ScreenToWorldPoint(
-            new Vector3(screenPos.x, screenPos.y, cam.nearClipPlane));
+        Vector3 worldPoint = cam.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, cam.nearClipPlane));
         worldPoint.z = 0f;
 
-        GameObject hitObject = FindClickableObject(cam, screenPos, worldPoint);
-
-        if (hitObject != null)
-        {
-            // 스프라이트 매핑 SO가 있으면 매핑된 이펙트 프리팹 리스트 조회
-            if (spriteEffectMap != null)
-            {
-                Sprite sprite = GetSpriteFromObject(hitObject);
-                if (sprite != null)
-                {
-                    List<GameObject> mappedEffects = spriteEffectMap.GetEffectPrefabs(sprite);
-                    if (mappedEffects != null && mappedEffects.Count > 0)
-                    {
-                        SpawnEffectsAtPosition(mappedEffects, worldPoint);
-                        return;
-                    }
-                }
-            }
-
-            // 폴백: 기존 hitEffectPrefabs
-            SpawnEffectsAtPosition(hitEffectPrefabs, worldPoint);
-        }
-        else
-        {
-            SpawnEffectsAtPosition(missEffectPrefabs, worldPoint);
-        }
-    }
-
-    /// <summary>
-    /// 해당 위치에 HiddenObj 또는 LeanClickEvent 컴포넌트를 가진 오브젝트를 반환합니다.
-    /// 없으면 null을 반환합니다.
-    /// </summary>
-    private GameObject FindClickableObject(Camera cam, Vector2 screenPos, Vector3 worldPoint)
-    {
-        // 2D 물리 검사
-        Collider2D[] hits2D = Physics2D.OverlapPointAll(worldPoint);
-        foreach (var col in hits2D)
-        {
-            if (col == null) continue;
-            if (col.GetComponent<HiddenObj>() != null || col.GetComponent<LeanClickEvent>() != null)
-                return col.gameObject;
-        }
-
-        // 3D 물리 검사 (Raycast)
-        Ray ray = cam.ScreenPointToRay(screenPos);
-        if (Physics.Raycast(ray, out RaycastHit hit3D))
-        {
-            if (hit3D.collider != null &&
-                (hit3D.collider.GetComponent<HiddenObj>() != null ||
-                 hit3D.collider.GetComponent<LeanClickEvent>() != null))
-                return hit3D.collider.gameObject;
-        }
-
-        return null;
+        if (enableDebug) Debug.Log("<b>[InstantiateClickEffect]</b> HandleMissEffect: No clickable object reported. Spawning miss effects.");
+        SpawnEffectsAtPosition(missEffectPrefabs, worldPoint);
     }
 
     /// <summary>
@@ -184,24 +203,63 @@ public class InstantiateClickEffect : MonoBehaviour
     /// </summary>
     private Sprite GetSpriteFromObject(GameObject obj)
     {
-        // HiddenObj가 있으면 UISprite → spriteRenderer.sprite 순으로 시도
+        // HiddenObj가 있으면 캐시/보조 로직이 포함된 GetUISprite를 우선 사용
         HiddenObj hiddenObj = obj.GetComponent<HiddenObj>();
         if (hiddenObj != null)
         {
-            if (hiddenObj.UISprite != null)
-                return hiddenObj.UISprite;
+            Sprite uiSprite = hiddenObj.GetUISprite();
+            if (uiSprite != null)
+            {
+                if (enableDebug) Debug.Log($"<b>[GetSpriteFromObject]</b> Found sprite '{uiSprite.name}' via hiddenObj.GetUISprite().");
+                return uiSprite;
+            }
+
             if (hiddenObj.spriteRenderer != null && hiddenObj.spriteRenderer.sprite != null)
+            {
+                if (enableDebug) Debug.Log($"<b>[GetSpriteFromObject]</b> Found sprite '{hiddenObj.spriteRenderer.sprite.name}' via hiddenObj.spriteRenderer.");
                 return hiddenObj.spriteRenderer.sprite;
+            }
+
+            // 일부 프리팹은 자식에 SpriteRenderer가 있으므로 추가로 탐색
+            SpriteRenderer childSpriteRenderer = hiddenObj.GetComponentInChildren<SpriteRenderer>();
+            if (childSpriteRenderer != null && childSpriteRenderer.sprite != null)
+            {
+                if (enableDebug) Debug.Log($"<b>[GetSpriteFromObject]</b> Found sprite '{childSpriteRenderer.sprite.name}' via hiddenObj.GetComponentInChildren<SpriteRenderer>().");
+                return childSpriteRenderer.sprite;
+            }
         }
 
         // 직접 SpriteRenderer 검사
         if (obj.TryGetComponent(out SpriteRenderer sr) && sr.sprite != null)
+        {
+            if (enableDebug) Debug.Log($"<b>[GetSpriteFromObject]</b> Found sprite '{sr.sprite.name}' via obj.GetComponent<SpriteRenderer>().");
             return sr.sprite;
+        }
 
         // UI Image 검사
         if (obj.TryGetComponent(out UnityEngine.UI.Image img) && img.sprite != null)
+        {
+            if (enableDebug) Debug.Log($"<b>[GetSpriteFromObject]</b> Found sprite '{img.sprite.name}' via obj.GetComponent<Image>().");
             return img.sprite;
+        }
 
+        // 자식 오브젝트에서 SpriteRenderer 검사
+        SpriteRenderer childSr = obj.GetComponentInChildren<SpriteRenderer>();
+        if (childSr != null && childSr.sprite != null)
+        {
+            if (enableDebug) Debug.Log($"<b>[GetSpriteFromObject]</b> Found sprite '{childSr.sprite.name}' via obj.GetComponentInChildren<SpriteRenderer>().");
+            return childSr.sprite;
+        }
+
+        // 자식 오브젝트에서 UI Image 검사
+        UnityEngine.UI.Image childImg = obj.GetComponentInChildren<UnityEngine.UI.Image>();
+        if (childImg != null && childImg.sprite != null)
+        {
+            if (enableDebug) Debug.Log($"<b>[GetSpriteFromObject]</b> Found sprite '{childImg.sprite.name}' via obj.GetComponentInChildren<Image>().");
+            return childImg.sprite;
+        }
+
+        if (enableDebug) Debug.LogWarning($"<b>[GetSpriteFromObject]</b> Could not find any sprite on '{obj.name}'.");
         return null;
     }
 

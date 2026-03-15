@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
@@ -12,6 +13,7 @@ public class SpriteEffectMapSO : ScriptableObject
     {
         None,
         FruitJuicy,    // 딸기, 열매 등 과일류 (과즙 튀는 효과)
+        Carrot,        // 당근, 무 등 뿌리 채소류
         Leaf,   // 나무, 덤불, 풀숲
         EarthDust,     // 흙, 당근 밭 (먼지나 흙덩이 튀는 효과)
         WoodyChop,     // 그루터기, 통나무 (나무 파편 효과)
@@ -44,6 +46,7 @@ public class SpriteEffectMapSO : ScriptableObject
     }
 
     [Tooltip("스프라이트 → 파티클 타입 매핑 목록")]
+    [Searchable]
     public List<SpriteEffectEntry> entries = new List<SpriteEffectEntry>();
 
     [Tooltip("파티클 타입 → 실제 이펙트 프리팹 매핑 목록")]
@@ -67,12 +70,34 @@ public class SpriteEffectMapSO : ScriptableObject
     }
 
     /// <summary>
-    /// 주어진 스프라이트에 매핑된 실제 이펙트 프리팹 리스트를 반환합니다.
-    /// 해당 타입의 프리팹 매핑이 없으면 null을 반환합니다.
+    /// 주어진 이름(오브젝트 이름 등)에 포함된 스프라이트 이름이 있다면 해당 파티클 타입을 반환합니다.
     /// </summary>
-    public List<GameObject> GetEffectPrefabs(Sprite sprite)
+    public ParticleType GetParticleTypeByName(string objectName)
     {
-        ParticleType pType = GetParticleType(sprite);
+        if (string.IsNullOrEmpty(objectName)) return ParticleType.None;
+        
+        string objNameLower = objectName.ToLower();
+
+        foreach (var entry in entries)
+        {
+            if (entry.sprite != null)
+            {
+                string spriteNameLower = entry.sprite.name.ToLower();
+                if (objNameLower.Contains(spriteNameLower))
+                {
+                    return entry.particleType;
+                }
+            }
+        }
+
+        return ParticleType.None;
+    }
+
+    /// <summary>
+    /// 주어진 파티클 타입에 매핑된 실제 이펙트 프리팹 리스트를 반환합니다.
+    /// </summary>
+    public List<GameObject> GetEffectPrefabsByType(ParticleType pType)
+    {
         if (pType == ParticleType.None) return null;
 
         foreach (var mapping in prefabMappings)
@@ -84,5 +109,15 @@ public class SpriteEffectMapSO : ScriptableObject
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// 주어진 스프라이트에 매핑된 실제 이펙트 프리팹 리스트를 반환합니다.
+    /// 해당 타입의 프리팹 매핑이 없으면 null을 반환합니다.
+    /// </summary>
+    public List<GameObject> GetEffectPrefabs(Sprite sprite)
+    {
+        ParticleType pType = GetParticleType(sprite);
+        return GetEffectPrefabsByType(pType);
     }
 }
