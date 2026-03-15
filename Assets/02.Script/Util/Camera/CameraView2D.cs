@@ -19,6 +19,7 @@ namespace Util.CameraSetting
 
         [Header("---Zoom---")]
         public bool _enableZoom;
+        public bool enableQEZoom = true; // Q/E 줌 활성화 여부
         public float zoomMin = 2f;
         public float zoomMax = 5.4f;
         [Header("Zoom Speed")]
@@ -26,12 +27,28 @@ namespace Util.CameraSetting
         public float touchPinchZoomSpeed = 0.005f;
         [Tooltip("마우스 휠 줌 속도")]
         public float mouseWheelZoomSpeed = 2f;
+        [Tooltip("키보드 Q/E 줌 속도")]
+        public float qeZoomSpeed = 800f;
         [Tooltip("비모바일 플랫폼에서 부드러운 줌 보간 속도")]
         public float smoothZoomLerpSpeed = 10f;
         public float zoomPan = 0f;
 
         [Header("---Pan---")]
         public bool _enablePan;
+        
+        public enum PCPanInputType
+        {
+            LeftClick,
+            MiddleClick,
+            LeftAndMiddleClick,
+            RightClick,
+            RightAndMiddleClick
+        }
+        
+        [Header("PC Input Options")]
+        [Tooltip("PC에서 카메라를 이동하는 방식 (마우스 클릭)")]
+        public PCPanInputType pcPanInputType = PCPanInputType.LeftAndMiddleClick;
+
         [Header("Pan Speed")]
         [Tooltip("PC 마우스 드래그 이동 속도")]
         public float pcCamPanSpeed = 5.0f;
@@ -167,30 +184,47 @@ namespace Util.CameraSetting
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         private void HandleMouseInput()
         {
-            if (Mouse.current == null) 
+            // WASD 이동 (기본 지원)
+            if (_enablePan && Keyboard.current != null)
             {
-                // Debug.LogWarning("Mouse.current is null in HandleMouseInput!");
-                // Legacy Input 사용 불가능하므로 키보드로 대체
-                if (_enablePan && Keyboard.current != null)
+                Vector2 movement = Vector2.zero;
+                if (Keyboard.current.wKey.isPressed) movement.y += 1;
+                if (Keyboard.current.sKey.isPressed) movement.y -= 1;
+                if (Keyboard.current.aKey.isPressed) movement.x -= 1;
+                if (Keyboard.current.dKey.isPressed) movement.x += 1;
+                
+                if (movement != Vector2.zero)
                 {
-                    Vector2 movement = Vector2.zero;
-                    if (Keyboard.current.wKey.isPressed) movement.y += 1;
-                    if (Keyboard.current.sKey.isPressed) movement.y -= 1;
-                    if (Keyboard.current.aKey.isPressed) movement.x -= 1;
-                    if (Keyboard.current.dKey.isPressed) movement.x += 1;
-                    
-                    if (movement != Vector2.zero)
-                    {
-                        var panDelta = movement * pcCamPanSpeed * Time.deltaTime * _camera.orthographicSize;
-                        var newPosition = _camera.transform.position + new Vector3(panDelta.x, panDelta.y, 0);
-                        _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
-                    }
+                    var panDelta = movement * pcCamPanSpeed * Time.deltaTime * _camera.orthographicSize;
+                    var newPosition = _camera.transform.position + new Vector3(panDelta.x, panDelta.y, 0);
+                    _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
                 }
-                return;
             }
 
+            if (Mouse.current == null) return;
+
             // 마우스 드래그로 이동
-            if (_enablePan && Mouse.current.leftButton.isPressed)
+            bool isPanInputActive = false;
+            switch(pcPanInputType)
+            {
+                case PCPanInputType.LeftClick:
+                    isPanInputActive = Mouse.current.leftButton.isPressed;
+                    break;
+                case PCPanInputType.MiddleClick:
+                    isPanInputActive = Mouse.current.middleButton.isPressed;
+                    break;
+                case PCPanInputType.LeftAndMiddleClick:
+                    isPanInputActive = Mouse.current.leftButton.isPressed || Mouse.current.middleButton.isPressed;
+                    break;
+                case PCPanInputType.RightClick:
+                    isPanInputActive = Mouse.current.rightButton.isPressed;
+                    break;
+                case PCPanInputType.RightAndMiddleClick:
+                    isPanInputActive = Mouse.current.rightButton.isPressed || Mouse.current.middleButton.isPressed;
+                    break;
+            }
+
+            if (_enablePan && isPanInputActive)
             {
                 var mouseDelta = Mouse.current.delta.ReadValue() * (_camera.orthographicSize / _camera.pixelHeight) * pcCamPanSpeed;
                 var newPosition = _camera.transform.position - new Vector3(mouseDelta.x, mouseDelta.y, 0);
@@ -248,10 +282,30 @@ namespace Util.CameraSetting
                 }
             }
 
-            // Method 3: 키보드 백업 (테스트용)
+            // Method 3: 키보드 백업 및 Q/E 줌
             if (!inputDetected && Keyboard.current != null)
             {
-                if (Keyboard.current.numpadPlusKey.wasPressedThisFrame || 
+                if (enableQEZoom && Keyboard.current.qKey.isPressed)
+                {
+                    if (_showDebugInfo)
+                        Debug.Log("[Keyboard Input] Q키로 줌인");
+                    
+                    finalScroll = qeZoomSpeed * Time.deltaTime; // 부드러운 연속 줌을 위해 프레임에 맞춰 조절
+                    finalMousePos = new Vector2(Screen.width/2f, Screen.height/2f);
+                    inputDetected = true;
+                    _lastInputMethod = "Keyboard Input";
+                }
+                else if (enableQEZoom && Keyboard.current.eKey.isPressed)
+                {
+                    if (_showDebugInfo)
+                        Debug.Log("[Keyboard Input] E키로 줌아웃");
+                    
+                    finalScroll = -qeZoomSpeed * Time.deltaTime;
+                    finalMousePos = new Vector2(Screen.width/2f, Screen.height/2f);
+                    inputDetected = true;
+                    _lastInputMethod = "Keyboard Input";
+                }
+                else if (Keyboard.current.numpadPlusKey.wasPressedThisFrame || 
                     Keyboard.current.equalsKey.wasPressedThisFrame ||
                     Keyboard.current.spaceKey.wasPressedThisFrame)
                 {
