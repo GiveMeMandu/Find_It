@@ -3,6 +3,8 @@ using UnityEngine;
 using SRF;
 using SRDebugger;
 using UnityEngine.Scripting;
+using DeskCat.FindIt.Scripts.Core.Main.System;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -59,5 +61,17 @@ public partial class SROptions
         {
             Debug.LogError("UserDataManager를 찾을 수 없습니다.");
         }
+    }
+    [DisplayName("게임 클리어")]
+    public void ClearGame()
+    {
+        var levelManager = LevelManager.Instance;
+        if (levelManager == null)
+        {
+            Debug.LogError("LevelManager를 찾을 수 없습니다.");
+            return;
+        }
+
+        levelManager.FindAllHidden();
     }
 }
