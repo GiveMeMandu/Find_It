@@ -100,6 +100,18 @@ namespace NKStudio
                 EditorUtility.RequestScriptReload();
             }
 
+            if (GUILayout.Button("치트키"))
+            {
+                if (Application.isPlaying)
+                {
+                    SRDebug.Instance.ShowDebugPanel(SRDebugger.DefaultTabs.Options);
+                }
+                else
+                {
+                    Debug.LogWarning("게임 실행 중에만 치트키 창을 열 수 있습니다.");
+                }
+            }
+
             GUILayout.FlexibleSpace();
         }
 
