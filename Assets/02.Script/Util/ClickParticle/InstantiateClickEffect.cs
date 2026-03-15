@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+using Pooling;
+
 public class InstantiateClickEffect : MonoBehaviour
 {
     [Label("커스텀 위치에 생성")]
@@ -44,7 +46,7 @@ public class InstantiateClickEffect : MonoBehaviour
 
     [Label("스프라이트 → 이펙트 매핑 SO")]
     [ShowIf("enableClickEffect")]
-    [Tooltip("클릭된 오브젝트의 스프라이트를 기준으로 이펙트를 결정합니다. 매핑이 없으면 hitEffectPrefabs로 폴백합니다.")]
+    [Tooltip("클릭된 오브젝트의 스프라이트를 기준으로 파티클 타입을 결정합니다.")]
     public SpriteEffectMapSO spriteEffectMap;
 
     // ─── 내부 상태 ───────────────────────────────────────
@@ -124,15 +126,18 @@ public class InstantiateClickEffect : MonoBehaviour
 
         if (hitObject != null)
         {
-            // 스프라이트 매핑 SO가 있으면 스프라이트 기반 이펙트 조회
+            // 스프라이트 매핑 SO가 있으면 매핑된 이펙트 프리팹 리스트 조회
             if (spriteEffectMap != null)
             {
                 Sprite sprite = GetSpriteFromObject(hitObject);
-                List<GameObject> mappedEffects = sprite != null ? spriteEffectMap.GetEffects(sprite) : null;
-                if (mappedEffects != null && mappedEffects.Count > 0)
+                if (sprite != null)
                 {
-                    SpawnEffectsAtPosition(mappedEffects, worldPoint);
-                    return;
+                    List<GameObject> mappedEffects = spriteEffectMap.GetEffectPrefabs(sprite);
+                    if (mappedEffects != null && mappedEffects.Count > 0)
+                    {
+                        SpawnEffectsAtPosition(mappedEffects, worldPoint);
+                        return;
+                    }
                 }
             }
 
@@ -210,7 +215,11 @@ public class InstantiateClickEffect : MonoBehaviour
         foreach (var prefab in prefabs)
         {
             if (prefab == null) continue;
-            var instance = Instantiate(prefab, position, Quaternion.identity);
+            
+            // PoolManager를 사용하여 PoolObject 가져오기
+            var poolObject = PoolManager.Instance.Pull<PoolObject>(prefab, position, Quaternion.identity);
+            
+            if (poolObject == null) continue;
 
             if (enableScaleSync)
             {
@@ -219,18 +228,18 @@ public class InstantiateClickEffect : MonoBehaviour
                     case ScaleSyncMode.MatchSource:
                         if (gameObject.TryGetComponent(out BGScaleLerp bGScaleLerp))
                         {
-                            instance.transform.localScale = bGScaleLerp.ToScale;
+                            poolObject.transform.localScale = bGScaleLerp.ToScale;
                         }
                         else
                         {
                             Vector3 sourceScale = (customTransformPosition != null)
                                 ? customTransformPosition.localScale
                                 : transform.localScale;
-                            instance.transform.localScale = sourceScale;
+                            poolObject.transform.localScale = sourceScale;
                         }
                         break;
                     case ScaleSyncMode.Custom:
-                        instance.transform.localScale = customScale;
+                        poolObject.transform.localScale = customScale;
                         break;
                     case ScaleSyncMode.None:
                     default:

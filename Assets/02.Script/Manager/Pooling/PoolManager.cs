@@ -77,11 +77,23 @@ namespace Pooling
                 Debug.LogError($"풀 생성 실패: {key} 키에 대한 풀이 없습니다. 타입은 {genericPools[key].GetType()}입니다.");
                 return null;
             }
-            T obj;
+            T obj = null;
 
             if (pool.Count > 0)
-                obj = pool.Pop();
-            else
+            {
+                // 파괴된 오브젝트가 풀에 남아있을 경우를 대비해 유효한 오브젝트를 찾을 때까지 Pop
+                while (pool.Count > 0)
+                {
+                    obj = pool.Pop();
+                    if (obj != null && obj.gameObject != null)
+                    {
+                        break;
+                    }
+                    obj = null;
+                }
+            }
+
+            if (obj == null)
             {
                 GameObject prefabToInstantiate = prefab;
                 if (prefabToInstantiate == null)
@@ -102,6 +114,8 @@ namespace Pooling
                 
                 obj = Instantiate(prefabToInstantiate, position, rotation).GetComponent<T>();
             }
+
+            if (obj == null) return null;
 
             // 1. 먼저 부모 지정
             if (parent != null)
