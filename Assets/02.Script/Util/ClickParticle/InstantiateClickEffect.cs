@@ -41,6 +41,10 @@ public class InstantiateClickEffect : MonoBehaviour
     [ShowIf("enableClickEffect")]
     public List<GameObject> missEffectPrefabs = new List<GameObject>();
 
+    [Label("HiddenObj 클릭 시 이펙트 무시")]
+    [ShowIf("enableClickEffect")]
+    public bool ignoreHiddenObjClick = true;
+
     [Label("감지 카메라 (비어 있으면 Camera.main 사용)")]
     [ShowIf("enableClickEffect")]
     public Camera clickCamera;
@@ -125,6 +129,12 @@ public class InstantiateClickEffect : MonoBehaviour
         // 히트 플래그 설정 (LateUpdate에서 Miss 발동을 막음)
         _hitProcessedThisFrame = true;
         _lastEffectTime = Time.time; // 마지막 이펙트 생성 시간 기록
+
+        if (ignoreHiddenObjClick && hitObject.GetComponent<HiddenObj>() != null)
+        {
+            if (enableDebug) Debug.Log("<b>[InstantiateClickEffect]</b> HandleHit: Ignored due to HiddenObj.");
+            return;
+        }
 
         Camera cam = clickCamera != null ? clickCamera : Camera.main;
         if (cam == null)
