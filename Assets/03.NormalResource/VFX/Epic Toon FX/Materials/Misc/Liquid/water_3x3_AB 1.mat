@@ -7,23 +7,24 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: water_3x3_AB
-  m_Shader: {fileID: 10721, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: water_3x3_AB 1
+  m_Shader: {fileID: 4800000, guid: dc1f5886585bd6a46b56d5c45882689f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
-  - _ALPHABLEND_ON
+  - _EMISSION
   - _FLIPBOOKBLENDING_OFF
   - _SURFACE_TYPE_TRANSPARENT
-  m_LightmapFlags: 0
+  m_LightmapFlags: 6
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
-  - DepthOnly
+  - ALWAYS
   - SHADOWCASTER
+  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -64,9 +65,12 @@ Material:
     - _DstBlend: 10
     - _DstBlendAlpha: 10
     - _EmissionEnabled: 0
+    - _ExtraWidth: 0.5
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
     - _LightingEnabled: 0
+    - _MinThickness: 0.2
+    - _MinWidth: 0.449
     - _Mode: 2
     - _QueueOffset: 0
     - _SoftParticlesEnabled: 0
