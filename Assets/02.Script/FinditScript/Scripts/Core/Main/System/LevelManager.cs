@@ -237,7 +237,7 @@ DebugGameState();
                             try
                             {
                                 hiddenObj = child.gameObject.AddComponent<HiddenObj>();
-                                Debug.Log($"[LevelManager] Successfully added HiddenObj to {child.name}");
+                                // Debug.Log($"[LevelManager] Successfully added HiddenObj to {child.name}");
                             }
                             catch (Exception e)
                             {
@@ -296,8 +296,8 @@ DebugGameState();
                             if (hiddenObj.BgAnimationTransform == null)
                             {
                                 bgObj = Instantiate(bgAnimPrefab, hiddenObj.transform);
-                                Debug.Log($"Added BGAnimation to {hiddenObj.gameObject.name}" +
-                                    (bgAnimHelper != null ? " (custom)" : " (default)"));
+                                // Debug.Log($"Added BGAnimation to {hiddenObj.gameObject.name}" +
+                                    // (bgAnimHelper != null ? " (custom)" : " (default)"));
                                 hiddenObj.BgAnimationTransform = bgObj.transform;
                                 hiddenObj.SetBgAnimation(bgObj);
                             }

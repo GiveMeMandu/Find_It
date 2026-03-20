@@ -162,6 +162,54 @@ public class LeanClickEvent : LeanSelectableByFinger
 		return _clickCount;
 	}
 
+	// --- 전역 레이캐스트 캐싱 (성능 최적화) ---
+	private static int _lastCacheFrame = -1;
+	private static Vector2 _lastCachePos;
+	private static List<RaycastResult> _cachedUIRaycastResults;
+	private static Collider2D[] _cached2DHits;
+
+	private static void UpdateHitCache(Vector2 screenPosition)
+	{
+		if (Time.frameCount == _lastCacheFrame && _lastCachePos == screenPosition) return;
+
+		_lastCacheFrame = Time.frameCount;
+		_lastCachePos = screenPosition;
+
+		// UI 캐싱
+		if (_cachedUIRaycastResults == null) _cachedUIRaycastResults = new List<RaycastResult>();
+		_cachedUIRaycastResults.Clear();
+		if (EventSystem.current != null)
+		{
+			var ped = new PointerEventData(EventSystem.current) { position = screenPosition };
+			EventSystem.current.RaycastAll(ped, _cachedUIRaycastResults);
+		}
+
+		// 2D 물리 캐싱
+		Camera cam = Camera.main ?? Camera.current;
+		if (cam != null)
+		{
+			Vector3 worldPoint = cam.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, cam.nearClipPlane));
+			_cached2DHits = Physics2D.OverlapPointAll(worldPoint);
+		}
+		else
+		{
+			_cached2DHits = new Collider2D[0];
+		}
+	}
+
+	private static List<RaycastResult> GetCachedUIRaycast(Vector2 screenPos) 
+	{ 
+		UpdateHitCache(screenPos); 
+		return _cachedUIRaycastResults; 
+	}
+
+	private static Collider2D[] GetCached2DHits(Vector2 screenPos) 
+	{ 
+		UpdateHitCache(screenPos); 
+		return _cached2DHits; 
+	}
+	// ----------------------------------------
+
 	/// <summary>
 	/// InputManager의 isEnabled 상태를 확인하는 헬퍼 메서드
 	/// </summary>
@@ -175,16 +223,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 	/// </summary>
 	private bool IsUIBlockingClick(Vector2 screenPosition)
 	{
-		if (EventSystem.current != null)
+		var raycastResults = GetCachedUIRaycast(screenPosition);
+		if (raycastResults != null)
 		{
-			var ped = new PointerEventData(EventSystem.current)
-			{
-				position = screenPosition
-			};
-
-			var raycastResults = new List<RaycastResult>();
-			EventSystem.current.RaycastAll(ped, raycastResults);
-
 			// UI 레이어(레이어 5)인 오브젝트만 체크
 			foreach (var result in raycastResults)
 			{
@@ -209,16 +250,9 @@ public class LeanClickEvent : LeanSelectableByFinger
 	private bool IsFingerOverThis(LeanFinger finger)
 	{
 		// UI check
-		if (EventSystem.current != null)
+		var raycastResults = GetCachedUIRaycast(finger.ScreenPosition);
+		if (raycastResults != null)
 		{
-			var ped = new PointerEventData(EventSystem.current)
-			{
-				position = finger.ScreenPosition
-			};
-
-			var raycastResults = new List<RaycastResult>();
-			EventSystem.current.RaycastAll(ped, raycastResults);
-
 			foreach (var result in raycastResults)
 			{
 				if (result.gameObject == gameObject || result.gameObject.transform.IsChildOf(transform))
@@ -229,7 +263,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 		}
 
 		// 3D physics check
-		var cam = Camera.main ?? Camera.current;
+		var cam = Camera.main; // 이 부분도 캐싱하면 좋지만 레이캐스트 용도로 남겨둠
 		if (cam != null)
 		{
 			var ray = cam.ScreenPointToRay(finger.ScreenPosition);
@@ -242,9 +276,8 @@ public class LeanClickEvent : LeanSelectableByFinger
 				}
 			}
 
-			// 2D check - 모든 겹치는 콜라이더를 확인
-			var wp = cam.ScreenToWorldPoint(new Vector3(finger.ScreenPosition.x, finger.ScreenPosition.y, cam.nearClipPlane));
-			Collider2D[] allHits = Physics2D.OverlapPointAll(wp);
+			// 2D check - 캐싱된 겹치는 콜라이더를 확인
+			Collider2D[] allHits = GetCached2DHits(finger.ScreenPosition);
 
 			foreach (var hit2d in allHits)
 			{
@@ -265,18 +298,14 @@ public class LeanClickEvent : LeanSelectableByFinger
 	/// </summary>
 	private bool CheckHiddenObjectPriority(Vector2 screenPosition)
 	{
-		Camera cam = Camera.main;
-		if (cam == null) return true;
-
-		Vector3 worldPoint = cam.ScreenToWorldPoint(screenPosition);
-
 		// 현재 오브젝트가 HiddenObj 컴포넌트를 가지고 있는지 확인
 		HiddenObj currentHiddenObj = GetComponent<HiddenObj>();
 		bool isCurrentUnfoundHiddenObj = currentHiddenObj != null && !currentHiddenObj.IsFound;
 
+		Collider2D[] allCachedHits = GetCached2DHits(screenPosition);
+
 		// OverHiddenObjectLayer 체크 - 이 레이어는 HiddenObj보다 우선순위가 높음
-		int overHiddenObjectLayerMask = 1 << Helper.LayerManager.OverHiddenObjectLayer;
-		Collider2D overHiddenObjHit = Physics2D.OverlapPoint(worldPoint, overHiddenObjectLayerMask);
+		Collider2D overHiddenObjHit = System.Array.Find(allCachedHits, hit => hit != null && hit.gameObject.layer == Helper.LayerManager.OverHiddenObjectLayer);
 
 		if (overHiddenObjHit != null)
 		{
@@ -300,8 +329,7 @@ public class LeanClickEvent : LeanSelectableByFinger
 		}
 
 		// HiddenObject 레이어 체크
-		int hiddenObjectLayerMask = 1 << Helper.LayerManager.HiddenObjectLayer;
-		Collider2D hiddenObjHit = Physics2D.OverlapPoint(worldPoint, hiddenObjectLayerMask);
+		Collider2D hiddenObjHit = System.Array.Find(allCachedHits, hit => hit != null && hit.gameObject.layer == Helper.LayerManager.HiddenObjectLayer);
 
 		if (hiddenObjHit != null)
 		{
@@ -321,13 +349,8 @@ public class LeanClickEvent : LeanSelectableByFinger
 	/// </summary>
 	private bool CheckHierarchyPriority(Vector2 screenPosition)
 	{
-		Camera cam = Camera.main;
-		if (cam == null) return true;
-
-		Vector3 worldPoint = cam.ScreenToWorldPoint(screenPosition);
-
-		// 모든 2D 콜라이더를 검사하여 겹치는 LeanClickEvent를 가진 객체들을 찾음
-		Collider2D[] overlappingColliders = Physics2D.OverlapPointAll(worldPoint);
+		// 모든 2D 콜라이더를 검사하여 겹치는 LeanClickEvent를 가진 객체들을 찾음 (캐싱된 데이터 사용)
+		Collider2D[] overlappingColliders = GetCached2DHits(screenPosition);
 
 		List<LeanClickEvent> overlappingClickEvents = new List<LeanClickEvent>();
 		
@@ -491,11 +514,11 @@ public class LeanClickEvent : LeanSelectableByFinger
 
 		if (!isTopMost)
 		{
-			Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
+			// Debug.Log($"[{gameObject.name}] BLOCKED: {overlappingClickEvents[0].gameObject.name} has priority, blocking {gameObject.name}");
 		}
 		else
 		{
-			Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
+			// Debug.Log($"[{gameObject.name}] ALLOWED: Top priority object clicked: {gameObject.name}");
 		}
 
 		return isTopMost;
