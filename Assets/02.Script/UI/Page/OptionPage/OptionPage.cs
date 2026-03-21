@@ -19,6 +19,8 @@ namespace UI
         public RectTransform contentRoot;
         public TabGroup tabGroup;
 
+        public GameObject PlayTabContent;
+
         public SoundManager soundManager => Global.SoundManager;
 
         public enum TabType
@@ -62,10 +64,16 @@ namespace UI
                 }
             }
 
+            // Ensure PlayTabContent is only active when Play tab is open
+            if (PlayTabContent != null)
+                PlayTabContent.SetActive(false);
+
             switch (tab)
             {
                 case TabType.Play:
                     // Play 탭은 동적 그룹 생성을 진행하지 않고 바인딩된 메서드만 사용하도록 비워둡니다.
+                    if (PlayTabContent != null)
+                        PlayTabContent.SetActive(true);
                     break;
                 case TabType.Options:
                     CreateOptionsGroup();

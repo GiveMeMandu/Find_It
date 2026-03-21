@@ -12,11 +12,11 @@ namespace UI
             var gameInput = Global.InputManager;
 
             // 키보드 설정 그룹
-            var keyboardGroup = CreateOptionGroup("UI/OptionPage/KeyboardControls");
+            var keyboardGroup = CreateOptionGroup("UI/Option/KeyboardControls");
             CreateBindingsForGroup(keyboardGroup, false);
 
             // 게임패드 설정 그룹
-            var gamepadGroup = CreateOptionGroup("UI/OptionPage/GamepadControls");
+            var gamepadGroup = CreateOptionGroup("UI/Option/GamepadControls");
             CreateBindingsForGroup(gamepadGroup, true);
 
             void CreateBindingsForGroup(OptionGroup group, bool isGamepad)
@@ -101,20 +101,20 @@ namespace UI
                         return -1;
                     }
 
-                    CreateBinding("UI/OptionPage/MoveUp", gameInput.MoveInputAction, GetBindingIndex("up"));
-                    CreateBinding("UI/OptionPage/MoveLeft", gameInput.MoveInputAction, GetBindingIndex("left"));
-                    CreateBinding("UI/OptionPage/MoveDown", gameInput.MoveInputAction, GetBindingIndex("down"));
-                    CreateBinding("UI/OptionPage/MoveRight", gameInput.MoveInputAction, GetBindingIndex("right"));
+                    CreateBinding("UI/Option/MoveUp", gameInput.MoveInputAction, GetBindingIndex("up"));
+                    CreateBinding("UI/Option/MoveLeft", gameInput.MoveInputAction, GetBindingIndex("left"));
+                    CreateBinding("UI/Option/MoveDown", gameInput.MoveInputAction, GetBindingIndex("down"));
+                    CreateBinding("UI/Option/MoveRight", gameInput.MoveInputAction, GetBindingIndex("right"));
                 }
                 else
                 {
-                    CreateBinding("UI/OptionPage/Move", gameInput.MoveInputAction);
+                    CreateBinding("UI/Option/Move", gameInput.MoveInputAction);
                 }
 
 
                 // 초기화 버튼 추가
                 var resetButton = group.CreateOptionButton();
-                resetButton.Init("UI/OptionPage/Reset", () =>
+                resetButton.Init("UI/Option/Reset", () =>
                 {
                     gameInput.ResetBindings(isGamepad);
                     OpenTab(TabType.Controls);

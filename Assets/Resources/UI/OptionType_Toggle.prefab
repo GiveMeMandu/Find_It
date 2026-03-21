@@ -85,9 +85,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1284111903532934231}
-  - component: {fileID: 5403250136140545857}
   - component: {fileID: 4592268090564242790}
-  - component: {fileID: 1749725516325148980}
+  - component: {fileID: 7755898149712521668}
   m_Layer: 0
   m_Name: OptionType_Toggle
   m_TagString: Untagged
@@ -117,20 +116,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5403250136140545857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 768504443382386292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2fb3541c07569240ab736227352c710, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggle: {fileID: 4592268090564242790}
-  labelText: {fileID: 8123591699056878653}
 --- !u!114 &4592268090564242790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,7 +164,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
---- !u!114 &1749725516325148980
+--- !u!114 &7755898149712521668
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,41 +173,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 768504443382386292}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d63f5d344209824e89fc78ed9155431, type: 3}
+  m_Script: {fileID: 11500000, guid: eaaaa4fac4532fb458242a7b640cd331, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  bindings:
-  - _proxySource: {fileID: 4592268090564242790}
-    _proxySourceType:
-      _type: UnityEngine.UI.Toggle, UnityEngine.UI, Version=1.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    _proxyPath: m_IsOn
-    _runtimeProxyPath: 
-    _proxyType:
-      _type: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-    _isBound: 0
-    _options: 0
-    _bindData:
-      Source: {fileID: 0}
-      Path: 
-      _mode: 0
-      _parameters: []
-      _mainParamIndex: -1
-      _readConverter:
-        rid: -2
-      _writeConverter:
-        rid: -2
-      _modifiers: []
-      _sourceType: 
-      _ppath: bindings.Array.data[0]._bindData
-      _context: {fileID: 1749725516325148980}
-      _flags: 2097280
-      _updateInterval: 1
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+  m_EditorClassIdentifier: Assembly-CSharp::OptionPageNamespace.OptionToggle
+  toggle: {fileID: 4592268090564242790}
+  labelText: {fileID: 8123591699056878653}
 --- !u!1 &1678659798282623542
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,9 +245,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: On
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0f363559a19bd47d6986254b461920d9, type: 2}
-  m_sharedMaterial: {fileID: -5608950484970212857, guid: 0f363559a19bd47d6986254b461920d9,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
+  m_sharedMaterial: {fileID: -5466882763235051421, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -332,15 +286,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -443,13 +399,14 @@ Animation:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2095501421462144106}
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Animation: {fileID: 7400000, guid: e5e18c7348a504eee9c2725fe13c552c, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: e5e18c7348a504eee9c2725fe13c552c, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
+  m_UpdateMode: 0
   m_CullingType: 0
 --- !u!1 &2507630937626944541
 GameObject:
@@ -462,9 +419,7 @@ GameObject:
   - component: {fileID: 6710924293396613063}
   - component: {fileID: 9056231938685418808}
   - component: {fileID: 4262282684208251770}
-  - component: {fileID: 6282678682858170470}
   - component: {fileID: 583535571096364946}
-  - component: {fileID: 9143184212939873853}
   m_Layer: 0
   m_Name: On
   m_TagString: Untagged
@@ -512,22 +467,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7039a2054298db84ab882b2768eacf28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!111 &6282678682858170470
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2507630937626944541}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: e5e18c7348a504eee9c2725fe13c552c, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: e5e18c7348a504eee9c2725fe13c552c, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &583535571096364946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -541,14 +480,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.40392157, g: 0.5137255, b: 0.96862745, a: 1}
+  m_Color: {r: 0.69803923, g: 0.5137255, b: 0.3803922, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 789103d4fff5444ea92c028061e79572, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ec3ec1113b2ab4d44bbe1cade1cfc848, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -558,51 +497,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
---- !u!114 &9143184212939873853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2507630937626944541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d63f5d344209824e89fc78ed9155431, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bindings:
-  - _proxySource: {fileID: 2507630937626944541}
-    _proxySourceType:
-      _type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    _proxyPath: m_IsActive
-    _runtimeProxyPath: activeSelf
-    _proxyType:
-      _type: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-    _isBound: 1
-    _options: 2
-    _bindData:
-      Source: {fileID: 4592268090564242790}
-      Path: isOn
-      _mode: 0
-      _parameters: []
-      _mainParamIndex: -1
-      _readConverter:
-        rid: -2
-      _writeConverter:
-        rid: -2
-      _modifiers: []
-      _sourceType: UnityEngine.UI.Toggle, UnityEngine.UI, Version=1.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      _ppath: bindings.Array.data[0]._bindData
-      _context: {fileID: 9143184212939873853}
-      _flags: 128
-      _updateInterval: 1
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!1 &4347892539159827285
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,7 +563,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 789103d4fff5444ea92c028061e79572, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ec3ec1113b2ab4d44bbe1cade1cfc848, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -746,9 +640,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: On
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0f363559a19bd47d6986254b461920d9, type: 2}
-  m_sharedMaterial: {fileID: -5608950484970212857, guid: 0f363559a19bd47d6986254b461920d9,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
+  m_sharedMaterial: {fileID: -5466882763235051421, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -788,15 +681,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -918,9 +813,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Off
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0f363559a19bd47d6986254b461920d9, type: 2}
-  m_sharedMaterial: {fileID: -5608950484970212857, guid: 0f363559a19bd47d6986254b461920d9,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
+  m_sharedMaterial: {fileID: -5466882763235051421, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -960,15 +854,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1054,16 +950,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uD1A0\uAE00"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0f363559a19bd47d6986254b461920d9, type: 2}
-  m_sharedMaterial: {fileID: -5608950484970212857, guid: 0f363559a19bd47d6986254b461920d9,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
+  m_sharedMaterial: {fileID: -5466882763235051421, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4283974205
-  m_fontColor: {r: 0.23921569, g: 0.25882354, b: 0.34509805, a: 1}
+    rgba: 4283003820
+  m_fontColor: {r: 0.6745098, g: 0.45098042, b: 0.28627452, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1080,12 +975,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 34
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 24
+  m_fontSizeMax: 34
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -1096,15 +991,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1402,9 +1299,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Off
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0f363559a19bd47d6986254b461920d9, type: 2}
-  m_sharedMaterial: {fileID: -5608950484970212857, guid: 0f363559a19bd47d6986254b461920d9,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
+  m_sharedMaterial: {fileID: -5466882763235051421, guid: 1dced7c3894dabd40b79f7b46e295267, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1444,15 +1340,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0

@@ -12,7 +12,7 @@ namespace UI
         
         private void CreateLanguageOption()
         {
-            var optionGroup = CreateOptionGroup("UI/OptionPage/Language");
+            var optionGroup = CreateOptionGroup("UI/Option/Language");
 
             // I2 Localization에서 사용 가능한 언어 목록 가져오기
             var languageList = new List<string>();
@@ -37,7 +37,7 @@ namespace UI
             // 드롭다운 생성 및 초기화
             var languageDropdown = optionGroup.CreateOptionDropdown();
             languageDropdown.Init(
-                "UI/OptionPage/Language",
+                "UI/Option/Language",
                 languageList,
                 currentLanguageIndex,
                 (index) =>
@@ -52,19 +52,19 @@ namespace UI
 
         private void CreateScreenOption()
         {
-            var screenGroup = CreateOptionGroup("UI/OptionPage/ScreenSettings");
+            var screenGroup = CreateOptionGroup("UI/Option/ScreenSettings");
 
             // 화면 모드 드롭다운
             var screenModeList = new List<string> { 
-                "UI/OptionPage/ScreenMode_ExclusiveFullScreen", 
-                "UI/OptionPage/ScreenMode_FullScreenWindow", 
-                "UI/OptionPage/ScreenMode_Windowed" 
+                "UI/Option/ScreenMode_ExclusiveFullScreen", 
+                "UI/Option/ScreenMode_FullScreenWindow", 
+                "UI/Option/ScreenMode_Windowed" 
             };
             var currentScreenModeIndex = Global.OptionManager.GetScreenModeIndex();
 
             var screenDropdown = screenGroup.CreateOptionDropdown();
             screenDropdown.Init(
-                "UI/OptionPage/ScreenMode",
+                "UI/Option/ScreenMode",
                 screenModeList,
                 currentScreenModeIndex,
                 (index) =>
@@ -108,25 +108,25 @@ namespace UI
 
             // 무제한 옵션 추가 (선택 사항이지만 보통 포함됨)
             fpsValues.Add(-1);
-            fpsStrings.Add("UI/OptionPage/FPS_Unlimited");
+            fpsStrings.Add("UI/Option/FPS_Unlimited");
 
             int currentFPS = Global.OptionManager.GetTargetFrameRate();
             int selectedFPSIndex = fpsValues.IndexOf(currentFPS);
             if (selectedFPSIndex == -1) selectedFPSIndex = 1; // 기본값 60Hz
 
             fpsDropdown.Init(
-                "UI/OptionPage/FrameRateLimit",
+                "UI/Option/FrameRateLimit",
                 fpsStrings,
                 selectedFPSIndex,
                 (index) =>
                 {
                     Global.OptionManager.SetTargetFrameRate(fpsValues[index]);
                 },
-                true // "UI/OptionPage/FPS_Unlimited"와 라벨 로컬라이징을 위해 true 유지
+                true // "UI/Option/FPS_Unlimited"와 라벨 로컬라이징을 위해 true 유지
             );
 
             resolutionDropdown.Init(
-                "UI/OptionPage/Resolution",
+                "UI/Option/Resolution",
                 resolutionStrings,
                 selectedResIndex,
                 (index) =>
@@ -141,7 +141,7 @@ namespace UI
             // 수직동기화 토글
             var vsyncToggle = screenGroup.CreateOptionToggle();
             vsyncToggle.Init(
-                "UI/OptionPage/VSync",
+                "UI/Option/VSync",
                 Global.OptionManager.GetVSync(),
                 (isOn) =>
                 {
