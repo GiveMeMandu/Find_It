@@ -129,11 +129,8 @@ public class IngameCoinLayer : AutoTaskControl
         _previousCoinValue = currentCoinValue;
         _accumulatedGainedMoney += gainedAmount;
 
-        // 코인러쉬 모드: 세션 코인 누적
-        if (isCoinRushMode)
-        {
-            _sessionCoinsCollected += gainedAmount;
-        }
+        // 세션 코인 누적 (코인러쉬 모드 포함 모든 모드에서 해당 스테이지 획득량 기록)
+        _sessionCoinsCollected += gainedAmount;
 
         // 업데이트 애니메이션을 강제로 처음부터 재생
         if (!playUpdateAnimOnFlyComplete)

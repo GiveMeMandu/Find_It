@@ -23,9 +23,7 @@ namespace UnityWeld
         }
 
         private void OnEnable() {
-            var managers = UnityEngine.Resources.FindObjectsOfTypeAll<Manager.CollectionManager>();
-            var manager = (managers != null && managers.Length > 0) ? managers[0] : null;
-            var allCollections = manager != null ? manager.GetAllCollections() : new List<CollectionSO>();
+            var allCollections = Global.CollectionManager != null ? Global.CollectionManager.GetAllCollections() : new List<CollectionSO>();
             PrepareViewModels(allCollections.Count);
             var viewModels = GetViewModels();
             for(int i = 0; i < viewModels.Count; i++)

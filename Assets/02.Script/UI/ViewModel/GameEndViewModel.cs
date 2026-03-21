@@ -5,6 +5,7 @@ using Data;
 using Manager;
 using SO;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityWeld;
 using UnityWeld.Binding;
 
@@ -53,6 +54,13 @@ namespace UI
                     var item = resultItems[i];
                     elementVM.Init(item.Icon, item.DisplayName, item.Count);
                 }
+            }
+
+            var scrollRect = GetComponentInChildren<ScrollRect>();
+            if (scrollRect != null)
+            {
+                Canvas.ForceUpdateCanvases();
+                scrollRect.horizontalNormalizedPosition = 0f;
             }
 
             Debug.Log($"[GameEndViewModel] 결과 아이템 {resultItems.Count}개 표시 완료");

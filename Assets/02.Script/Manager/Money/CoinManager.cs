@@ -22,6 +22,7 @@ namespace Manager
         public event EventHandler<int> OnCoinValueIncreasedParticle;
 
         public float customerProfitBonus = 1f;
+
         //* 저장할 땐 string 형식으로 바꿔서 큰 값을 저장
         private BigInteger _coin;
         public BigInteger Coin

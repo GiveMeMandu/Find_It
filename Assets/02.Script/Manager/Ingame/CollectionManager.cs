@@ -70,10 +70,32 @@ namespace Manager
             {
                 if (collection == null) continue;
 
-                bool nameMatch = !string.IsNullOrEmpty(objName) && objName == collection.name;
-                bool spriteMatch = !string.IsNullOrEmpty(objSpriteName)
-                    && collection.collectionImage != null
-                    && objSpriteName == collection.collectionImage.name;
+                bool nameMatch = !string.IsNullOrEmpty(objName) && 
+                    (objName.Equals(collection.name, System.StringComparison.OrdinalIgnoreCase) || objName.Contains(collection.name));
+                
+                // 스프라이트 이름 유사성 검사 보완
+                bool spriteMatch = false;
+                if (!string.IsNullOrEmpty(objSpriteName))
+                {
+                    // 기본 컬렉션 이미지 매칭
+                    if (collection.collectionImage != null && (objSpriteName == collection.collectionImage.name || objSpriteName.Contains(collection.collectionImage.name)))
+                    {
+                        spriteMatch = true;
+                    }
+                    
+                    // 인게임 할당된 이미지들과 매칭 검사
+                    if (!spriteMatch && collection.inGameSprites != null)
+                    {
+                        foreach (var inGameSprite in collection.inGameSprites)
+                        {
+                            if (inGameSprite != null && (objSpriteName == inGameSprite.name || objSpriteName.Contains(inGameSprite.name)))
+                            {
+                                spriteMatch = true;
+                                break;
+                            }
+                        }
+                    }
+                }
 
                 if (nameMatch || spriteMatch)
                 {

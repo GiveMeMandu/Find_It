@@ -112,6 +112,16 @@ namespace UI.Page
             OnPropertyChanged(nameof(IsStar2Active));
             OnPropertyChanged(nameof(IsStar3Active));
         }
+        
+        public override void Init(params object[] parameters)
+        {
+            Global.InputManager.DisableGameInputOnly();
+        }
+        public override void OnClose()
+        {
+            Global.InputManager.EnableGameInputOnly();
+            base.OnClose();
+        }
 
         /// <summary>
         /// 획득한 결과 아이템(스티커, 코인 등)을 표시합니다.
@@ -153,7 +163,7 @@ namespace UI.Page
         {
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             // 다음 스테이지로 이동 또는 메인 메뉴로 이동
-            LoadingSceneManager.LoadScene(Data.SceneNum.SELECT);
+            LoadingSceneManager.LoadScene(Data.SceneNum.START);
         }
 
         [Binding]
@@ -169,7 +179,7 @@ namespace UI.Page
             else
             {
                 // 메인 메뉴로 이동
-                LoadingSceneManager.LoadScene(Data.SceneNum.SELECT);
+                LoadingSceneManager.LoadScene(Data.SceneNum.START);
             }
         }
 
@@ -178,11 +188,8 @@ namespace UI.Page
         {
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             // 메인 메뉴로 이동
-            LoadingSceneManager.LoadScene(Data.SceneNum.SELECT);
+            LoadingSceneManager.LoadScene(Data.SceneNum.START);
         }
 
-        public override void Init(params object[] parameters)
-        {
-        }
     }
 }

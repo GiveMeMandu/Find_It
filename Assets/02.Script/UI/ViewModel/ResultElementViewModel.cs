@@ -11,6 +11,7 @@ namespace UI
     [Binding]
     public class ResultElementViewModel : UnityWeld.ViewModel
     {
+        public Image IconImage;
         private Sprite _icon;
         [Binding]
         public Sprite Icon
@@ -69,6 +70,37 @@ namespace UI
             Icon = icon;
             DisplayName = displayName;
             Count = count;
+            if (IconImage != null && Icon != null)
+            {
+                Canvas.ForceUpdateCanvases();
+                LayoutRebuilder.ForceRebuildLayoutImmediate(IconImage.rectTransform);
+
+                var spriteRect = Icon.rect;
+                float spriteW = spriteRect.width;
+                float spriteH = spriteRect.height;
+
+                float containerW = IconImage.rectTransform.rect.width;
+                float containerH = IconImage.rectTransform.rect.height;
+
+                if (spriteW > 0 && spriteH > 0 && containerW > 0 && containerH > 0)
+                {
+                    float scale = Mathf.Min(containerW / spriteW, containerH / spriteH);
+                    ImageSize = new Vector2(spriteW * scale, spriteH * scale);
+                }
+            }
+        }
+
+        private Vector2 _imageSize;
+
+        [Binding]
+        public Vector2 ImageSize
+        {
+            get => _imageSize;
+            set
+            {
+                _imageSize = value;
+                OnPropertyChanged(nameof(ImageSize));
+            }
         }
     }
 }

@@ -12245,14 +12245,17 @@ MonoBehaviour:
   _lastInputMethod: None
   _forceDisabledDebug: 0
   _enableZoom: 1
+  enableQEZoom: 1
   zoomMin: 2
   zoomMax: 9.5
   touchPinchZoomSpeed: 0.005
-  mouseWheelZoomSpeed: 1
+  mouseWheelZoomSpeed: 0.5
+  qeZoomSpeed: 800
   smoothZoomLerpSpeed: 10
   zoomPan: 0.1
   _enablePan: 1
-  pcCamPanSpeed: 5
+  pcPanInputType: 2
+  pcCamPanSpeed: 2
   mobilePanSpeed: 2.5
   _infinitePan: 0
   _autoPanBoundary: 1
@@ -12260,6 +12263,8 @@ MonoBehaviour:
   _panMinY: -0.5
   _panMaxX: 0
   _panMaxY: 0.5
+  enableSmoothPan: 1
+  smoothPanDeceleration: 10
 --- !u!114 &8233476206311598857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12302,6 +12307,7 @@ MonoBehaviour:
   CurrentFoundObjCountText: {fileID: 0}
   FoundRabbitCountText: {fileID: 4514213119038356657}
   StageCompleteText: {fileID: 1612984198447237342}
+  coinSprite: {fileID: 21300000, guid: 163525cd42f0f8248bc4508e38e41d9b, type: 3}
   StarList:
   - {fileID: 814008824926138035}
   - {fileID: 4019313888178324723}

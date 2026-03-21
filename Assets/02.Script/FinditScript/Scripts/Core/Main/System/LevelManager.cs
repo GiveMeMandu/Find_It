@@ -18,6 +18,7 @@ using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
 using DG.Tweening;
 using UI;
 using UI.Page;
+using System.Numerics;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
@@ -113,6 +114,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public Text CurrentFoundObjCountText;
         public Text FoundRabbitCountText;
         public TextMeshProUGUI StageCompleteText;
+        public Sprite coinSprite;
 
         public List<Transform> StarList = new List<Transform>();
 
@@ -127,6 +129,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public Dictionary<Guid, HiddenObj> RabbitObjDic = new Dictionary<Guid, HiddenObj>();
         private DateTime StartTime;
         private DateTime EndTime;
+        private BigInteger StartCoinAmount; // 스테이지 시작 시 코인 기록용
 
         private int rabbitObjCount = 0;
         private int maxRabbitObjCount = 0;
@@ -189,6 +192,11 @@ DebugGameState();
                 ToggleBtn.onClick.AddListener(ToggleScrollView);
             if (GameEndBtn != null)
                 GameEndBtn.onClick.AddListener(GoToNextLevel);
+
+            if (Global.CoinManager != null)
+            {
+                StartCoinAmount = Global.CoinManager.GetCoinValue();
+            }
 
             StartTime = DateTime.Now;
 
@@ -279,7 +287,7 @@ DebugGameState();
                         }
 
                         // 터치 영역을 넓히기 위해 콜라이더 사이즈 조정
-                        boxCollider.size = new Vector2(boxCollider.size.x * 1.5f, boxCollider.size.y * 1.5f);
+                        boxCollider.size = new UnityEngine.Vector2(boxCollider.size.x * 1.5f, boxCollider.size.y * 1.5f);
 
                         // 배경 애니메이션 설정
                         // BGAnimationHelper가 있으면 해당 설정을 우선 적용
@@ -869,36 +877,47 @@ DebugGameState();
                     // 결과 아이템 목록 생성 (스티커 + 코인)
                     var resultItems = new List<UI.ResultItemData>();
 
-                    // 1. 획득한 스티커(컬렉션) 추가
+                    // 1. 획득한 스티커(컬렉션) 추가 (중복 획득 시 카운트 합산)
                     if (Global.CollectionManager != null)
                     {
                         var earnedStickers = Global.CollectionManager.GetEarnedThisStage();
-                        foreach (var collection in earnedStickers)
+                        
+                        var groupedStickers = earnedStickers
+                            .Where(c => c != null)
+                            .GroupBy(c => c)
+                            .Select(g => new { Collection = g.Key, Count = g.Count() });
+
+                        foreach (var group in groupedStickers)
                         {
-                            if (collection != null)
-                            {
-                                resultItems.Add(new UI.ResultItemData(
-                                    collection.collectionImage,
-                                    I2.Loc.LocalizationManager.GetTranslation(collection.collectionName)
-                                ));
-                            }
+                            resultItems.Add(new UI.ResultItemData(
+                                group.Collection.collectionImage,
+                                I2.Loc.LocalizationManager.GetTranslation(group.Collection.collectionName),
+                                group.Count
+                            ));
                         }
                     }
 
                     // 2. 획득한 코인 추가
-                    var coinLayer = FindAnyObjectByType<IngameCoinLayer>();
-                    if (coinLayer != null && coinLayer.SessionCoinsCollected > global::System.Numerics.BigInteger.Zero)
+                    // 기존에 IngameCoinLayer의 SessionCoinsCollected를 이용하던 방식을 
+                    // LevelManager에서 시작할 때 기록한 StartCoinAmount와 현재 코인량 비교로 변경
+                    BigInteger currentCoin = Global.CoinManager != null ? Global.CoinManager.GetCoinValue() : global::System.Numerics.BigInteger.Zero;
+                    BigInteger gainedCoin = currentCoin - StartCoinAmount;
+
+                    if (gainedCoin > global::System.Numerics.BigInteger.Zero)
                     {
-                        Sprite coinSprite = null;
+                        Sprite resultCoinSprite = this.coinSprite;
+                        
+                        // 기존 코인 러쉬 매니저에서의 스프라이트 가져오기 (호환성 유지 및 덮어쓰기)
                         var coinRushManager = FindAnyObjectByType<CoinRushModeManager>();
                         if (coinRushManager != null && coinRushManager.coinSprite != null)
                         {
-                            coinSprite = coinRushManager.coinSprite;
+                            resultCoinSprite = coinRushManager.coinSprite;
                         }
+
                         resultItems.Add(new UI.ResultItemData(
-                            coinSprite,
+                            resultCoinSprite,
                             "Coin",
-                            (int)coinLayer.SessionCoinsCollected
+                            (int)gainedCoin
                         ));
                     }
 
@@ -1134,6 +1153,11 @@ DebugGameState();
                         obj.whenFoundEventHelper.onFoundEvent?.Invoke();
                     }
 
+                    if (Global.CollectionManager != null)
+                    {
+                        Global.CollectionManager.TryCollectFromHiddenObj(obj);
+                    }
+
                     // 사운드 재생
                     if (group.Representative.PlaySoundWhenFound && FoundFx != null)
                         FoundFx.Play();
@@ -1239,6 +1263,11 @@ DebugGameState();
                 if (selectedObj.whenFoundEventHelper != null)
                 {
                     selectedObj.whenFoundEventHelper.onFoundEvent?.Invoke();
+                }
+
+                if (Global.CollectionManager != null)
+                {
+                    Global.CollectionManager.TryCollectFromHiddenObj(selectedObj);
                 }
 
                 Debug.Log($"[LevelManager] 테스트로 찾은 오브젝트: {selectedObj.name} (그룹: {group.BaseGroupName})");
