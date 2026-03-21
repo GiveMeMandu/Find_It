@@ -58,6 +58,12 @@ namespace Util.CameraSetting
         public bool _autoPanBoundary = true;
         public float _panMinX, _panMinY;
         public float _panMaxX, _panMaxY;
+
+        [Header("Smooth Pan")]
+        [Tooltip("WASD 이동 시 부드러운 움직임(관성) 사용 여부")]
+        public bool enableSmoothPan = true;
+        [Tooltip("매끄럽게 이동할 때의 관성 비율 (클수록 빠르게 정지)")]
+        public float smoothPanDeceleration = 10f;
         
         // 상태 관리 변수들
         private bool _forceDisabled = false; // InputManager에서 강제로 비활성화된 상태
@@ -71,6 +77,7 @@ namespace Util.CameraSetting
         
         // 카메라 이동 관련 변수들
         private bool _isMovingCamera = false;
+        private Vector3 _currentPanVelocity; // WASD 부드러운 이동(관성)을 위한 변수
         
         // 부드러운 줌 관련 변수들 (비모바일 플랫폼)
         private float _targetOrthographicSize;
@@ -185,14 +192,27 @@ namespace Util.CameraSetting
         private void HandleMouseInput()
         {
             // WASD 이동 (InputManager 연동)
-            if (_enablePan && Manager.Global.InputManager != null)
+            // UI 드래그 상태(_uiDragState)일 때는 마우스 드래그만 막고 WASD는 허용합니다. (강제 비활성화 상태에서는 모두 차단)
+            bool canWASD = !_forceDisabled;
+
+            if (canWASD && Manager.Global.InputManager != null)
             {
                 Vector2 movement = Manager.Global.InputManager.Move;
                 
-                if (movement != Vector2.zero)
+                Vector3 targetVelocity = new Vector3(movement.x, movement.y, 0) * (pcCamPanSpeed * _camera.orthographicSize);
+                
+                if (enableSmoothPan)
                 {
-                    var panDelta = movement * pcCamPanSpeed * Time.deltaTime * _camera.orthographicSize;
-                    var newPosition = _camera.transform.position + new Vector3(panDelta.x, panDelta.y, 0);
+                    _currentPanVelocity = Vector3.Lerp(_currentPanVelocity, targetVelocity, Time.deltaTime * smoothPanDeceleration);
+                }
+                else
+                {
+                    _currentPanVelocity = targetVelocity;
+                }
+
+                if (_currentPanVelocity.sqrMagnitude > 0.0001f)
+                {
+                    var newPosition = _camera.transform.position + (_currentPanVelocity * Time.deltaTime);
                     _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
                 }
             }
@@ -286,7 +306,7 @@ namespace Util.CameraSetting
                     if (_showDebugInfo)
                         Debug.Log("[InputManager] 줌인 (ZoomUp 감지)");
                     
-                    finalScroll = qeZoomSpeed * Time.deltaTime; // 부드러운 연속 줌을 위해 프레임에 맞춰 조절
+                    finalScroll = qeZoomSpeed * Time.deltaTime/100; // 부드러운 연속 줌을 위해 프레임에 맞춰 조절
                     finalMousePos = new Vector2(Screen.width/2f, Screen.height/2f);
                     inputDetected = true;
                     _lastInputMethod = "InputManager ZoomUp";
@@ -296,7 +316,7 @@ namespace Util.CameraSetting
                     if (_showDebugInfo)
                         Debug.Log("[InputManager] 줌아웃 (ZoomDown 감지)");
                     
-                    finalScroll = -qeZoomSpeed * Time.deltaTime;
+                    finalScroll = -qeZoomSpeed * Time.deltaTime/100;
                     finalMousePos = new Vector2(Screen.width/2f, Screen.height/2f);
                     inputDetected = true;
                     _lastInputMethod = "InputManager ZoomDown";
@@ -389,17 +409,15 @@ namespace Util.CameraSetting
                 _forceDisabledDebug = _forceDisabled; // 인스펙터에서 확인용
             }
             
-            if (!_enablePan && !_enableZoom) return;
-            
-            // 카메라가 자동 이동 중일 때는 사용자 입력 무시
-            if (_isMovingCamera) return;
+            // 카메라가 자동 이동 중이거나 모든 입력이 제한된 상태면 사용자의 입력(WASD 등) 포함해서 무시
+            if (_forceDisabled || _isMovingCamera) return;
 
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
             HandleMouseInput();
 #endif
 
-            // 모든 플랫폼에서 터치 입력 처리
+            // 터치/마우스 팬/줌 동작은 각각의 함수 내부나 위쪽에서 _enablePan, _enableZoom 상태를 통해 제어됨.
             HandleTouchInput();
         }
 
