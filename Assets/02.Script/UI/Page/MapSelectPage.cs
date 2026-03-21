@@ -31,5 +31,9 @@ namespace UI.Page
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             // Global.GoogleMobileAdsManager.ShowRewardedAd();
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

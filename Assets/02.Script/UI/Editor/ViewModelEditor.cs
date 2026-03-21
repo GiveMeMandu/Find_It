@@ -20,6 +20,8 @@ namespace UI.Editor
 
         protected override void OnInspector()
         {
+            DrawDefaultInspector();
+            
             DrawLine(Color.black);
             
             if (GUILayout.Button("바인딩 검사하기"))

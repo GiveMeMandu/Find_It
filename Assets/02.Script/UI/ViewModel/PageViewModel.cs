@@ -5,8 +5,12 @@ using UnityWeld.Binding;
 namespace UI
 {
     [Binding]
-    public class PageViewModel : BaseViewModel
+    public abstract class PageViewModel : View
     {
+        public override void OnEscapePressed()
+        {
+            Global.UIManager.CloseCurrentPage();
+        }
         [Binding]
         public virtual void ClosePage()
         {

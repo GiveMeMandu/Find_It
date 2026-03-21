@@ -30,5 +30,9 @@ namespace UI.Page
 #endif
             Application.Quit();
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

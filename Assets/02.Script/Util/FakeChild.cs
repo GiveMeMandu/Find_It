@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SnowRabbit.Utility
+namespace Utility
 {
     [ExecuteAlways]
     public class FakeChild : MonoBehaviour

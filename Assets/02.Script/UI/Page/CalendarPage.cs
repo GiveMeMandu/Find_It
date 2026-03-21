@@ -11,6 +11,8 @@ namespace UI.Page
     [Binding]
     public class CalendarPage : PageViewModel
     {
-
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

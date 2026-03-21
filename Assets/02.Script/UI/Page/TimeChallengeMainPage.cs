@@ -280,5 +280,9 @@ namespace UI.Page
                 TimeChallengeManager.Instance.ToggleScrollView();
             }
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

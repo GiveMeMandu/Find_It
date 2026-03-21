@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SnowRabbit.Stage
+namespace Stage
 {
     [Serializable]
     public abstract class TriggerEvent : TriggerElement

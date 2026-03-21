@@ -25,6 +25,15 @@ namespace Manager
         private EventSystem eventSystem;
         public bool isEnabled = true;
 
+        public InputAction MoveInputAction => playerAction.playerControl.Move;
+        public InputAction ZoomUpInputAction => playerAction.playerControl.ZoomUp;
+        public InputAction ZoomDownInputAction => playerAction.playerControl.ZoomDown;
+        public InputAction MouseWheelInputAction => playerAction.playerControl.MouseWheel;
+
+        public Vector2 Move => isEnabled ? MoveInputAction.ReadValue<Vector2>() : Vector2.zero;
+        public bool ZoomUp => isEnabled && ZoomUpInputAction.IsPressed();
+        public bool ZoomDown => isEnabled && ZoomDownInputAction.IsPressed();
+
         public struct TouchData
         {
             public int TouchId;
@@ -75,6 +84,9 @@ namespace Manager
             Touch.onFingerDown += OnFingerDown;
             Touch.onFingerUp += OnFingerUp;
             Touch.onFingerMove += OnFingerMove;
+
+            // 저장된 키 바인딩 설정 로드
+            LoadBindings();
             
             playerAction.playerControl.Pause.performed += Pause_Performed;
             playerAction.playerControl.Enable();
@@ -272,6 +284,48 @@ namespace Manager
         public bool IsInputEnabled()
         {
             return isEnabled;
+        }
+
+        public const string BINDING_KEY = "BINDING_KEY";
+        
+        public void SaveBindings()
+        {
+            if (playerAction != null && playerAction.asset != null)
+            {
+                string json = playerAction.asset.SaveBindingOverridesAsJson();
+                PlayerPrefs.SetString(BINDING_KEY, json);
+            }
+        }
+        
+        public void LoadBindings()
+        {
+            string bindingJson = PlayerPrefs.GetString(BINDING_KEY, "");
+            if (!string.IsNullOrEmpty(bindingJson) && playerAction != null && playerAction.asset != null)
+            {
+                playerAction.asset.LoadBindingOverridesFromJson(bindingJson);
+            }
+        }
+
+        public void ResetBindings(bool isGamepad)
+        {
+            string targetGroup = isGamepad ? "Gamepad" : "Keyboard&Mouse";
+            if (playerAction != null && playerAction.asset != null)
+            {
+                foreach (var actionMap in playerAction.asset.actionMaps)
+                {
+                    foreach (var action in actionMap.actions)
+                    {
+                        for (int i = 0; i < action.bindings.Count; i++)
+                        {
+                            if (!string.IsNullOrEmpty(action.bindings[i].groups) && action.bindings[i].groups.Contains(targetGroup))
+                            {
+                                action.RemoveBindingOverride(i);
+                            }
+                        }
+                    }
+                }
+                SaveBindings();
+            }
         }
     }
 }

@@ -22,6 +22,19 @@ namespace Manager
         public SFXSound[] sfxArr;
         public AudioSource bgmSource, sfxSource;
 
+        // 화면 UI 등과 연동하기 위한 임시 볼륨 프로퍼티
+        public float BGMVolume
+        {
+            get => bgmSource != null ? bgmSource.volume : 1f;
+            set { if (bgmSource != null) bgmSource.volume = value; }
+        }
+
+        public float SFXVolume
+        {
+            get => sfxSource != null ? sfxSource.volume : 1f;
+            set { if (sfxSource != null) sfxSource.volume = value; }
+        }
+
         public void PlayMusic(BGMEnum name, float volume = 0.15f, bool isLoop = true)
         {
             BGMSound s = FindBGM(name, bgmArr);

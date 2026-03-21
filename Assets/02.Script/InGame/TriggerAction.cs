@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.Playables;
 using I2.Loc;
 
-namespace SnowRabbit.Stage
+namespace Stage
 {
 
     [Serializable]

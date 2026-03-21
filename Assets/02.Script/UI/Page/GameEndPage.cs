@@ -179,5 +179,9 @@ namespace UI.Page
             // 메인 메뉴로 이동
             LoadingSceneManager.LoadScene(Data.SceneNum.SELECT);
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

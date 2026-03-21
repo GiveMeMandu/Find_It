@@ -21,6 +21,11 @@ namespace Manager
         
         private void Start()
         {
+            if (_toastObject != null)
+            {
+                _toastObject.SetActive(false);
+            }
+
             // 로딩 완료 후 초기화
             if (mouseUIController != null)
             {

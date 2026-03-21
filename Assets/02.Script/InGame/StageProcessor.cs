@@ -7,7 +7,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SnowRabbit.Stage
+namespace Stage
 {
     public class StageProcessor : MonoBehaviour
     {

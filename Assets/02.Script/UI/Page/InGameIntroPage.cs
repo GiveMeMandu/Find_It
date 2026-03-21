@@ -111,5 +111,9 @@ namespace UI.Page
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             Debug.Log("Skip intro button clicked");
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

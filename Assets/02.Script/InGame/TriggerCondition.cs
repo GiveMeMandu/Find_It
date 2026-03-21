@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SnowRabbit.Stage
+namespace Stage
 {
     [Serializable]
     public abstract class TriggerCondition : TriggerElement

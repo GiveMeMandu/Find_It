@@ -37,5 +37,9 @@ namespace UI.Page
                 _timerViewModel.OnTimerComplete -= HandleTimerComplete;
             }
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

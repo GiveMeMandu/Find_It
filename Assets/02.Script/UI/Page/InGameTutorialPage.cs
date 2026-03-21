@@ -14,5 +14,8 @@ namespace UI.Page
     [Binding]
     public class InGameTutorialPage : PageViewModel
     {
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

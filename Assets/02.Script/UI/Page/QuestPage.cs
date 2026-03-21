@@ -32,5 +32,9 @@ namespace UI.Page
                 else q.gameObject.SetActive(false);
             }
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

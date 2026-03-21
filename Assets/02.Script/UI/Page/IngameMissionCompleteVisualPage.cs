@@ -98,5 +98,10 @@ namespace UI.Page
                 Global.UIManager.ClosePage(this);
             }
         }
+
+        public override void Init(params object[] parameters)
+        {
+            // throw new System.NotImplementedException();
+        }
     }
 }

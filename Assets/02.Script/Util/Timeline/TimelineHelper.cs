@@ -3,7 +3,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace SnowRabbit.Timeline
+namespace Timeline
 {
     [ExecuteAlways]
     [RequireComponent(typeof(PlayableDirector))]

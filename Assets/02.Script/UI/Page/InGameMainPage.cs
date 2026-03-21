@@ -421,5 +421,10 @@ namespace UI.Page
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
             Global.UIManager.OpenPage<InGameTutorialPage>();
         }
+
+        public override void Init(params object[] parameters)
+        {
+            // throw new NotImplementedException();
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 
-namespace SnowRabbit.Stage
+namespace Stage
 {
     public class StageData : MonoBehaviour
     {

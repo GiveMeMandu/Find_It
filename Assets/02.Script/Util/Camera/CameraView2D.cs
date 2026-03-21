@@ -184,14 +184,10 @@ namespace Util.CameraSetting
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         private void HandleMouseInput()
         {
-            // WASD 이동 (기본 지원)
-            if (_enablePan && Keyboard.current != null)
+            // WASD 이동 (InputManager 연동)
+            if (_enablePan && Manager.Global.InputManager != null)
             {
-                Vector2 movement = Vector2.zero;
-                if (Keyboard.current.wKey.isPressed) movement.y += 1;
-                if (Keyboard.current.sKey.isPressed) movement.y -= 1;
-                if (Keyboard.current.aKey.isPressed) movement.x -= 1;
-                if (Keyboard.current.dKey.isPressed) movement.x += 1;
+                Vector2 movement = Manager.Global.InputManager.Move;
                 
                 if (movement != Vector2.zero)
                 {
@@ -282,51 +278,54 @@ namespace Util.CameraSetting
                 }
             }
 
-            // Method 3: 키보드 백업 및 Q/E 줌
-            if (!inputDetected && Keyboard.current != null)
+            // Method 3: 키보드 백업 및 Q/E 줌 (InputManager 연동)
+            if (!inputDetected && Manager.Global.InputManager != null)
             {
-                if (enableQEZoom && Keyboard.current.qKey.isPressed)
+                if (enableQEZoom && Manager.Global.InputManager.ZoomUp)
                 {
                     if (_showDebugInfo)
-                        Debug.Log("[Keyboard Input] Q키로 줌인");
+                        Debug.Log("[InputManager] 줌인 (ZoomUp 감지)");
                     
                     finalScroll = qeZoomSpeed * Time.deltaTime; // 부드러운 연속 줌을 위해 프레임에 맞춰 조절
                     finalMousePos = new Vector2(Screen.width/2f, Screen.height/2f);
                     inputDetected = true;
-                    _lastInputMethod = "Keyboard Input";
+                    _lastInputMethod = "InputManager ZoomUp";
                 }
-                else if (enableQEZoom && Keyboard.current.eKey.isPressed)
+                else if (enableQEZoom && Manager.Global.InputManager.ZoomDown)
                 {
                     if (_showDebugInfo)
-                        Debug.Log("[Keyboard Input] E키로 줌아웃");
+                        Debug.Log("[InputManager] 줌아웃 (ZoomDown 감지)");
                     
                     finalScroll = -qeZoomSpeed * Time.deltaTime;
                     finalMousePos = new Vector2(Screen.width/2f, Screen.height/2f);
                     inputDetected = true;
-                    _lastInputMethod = "Keyboard Input";
+                    _lastInputMethod = "InputManager ZoomDown";
                 }
-                else if (Keyboard.current.numpadPlusKey.wasPressedThisFrame || 
-                    Keyboard.current.equalsKey.wasPressedThisFrame ||
-                    Keyboard.current.spaceKey.wasPressedThisFrame)
+                else if (Keyboard.current != null)
                 {
-                    if (_showDebugInfo)
-                        Debug.Log("[Keyboard Input] 키보드로 줌인");
-                    
-                    finalScroll = 120f; // 일반적인 마우스 휠 값
-                    finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
-                    inputDetected = true;
-                    _lastInputMethod = "Keyboard Input";
-                }
-                else if (Keyboard.current.numpadMinusKey.wasPressedThisFrame || 
-                         Keyboard.current.minusKey.wasPressedThisFrame)
-                {
-                    if (_showDebugInfo)
-                        Debug.Log("[Keyboard Input] 키보드로 줌아웃");
-                    
-                    finalScroll = -120f;
-                    finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
-                    inputDetected = true;
-                    _lastInputMethod = "Keyboard Input";
+                    if (Keyboard.current.numpadPlusKey.wasPressedThisFrame || 
+                        Keyboard.current.equalsKey.wasPressedThisFrame ||
+                        Keyboard.current.spaceKey.wasPressedThisFrame)
+                    {
+                        if (_showDebugInfo)
+                            Debug.Log("[Keyboard Input] 키보드로 줌인");
+                        
+                        finalScroll = 120f; // 일반적인 마우스 휠 값
+                        finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
+                        inputDetected = true;
+                        _lastInputMethod = "Keyboard Input";
+                    }
+                    else if (Keyboard.current.numpadMinusKey.wasPressedThisFrame || 
+                            Keyboard.current.minusKey.wasPressedThisFrame)
+                    {
+                        if (_showDebugInfo)
+                            Debug.Log("[Keyboard Input] 키보드로 줌아웃");
+                        
+                        finalScroll = -120f;
+                        finalMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(Screen.width/2, Screen.height/2);
+                        inputDetected = true;
+                        _lastInputMethod = "Keyboard Input";
+                    }
                 }
             }
 

@@ -238,5 +238,9 @@ namespace UI.Page
             float newHeight = targetWidth / aspectRatio;
             return new Vector2(targetWidth, newHeight);
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

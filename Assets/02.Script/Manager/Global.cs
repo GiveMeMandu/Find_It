@@ -29,6 +29,7 @@ namespace Manager
         public static SpinTicketManager SpinTicketManager { get; set; }
         public static ItemManager ItemManager { get; set; }
         public static MainMenuSelectedManager MainMenuSelectedManager { get; set; }
+        public static OptionManager OptionManager { get; set; }
         // public static GameStateManager GameStateManager { get; set; }
         public static InputManager InputManager { get; set; }
         // public static OptionManager OptionManager { get; private set; }
@@ -59,6 +60,9 @@ namespace Manager
             CoinManager = new();
             CoinManager.Initial();
 
+            OptionManager = new OptionManager();
+            OptionManager.Init();
+            
             // CashManager = new();
             // CashManager.Initial();
 

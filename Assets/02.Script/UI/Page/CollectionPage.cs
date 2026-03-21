@@ -35,5 +35,9 @@ namespace UI.Page
                 else scroll.gameObject.SetActive(false);
             }
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

@@ -21,5 +21,9 @@ namespace UI.Page
                 OnPropertyChanged(nameof(Score));
             }
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

@@ -22,5 +22,9 @@ namespace UI.Page
                 OnPropertyChanged(nameof(Load));
             }
         }
+
+        public override void Init(params object[] parameters)
+        {
+        }
     }
 }

@@ -7,7 +7,7 @@ using DeskCat.FindIt.Scripts.Core.Main.System;
 using DeskCat.FindIt.Scripts.Core.Main.Utility.Animation;
 using UnityWeld;
 using UniRx.Triggers;
-using SnowRabbit.Utility;
+using Utility;
 
 namespace UI
 {
