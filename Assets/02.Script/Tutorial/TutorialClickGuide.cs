@@ -1,0 +1,71 @@
+using InGame;
+using Manager;
+using UI;
+using UI.Page;
+using UnityEngine;
+
+namespace InGame.Tutorial
+{
+    public class TutorialClickGuide : TutorialBase
+    {
+        [Header("클릭 대상")]
+        [SerializeField] private LeanClickEvent _targetTouchable;
+
+        [Header("스킵가능한건지")]
+        [SerializeField] private bool _isSkipable = false;
+        [SerializeField] private SpriteRenderer _targetGuideSprite;
+        private InGameMainPage inGameMainPage;
+        private bool isTouched = false;
+        private float timer = 0f;
+        private const float SKIP_TIME = 3f;
+
+        public override void Enter()
+        {
+            timer = 0f;
+            if (Global.UIManager.GetPages<InGameMainPage>().Count > 0)
+            {
+                LeanClickEvent.OnGlobalClickSuccess += OnGlobalClickSuccess;
+                inGameMainPage = Global.UIManager.GetPages<InGameMainPage>()[0];
+                var guideViewModel = Global.UIManager.OpenPage<GuidePage>().GetComponentInChildren<GuideViewModel>();
+                guideViewModel.SetTargetGuide(_targetGuideSprite);
+            }
+        }
+
+        public override void Execute(TutorialController controller)
+        {
+            if(isTouched)
+            {
+                controller.SetNextTutorial();
+                return;
+            }
+
+            if(_isSkipable)
+            {
+                timer += Time.deltaTime;
+                if(timer >= SKIP_TIME)
+                {
+                    controller.SetNextTutorial();
+                }
+            }
+        }
+
+        public override void Exit()
+        {
+            LeanClickEvent.OnGlobalClickSuccess -= OnGlobalClickSuccess;
+            Global.UIManager.ClosePage();
+        }
+
+        private void OnDestroy()
+        {
+            LeanClickEvent.OnGlobalClickSuccess -= OnGlobalClickSuccess;
+        }
+
+        private void OnGlobalClickSuccess(GameObject clickedObject, Vector2 screenPos)
+        {
+            if (_targetTouchable != null && clickedObject == _targetTouchable.gameObject)
+            {
+                isTouched = true;
+            }
+        }
+    }
+}
