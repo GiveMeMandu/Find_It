@@ -47,6 +47,8 @@ namespace UI.Page
             }
         }
         
+        public override bool BlockEscape => true;
+        
         private void OnEnable()
         {
             ShowMapButton = true;

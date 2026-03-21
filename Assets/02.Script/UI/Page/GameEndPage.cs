@@ -73,6 +73,7 @@ namespace UI.Page
                 OnPropertyChanged(nameof(StarCount));
             }
         }
+        public override bool BlockEscape => true; // 게임 종료 페이지에서는 Escape 키 입력 차단
 
         // 별 개별 표시를 위한 프로퍼티들
         [Binding]

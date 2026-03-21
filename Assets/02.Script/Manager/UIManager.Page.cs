@@ -55,15 +55,10 @@ namespace Manager
             {
                 if (_pageStack.Count > 0)
                 {
-                    // EscapePressedThisFrame = false;
-                    // 추후 PageViewModel에 BlockEscape 변수 등을 추가하여 분기할 수 있습니다.
-                    // if (!CurrentPage.BlockEscape)
-                    // {
-                    //     CurrentPage.OnEscapePressed();
-                    // }
-                    // else
-                    
-                    CloseCurrentPage();
+                    if (!CurrentPage.BlockEscape)
+                    {
+                        CurrentPage.OnEscapePressed();
+                    }
                 }
             }
 

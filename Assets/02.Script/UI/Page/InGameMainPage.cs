@@ -161,6 +161,7 @@ namespace UI.Page
         private HiddenObj _currentFoundObj;
         private Vector2 _tooltipSize = new Vector2(235.2f, 135f);
 
+        public override bool BlockEscape => true;
         private void OnEnable()
         {
             ShowFoundObjToolTip = false;
