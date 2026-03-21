@@ -41,6 +41,8 @@ namespace UI.Page
         }
         private CancellationTokenSource _cts;
         private TaskCompletionSource<bool> _closeTaskSource;
+        
+        public override bool BlockEscape => true; // 게임 종료 페이지에서는 Escape 키 입력 차단
 
         private void OnEnable()
         {
