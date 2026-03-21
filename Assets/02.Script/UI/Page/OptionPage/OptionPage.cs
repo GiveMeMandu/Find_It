@@ -37,12 +37,24 @@ namespace UI
                 optionGroupPrefab.gameObject.SetActive(false);
         }
 
-        public override void Init(params object[]  parameters)
+        public override void Init(params object[] parameters)
         {
             InitializeTabs();
-            Debug.Log("OptionPage initialized with parameters: " + string.Join(", ", parameters));
+            Time.timeScale = 0;
+
+            Global.InputManager.DisableGameInputOnly();
+
+
             // 첫 번째 탭 선택 (Play)
             tabGroup.SelectTab(0);
+        }
+        public override void OnClose()
+        {
+            
+            Time.timeScale = 1;
+            base.OnClose();
+            Global.InputManager.EnableGameInputOnly();
+
         }
 
         private void InitializeTabs()
@@ -96,12 +108,14 @@ namespace UI
         [UnityWeld.Binding.Binding]
         public void GoToStartScene()
         {
+            Global.UIManager.ClosePage(this);
             LoadingSceneManager.LoadScene(Data.SceneNum.START);
         }
 
         [UnityWeld.Binding.Binding]
         public void RestartCurrentScene()
         {
+            Global.UIManager.ClosePage(this);
             LoadingSceneManager.LoadScene((int)Global.CurrentScene.SceneName);
         }
 

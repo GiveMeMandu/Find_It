@@ -137,7 +137,7 @@ namespace Manager
             var page = _pageStack.Pop();
             
             // If your PageViewModel has an OnClose method, call it here
-            // page.OnClose();
+            page.OnClose();
             
             OnClosePage?.Invoke(this, page);
 
