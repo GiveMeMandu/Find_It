@@ -260,7 +260,7 @@ namespace Util.CameraSetting
             if (_isMovingCamera || _forceDisabled || !_enableZoom) 
             {
                 if (_showDebugInfo && !_enableZoom)
-                    Debug.Log($"[Zoom Disabled] _enableZoom={_enableZoom}, _forceDisabled={_forceDisabled}, _isMovingCamera={_isMovingCamera}");
+                    // Debug.Log($"[Zoom Disabled] _enableZoom={_enableZoom}, _forceDisabled={_forceDisabled}, _isMovingCamera={_isMovingCamera}");
                 return;
             }
 

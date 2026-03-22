@@ -161,7 +161,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 visualPage.Initialize(setData.SetName, target, enableCameraEffect, cameraZoomSize);
             }
 
-            await infoPage.WaitForClose();
+            await UniTask.Yield();
         }
 
         // SetCompletionObject에서 호출: 미션 현황판 보기
@@ -231,8 +231,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         protected virtual async UniTask ShowTaskAlertPage(ItemSetData setData, HiddenObj obj)
         {
-            var page = Global.UIManager.OpenPage<InGameMissionCompletePage>();
-            
             string groupName = GetGroupName(obj);
             // LevelManager에서 그룹 정보를 가져옴
             var groupList = LevelManager.Instance.TargetObjDic.Values
@@ -241,6 +239,27 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             int foundInGroup = groupList != null ? groupList.FoundCount : 0;
             int totalInGroup = groupList != null ? groupList.TotalCount : 0;
             bool isGroupComplete = foundInGroup == totalInGroup;
+            
+            // 이 아이템을 찾음으로써 세트가 완성되는 상황인지 미리 체크
+            bool isSetWillBeCompleted = false;
+            if (isGroupComplete && !completedGroups[setData.SetName].Contains(groupName))
+            {
+                int currentCompletedCount = completedGroups[setData.SetName].Count;
+                if (currentCompletedCount + 1 >= setData.RequiredGroups.Count)
+                {
+                    isSetWillBeCompleted = true;
+                }
+            }
+
+            // 세트가 완성될 예정이라면 진행도 팝업을 띄우지 않고 바로 세트 완료 처리로 넘김
+            if (isSetWillBeCompleted)
+            {
+                completedGroups[setData.SetName].Add(groupName);
+                CheckSetCompletion(setData);
+                return;
+            }
+
+            var page = Global.UIManager.OpenPage<InGameMissionCompletePage>();
             
             float missionNameAlpha = isGroupComplete && !completedGroups[setData.SetName].Contains(groupName) ? 0.6f : 1f;
             

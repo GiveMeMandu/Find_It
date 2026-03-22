@@ -162,8 +162,38 @@ namespace UI.Page
         public void OnClickNextStage()
         {
             Global.SoundManager.PlaySFX(SFXEnum.ClickUI);
-            // 다음 스테이지로 이동 또는 메인 메뉴로 이동
-            LoadingSceneManager.LoadScene(Data.SceneNum.START);
+            
+            var stageManager = Global.StageManager;
+            if (stageManager != null)
+            {
+                int nextStageIndex = stageManager.CurrentStageIndex + 1;
+                
+                // 현재 챕터에 다음 스테이지가 있는지 확인
+                if (nextStageIndex < stageManager.GetCurrentChapterStageCount())
+                {
+                    string nextSceneName = stageManager.GetStageSceneName(nextStageIndex);
+                    stageManager.SelectStage(nextStageIndex);
+                    LoadingSceneManager.LoadSceneByName(nextSceneName);
+                }
+                else if (stageManager.IsNextAvailable)
+                {
+                    // 다음 챕터의 첫 번째 스테이지로 이동
+                    stageManager.NextChapter();
+                    stageManager.SelectStage(0);
+                    string nextSceneName = stageManager.GetStageSceneName(0);
+                    LoadingSceneManager.LoadSceneByName(nextSceneName);
+                }
+                else
+                {
+                    // 다음 스테이지/챕터가 없으면 메인 메뉴로
+                    LoadingSceneManager.LoadScene(Data.SceneNum.START);
+                }
+            }
+            else
+            {
+                // StageManager가 없으면 기본적으로 메인 메뉴로 이동
+                LoadingSceneManager.LoadScene(Data.SceneNum.START);
+            }
         }
 
         [Binding]

@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityWeld;
 using UnityWeld.Binding;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace UI
 {
@@ -16,8 +17,6 @@ namespace UI
         [SerializeField] private float _animationDuration = 0.5f; // 애니메이션 시간
         [SerializeField] private float _fingerOffsetY = 100f; // Y축 오프셋 (위아래 거리)
         [SerializeField] private float _fingerOffsetX = 0f;   // X축 오프셋 (좌우 거리)
-        [SerializeField] private float _fingerBobAmount = 20f; // 위아래 움직임 크기
-        [SerializeField] private float _fingerBobSpeed = 2f; // 위아래 움직임 속도
         
         private Vector2 _targetSize;
         private Vector2 _targetPosition;
@@ -27,6 +26,7 @@ namespace UI
         private Canvas _canvas;
         private Image _maskImage;
         private Sprite _defaultMaskSprite;
+        private CancellationTokenSource _cts;
 
         protected override void Awake()
         {
@@ -128,7 +128,11 @@ namespace UI
                 _fingerImage.anchoredPosition = _fingerBasePosition;
             }
 
-            StartCoroutine(AnimateMaskToTargetUI());
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = new CancellationTokenSource();
+
+            AnimateMaskToTargetUI(_cts.Token).Forget();
         }
 
         // Sprite 렌더러용 가이드 설정
@@ -159,10 +163,14 @@ namespace UI
             _targetSize = spriteSize * (Screen.height / mainCam.orthographicSize / 2f) / canvasScale;
             _targetPosition = (Vector2)canvas.GetComponent<RectTransform>().TransformPoint(localPoint);
             
-            StartCoroutine(AnimateMaskToTarget());
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = new CancellationTokenSource();
+
+            AnimateMaskToTarget(_cts.Token).Forget();
         }
 
-        private IEnumerator AnimateMaskToTarget()
+        private async UniTaskVoid AnimateMaskToTarget(CancellationToken token)
         {
             float elapsedTime = 0f;
             Vector2 startSize = _maskArea.sizeDelta;
@@ -183,6 +191,8 @@ namespace UI
             
             while (elapsedTime < _animationDuration)
             {
+                if (_maskArea == null || _fingerImage == null) return;
+
                 elapsedTime += Time.deltaTime;
                 float progress = elapsedTime / _animationDuration;
                 
@@ -190,18 +200,16 @@ namespace UI
                 _maskArea.position = Vector2.Lerp(startPos, _targetPosition, progress);
                 _fingerImage.position = Vector2.Lerp(fingerStartPos, _fingerBasePosition, progress);
                 
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
             }
 
+            if (_maskArea == null || _fingerImage == null) return;
             _maskArea.sizeDelta = _targetSize;
             _maskArea.position = _targetPosition;
             _fingerImage.position = _fingerBasePosition;
-
-            // 손가락 위아래 움직임 시작
-            StartCoroutine(AnimateFinger());
         }
 
-        private IEnumerator AnimateMaskToTargetUI()
+        private async UniTaskVoid AnimateMaskToTargetUI(CancellationToken token)
         {
             float elapsedTime = 0f;
             Vector2 startSize = Vector2.zero;
@@ -209,6 +217,8 @@ namespace UI
 
             while (elapsedTime < _animationDuration)
             {
+                if (_maskArea == null || _fingerImage == null) return;
+
                 elapsedTime += Time.deltaTime;
                 float progress = elapsedTime / _animationDuration;
                 
@@ -219,33 +229,23 @@ namespace UI
                     _fingerImage.anchoredPosition = Vector2.Lerp(fingerStartPos, _fingerBasePosition, progress);
                 }
                 
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
             }
 
+            if (_maskArea == null || _fingerImage == null) return;
             _maskArea.sizeDelta = _targetSize;
             if (_isFinger)
             {
                 _fingerImage.anchoredPosition = _fingerBasePosition;
-                StartCoroutine(AnimateFinger());
-            }
-        }
-
-        private IEnumerator AnimateFinger()
-        {
-            Vector2 basePos = _fingerImage.anchoredPosition;
-            
-            while (true)
-            {
-                float yOffset = Mathf.Sin(Time.time * _fingerBobSpeed) * _fingerBobAmount;
-                _fingerImage.anchoredPosition = basePos + new Vector2(0, yOffset);
-                yield return null;
             }
         }
 
         // 가이드 종료 시 호출
         public void HideGuide()
         {
-            StopAllCoroutines();
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = null;
             gameObject.SetActive(false);
         }
     }

@@ -17,5 +17,16 @@ namespace UI.Page
         public override void Init(params object[] parameters)
         {
         }
+
+        [Binding]
+        public void OpenSteamPage()
+        {
+            Application.OpenURL("https://store.steampowered.com/app/4324730/Find_Bunny__A_Little_Hidden_Journey/");
+        }
+        [Binding]
+        public void OpenFeedbackPage()
+        {
+            Application.OpenURL("https://www.reddit.com/r/Findbunny/");
+        }
     }
 }

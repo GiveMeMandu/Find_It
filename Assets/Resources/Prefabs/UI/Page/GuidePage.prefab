@@ -181,8 +181,6 @@ MonoBehaviour:
   _animationDuration: 0.5
   _fingerOffsetY: 100
   _fingerOffsetX: 100
-  _fingerBobAmount: 0.25
-  _fingerBobSpeed: 2
 --- !u!1 &1625389593251903301
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,6 +192,7 @@ GameObject:
   - component: {fileID: 8173702094829551848}
   - component: {fileID: 2637715577245833438}
   - component: {fileID: 2863266005799903388}
+  - component: {fileID: 466415526543468313}
   m_Layer: 0
   m_Name: GuideHand
   m_TagString: Untagged
@@ -208,17 +207,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625389593251903301}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.13052616, w: 0.9914449}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 665105458480620497}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 15}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 72.7357, y: 82.6347}
+  m_SizeDelta: {x: 127.7169, y: 145.0986}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2637715577245833438
 CanvasRenderer:
@@ -258,6 +257,44 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &466415526543468313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1625389593251903301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58287c2584abd4a41af4bfab4ee579fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Effect.ShakeVFX
+  isPlayOnStart: 0
+  isPlayOnEnable: 1
+  isStopOtherEffect: 0
+  startDelay: 1
+  delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 1
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  maxRotationAngle: 2
+  shakeCount: 1
+  shakeDuration: 0.1
+  restoreDuration: 0.1
+  decayFactor: 0.3
+  animationEase: 3
 --- !u!1 &3009415031663837350
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,6 +541,7 @@ GameObject:
   - component: {fileID: 617845200141186081}
   - component: {fileID: 6789893174133634692}
   - component: {fileID: 261611712371436382}
+  - component: {fileID: 5816332614166946559}
   m_Layer: 0
   m_Name: GuideMask
   m_TagString: Untagged
@@ -568,6 +606,45 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5816332614166946559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611910047534156889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8e2fb5a3680324b9c0e2c6c9964571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Effect.FadeVFX
+  isPlayOnStart: 0
+  isPlayOnEnable: 1
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  fadeMode: 0
+  startAlpha: 0
+  endAlpha: 0.63
+  duration: 0.1
+  animationEase: 1
+  forceStartAlpha: 1
+  useYoyoLoop: 0
 --- !u!1 &8152263072086268902
 GameObject:
   m_ObjectHideFlags: 0

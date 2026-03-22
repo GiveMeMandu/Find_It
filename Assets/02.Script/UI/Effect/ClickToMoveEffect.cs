@@ -34,6 +34,15 @@ namespace UI.Effect
         }
         
         /// <summary>
+        /// 실행될 때마다 다음 이동 방향(전진/복귀)을 교대로 토글합니다. (핑퐁 재생용)
+        /// </summary>
+        public void ToggleIsResetOnNext()
+        {
+            isResetOnNext = !isResetOnNext;
+            isResetedThisTime = false; // 방향이 토글될 때 재생 상태 꼬임 방지
+        }
+        
+        /// <summary>
         /// 강제로 이펙트를 재생합니다 (재생 중이어도 실행)
         /// </summary>
         public override void PlayVFXForce()

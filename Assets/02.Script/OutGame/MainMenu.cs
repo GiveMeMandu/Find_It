@@ -25,6 +25,8 @@ namespace OutGame
         public bool CanPlay = false;
         private bool isMapButtonClicked = false;
         private bool isHomeClicked = false;
+        // 홈으로 한 번 이동하면 이후 클릭을 무시하기 위한 플래그
+        private bool hasGoneHome = false;
         private MoveEffect moveEffect;
         private CameraRootPanning cameraRootPanning;
         private bool isCameraMoving = false;
@@ -112,6 +114,7 @@ namespace OutGame
         [Button("테스트용: 홈버튼")]
         public void OnClickHomeButton()
         {
+            if (hasGoneHome) return;
             if(isCameraMoving) return;
 
             isHomeClicked = !isHomeClicked;
@@ -130,6 +133,9 @@ namespace OutGame
                     isCameraMoving = false;
                     if (cameraRootPanning != null)
                         cameraRootPanning.EnablePanningAfterCameraMove();
+                    // 홈으로 이동한 경우, 이후 재호출 차단
+                    if (isHomeClicked)
+                        hasGoneHome = true;
                 });
             moveEffect.PlayVFX();
         }

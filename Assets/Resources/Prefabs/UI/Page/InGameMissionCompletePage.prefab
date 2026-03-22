@@ -455,7 +455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlayOnStart: 0
   isPlayOnEnable: 1
-  isStopOtherEffect: 1
+  isStopOtherEffect: 0
   startDelay: 0
   delay: 0
   isRandomDelay: 0
@@ -465,7 +465,7 @@ MonoBehaviour:
   isUIEffect: 1
   effectAddValue: 0
   effectSpeed: 1
-  isPlayLock: 0
+  isPlayLock: 1
   OnEffectStart:
     m_PersistentCalls:
       m_Calls: []
@@ -474,7 +474,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5022912638866460682}
         m_TargetAssemblyTypeName: UI.Effect.ClickToMoveEffect, Assembly-CSharp
-        m_MethodName: SetIsResetOnNext
+        m_MethodName: ToggleIsResetOnNext
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -504,6 +504,7 @@ MonoBehaviour:
   chainDelay: 0
   isSmallOnEnd: 0
   smallTiming: 1
+  waitTimeAfterEffect: 0
   targetPosition: {x: 0, y: -65, z: 0}
   isResetOnNext: 0
   isResetedThisTime: 0
