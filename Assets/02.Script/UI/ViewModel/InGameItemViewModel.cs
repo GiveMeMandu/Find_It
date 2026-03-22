@@ -187,7 +187,13 @@ namespace UI
 
         private void InitializeItemsForDemo()
         {
-            // 부스 운영을 위해 각 아이템 3개씩 지급
+            // 부스 운영을 위해 최초 1회만 각 아이템 3개씩 지급
+            if (PlayerPrefs.GetInt("DemoItemsGiven", 0) == 1)
+            {
+                Debug.Log("이미 데모용 아이템이 지급된 적이 있어 추가 지급하지 않습니다.");
+                return;
+            }
+
             if (Global.ItemManager.GetItemCount(ItemType.Compass) > 0 ||
                Global.ItemManager.GetItemCount(ItemType.Stopwatch) > 0 ||
                Global.ItemManager.GetItemCount(ItemType.Hint) > 0)
@@ -199,6 +205,9 @@ namespace UI
             Global.ItemManager.AddItem(ItemType.Compass, 3);
             Global.ItemManager.AddItem(ItemType.Stopwatch, 3);
             Global.ItemManager.AddItem(ItemType.Hint, 3);
+            
+            PlayerPrefs.SetInt("DemoItemsGiven", 1);
+            PlayerPrefs.Save();
 
             Debug.Log("부스 데모용 아이템 지급 완료: 각 아이템 3개씩");
         }
@@ -240,6 +249,12 @@ namespace UI
         [Binding]
         public void UseCompass()
         {
+            if (Global.ItemManager == null || Global.ItemManager.GetItemCount(ItemType.Compass) <= 0)
+            {
+                Debug.Log("나침반 아이템이 없습니다.");
+                return;
+            }
+
             // 이미 나침반 효과가 활성화되어 있으면 아이템 사용하지 않음
             if (IsCompassActive)
             {
@@ -247,7 +262,7 @@ namespace UI
                 return;
             }
 
-            if (Global.ItemManager != null && Global.ItemManager.UseItem(ItemType.Compass))
+            if (Global.ItemManager.UseItem(ItemType.Compass))
             {
                 ActivateCompass();
             }
@@ -256,6 +271,12 @@ namespace UI
         [Binding]
         public void UseStopwatch()
         {
+            if (Global.ItemManager == null || Global.ItemManager.GetItemCount(ItemType.Stopwatch) <= 0)
+            {
+                Debug.Log("초시계 아이템이 없습니다.");
+                return;
+            }
+
             // 이미 초시계 효과가 활성화되어 있으면 아이템 사용하지 않음
             if (IsStopwatchActive)
             {
@@ -263,7 +284,7 @@ namespace UI
                 return;
             }
 
-            if (Global.ItemManager != null && Global.ItemManager.UseItem(ItemType.Stopwatch))
+            if (Global.ItemManager.UseItem(ItemType.Stopwatch))
             {
                 ActivateStopwatch();
             }
@@ -272,6 +293,12 @@ namespace UI
         [Binding]
         public void UseHint()
         {
+            if (Global.ItemManager == null || Global.ItemManager.GetItemCount(ItemType.Hint) <= 0)
+            {
+                Debug.Log("돋보기 아이템이 없습니다.");
+                return;
+            }
+
             // 이미 돋보기 효과가 활성화되어 있으면 아이템 사용하지 않음
             if (IsHintActive || IsMagnifierEffectActive)
             {
@@ -279,7 +306,7 @@ namespace UI
                 return;
             }
 
-            if (Global.ItemManager != null && Global.ItemManager.UseItem(ItemType.Hint))
+            if (Global.ItemManager.UseItem(ItemType.Hint))
             {
                 ActivateHint();
             }

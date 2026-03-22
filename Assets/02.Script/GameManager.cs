@@ -1,21 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void InitializeDOTween()
-    {
-        // DOTween 초기화 및 캐퍼시티 확장 (IndexOutOfRangeException 방지)
-        // Awake 단계보다 먼저 실행되어 기본 Capacity(200, 50)로 초기화되는 것을 막습니다.
-        DOTween.Init(true, true, LogBehaviour.Default).SetCapacity(4000, 1000);
-    }
-
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-
         if (!PlayerPrefs.HasKey("IsTutorial"))
         {
             PlayerPrefs.SetInt("IsTutorial", 1);

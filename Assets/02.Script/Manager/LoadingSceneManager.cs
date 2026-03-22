@@ -34,6 +34,12 @@ namespace Manager
 
         private void Start()
         {
+            // 1. 이전 씬에서 Time.timeScale=0 (예: 일시정지)된 상태로 넘어왔을 경우 DOTween이 멈추는 현상 방지
+            Time.timeScale = 1f;
+            
+            // 2. 이전 씬에서 잔존하는 트윈들을 모두 제거해 MissingReferenceException 및 오작동 방지
+            DG.Tweening.DOTween.KillAll();
+
             if(nextScene == 0) 
                 nextScene = (int)SceneNum.START;
             LoadSceneSide().Forget();

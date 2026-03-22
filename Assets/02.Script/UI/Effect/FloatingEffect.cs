@@ -77,23 +77,7 @@ namespace UI.Effect
                 return;
 
             isFloating = true;
-            
-            Vector3 targetPos = startPosition + moveDirection * floatingDistance;
-            floatingSequence = DOTween.Sequence();
-            
-            if (isUIEffect)
-            {
-                var rectTransform = GetComponent<RectTransform>();
-                floatingSequence.Append(rectTransform.DOAnchorPos(targetPos, floatingSpeed).SetEase(easeType))
-                                .Append(rectTransform.DOAnchorPos(startPosition, floatingSpeed).SetEase(easeType));
-            }
-            else
-            {
-                floatingSequence.Append(transform.DOLocalMove(targetPos, floatingSpeed).SetEase(easeType))
-                                .Append(transform.DOLocalMove(startPosition, floatingSpeed).SetEase(easeType));
-            }
-            
-            floatingSequence.SetLoops(-1).SetLink(gameObject);
+            StartFloatingTask().Forget();
         }
 
         [Button("떠다니기 정지")]
@@ -103,19 +87,72 @@ namespace UI.Effect
             floatingSequence?.Kill();
         }
 
+        private async UniTaskVoid StartFloatingTask()
+        {
+            while (isFloating)
+            {
+                if (isUIEffect)
+                {
+                    await FloatingUITask();
+                }
+                else
+                {
+                    await FloatingGameObjectTask();
+                }
+
+                await UniTask.Yield(destroyCancellation.Token);
+            }
+        }
+
+        private async UniTask FloatingGameObjectTask()
+        {
+            destroyCancellation.Cancel();
+            destroyCancellation = new CancellationTokenSource();
+
+            Vector3 targetPos = startPosition + moveDirection * floatingDistance;
+
+            try
+            {
+                // 위로 이동
+                await transform.DOLocalMove(targetPos, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+                // 아래로 이동
+                await transform.DOLocalMove(startPosition, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+            }
+            catch (System.OperationCanceledException)
+            {
+                // 작업이 취소됨
+            }
+        }
+
+        private async UniTask FloatingUITask()
+        {
+            destroyCancellation.Cancel();
+            destroyCancellation = new CancellationTokenSource();
+
+            var rectTransform = GetComponent<RectTransform>();
+            Vector3 targetPos = startPosition + moveDirection * floatingDistance;
+
+            try
+            {
+                // 목표 위치로 이동
+                await rectTransform.DOAnchorPos(targetPos, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+                // 원래 위치로 복귀
+                await rectTransform.DOAnchorPos(startPosition, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+            }
+            catch (System.OperationCanceledException)
+            {
+                // 작업이 취소됨
+            }
+        }
+
         protected override async UniTask VFXOnceInGame()
         {
-            Vector3 targetPos = startPosition + moveDirection * floatingDistance;
-            await transform.DOLocalMove(targetPos, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
-            await transform.DOLocalMove(startPosition, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+            await FloatingGameObjectTask();
         }
 
         protected override async UniTask VFXOnceUI()
         {
-            var rectTransform = GetComponent<RectTransform>();
-            Vector3 targetPos = startPosition + moveDirection * floatingDistance;
-            await rectTransform.DOAnchorPos(targetPos, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
-            await rectTransform.DOAnchorPos(startPosition, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+            await FloatingUITask();
         }
     }
 }

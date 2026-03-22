@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using OutGame;
 using Pooling;
 using UnityEngine;
@@ -62,7 +63,7 @@ namespace Manager
 
             OptionManager = new OptionManager();
             OptionManager.Init();
-            
+
             // CashManager = new();
             // CashManager.Initial();
 
@@ -72,7 +73,17 @@ namespace Manager
             // ItemManager는 이제 LoadManagerPrefabs에서 로드됨
             // ItemManager = new();
             // ItemManager.Initial();
+
         }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void InitializeDOTween()
+        {
+            // DOTween 초기화 및 캐퍼시티 확장 (IndexOutOfRangeException 방지)
+            // Awake 단계보다 먼저 실행되어 기본 Capacity(200, 50)로 초기화되는 것을 막습니다.
+            DOTween.Init(true, true, LogBehaviour.Default).SetCapacity(4000, 1000);
+        }
+
 
         private void OnApplicationPause(bool pauseStatus) => OnApplicationPauseEvt?.Invoke(this, EventArgs.Empty);
         private void OnApplicationQuit()
@@ -86,7 +97,7 @@ namespace Manager
         private void LoadManagerPrefabs()
         {
             string prefixManager = "Prefabs/Manager/";
-            
+
             // StageManager 로드
             try
             {
@@ -102,7 +113,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load StageManager: {e.Message}");
             }
-            
+
             // UIManager 로드
             try
             {
@@ -121,7 +132,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load UIManager: {e.Message}");
             }
-            
+
             // SoundManager 로드
             try
             {
@@ -136,7 +147,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load SoundManager: {e.Message}");
             }
-            
+
             // DailyCheckManager 로드
             try
             {
@@ -151,7 +162,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load DailyCheckManager: {e.Message}");
             }
-            
+
             // RewardManager 로드
             try
             {
@@ -166,7 +177,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load RewardManager: {e.Message}");
             }
-            
+
             // InputManager 로드
             try
             {
@@ -181,7 +192,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load InputManager: {e.Message}");
             }
-            
+
             // QuestManager 로드
             try
             {
@@ -196,7 +207,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load QuestManager: {e.Message}");
             }
-            
+
             // GoogleMobileAdsManager 로드 (모바일에서 문제가 될 수 있음)
             try
             {
@@ -211,7 +222,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load GoogleMobileAdsManager: {e.Message}");
             }
-            
+
             // ItemManager 로드
             try
             {
@@ -227,7 +238,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load ItemManager: {e.Message}");
             }
-            
+
             // MainMenuSelectedManager 로드
             try
             {
@@ -264,7 +275,7 @@ namespace Manager
             {
                 Debug.LogError($"Failed to load PoolManager: {e.Message}");
             }
-            
+
             Debug.Log("LoadManagerPrefabs completed");
         }
     }

@@ -256,7 +256,8 @@ namespace UI
             {
                 // 파일로 저장
                 string timestamp = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                string filename = $"Mission_{ItemSetName}_{timestamp}.png";
+                string safeItemSetName = string.Join("_", ItemSetName.Split(System.IO.Path.GetInvalidFileNameChars()));
+                string filename = $"Mission_{safeItemSetName}_{timestamp}.png";
                 byte[] bytes = screenshot.EncodeToPNG();
                 System.IO.File.WriteAllBytes(filename, bytes);
 
