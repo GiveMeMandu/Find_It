@@ -210,11 +210,14 @@ public class LeanClickEvent : LeanSelectableByFinger
 	}
 	// ----------------------------------------
 
+	public bool isTutorialTarget = false; // 튜토리얼 타겟일 경우 입력 무시용
+
 	/// <summary>
 	/// InputManager의 isEnabled 상태를 확인하는 헬퍼 메서드
 	/// </summary>
 	private bool IsInputEnabled()
 	{
+		if (isTutorialTarget) return true; // 튜토리얼 타겟은 입력 비활성화 상태에서도 클릭 가능하게 예외 처리
 		return Global.InputManager != null && Global.InputManager.isEnabled;
 	}
 

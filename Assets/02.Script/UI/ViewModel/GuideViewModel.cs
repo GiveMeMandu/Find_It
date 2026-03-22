@@ -25,6 +25,8 @@ namespace UI
         private bool _isUITarget;
         private bool _isFinger;
         private Canvas _canvas;
+        private Image _maskImage;
+        private Sprite _defaultMaskSprite;
 
         protected override void Awake()
         {
@@ -34,13 +36,24 @@ namespace UI
             {
                 Debug.LogError("GuideViewModel requires a Canvas parent!");
             }
+            
+            _maskImage = _maskArea.GetComponent<Image>();
+            if (_maskImage != null)
+            {
+                _defaultMaskSprite = _maskImage.sprite;
+            }
         }
 
         // UI 요소용 가이드 설정
-        public void SetTargetGuide(RectTransform target, Vector2 offset = default, bool isFinger = true, bool isLayoutElement = false)
+        public void SetTargetGuide(RectTransform target, Vector2 offset = default, bool isFinger = true, bool isLayoutElement = false, Sprite customMaskSprite = null)
         {
             _isUITarget = true;
             _isFinger = isFinger;
+
+            if (_maskImage != null)
+            {
+                _maskImage.sprite = customMaskSprite != null ? customMaskSprite : _defaultMaskSprite;
+            }
 
             // 캔버스와 카메라 설정 가져오기
             RectTransform canvasRect = _canvas.GetComponent<RectTransform>();
@@ -50,22 +63,25 @@ namespace UI
             Vector3[] corners = new Vector3[4];
             target.GetWorldCorners(corners);
 
-            // 캔버스 스케일 고려
-            float canvasScale = _canvas.scaleFactor;
+            // 월드 코너를 스크린을 거쳐 캔버스 로컬 좌표로 변환해 정확한 렌더링 크기 계산
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRect,
+                RectTransformUtility.WorldToScreenPoint(cam, corners[0]),
+                cam,
+                out Vector2 localBottomLeft
+            );
             
-            if (isLayoutElement)
-            {
-                // Layout Element의 경우 실제 렌더링되는 크기 사용
-                _targetSize = new Vector2(
-                    (corners[2].x - corners[0].x),
-                    (corners[2].y - corners[0].y)
-                );
-            }
-            else
-            {
-                // 일반적인 경우 RectTransform의 sizeDelta 사용
-                _targetSize = target.sizeDelta;
-            }
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRect,
+                RectTransformUtility.WorldToScreenPoint(cam, corners[2]),
+                cam,
+                out Vector2 localTopRight
+            );
+
+            _targetSize = new Vector2(
+                Mathf.Abs(localTopRight.x - localBottomLeft.x),
+                Mathf.Abs(localTopRight.y - localBottomLeft.y)
+            );
             
             Debug.Log($"Target Size: {_targetSize}, Target Rect Size: {target.rect.size}, Mask Size: {_maskArea.sizeDelta}");
 
@@ -116,8 +132,13 @@ namespace UI
         }
 
         // Sprite 렌더러용 가이드 설정
-        public void SetTargetGuide(SpriteRenderer target)
+        public void SetTargetGuide(SpriteRenderer target, Sprite customMaskSprite = null)
         {
+            if (_maskImage != null)
+            {
+                _maskImage.sprite = customMaskSprite != null ? customMaskSprite : _defaultMaskSprite;
+            }
+
             Camera mainCam = Camera.main;
             Canvas canvas = _maskArea.GetComponentInParent<Canvas>();
             

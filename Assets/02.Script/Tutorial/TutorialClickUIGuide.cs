@@ -10,6 +10,7 @@ namespace InGame.Tutorial
     public class TutorialClickUIGuide : TutorialBase
     {
         [SerializeField] private Button _targetButton; // 터치할 UI 버튼
+        [SerializeField] private Sprite _customMaskSprite; // 커스텀 마스크 이미지
         private InGameMainPage inGameMainPage;
         private bool isTouched = false;
         [SerializeField] private Vector2 offset = new Vector2(0, 0);
@@ -17,13 +18,15 @@ namespace InGame.Tutorial
         public bool isFinger = false;
         public bool isLayoutElement = false;  // Layout Group 내부 요소인지 여부
 
-        public void Init(Button targetButton = null, Vector2 offset = default, bool isFinger = false, bool isLayoutElement = false)
+        public void Init(Button targetButton = null, Vector2 offset = default, bool isFinger = false, bool isLayoutElement = false, Sprite customMaskSprite = null)
         {
             if (targetButton != null)
                 _targetButton = targetButton;
             this.offset = offset;
             this.isFinger = isFinger;
             this.isLayoutElement = isLayoutElement;
+            if (customMaskSprite != null)
+                _customMaskSprite = customMaskSprite;
             Enter();
         }
 
@@ -60,7 +63,7 @@ namespace InGame.Tutorial
 
             var guideViewModel = guidePage.GetComponentInChildren<GuideViewModel>();
             RectTransform buttonRect = _targetButton.GetComponent<RectTransform>();
-            guideViewModel.SetTargetGuide(buttonRect, offset, isFinger, isLayoutElement);
+            guideViewModel.SetTargetGuide(buttonRect, offset, isFinger, isLayoutElement, _customMaskSprite);
         }
 
         public override void Execute(TutorialController controller)

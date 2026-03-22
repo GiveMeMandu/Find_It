@@ -10,10 +10,12 @@ namespace InGame.Tutorial
     {
         [Header("클릭 대상")]
         [SerializeField] private LeanClickEvent _targetTouchable;
+        [SerializeField] private SpriteRenderer _targetGuideSprite;
+        [SerializeField] private Sprite _customMaskSprite; // 커스텀 마스크 이미지
+        public bool isInputDisableMoveInput = true; // 클릭 가이드 실행 시 입력 비활성화 여부
 
         [Header("스킵가능한건지")]
         [SerializeField] private bool _isSkipable = false;
-        [SerializeField] private SpriteRenderer _targetGuideSprite;
         private InGameMainPage inGameMainPage;
         private bool isTouched = false;
         private float timer = 0f;
@@ -22,12 +24,22 @@ namespace InGame.Tutorial
         public override void Enter()
         {
             timer = 0f;
+            if (isInputDisableMoveInput)
+            {
+                Global.InputManager.DisableGameInputOnly();
+            }
+
+            if (_targetTouchable != null)
+            {
+                _targetTouchable.isTutorialTarget = true;
+            }
+
             if (Global.UIManager.GetPages<InGameMainPage>().Count > 0)
             {
                 LeanClickEvent.OnGlobalClickSuccess += OnGlobalClickSuccess;
                 inGameMainPage = Global.UIManager.GetPages<InGameMainPage>()[0];
                 var guideViewModel = Global.UIManager.OpenPage<GuidePage>().GetComponentInChildren<GuideViewModel>();
-                guideViewModel.SetTargetGuide(_targetGuideSprite);
+                guideViewModel.SetTargetGuide(_targetGuideSprite, _customMaskSprite);
             }
         }
 
@@ -51,8 +63,17 @@ namespace InGame.Tutorial
 
         public override void Exit()
         {
+            if (_targetTouchable != null)
+            {
+                _targetTouchable.isTutorialTarget = false;
+            }
+
             LeanClickEvent.OnGlobalClickSuccess -= OnGlobalClickSuccess;
             Global.UIManager.ClosePage();
+            if (isInputDisableMoveInput)
+            {
+                Global.InputManager.EnableGameInputOnly();
+            }
         }
 
         private void OnDestroy()

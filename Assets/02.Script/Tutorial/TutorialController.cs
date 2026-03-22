@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,14 +16,18 @@ public class TutorialController : MonoBehaviour
 	private TutorialBase		currentTutorial = null;
 	public	int					currentIndex = -1;
 
-	[SerializeField]
-	private bool autoStart = false;
+	[SerializeField] private bool autoStart = false;
+	[SerializeField] private bool autoSet = false;
 
 	private void Start()
 	{
 		if (autoStart)
 		{
 			SetNextTutorial();
+		}
+		if (autoSet)
+		{
+			AutoFillTutorials();
 		}
 	}
 
@@ -36,6 +41,7 @@ public class TutorialController : MonoBehaviour
 
 	public void SetNextTutorial()
 	{
+		Debug.Log($"TutorialController: SetNextTutorial called. Current Index: {currentIndex}");
 		// 현재 튜토리얼의 Exit() 메소드 호출
 		if ( currentTutorial != null )
 		{
@@ -54,6 +60,7 @@ public class TutorialController : MonoBehaviour
 		currentTutorial = tutorials[currentIndex];
 
 		// 새로 바뀐 튜토리얼의 Enter() 메소드 호출
+		Debug.Log($"TutorialController: SetNextTutorial - {currentTutorial.GetType().Name}");
 		currentTutorial.Enter();
 	}
 
@@ -72,5 +79,64 @@ public class TutorialController : MonoBehaviour
 		}
 		OnCompletedAllTutorials?.Invoke();
 	}
+	[Button("튜토리얼 자동 할당")]
+	public void AutoFillTutorials()
+	{
+		tutorials.Clear();
+		var tutorialObjects = GetComponentsInChildren<TutorialBase>(true);
+		foreach (var tutorial in tutorialObjects)
+		{
+			tutorials.Add(tutorial);
+		}
+	}
+
+#if UNITY_EDITOR
+	[TitleGroup("튜토리얼 객체 동적 생성")]
+	[ValueDropdown("GetTutorialTypes")]
+	[LabelText("튜토리얼 종류")]
+	public System.Type tutorialTypeToCreate;
+
+	[TitleGroup("튜토리얼 객체 동적 생성")]
+	[Button("선택한 튜토리얼 자식 객체로 생성", ButtonSizes.Large)]
+	public void CreateSelectedTutorial()
+	{
+		if (tutorialTypeToCreate == null)
+		{
+			Debug.LogWarning("생성할 튜토리얼 타입을 선택해주세요.");
+			return;
+		}
+
+		GameObject go = new GameObject(tutorialTypeToCreate.Name);
+		go.transform.SetParent(this.transform);
+		go.transform.localPosition = Vector3.zero;
+		go.transform.localScale = Vector3.one;
+		
+		UnityEditor.Undo.RegisterCreatedObjectUndo(go, "Create " + tutorialTypeToCreate.Name);
+		go.AddComponent(tutorialTypeToCreate);
+
+		UnityEditor.Selection.activeGameObject = go;
+		
+		// 생성 후 자동으로 리스트 갱신
+		AutoFillTutorials();
+	}
+
+	private System.Collections.IEnumerable GetTutorialTypes()
+	{
+		var list = new Sirenix.OdinInspector.ValueDropdownList<System.Type>();
+		var baseType = typeof(TutorialBase);
+		
+		foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+		{
+			foreach (var type in assembly.GetTypes())
+			{
+				if (baseType.IsAssignableFrom(type) && !type.IsAbstract && type.IsClass && type != baseType)
+				{
+					list.Add(type.Name, type);
+				}
+			}
+		}
+		return list;
+	}
+#endif
 }
 

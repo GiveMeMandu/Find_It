@@ -66,7 +66,8 @@ namespace Util.CameraSetting
         public float smoothPanDeceleration = 10f;
         
         // 상태 관리 변수들
-        private bool _forceDisabled = false; // InputManager에서 강제로 비활성화된 상태
+        private bool _forceDisabled => _forceDisabledCount > 0;
+        private int _forceDisabledCount = 0; // 중복 비활성화 관리를 위한 카운터
         private bool _uiDragState = false; // UI 드래그 중인 상태
 
         private UnityEngine.Camera _camera;
@@ -192,8 +193,8 @@ namespace Util.CameraSetting
         private void HandleMouseInput()
         {
             // WASD 이동 (InputManager 연동)
-            // UI 드래그 상태(_uiDragState)일 때는 마우스 드래그만 막고 WASD는 허용합니다. (강제 비활성화 상태에서는 모두 차단)
-            bool canWASD = !_forceDisabled;
+            //_enablePan이 켜져있고 강제 비활성화(_forceDisabled)가 아닐 때만 WASD를 허용합니다.
+            bool canWASD = !_forceDisabled && _enablePan;
 
             if (canWASD && Manager.Global.InputManager != null)
             {
@@ -215,6 +216,11 @@ namespace Util.CameraSetting
                     var newPosition = _camera.transform.position + (_currentPanVelocity * Time.deltaTime);
                     _camera.transform.position = _infinitePan ? newPosition : ClampCamera(newPosition);
                 }
+            }
+            else
+            {
+                // enablePan이 false거나 입력이 불가능한 상태면 관성을 즉시 제거합니다.
+                _currentPanVelocity = Vector3.zero;
             }
 
             if (Mouse.current == null) return;
@@ -414,6 +420,7 @@ namespace Util.CameraSetting
 
 
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
+            // 내부에서 _enablePan 및 관성 상태를 체크하므로 매 프레임 호출되어야 잔여 관성이 멈춥니다.
             HandleMouseInput();
 #endif
 
@@ -623,14 +630,22 @@ namespace Util.CameraSetting
                 return;
             }
             
-            if (Instance._showDebugInfo)
+            if (value)
             {
-                Debug.Log($"[CameraView2D] SetForceDisabled: {Instance._forceDisabled} -> {value}");
+                Instance._forceDisabledCount++;
+            }
+            else
+            {
+                Instance._forceDisabledCount--;
+                if (Instance._forceDisabledCount < 0) Instance._forceDisabledCount = 0;
             }
             
-            Instance._forceDisabled = value;
+            if (Instance._showDebugInfo)
+            {
+                Debug.Log($"[CameraView2D] SetForceDisabled Count: {Instance._forceDisabledCount}, IsDisabled: {Instance._forceDisabled}");
+            }
             
-            if (value)
+            if (Instance._forceDisabled)
             {
                 // 강제 비활성화 시 즉시 카메라 컨트롤 비활성화
                 Instance._enablePan = false;

@@ -39,7 +39,7 @@ namespace UI.Page
             }
         }
         private CancellationTokenSource _cts;
-        
+
         public override bool BlockEscape => true; // 게임 종료 페이지에서는 Escape 키 입력 차단
 
         private void OnEnable()
@@ -54,6 +54,7 @@ namespace UI.Page
             // 위에 표기를 위해 _ 대신 - 쓰기
             _curStage = _curStage.Replace('_', '-');
 
+            Global.InputManager.DisableGameInputOnly();
             DisableInputAndDestroyAsync(_cts.Token).Forget();
         }
 
@@ -68,7 +69,7 @@ namespace UI.Page
             {
                 Debug.LogError($"[InGameIntroPage] Error enabling input in OnDisable: {ex.Message}");
             }
-            
+
             // CancellationToken 정리
             _cts?.Cancel();
             _cts?.Dispose();
@@ -79,13 +80,12 @@ namespace UI.Page
         {
             try
             {
-                Global.InputManager.DisableAllInput();
 
                 await UniTask.WaitForSeconds(3, cancellationToken: cancellationToken);
-                
-                Global.InputManager.EnableAllInput();
+
                 Global.UIManager.ClosePage();
-                Global.UIManager.OpenPage<InGameTutorialPage>();
+                // Global.InputManager.EnableAllInput();
+                // Global.UIManager.OpenPage<InGameTutorialPage>();
             }
             catch (OperationCanceledException)
             {
@@ -96,7 +96,7 @@ namespace UI.Page
             {
                 // 예외 발생 시에도 입력 복구
                 Debug.LogError($"[InGameIntroPage] Error in DisableInputAndDestroyAsync: {ex.Message}");
-                Global.InputManager.EnableAllInput();
+                // Global.InputManager.EnableAllInput();
             }
         }
 

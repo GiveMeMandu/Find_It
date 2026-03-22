@@ -11,7 +11,7 @@ using UI.Page;
 using Cysharp.Threading.Tasks;
 using Manager;
 using UI;
-using @Button = Sirenix.OdinInspector.ButtonAttribute;
+using Button = Sirenix.OdinInspector.ButtonAttribute;
 
 public class SetCompletionObject : MonoBehaviour
 {
@@ -32,7 +32,7 @@ public class SetCompletionObject : MonoBehaviour
 
     [Label("미션 완료 체크 아이콘")]
     public GameObject foundCheckIcon;
-    
+
     [Label("화면 밖 알림 인디케이터")]
     public RectTransform OffScreenIndicator;
 
@@ -44,7 +44,7 @@ public class SetCompletionObject : MonoBehaviour
     [InfoBox("세트 완성 시 표시할 GameObject를 연결하세요. 예: 세트 완성 아트 또는 이펙트.")]
     public GameObject CompletionView;  // 세트 완성 모습을 보여줄 GameObject
     public bool IsFound { get; private set; }
-    
+
     // 미션을 수락했는지(클릭했는지) 추적
     public bool IsAccepted { get; private set; } = false;
 
@@ -57,21 +57,21 @@ public class SetCompletionObject : MonoBehaviour
     [Label("세트 완성 시 이벤트")]
     [InfoBox("세트가 완성되었을 때 실행할 이벤트를 연결하세요. 예: UI 알림, 애니메이션 재생 등.")]
     public UnityEvent OnSetComplete;
-    
+
     [Header("Camera Effect Settings")]
     [Label("카메라 연출 활성화")]
     [InfoBox("세트 완성 시 카메라 연출 및 사진 촬영을 수행할지 여부를 설정합니다.")]
     public bool enableCameraEffect = false;
-    
+
     [Label("카메라 확대 크기 (Orthographic Size)")]
     [InfoBox("카메라 연출 시 확대할 Orthographic Size 값입니다. 값이 작을수록 더 많이 확대됩니다. 기즈모로 확대 범위를 미리 확인할 수 있습니다.")]
     [ShowIf("enableCameraEffect")]
     [Range(0.5f, 10f)]
     public float defaultCameraZoomSize = 3f;
-    
+
     private Camera _mainCamera;
     private Canvas _indicatorCanvas;
-    
+
     // 자식으로 있는 미션 아이템 그룹 뷰모델 캐싱
     [SerializeField] private MissionElementViewModel _missionItemGroup;
     public Canvas MissionItemGroupCanvas;
@@ -83,16 +83,16 @@ public class SetCompletionObject : MonoBehaviour
             CompletionView.SetActive(false);
         }
         if (hideOnStart) gameObject.SetActive(false);  // 처음에는 숨김
-        
+
         _mainCamera = Camera.main;
-        
+
         // 인디케이터 초기화
         if (OffScreenIndicator != null)
         {
             OffScreenIndicator.gameObject.SetActive(false);
             _indicatorCanvas = OffScreenIndicator.GetComponentInParent<Canvas>();
         }
-        
+
         if (questionAlertObject != null)
         {
             questionAlertObject.SetActive(true);
@@ -105,9 +105,9 @@ public class SetCompletionObject : MonoBehaviour
         {
             foundCheckIcon.SetActive(false);
         }
-        if(_missionItemGroup == null)
+        if (_missionItemGroup == null)
             _missionItemGroup = GetComponentInChildren<MissionElementViewModel>(true);
-        if(MissionItemGroupCanvas == null)
+        if (MissionItemGroupCanvas == null)
             MissionItemGroupCanvas = _missionItemGroup.GetComponentInChildren<Canvas>(true);
     }
 
@@ -115,7 +115,7 @@ public class SetCompletionObject : MonoBehaviour
     {
         // 카메라 연출 중이면 MissionItemGroupCanvas 비활성화
         bool isCameraEffectPlaying = ItemSetManager.Instance != null && ItemSetManager.Instance.IsPlayingCameraEffect;
-        
+
         if (isCameraEffectPlaying)
         {
             if (MissionItemGroupCanvas != null && MissionItemGroupCanvas.gameObject.activeSelf)
@@ -126,7 +126,7 @@ public class SetCompletionObject : MonoBehaviour
             if (MissionItemGroupCanvas != null && !MissionItemGroupCanvas.gameObject.activeSelf)
                 MissionItemGroupCanvas.gameObject.SetActive(true);
         }
-        
+
         // 미션이 이미 수락되었거나, 완료되었거나, 인디케이터가 없으면 업데이트 안 함
         if (IsAccepted || IsFound || _mainCamera == null)
         {
@@ -143,9 +143,9 @@ public class SetCompletionObject : MonoBehaviour
     private void UpdateIndicatorPosition()
     {
         Vector3 screenPos = _mainCamera.WorldToScreenPoint(transform.position);
-        bool isOffScreen = screenPos.x <= IndicatorPadding || 
-                           screenPos.x >= Screen.width - IndicatorPadding || 
-                           screenPos.y <= IndicatorPadding || 
+        bool isOffScreen = screenPos.x <= IndicatorPadding ||
+                           screenPos.x >= Screen.width - IndicatorPadding ||
+                           screenPos.y <= IndicatorPadding ||
                            screenPos.y >= Screen.height - IndicatorPadding ||
                            screenPos.z < 0;
 
@@ -154,14 +154,14 @@ public class SetCompletionObject : MonoBehaviour
             // 화면 밖: 말풍선 끄고 인디케이터 켜기
             if (questionAlertObject != null) questionAlertObject.SetActive(false);
             if (foundAlertObject != null) foundAlertObject.SetActive(false);
-            
+
             if (OffScreenIndicator != null)
             {
                 if (!OffScreenIndicator.gameObject.activeSelf) OffScreenIndicator.gameObject.SetActive(true);
 
                 // 인디케이터 위치 계산
                 Vector3 center = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
-                
+
                 // 타겟이 카메라 뒤에 있다면 위치를 반전시킴
                 if (screenPos.z < 0)
                 {
@@ -169,14 +169,14 @@ public class SetCompletionObject : MonoBehaviour
                 }
 
                 Vector3 direction = (screenPos - center).normalized;
-                
+
                 // 화면 경계에 위치시키기 (Center 기준)
                 Vector2 screenBounds = new Vector2(Screen.width * 0.5f - IndicatorPadding, Screen.height * 0.5f - IndicatorPadding);
-                
+
                 // 기울기(m) = dy / dx
                 // y = m * x
                 float m = direction.y / direction.x;
-                
+
                 Vector3 targetLocalPos = Vector3.zero;
 
                 // 수직선 체크 (x가 0에 가까울 때)
@@ -222,10 +222,10 @@ public class SetCompletionObject : MonoBehaviour
             {
                 // 재료를 찾아서 foundAlert가 떠있는 상태가 아닐 때만 물음표 표시
                 bool isFoundAlertActive = foundAlertObject != null && foundAlertObject.activeSelf;
-                if (questionAlertObject != null && !questionAlertObject.activeSelf && !isFoundAlertActive) 
+                if (questionAlertObject != null && !questionAlertObject.activeSelf && !isFoundAlertActive)
                     questionAlertObject.SetActive(true);
             }
-            
+
             if (OffScreenIndicator != null && OffScreenIndicator.gameObject.activeSelf) OffScreenIndicator.gameObject.SetActive(false);
         }
     }
@@ -252,7 +252,7 @@ public class SetCompletionObject : MonoBehaviour
         {
             MissionItemGroupCanvas.gameObject.SetActive(true);
             _missionItemGroup.gameObject.SetActive(true);
-            
+
             // 데이터 초기화
             if (ItemSetManager.Instance != null)
             {
@@ -271,7 +271,7 @@ public class SetCompletionObject : MonoBehaviour
         if (!IsFound)
         {
             IsFound = true;
-            
+
             // 모든 알림 끄기
             if (questionAlertObject != null) questionAlertObject.SetActive(false);
             if (foundAlertObject != null) foundAlertObject.SetActive(false);
@@ -280,7 +280,7 @@ public class SetCompletionObject : MonoBehaviour
                 LevelManager.PlayItemFx(AudioWhenClick);
             }
             // CompletionView.SetActive(true);
-            
+
             // ItemSetManager에 클릭되었음을 알림
             if (ItemSetManager.Instance != null)
             {
@@ -302,7 +302,7 @@ public class SetCompletionObject : MonoBehaviour
 
         // gameObject.SetActive(true);  // 세트가 완성되면 알림 표시
         OnSetComplete?.Invoke();
-        
+
         // Debug.Log($"SetCompletionObject {SetName} is now active and ready to be clicked!");
     }
 
@@ -329,26 +329,26 @@ public class SetCompletionObject : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         if (!enableCameraEffect) return;
-        
+
         // 카메라 확대 영역을 와이어프레임 박스로 시각화
         float aspect = Camera.main != null ? Camera.main.aspect : 16f / 9f;
         float height = defaultCameraZoomSize * 2f;
         float width = height * aspect;
-        
+
         // 초록색 와이어프레임: 확대 시 보이는 영역
         Gizmos.color = new Color(0f, 1f, 0f, 0.8f);
         Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0f));
-        
+
         // 반투명 초록색 면: 확대 영역 채우기
         Gizmos.color = new Color(0f, 1f, 0f, 0.1f);
         Gizmos.DrawCube(transform.position, new Vector3(width, height, 0f));
-        
+
         // 중앙 십자 표시
         Gizmos.color = Color.yellow;
         float crossSize = Mathf.Min(width, height) * 0.05f;
         Gizmos.DrawLine(transform.position - Vector3.right * crossSize, transform.position + Vector3.right * crossSize);
         Gizmos.DrawLine(transform.position - Vector3.up * crossSize, transform.position + Vector3.up * crossSize);
-        
+
 #if UNITY_EDITOR
         // 라벨 표시
         UnityEditor.Handles.Label(
@@ -394,5 +394,23 @@ public class SetCompletionObject : MonoBehaviour
                 }
             }
         }
+    }
+    [@Button("세트 매니저 객체 선택")]
+    public void SelectItemSetManagerInEditor()
+    {
+        {
+#if UNITY_EDITOR
+            var manager = FindAnyObjectByType<ItemSetManager>();
+            if (manager != null)
+            {
+                UnityEditor.Selection.activeObject = manager.gameObject;
+                Debug.Log("ItemSetManager 객체를 선택했습니다.");
+            }
+            else
+            {
+                Debug.LogWarning("씬에 ItemSetManager 객체가 존재하지 않습니다.");
+            }
+        }
+#endif
     }
 }
