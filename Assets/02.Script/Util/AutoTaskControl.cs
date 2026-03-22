@@ -12,6 +12,9 @@ public class AutoTaskControl : MonoBehaviour
     }
     protected virtual void OnDisable()
     {
+        // DOTween 찌꺼기 방지: 현재 MonoBehaviour에 연결된 모든 트윈 강제 파괴
+        DG.Tweening.DOTween.Kill(this.transform);
+
         if (destroyCancellation != null && !destroyCancellation.IsCancellationRequested)
         {
             try
@@ -27,6 +30,9 @@ public class AutoTaskControl : MonoBehaviour
     }
     protected virtual void OnDestroy()
     {
+        // DOTween 찌꺼기 방지: 오브젝트 파괴 시 연결된 모든 트윈 강제 파괴
+        DG.Tweening.DOTween.Kill(this.transform);
+
         if (destroyCancellation != null)
         {
             try

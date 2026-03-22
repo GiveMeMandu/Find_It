@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -50,3 +51,4 @@ public class SelectGameObjectsWithMissingScripts : Editor
         Debug.Log($"<color=green>Missing Script 제거 완료</color>\nGameObjects: {gameObjectCount}, Removed Components: {componentCount}");
     }
 }
+#endif

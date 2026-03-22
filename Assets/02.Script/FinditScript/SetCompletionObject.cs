@@ -398,18 +398,16 @@ public class SetCompletionObject : MonoBehaviour
     [@Button("세트 매니저 객체 선택")]
     public void SelectItemSetManagerInEditor()
     {
-        {
 #if UNITY_EDITOR
-            var manager = FindAnyObjectByType<ItemSetManager>();
-            if (manager != null)
-            {
-                UnityEditor.Selection.activeObject = manager.gameObject;
-                Debug.Log("ItemSetManager 객체를 선택했습니다.");
-            }
-            else
-            {
-                Debug.LogWarning("씬에 ItemSetManager 객체가 존재하지 않습니다.");
-            }
+        var manager = FindAnyObjectByType<ItemSetManager>();
+        if (manager != null)
+        {
+            UnityEditor.Selection.activeObject = manager.gameObject;
+            Debug.Log("ItemSetManager 객체를 선택했습니다.");
+        }
+        else
+        {
+            Debug.LogWarning("씬에 ItemSetManager 객체가 존재하지 않습니다.");
         }
 #endif
     }

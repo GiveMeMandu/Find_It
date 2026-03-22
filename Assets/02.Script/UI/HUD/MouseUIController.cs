@@ -115,7 +115,8 @@ public class MouseUIController : MonoBehaviour
         {
             MouseCursorUI.DOKill();
             MouseCursorUI.DOScale(0.9f, ClickAnimationDuration)
-                .SetEase(Ease.OutQuad);
+                .SetEase(Ease.OutQuad)
+                .SetLink(MouseCursorUI.gameObject);
         }
 
         OnMouseDownEvent.Invoke();
@@ -131,7 +132,8 @@ public class MouseUIController : MonoBehaviour
         {
             MouseCursorUI.DOKill();
             MouseCursorUI.DOScale(1f, ClickAnimationDuration)
-                .SetEase(Ease.OutQuad);
+                .SetEase(Ease.OutQuad)
+                .SetLink(MouseCursorUI.gameObject);
         }
     }
 
@@ -167,7 +169,7 @@ public class MouseUIController : MonoBehaviour
         if (_canvasGroup != null)
         {
             _canvasGroup.DOKill();
-            _canvasGroup.DOFade(1f, FadeDuration).SetEase(Ease.OutQuad);
+            _canvasGroup.DOFade(1f, FadeDuration).SetEase(Ease.OutQuad).SetLink(_canvasGroup.gameObject);
         }
     }
 
@@ -177,7 +179,7 @@ public class MouseUIController : MonoBehaviour
         if (_canvasGroup != null)
         {
             _canvasGroup.DOKill();
-            _canvasGroup.DOFade(0f, FadeDuration).SetEase(Ease.InQuad);
+            _canvasGroup.DOFade(0f, FadeDuration).SetEase(Ease.InQuad).SetLink(_canvasGroup.gameObject);
         }
     }
 

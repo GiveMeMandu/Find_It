@@ -54,7 +54,7 @@ namespace Manager
         {
             playerAction = new PlayerAction();
             EnhancedTouchSupport.Enable();
-            
+
             // 마우스 입력 시스템 강제 초기화
             try
             {
@@ -66,7 +66,7 @@ namespace Manager
                 else
                 {
                     Debug.LogWarning("Mouse.current가 null입니다. New Input System이 제대로 초기화되지 않았을 수 있습니다.");
-                    
+
                     // 마우스 디바이스를 수동으로 추가 시도
                     var mouse = InputSystem.AddDevice<Mouse>();
                     if (mouse != null)
@@ -79,7 +79,7 @@ namespace Manager
             {
                 Debug.LogError($"마우스 입력 시스템 초기화 실패: {e.Message}");
             }
-            
+
             // 터치 이벤트 바인딩
             Touch.onFingerDown += OnFingerDown;
             Touch.onFingerUp += OnFingerUp;
@@ -87,7 +87,7 @@ namespace Manager
 
             // 저장된 키 바인딩 설정 로드
             LoadBindings();
-            
+
             playerAction.playerControl.Pause.performed += Pause_Performed;
             playerAction.playerControl.Enable();
 
@@ -124,7 +124,7 @@ namespace Manager
         private void OnFingerDown(Finger finger)
         {
             if (!isEnabled) return;
-            
+
             ProcessFingerDownAsync(finger).Forget();
         }
 
@@ -134,16 +134,16 @@ namespace Manager
             await UniTask.Yield();
 
             if (eventSystem.IsPointerOverGameObject(finger.index)) return;
-            
+
             // 터치가 유효한지 확인
             if (!finger.currentTouch.valid) return;
 
-            try 
+            try
             {
                 Vector2 screenPos = finger.currentTouch.screenPosition;
                 Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
                 var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
-                
+
                 OnTouchPressAction?.Invoke(this, touchData);
             }
             catch (InvalidOperationException)
@@ -165,7 +165,7 @@ namespace Manager
                 Vector2 screenPos = finger.currentTouch.screenPosition;
                 Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
                 var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
-                
+
                 OnTouchPressEndAction?.Invoke(this, touchData);
             }
             catch (InvalidOperationException)
@@ -192,7 +192,7 @@ namespace Manager
                 Vector2 screenPos = finger.currentTouch.screenPosition;
                 Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
                 var touchData = new TouchData(finger.index, screenPos, worldPos, finger.currentTouch.phase);
-                
+
                 OnTouchMoveAction?.Invoke(this, touchData);
             }
             catch (InvalidOperationException)
@@ -226,12 +226,12 @@ namespace Manager
             isEnabled = false;
             playerAction.playerControl.Disable();
             playerAction.Disable();
-            
+
             if (eventSystem != null)
             {
                 eventSystem.enabled = false;
             }
-            
+
             CameraView2D.SetForceDisabled(true);
         }
 
@@ -240,12 +240,12 @@ namespace Manager
             isEnabled = true;
             playerAction.playerControl.Enable();
             playerAction.Enable();
-            
+
             if (eventSystem != null)
             {
                 eventSystem.enabled = true;
             }
-            
+
             CameraView2D.SetForceDisabled(false);
         }
 
@@ -254,13 +254,13 @@ namespace Manager
             isEnabled = false;
             playerAction.playerControl.Disable();
             playerAction.Disable();
-            
+
             // UI는 활성화 상태로 유지
             if (eventSystem != null)
             {
                 eventSystem.enabled = true;
             }
-            
+
             // 카메라 컨트롤을 강제로 비활성화 (UI 드래그 상태와 관계없이)
             CameraView2D.SetForceDisabled(true);
         }
@@ -270,15 +270,16 @@ namespace Manager
             isEnabled = true;
             playerAction.playerControl.Enable();
             playerAction.Enable();
-            
+
             // UI는 활성화 상태로 유지
             if (eventSystem != null)
             {
                 eventSystem.enabled = true;
             }
-            
+
             // 카메라 컨트롤 강제 비활성화 해제 (UI 드래그 상태에 따라 자동 관리)
-            CameraView2D.SetForceDisabled(false);
+            if (CameraView2D.Instance != null)
+                CameraView2D.SetForceDisabled(false);
         }
 
         public bool IsInputEnabled()
@@ -287,7 +288,7 @@ namespace Manager
         }
 
         public const string BINDING_KEY = "BINDING_KEY";
-        
+
         public void SaveBindings()
         {
             if (playerAction != null && playerAction.asset != null)
@@ -296,7 +297,7 @@ namespace Manager
                 PlayerPrefs.SetString(BINDING_KEY, json);
             }
         }
-        
+
         public void LoadBindings()
         {
             string bindingJson = PlayerPrefs.GetString(BINDING_KEY, "");

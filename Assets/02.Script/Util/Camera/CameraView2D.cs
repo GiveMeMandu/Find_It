@@ -194,7 +194,8 @@ namespace Util.CameraSetting
         {
             // WASD 이동 (InputManager 연동)
             //_enablePan이 켜져있고 강제 비활성화(_forceDisabled)가 아닐 때만 WASD를 허용합니다.
-            bool canWASD = !_forceDisabled && _enablePan;
+            // UI에 마우스가 올라간 상태(_uiDragState)여도 키보드(WASD) 이동은 허용합니다.
+            bool canWASD = !_forceDisabled && (_enablePan || _uiDragState);
 
             if (canWASD && Manager.Global.InputManager != null)
             {
