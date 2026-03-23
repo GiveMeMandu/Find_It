@@ -18,11 +18,20 @@ namespace InGame
         [SerializeField] private PlayableDirector _introDirector;
         [LabelText("아웃트로")]
         [SerializeField] private PlayableDirector _outroDirector;
+        public bool isUsingIntro = false;
 
         protected override void Start()
         {
             base.Start();
-            if (_introDirector != null) _introDirector.enabled = false;
+            if (!isUsingIntro)
+            {
+                if (_introDirector != null) _introDirector.enabled = false;
+            }else
+            {
+                if (_introDirector != null) _introDirector.enabled = true;
+                _levelManager.HideUI();
+                Global.UIManager.ClosePage();
+            }
             StartStage();
         }
         public override void SkipIntro()

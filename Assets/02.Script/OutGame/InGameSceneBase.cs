@@ -49,6 +49,7 @@ namespace OutGame
         public virtual void SkipIntro()
         {
             StartStageBase();
+            _levelManager.ShowUI();
         }
 
     }
