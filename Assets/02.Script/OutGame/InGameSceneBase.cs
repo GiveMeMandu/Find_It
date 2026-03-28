@@ -5,6 +5,7 @@ using Manager;
 using UI.Page;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 
 namespace OutGame
 {
@@ -12,6 +13,8 @@ namespace OutGame
     {
         public bool isTimeChallenge = false;
         public LevelManager _levelManager;
+        [LabelText("인트로 UI 페이지 오픈 여부")]
+        public bool isIntroPageOpen = true;
         
         protected override void Start()
         {
@@ -37,7 +40,9 @@ namespace OutGame
             if(_levelManager != null) {
                 _levelManager.gameObject.SetActive(true);
             }
-            Global.UIManager.OpenPage<InGameIntroPage>();
+            if(isIntroPageOpen) {
+                Global.UIManager.OpenPage<InGameIntroPage>();
+            }
         }
 
         protected virtual async UniTask ClearStageTask()
