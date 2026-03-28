@@ -85,7 +85,7 @@ namespace InGame
             }
             else
             {
-                StartStageBase();
+                // StartStageBase();
             }
         }
         protected override async UniTask ClearStageTask()

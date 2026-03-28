@@ -40,9 +40,9 @@ namespace OutGame
             if(_levelManager != null) {
                 _levelManager.gameObject.SetActive(true);
             }
-            if(isIntroPageOpen) {
+            // if(isIntroPageOpen) {
                 Global.UIManager.OpenPage<InGameIntroPage>();
-            }
+            // }
         }
 
         protected virtual async UniTask ClearStageTask()
