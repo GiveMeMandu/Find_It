@@ -89,7 +89,15 @@ namespace Manager
             catch (Exception e)
             {
                 Debug.LogWarning($"저장 데이터 로드 중 오류 발생: {e.Message}");
+                
+                // 손상된 기존 파일이 있다면 삭제하여 Save() 시 병합 오류를 방지합니다.
+                if (ES3.FileExists(FileName))
+                {
+                    try { ES3.DeleteFile(FileName); } catch { }
+                }
+
                 userStorage = new Storage();
+                InitializeFirstStage();
                 Save();
             }
         }
