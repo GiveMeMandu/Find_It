@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using I2.Loc;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -18,13 +19,14 @@ namespace UI
         public UnityEvent OnDeselected;
         public UnityEvent OnDeselectedLeft;  // 선택된 탭 기준 왼쪽에 깔렸을 때 호출
         public UnityEvent OnDeselectedRight; // 선택된 탭 기준 오른쪽에 깔렸을 때 호출
+        public Image icon;
 
         void Awake()
         {
             _labelTexts = GetComponentsInChildren<Localize>();
         }
 
-        public void Init(string labelTerm, Action onClick)
+        public void Init(string labelTerm, Action onClick, Sprite sprite = null)
         {
             if (_labelTexts != null)
             {
@@ -42,6 +44,11 @@ namespace UI
                 button.onClick.AddListener(() => {
                     _onClick?.Invoke();
                 });
+            }
+
+            if (icon != null && sprite != null)
+            {
+                icon.sprite = sprite;
             }
         }
 

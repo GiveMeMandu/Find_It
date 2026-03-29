@@ -39,16 +39,26 @@ namespace UnityWeld
 
         private void OnEnable() {
             var allCollections = Global.CollectionManager != null ? Global.CollectionManager.GetAllCollections() : new List<CollectionSO>();
-            PrepareViewModels(allCollections.Count);
+            var ownedCollections = allCollections.FindAll(c => Global.CollectionManager.GetCollectionCount(c) > 0);
+            
+            PrepareViewModels(ownedCollections.Count);
             var viewModels = GetViewModels();
             for(int i = 0; i < viewModels.Count; i++)
             {
                 var viewModel = viewModels[i] as CollectionElementViewModel;
-                viewModel.Init(this, allCollections[i]);
+                viewModel.Init(this, ownedCollections[i]);
                 if(i == 0)
                 {
                     SelectElement(viewModel);
-                    OnClickShowCollectionInfo(allCollections[i]);
+                    OnClickShowCollectionInfo(ownedCollections[i]);
+                }
+            }
+
+            if (ownedCollections.Count == 0)
+            {
+                if (_collectionInfoViewModel != null && _collectionInfoViewModel.transform != null)
+                {
+                    _collectionInfoViewModel.transform.gameObject.SetActive(false);
                 }
             }
         }

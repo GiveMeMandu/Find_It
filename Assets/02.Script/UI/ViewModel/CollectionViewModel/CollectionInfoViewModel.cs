@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityWeld;
 using UnityWeld.Binding;
 using UnityEngine.UI;
+using UI.Page;
 
 namespace UI
 {
@@ -15,6 +16,31 @@ namespace UI
     public class CollectionInfoViewModel : ViewModel
     {
         public Image collectSelectedImage;
+        private CollectionSO _currentCollection;
+        private CollectionPage _collectionPage;
+        [Binding]
+        public void OnClickPlaceSticker()
+        {
+            if (_currentCollection != null)
+            {
+                var diaryViewModel = FindFirstObjectByType<CollectionDiaryViewModel>(UnityEngine.FindObjectsInactive.Include);
+                if(_collectionPage != null)
+                {
+                    _collectionPage.tabGroup.SelectTab(0);
+                }
+                if (diaryViewModel != null)
+                {
+                    diaryViewModel.PlaceNewSticker(_currentCollection);
+                    // Refresh count text
+                    CollectionCount = Global.CollectionManager.GetCollectionCount(_currentCollection).ToString();
+                }
+                else
+                {
+                    Debug.LogWarning("CollectionDiaryViewModel not found in scene!");
+                }
+            }
+        }
+
         private string _collectionName;
         [Binding]
         public string CollectionName
@@ -81,6 +107,8 @@ namespace UI
         }
         public void Show(CollectionSO collection)
         {
+            _collectionPage = FindFirstObjectByType<CollectionPage>(UnityEngine.FindObjectsInactive.Include);
+            _currentCollection = collection;
             CollectionName = LocalizationManager.GetTranslation(collection.collectionName);
             CollectionCount = Global.CollectionManager.GetCollectionCount(collection).ToString();
             CollectionImage = collection.collectionImage;

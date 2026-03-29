@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -9,6 +10,7 @@ namespace UI
         [Header("Settings")]
         public TabButton tabButtonPrefab;
         public Transform tabRoot;
+        public Image icon;
 
         private List<TabButton> _tabs = new List<TabButton>();
         private int _selectedIndex = -1;
@@ -30,7 +32,7 @@ namespace UI
             _selectedIndex = -1;
         }
 
-        public void AddTab(string labelTerm, Action onSelect)
+        public void AddTab(string labelTerm, Action onSelect, Sprite sprite = null)
         {
             if (tabButtonPrefab == null || tabRoot == null)
                 return;
@@ -39,8 +41,7 @@ namespace UI
             tabButton.gameObject.SetActive(true);
 
             int index = _tabs.Count;
-            tabButton.Init(labelTerm, () => SelectTab(index, onSelect));
-            
+            tabButton.Init(labelTerm, () => SelectTab(index, onSelect), sprite);
             _tabs.Add(tabButton);
         }
 

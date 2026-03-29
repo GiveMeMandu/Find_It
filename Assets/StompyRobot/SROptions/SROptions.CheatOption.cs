@@ -62,6 +62,25 @@ public partial class SROptions
             Debug.LogError("UserDataManager를 찾을 수 없습니다.");
         }
     }
+    [DisplayName("모든 컬렉션 획득")]
+    public void GetAllCollections()
+    {
+        var collectionManager = Manager.Global.CollectionManager;
+        var userDataManager = Manager.Global.UserDataManager;
+        if (collectionManager != null && userDataManager != null)
+        {
+            var allCollections = collectionManager.GetAllCollections();
+            foreach (var collection in allCollections)
+            {
+                userDataManager.AddCollection(collection, 99); // 테스트를 위해 99개씩 지급
+            }
+            Debug.Log($"총 {allCollections.Count}개의 컬렉션을 99개씩 획득했습니다.");
+        }
+        else
+        {
+            Debug.LogError("CollectionManager 또는 UserDataManager를 찾을 수 없습니다.");
+        }
+    }
     [DisplayName("게임 클리어")]
     public void ClearGame()
     {

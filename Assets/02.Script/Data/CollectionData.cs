@@ -9,7 +9,20 @@ namespace Data
         public CollectionData()
         {
             CollectionInventory = new Dictionary<string, CollectionInfo>();
+            PlacedStickers = new List<PlacedStickerData>();
         }
+
+        [System.Serializable]
+        public class PlacedStickerData
+        {
+            public string id;
+            public string collectionKey;
+            public float posX, posY, posZ;
+            public float rotX, rotY, rotZ;
+            public float scaleX, scaleY, scaleZ;
+        }
+
+        public List<PlacedStickerData> PlacedStickers;
 
         [System.Serializable]
         public class CollectionInfo

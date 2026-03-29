@@ -54,5 +54,70 @@ namespace Manager
         {
             return userStorage.collectionData.CollectionInventory;
         }
+
+        // --- Diary(스티커 배치) 관련 메서드 ---
+
+        public void SavePlacedSticker(CollectionData.PlacedStickerData data)
+        {
+            if (userStorage.collectionData.PlacedStickers == null)
+            {
+                userStorage.collectionData.PlacedStickers = new List<CollectionData.PlacedStickerData>();
+            }
+
+            var existing = userStorage.collectionData.PlacedStickers.Find(x => x.id == data.id);
+            if (existing != null)
+            {
+                existing.posX = data.posX;
+                existing.posY = data.posY;
+                existing.posZ = data.posZ;
+                existing.rotX = data.rotX;
+                existing.rotY = data.rotY;
+                existing.rotZ = data.rotZ;
+                existing.scaleX = data.scaleX;
+                existing.scaleY = data.scaleY;
+                existing.scaleZ = data.scaleZ;
+            }
+            else
+            {
+                userStorage.collectionData.PlacedStickers.Add(data);
+            }
+            Save();
+        }
+
+        public void RemovePlacedSticker(string id)
+        {
+            if (userStorage.collectionData.PlacedStickers == null) return;
+            var sticker = userStorage.collectionData.PlacedStickers.Find(x => x.id == id);
+            if (sticker != null)
+            {
+                var so = FindCollectionByName(sticker.collectionKey);
+                if (so != null)
+                    AddCollection(so, 1);
+                userStorage.collectionData.PlacedStickers.Remove(sticker);
+                Save();
+            }
+        }
+
+        public void ClearAllPlacedStickers()
+        {
+            if (userStorage.collectionData.PlacedStickers == null) return;
+            foreach (var st in userStorage.collectionData.PlacedStickers)
+            {
+                var so = FindCollectionByName(st.collectionKey);
+                if (so != null)
+                    AddCollection(so, 1);
+            }
+            userStorage.collectionData.PlacedStickers.Clear();
+            Save();
+        }
+
+        public List<CollectionData.PlacedStickerData> GetAllPlacedStickers()
+        {
+            if (userStorage.collectionData.PlacedStickers == null)
+            {
+                userStorage.collectionData.PlacedStickers = new List<CollectionData.PlacedStickerData>();
+            }
+            return userStorage.collectionData.PlacedStickers;
+        }
     }
 }
