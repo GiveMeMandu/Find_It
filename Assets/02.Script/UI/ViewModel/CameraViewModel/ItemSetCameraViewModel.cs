@@ -258,10 +258,20 @@ namespace UI
                 string timestamp = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string safeItemSetName = string.Join("_", ItemSetName.Split(System.IO.Path.GetInvalidFileNameChars()));
                 string filename = $"Mission_{safeItemSetName}_{timestamp}.png";
-                byte[] bytes = screenshot.EncodeToPNG();
-                System.IO.File.WriteAllBytes(filename, bytes);
+                
+                // ES3로 이미지 저장
+                ES3.SaveImage(screenshot, filename);
 
-                Debug.Log($"[Screenshot] Saved to {filename}");
+                // 저장한 파일명들을 리스트로 관리하기 위해 ES3에 기록 (CollectionBookScrollViewModel에서 읽어갈 용도)
+                var photoList = ES3.KeyExists("SavedPhotos") ? ES3.Load<List<string>>("SavedPhotos") : new List<string>();
+                photoList.Add(filename);
+                ES3.Save("SavedPhotos", photoList);
+
+                // 기존 파일 직접 저장 로직 주석 처리 또는 삭제
+                // byte[] bytes = screenshot.EncodeToPNG();
+                // System.IO.File.WriteAllBytes(filename, bytes);
+
+                Debug.Log($"[Screenshot] Saved using ES3 to {filename}");
 
                 // 사진 이미지 객체에 sprite로 할당
                 if (photoImage != null)

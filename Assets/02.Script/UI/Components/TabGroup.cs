@@ -79,7 +79,30 @@ namespace UI
         {
             for (int i = 0; i < _tabs.Count; i++)
             {
-                _tabs[i].SetSelected(i == _selectedIndex);
+                _tabs[i].SetState(i == _selectedIndex, i < _selectedIndex);
+            }
+
+            if (_selectedIndex >= 0 && _selectedIndex < _tabs.Count)
+            {
+                if (_tabs[_selectedIndex].isSetSiblingIndex)
+                {
+                    // 선택된 탭을 중심으로 계단식으로 아래로 깔리도록 렌더링 순서(Z인덱스) 재배치
+                    
+                    // 1. 선택된 탭의 왼쪽 탭들은 왼쪽부터 차례대로 올림
+                    for (int i = 0; i < _selectedIndex; i++)
+                    {
+                        _tabs[i].transform.SetAsLastSibling();
+                    }
+
+                    // 2. 선택된 탭의 오른쪽 탭들은 오른쪽 끝에서부터 차례대로 올림 (역순)
+                    for (int i = _tabs.Count - 1; i > _selectedIndex; i--)
+                    {
+                        _tabs[i].transform.SetAsLastSibling();
+                    }
+
+                    // 3. 마지막으로 선택된 탭을 가장 마지막(맨 위)으로 올림
+                    _tabs[_selectedIndex].transform.SetAsLastSibling();
+                }
             }
         }
     }

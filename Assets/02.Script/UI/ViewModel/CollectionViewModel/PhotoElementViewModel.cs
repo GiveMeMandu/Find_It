@@ -4,44 +4,50 @@ using UnityWeld.Binding;
 using UnityWeld;
 using UnityEngine.UI;
 using UnityEngine;
-using SO;
-using I2.Loc;
-using Manager;
 using UnityEngine.Events;
+
 namespace UI
 {
     [Binding]
-    public class CollectionElementViewModel : ViewModel
+    public class PhotoElementViewModel : ViewModel
     {
-        public CollectionScrollViewModel CollectionScrollView;
+        public UnityWeld.CollectionBookScrollViewModel CollectionBookScrollView;
         public Image IconImage;
         public UnityEvent OnSelected = new UnityEvent();
         public GameObject selectedObj;
-        private CollectionSO _collection;
-        protected override void Awake() {
+        
+        private Sprite _photoSprite;
+        private string _photoName;
+
+        protected override void Awake() 
+        {
             base.Awake();
         }
 
         [Binding]
-        public void OnClickShowCollectionInfo()
+        public void OnClickShowPhotoInfo()
         {
             OnSelected.Invoke();
-            CollectionScrollView.SelectElement(this);
-            CollectionScrollView.OnClickShowCollectionInfo(_collection);
+            CollectionBookScrollView.SelectElement(this);
+            CollectionBookScrollView.OnClickShowPhotoInfo(_photoSprite, _photoName);
         }
 
         public void Init(
-            CollectionScrollViewModel collectionScrollView,
-            CollectionSO collection
+            UnityWeld.CollectionBookScrollViewModel scrollView, 
+            Sprite sprite, 
+            string photoName
         )
         {
             if (selectedObj != null) selectedObj.SetActive(false);
-            CollectionScrollView = collectionScrollView;
-            _collection = collection;
-            Image = collection.collectionImage;
+            CollectionBookScrollView = scrollView;
+            _photoSprite = sprite;
+            _photoName = photoName;
+            
+            Image = sprite;
+            Name = photoName;
+
             if (IconImage != null && Image != null)
             {
-
                 Canvas.ForceUpdateCanvases();
                 LayoutRebuilder.ForceRebuildLayoutImmediate(IconImage.rectTransform);
 
@@ -58,12 +64,9 @@ namespace UI
                     ImageSize = new Vector2(spriteW * scale, spriteH * scale);
                 }
             }
-            Name = LocalizationManager.GetTranslation(collection.collectionName);
-            Count = Global.CollectionManager.GetCollectionCount(collection);
         }
 
         private Sprite _image;
-
         [Binding]
         public Sprite Image
         {
@@ -76,7 +79,6 @@ namespace UI
         }
 
         private Vector2 _imageSize;
-
         [Binding]
         public Vector2 ImageSize
         {
@@ -97,30 +99,6 @@ namespace UI
             {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
-            }
-        }
-
-        private string _description;
-        [Binding]
-        public string Description
-        {
-            get => _description;
-            set
-            {
-                _description = value;
-                OnPropertyChanged(nameof(Description));
-            }
-        }
-
-        private int _count;
-        [Binding]
-        public int Count
-        {
-            get => _count;
-            set
-            {
-                _count = value;
-                OnPropertyChanged(nameof(Count));
             }
         }
     }

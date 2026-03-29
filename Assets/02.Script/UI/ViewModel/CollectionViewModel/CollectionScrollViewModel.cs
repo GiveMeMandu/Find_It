@@ -16,6 +16,21 @@ namespace UnityWeld
         [SerializeField]
         private CollectionInfoViewModel _collectionInfoViewModel;
 
+        private CollectionElementViewModel _selectedElement;
+
+        public void SelectElement(CollectionElementViewModel element)
+        {
+            if (_selectedElement != null && _selectedElement.selectedObj != null)
+            {
+                _selectedElement.selectedObj.SetActive(false);
+            }
+            _selectedElement = element;
+            if (_selectedElement != null && _selectedElement.selectedObj != null)
+            {
+                _selectedElement.selectedObj.SetActive(true);
+            }
+        }
+
         public void OnClickShowCollectionInfo(CollectionSO collection)
         {
             _collectionInfoViewModel.transform.gameObject.SetActive(true);
@@ -30,6 +45,11 @@ namespace UnityWeld
             {
                 var viewModel = viewModels[i] as CollectionElementViewModel;
                 viewModel.Init(this, allCollections[i]);
+                if(i == 0)
+                {
+                    SelectElement(viewModel);
+                    OnClickShowCollectionInfo(allCollections[i]);
+                }
             }
         }
     }

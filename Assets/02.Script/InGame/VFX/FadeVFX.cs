@@ -28,7 +28,7 @@ namespace Effect
         [Tooltip("목표 알파값 (0~1)"), Range(0f, 1f)]
         [SerializeField] private float endAlpha = 0f;
 
-        [Tooltip("페이드 시간 (초)"), Range(0.01f, 5f)]
+        [Tooltip("페이드 시간 (초)"), Range(0f, 5f)]
         [SerializeField] private float duration = 0.5f;
 
         [Tooltip("애니메이션 이징 타입")]
