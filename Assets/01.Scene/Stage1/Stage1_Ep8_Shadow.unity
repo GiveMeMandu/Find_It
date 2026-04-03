@@ -210,6 +210,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!60 &1338487
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1440,6 +1441,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: 1
+  isTutorialTarget: 0
 --- !u!212 &299867265
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1865,6 +1867,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &329095464
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2846,9 +2849,9 @@ GameObject:
   - component: {fileID: 386812204}
   - component: {fileID: 386812203}
   - component: {fileID: 386812202}
-  - component: {fileID: 386812201}
   - component: {fileID: 386812200}
-  m_Layer: 0
+  - component: {fileID: 386812205}
+  m_Layer: 7
   m_Name: 0_2Strawberry L1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
@@ -2925,52 +2928,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
---- !u!61 &386812201
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 386812198}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.44, y: 1.76}
-    newSize: {x: 2.44, y: 1.76}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 2.44, y: 1.76}
-  m_EdgeRadius: 0
+  isTutorialTarget: 0
 --- !u!114 &386812202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3087,6 +3045,106 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!60 &386812205
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386812198}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.44, y: 1.76}
+    newSize: {x: 2.44, y: 1.76}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.57, y: -0.53999996}
+      - {x: 0.72999996, y: -0.29999998}
+      - {x: 0.85999995, y: -0.31}
+      - {x: 1.04, y: -0.29}
+      - {x: 1, y: -0.22}
+      - {x: 0.78999996, y: -0.14}
+      - {x: 1.0799999, y: -0.22999999}
+      - {x: 1.22, y: -0.22999999}
+      - {x: 1.22, y: -0.19999999}
+      - {x: 1.09, y: -0.02}
+      - {x: 1.03, y: -0.01}
+      - {x: 0.85999995, y: -0.02}
+      - {x: 1.0799999, y: 0.16}
+      - {x: 1.18, y: 0.17999999}
+      - {x: 1.22, y: 0.19999999}
+      - {x: 1.22, y: 0.26999998}
+      - {x: 1.1899999, y: 0.28}
+      - {x: 0.95, y: 0.28}
+      - {x: 0.77, y: 0.22999999}
+      - {x: 0.55, y: 0.17999999}
+      - {x: 0.59, y: 0.29999998}
+      - {x: 0.55, y: 0.35}
+      - {x: 0.44, y: 0.39999998}
+      - {x: 0.35, y: 0.38}
+      - {x: 0.44, y: 0.56}
+      - {x: 0.44, y: 0.64}
+      - {x: 0.41, y: 0.65}
+      - {x: 0.32, y: 0.62}
+      - {x: 0.22, y: 0.87}
+      - {x: 0.19, y: 0.88}
+      - {x: -0.01, y: 0.88}
+      - {x: -0.11, y: 0.84}
+      - {x: -0.19999999, y: 0.88}
+      - {x: -0.35, y: 0.88}
+      - {x: -0.32999998, y: 0.71}
+      - {x: -0.42999998, y: 0.77}
+      - {x: -0.51, y: 0.77}
+      - {x: -0.47, y: 0.66999996}
+      - {x: -0.52, y: 0.55}
+      - {x: -0.69, y: 0.55}
+      - {x: -0.79999995, y: 0.52}
+      - {x: -1.01, y: 0.32999998}
+      - {x: -1.14, y: 0.12}
+      - {x: -1.1999999, y: -0.049999997}
+      - {x: -1.22, y: -0.19999999}
+      - {x: -1.22, y: -0.66999996}
+      - {x: -1.1899999, y: -0.75}
+      - {x: -1.13, y: -0.85999995}
+      - {x: -1.1, y: -0.88}
+      - {x: 0.47, y: -0.88}
+      - {x: 0.45, y: -0.83}
+      - {x: 0.38, y: -0.77}
+      - {x: 0.32999998, y: -0.74}
+  m_UseDelaunayMesh: 0
 --- !u!1 &400801159
 GameObject:
   m_ObjectHideFlags: 0
@@ -3370,6 +3428,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!212 &400801166
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3913,6 +3972,7 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &444622000
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5521,6 +5581,10 @@ PrefabInstance:
       value: sea otter_find_under
       objectReference: {fileID: 0}
     - target: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -5559,6 +5623,21 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1615506641}
+    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1615506655}
+    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1615506654}
+    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1615506658}
+    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1615506657}
+    - targetCorrespondingSourceObject: {fileID: 5591604640563425635, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1615506656}
   m_SourcePrefab: {fileID: 100100000, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
 --- !u!1001 &679528432
 PrefabInstance:
@@ -6388,6 +6467,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!1 &739158799
 GameObject:
   m_ObjectHideFlags: 0
@@ -6608,6 +6688,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!1 &749688937
 GameObject:
   m_ObjectHideFlags: 0
@@ -7217,6 +7298,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!1001 &850829772
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7609,8 +7691,10 @@ MonoBehaviour:
   volume: 0.5
   isTimeChallenge: 0
   _levelManager: {fileID: 991907604}
+  isIntroPageOpen: 1
   _introDirector: {fileID: 20854558}
   _outroDirector: {fileID: 0}
+  isUsingIntro: 0
 --- !u!114 &874517317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7812,6 +7896,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &911895835
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8311,6 +8396,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!114 &944649541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8892,13 +8978,16 @@ MonoBehaviour:
   _lastInputMethod: None
   _forceDisabledDebug: 0
   _enableZoom: 1
+  enableQEZoom: 1
   zoomMin: 2
   zoomMax: 5.4
   touchPinchZoomSpeed: 0.005
   mouseWheelZoomSpeed: 2
+  qeZoomSpeed: 800
   smoothZoomLerpSpeed: 10
   zoomPan: 0
   _enablePan: 1
+  pcPanInputType: 2
   pcCamPanSpeed: 5
   mobilePanSpeed: 1.5
   _infinitePan: 0
@@ -8907,6 +8996,8 @@ MonoBehaviour:
   _panMinY: 0
   _panMaxX: 0
   _panMaxY: 0
+  enableSmoothPan: 1
+  smoothPanDeceleration: 10
 --- !u!4 &957360272
 Transform:
   m_ObjectHideFlags: 0
@@ -9503,6 +9594,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!60 &1021037248
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -11531,6 +11623,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!1 &1275559188
 GameObject:
   m_ObjectHideFlags: 0
@@ -11887,6 +11980,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!212 &1305535160
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -12195,6 +12289,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!114 &1315650709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13150,6 +13245,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!114 &1382356702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13568,6 +13664,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!114 &1398795175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14916,6 +15013,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!212 &1482329262
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -15065,6 +15163,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!60 &1487154480
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -16869,6 +16968,193 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 7927754508570010578, guid: 136018ff50809b54ea90c96aa832dd0d, type: 3}
   m_PrefabInstance: {fileID: 665006600}
   m_PrefabAsset: {fileID: 0}
+--- !u!61 &1615506654
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615506639}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &1615506655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615506639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a209d8210ccc85418269a8e467afda6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StretchVFXGroupSetting
+  stretchMultiplier: 1.1
+  xAnimDuration: 0.1
+  yRestoreDuration: 0.15
+  animationEase: 3
+  useSpriteBounds: 1
+  colliderSize: {x: 1, y: 1}
+  colliderOffset: {x: 0, y: 0}
+  applyToChildren: 0
+  addClickSound: 1
+  clickSoundType: 1
+--- !u!114 &1615506656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615506639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6f70c0df96a36e46bd3551379937a42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickTouchSound
+  clickSoundType: 1
+  playOnAwake: 0
+  useRandomSound: 1
+--- !u!114 &1615506657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615506639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996e6d9017ec2e8428505b8605a65067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Effect.StretchVFX
+  isPlayOnStart: 0
+  isPlayOnEnable: 0
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1615506656}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayClickSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  stretchMultiplier: 1.1
+  xAnimDuration: 0.1
+  yRestoreDuration: 0.15
+  animationEase: 3
+--- !u!114 &1615506658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615506639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1547bb43f389294b93eab309edf6a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeanClickEvent
+  selfSelected: 0
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  use: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFinger:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelectedSelectFingerUp:
+    m_PersistentCalls:
+      m_Calls: []
+  Enable: 1
+  OnMouseDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMouseUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1615506657}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayVFX
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!1 &1626241735
 GameObject:
   m_ObjectHideFlags: 0
@@ -17861,6 +18147,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!114 &1682800841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20308,6 +20595,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &1916902803
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -21416,6 +21704,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!114 &2073372423 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2527756385749889392, guid: 9ad22eb3fbbaee944a7929bbef235ad4, type: 3}
@@ -27415,6 +27704,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &4783111314841508993
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -27920,6 +28210,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!1 &4950884503874274272
 GameObject:
   m_ObjectHideFlags: 0
@@ -28281,6 +28572,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &5058074176720143869
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -29765,6 +30057,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: 1
+  isTutorialTarget: 0
 --- !u!61 &6055729991317223886
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -30182,6 +30475,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &6196726309888658599
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -30216,7 +30510,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.394691}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -30226,7 +30520,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 8.51, y: 3.28}
+  m_Size: {x: 8.51, y: 2.4906182}
   m_EdgeRadius: 0
 --- !u!114 &6196726309888658600
 MonoBehaviour:
@@ -32952,6 +33246,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!1 &7945776727738472547
 GameObject:
   m_ObjectHideFlags: 0
@@ -33202,6 +33497,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!4 &7974510262753697071
 Transform:
   m_ObjectHideFlags: 0
@@ -33318,6 +33614,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &7974605909422158046
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -33815,6 +34112,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &8337745375548132265
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -34080,6 +34378,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: 1
+  isTutorialTarget: 0
 --- !u!114 &8367341953373510986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34421,6 +34720,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!212 &8435163470901820185
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -35297,6 +35597,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!114 &8435163470901820188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35931,6 +36232,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!1 &8995958106312485746
 GameObject:
   m_ObjectHideFlags: 0
@@ -36454,6 +36756,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: -1
+  isTutorialTarget: 0
 --- !u!61 &9208766999222575551
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -36488,7 +36791,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.35960758}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -36498,7 +36801,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 5.85, y: 2.6}
+  m_Size: {x: 5.85, y: 1.8807847}
   m_EdgeRadius: 0
 --- !u!114 &9208766999222575552
 MonoBehaviour:

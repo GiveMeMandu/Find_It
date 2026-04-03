@@ -116,7 +116,17 @@ namespace UI
         public void RestartCurrentScene()
         {
             Global.UIManager.ClosePage(this);
-            LoadingSceneManager.LoadScene((int)Global.CurrentScene.SceneName);
+            
+            // StageManager에서 관리하는 현재 스테이지의 씬 이름으로 재시작
+            if (Global.StageManager != null && !string.IsNullOrEmpty(Global.StageManager.CurrentStageSceneName))
+            {
+                LoadingSceneManager.LoadSceneByName(Global.StageManager.CurrentStageSceneName);
+            }
+            else
+            {
+                // StageManager 정보가 없을 경우 폴백 (현재 활성화된 씬 재로드)
+                LoadingSceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+            }
         }
 
 
