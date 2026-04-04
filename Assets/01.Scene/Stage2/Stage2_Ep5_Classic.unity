@@ -4092,12 +4092,12 @@ MonoBehaviour:
   EnableTooltip: 0
   TooltipsType: 0
   Tooltips: []
-  EnableBGAnimation: 0
-  BGAnimationPrefab: {fileID: 0}
-  BgAnimationTransform: {fileID: 0}
+  EnableBGAnimation: 1
+  BGAnimationPrefab: {fileID: 7532000456490516641, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+  BgAnimationTransform: {fileID: 959754603}
   BgAnimationLerp: {fileID: 0}
   BgAnimationSpriteRenderer: {fileID: 0}
-  HideWhenFound: 1
+  HideWhenFound: 0
   PlaySoundWhenFound: 1
   clickPriority: 0
   AudioWhenClick: {fileID: 0}
@@ -4224,7 +4224,8 @@ Transform:
   m_LocalPosition: {x: -0.067000575, y: 1.9319999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 959754603}
   m_Father: {fileID: 691676763}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &69357096
@@ -8965,7 +8966,7 @@ MonoBehaviour:
   dayNightEnableObj: []
   nightDarkObj: []
   nightColor: {r: 0, g: 0, b: 0, a: 1}
-  fadeDuration: 4
+  fadeDuration: 0.2
   isHideOnDay: 0
   isActiveOnNight: 0
   isDisableOnNight: 1
@@ -17728,7 +17729,7 @@ MonoBehaviour:
   dayNightEnableObj: []
   nightDarkObj: []
   nightColor: {r: 0, g: 0, b: 0, a: 1}
-  fadeDuration: 4
+  fadeDuration: 0.2
   isHideOnDay: 0
   isActiveOnNight: 0
   isDisableOnNight: 1
@@ -18622,7 +18623,7 @@ MonoBehaviour:
   dayNightEnableObj: []
   nightDarkObj: []
   nightColor: {r: 0, g: 0, b: 0, a: 1}
-  fadeDuration: 4
+  fadeDuration: 0.3
   isHideOnDay: 0
   isActiveOnNight: 0
   isDisableOnNight: 0
@@ -21631,7 +21632,7 @@ MonoBehaviour:
   dayNightEnableObj: []
   nightDarkObj: []
   nightColor: {r: 0, g: 0, b: 0, a: 1}
-  fadeDuration: 4
+  fadeDuration: 0.2
   isHideOnDay: 0
   isActiveOnNight: 0
   isDisableOnNight: 0
@@ -36442,7 +36443,7 @@ MonoBehaviour:
   dayNightEnableObj: []
   nightDarkObj: []
   nightColor: {r: 0, g: 0, b: 0, a: 1}
-  fadeDuration: 4
+  fadeDuration: 0.45
   isHideOnDay: 0
   isActiveOnNight: 0
   isDisableOnNight: 0
@@ -46669,6 +46670,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -7552582706839291426, guid: b46f0b2a7a6e79f4cb1ae569b284acf3, type: 3}
   m_PrefabInstance: {fileID: 958004532}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &959754603 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+  m_PrefabInstance: {fileID: 1006411591}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &960397870
 GameObject:
   m_ObjectHideFlags: 0
@@ -48634,6 +48640,67 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &1006411591
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 69357095}
+    m_Modifications:
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516640, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516641, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_Name
+      value: BGAnimPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532000456490516654, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
+      propertyPath: m_SortingOrder
+      value: 84
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
 --- !u!1 &1008687381
 GameObject:
   m_ObjectHideFlags: 0
@@ -76473,6 +76540,7 @@ Transform:
   - {fileID: 1710134430}
   - {fileID: 1065727856}
   - {fileID: 924687079}
+  - {fileID: 2087557585}
   m_Father: {fileID: 1798087659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1585360328
@@ -101903,10 +101971,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2087557585}
   - component: {fileID: 2087557586}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: day_hide_honey
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_TagString: Hidden
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -101923,7 +101991,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2115372380}
+  m_Father: {fileID: 1582131975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2087557586
 SpriteRenderer:
@@ -104580,7 +104648,6 @@ Transform:
   - {fileID: 102081594}
   - {fileID: 389494882}
   - {fileID: 809487103}
-  - {fileID: 2087557585}
   - {fileID: 1755260292}
   - {fileID: 1187287185}
   - {fileID: 568873731}
