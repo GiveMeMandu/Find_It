@@ -654,10 +654,13 @@ public class CoinRushModeManager : ModeManager
     private void PlayCoinFlyToUIDelayed(HiddenObj hiddenObj)
     {
         if (hiddenObj == null) return;
+        Vector3 worldPos = hiddenObj.transform.position;
         UniTask.Void(async () =>
         {
-            await UniTask.Delay(System.TimeSpan.FromSeconds(1.4f));
-            PlayCoinFlyToUI(hiddenObj.transform.position);
+            bool canceled = await UniTask.Delay(System.TimeSpan.FromSeconds(1.4f), cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow();
+            if (canceled) return;
+
+            PlayCoinFlyToUI(worldPos);
         });
     }
 
@@ -670,7 +673,9 @@ public class CoinRushModeManager : ModeManager
         Vector3 worldPos = coinTransform.position;
         UniTask.Void(async () =>
         {
-            await UniTask.Delay(System.TimeSpan.FromSeconds(1.4f));
+            bool canceled = await UniTask.Delay(System.TimeSpan.FromSeconds(1.4f), cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow();
+            if (canceled) return;
+
             PlayCoinFlyToUI(worldPos);
         });
     }
