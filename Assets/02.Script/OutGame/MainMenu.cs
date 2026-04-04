@@ -19,6 +19,7 @@ namespace OutGame
 {
     public class MainMenu : SceneBase
     {
+        public static bool IsFirstMainMenuLoad = true;
         private MainMenuPage mainMenuPage = null;
         private PageSlideEffect pageSlideEffect = null;
         [SerializeField] private MapSelectView mapSelectView;
@@ -43,6 +44,16 @@ namespace OutGame
             
             // CameraRootPanning 컴포넌트 찾기
             cameraRootPanning = FindAnyObjectByType<CameraRootPanning>();
+
+            if (!IsFirstMainMenuLoad)
+            {
+                isHomeClicked = true;
+                hasGoneHome = true;
+                isMapButtonClicked = false;
+                Camera.main.transform.localPosition = new Vector3(19.86f, Camera.main.transform.localPosition.y, Camera.main.transform.localPosition.z);
+                moveEffect.MoveToTargetInstantly(); // 이동 효과 즉시 타겟으로 세팅
+            }
+            IsFirstMainMenuLoad = false;
             
             CanPlay = true;
             Global.UIManager.mouseUIController.FadeIn();

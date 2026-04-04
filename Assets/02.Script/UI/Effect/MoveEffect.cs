@@ -37,7 +37,12 @@ namespace UI.Effect
         {
             ResetToInitialState();
         }
-        
+
+        public void SetMoveDuration(float duration)
+        {
+            moveDuration = duration;
+        }
+
         /// <summary>
         /// 출발점과 도착점을 동적으로 설정합니다
         /// </summary>
@@ -340,6 +345,50 @@ namespace UI.Effect
         public void AutoSetTargetPosition()
         {
             this.targetPosition = transform.localPosition;
+        }
+
+        [Button("즉시 타겟으로 이동")]
+        public void MoveToTargetInstantly()
+        {
+            Initial();
+            if (isUIEffect)
+            {
+                if (rectTransform == null) rectTransform = GetComponent<RectTransform>();
+                Vector3 targetPos = rectTransform.anchoredPosition;
+                if (!useRandomPosition)
+                {
+                    if (useXAxis) targetPos.x = targetPosition.x;
+                    if (useYAxis) targetPos.y = targetPosition.y;
+                    if (useZAxis) targetPos.z = targetPosition.z;
+                    targetPos = GetAdjustedPosition(targetPos, rectTransform);
+                }
+                else
+                {
+                    targetPos = targetPosition;
+                }
+                rectTransform.anchoredPosition = targetPos;
+                
+                if (isSmallOnEnd) transform.localScale = Vector3.zero;
+            }
+            else
+            {
+                Vector3 targetPos = transform.localPosition;
+                if (!useRandomPosition)
+                {
+                    if (useXAxis) targetPos.x = targetPosition.x;
+                    if (useYAxis) targetPos.y = targetPosition.y;
+                    if (useZAxis) targetPos.z = targetPosition.z;
+                }
+                else
+                {
+                    targetPos = targetPosition;
+                }
+                transform.localPosition = targetPos;
+                
+                if (isSmallOnEnd) transform.localScale = Vector3.zero;
+            }
+
+            if (isResetOnNext) isResetedThisTime = false;
         }
 
     }
