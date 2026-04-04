@@ -433,6 +433,8 @@ namespace UI
             var rabbitDict = GetHiddenObjectDictionary();
             if (rabbitDict == null) return null;
 
+            var fogManager = FindObjectOfType<FogModeManager>();
+
             float closestDistance = float.MaxValue;
             System.Guid closestGuid = System.Guid.Empty;
             HiddenObj closestRabbit = null;
@@ -441,8 +443,12 @@ namespace UI
             {
                 if (kvp.Value.IsFound || excludeGuids.Contains(kvp.Key)) continue;
 
-                // 카메라 월드 포지션에서 오브젝트 월드 포지션까지의 거리 계산
                 Vector3 targetPosition = kvp.Value.transform.position;
+                
+                // 안개에 가려진 오브젝트 제외
+                if (IsPositionUnderFog(fogManager, targetPosition)) continue;
+
+                // 카메라 월드 포지션에서 오브젝트 월드 포지션까지의 거리 계산
                 float distance = Vector3.Distance(cameraPosition, targetPosition);
 
                 if (distance < closestDistance)
@@ -694,10 +700,12 @@ namespace UI
             if (rabbitDict == null) return null;
 
             var unfoundObjects = new System.Collections.Generic.List<(System.Guid, HiddenObj)>();
+            var fogManager = FindObjectOfType<FogModeManager>();
 
             foreach (var kvp in rabbitDict)
             {
-                if (!kvp.Value.IsFound)
+                // 안개에 가려진 오브젝트는 제외
+                if (!kvp.Value.IsFound && !IsPositionUnderFog(fogManager, kvp.Value.transform.position))
                 {
                     unfoundObjects.Add((kvp.Key, kvp.Value));
                 }
@@ -707,6 +715,31 @@ namespace UI
 
             int randomIndex = UnityEngine.Random.Range(0, unfoundObjects.Count);
             return unfoundObjects[randomIndex];
+        }
+
+        private bool IsPositionUnderFog(FogModeManager fogManager, Vector3 position)
+        {
+            if (fogManager == null || fogManager.fogAreaDataList == null) return false;
+
+            foreach (var fogData in fogManager.fogAreaDataList)
+            {
+                if (fogData.fogArea == null || !fogData.fogArea.gameObject.activeInHierarchy) continue;
+
+                var spriteRenderers = fogData.fogArea.GetComponentsInChildren<SpriteRenderer>();
+                foreach (var sprite in spriteRenderers)
+                {
+                    if (sprite != null && sprite.gameObject.activeInHierarchy && sprite.color.a > 0.01f)
+                    {
+                        var bounds = sprite.bounds;
+                        if (position.x >= bounds.min.x && position.x <= bounds.max.x &&
+                            position.y >= bounds.min.y && position.y <= bounds.max.y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         private bool IsObjectVisibleOnScreen(HiddenObj targetObject)

@@ -76,7 +76,7 @@ namespace InGame
                 _introDirector.initialTime = 0;
                 _introDirector.enabled = true;
 
-                // StartStageBase();
+                StartStageBase();
                 // 스킵 버튼 2초 후 활성화
                 if (Global.UIManager.GetCurrentPage() is InGameMainPage currentPage)
                 {
@@ -85,7 +85,7 @@ namespace InGame
             }
             else
             {
-                // StartStageBase();
+                StartStageBase();
             }
         }
         protected override async UniTask ClearStageTask()
