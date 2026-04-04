@@ -47,7 +47,12 @@ namespace UI.Page
             }
         }
         
-        public override bool BlockEscape => true;
+        public override bool BlockEscape => false;
+
+        public override void OnEscapePressed()
+        {
+            OnClickOptionButton();
+        }
         
         private void OnEnable()
         {

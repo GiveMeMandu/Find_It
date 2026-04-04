@@ -53,12 +53,24 @@ namespace Manager
 
             if (EscapePressedThisFrame)
             {
+                // 로딩 씬에서는 옵션창 등 ESC 동작을 막습니다.
+                if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == (int)Data.SceneNum.LOADING || UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == (int)Data.SceneNum.BOOTSTRAP)
+                {
+                    IgnoreEscapeThisFrame = false;
+                    EscapePressedThisFrame = false;
+                    return;
+                }
+
                 if (_pageStack.Count > 0)
                 {
                     if (!CurrentPage.BlockEscape)
                     {
                         CurrentPage.OnEscapePressed();
                     }
+                }
+                else
+                {
+                    OpenPage<OptionPage>();
                 }
             }
 

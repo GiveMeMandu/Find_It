@@ -18,27 +18,80 @@ namespace UI
         public Image collectSelectedImage;
         private CollectionSO _currentCollection;
         private CollectionPage _collectionPage;
+        private bool _isBatchMode;
+        [Binding]
+        public bool IsBatchMode
+        {
+            get => _isBatchMode;
+            set
+            {
+                _isBatchMode = value;
+                OnPropertyChanged(nameof(IsBatchMode));
+            }
+        }
+
+        [Binding]
+        public void ToggleBatchMode()
+        {
+            IsBatchMode = !IsBatchMode;
+        }
+
+        private bool _isPlaced;
+        [Binding]
+        public bool IsPlaced
+        {
+            get => _isPlaced;
+            set
+            {
+                _isPlaced = value;
+                OnPropertyChanged(nameof(IsPlaced));
+            }
+        }
+
         [Binding]
         public void OnClickPlaceSticker()
         {
             if (_currentCollection != null)
             {
                 var diaryViewModel = FindFirstObjectByType<CollectionDiaryViewModel>(UnityEngine.FindObjectsInactive.Include);
-                if(_collectionPage != null)
+                
+                // 일괄 선택 모드가 아닐 때만 탭 이동
+                if (!_isBatchMode && _collectionPage != null)
                 {
                     _collectionPage.tabGroup.SelectTab(0);
                 }
+
                 if (diaryViewModel != null)
                 {
                     diaryViewModel.PlaceNewSticker(_currentCollection);
                     // Refresh count text
                     CollectionCount = Global.CollectionManager.GetCollectionCount(_currentCollection).ToString();
+                    UpdateIsPlacedStatus();
                 }
                 else
                 {
                     Debug.LogWarning("CollectionDiaryViewModel not found in scene!");
                 }
             }
+        }
+
+        public void UpdateIsPlacedStatus()
+        {
+            if (_currentCollection == null) return;
+            var placedStickers = Global.UserDataManager.GetAllPlacedStickers();
+            bool found = false;
+            if (placedStickers != null)
+            {
+                foreach (var data in placedStickers)
+                {
+                    if (data.collectionKey == _currentCollection.name)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            IsPlaced = found;
         }
 
         private string _collectionName;

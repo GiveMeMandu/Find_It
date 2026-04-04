@@ -14,6 +14,7 @@ public class TutorialController : MonoBehaviour
 	private	string				nextSceneName = "";
 
 	private TutorialBase		currentTutorial = null;
+	public bool                 IsPlaying => currentTutorial != null;
 	public	int					currentIndex = -1;
 
 	[SerializeField] private bool autoStart = false;

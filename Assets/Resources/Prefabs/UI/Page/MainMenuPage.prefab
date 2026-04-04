@@ -265,14 +265,14 @@ RectTransform:
   m_GameObject: {fileID: 1520830072828743677}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.55, y: 1.55, z: 1.55}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5471441939389169569}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 6.1, y: 48}
+  m_AnchoredPosition: {x: 6.1, y: 0}
   m_SizeDelta: {x: 894, y: 293.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2296564039238469253
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 43566b6c112156c42be28ed7e87c1210, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f91f040d72ff8af45889eb653473a338, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -330,7 +330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5943921174293256603
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2492,7 +2492,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -145, y: 15}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5127429113317650226
@@ -2506,6 +2506,7 @@ GameObject:
   - component: {fileID: 9123397334575963101}
   - component: {fileID: 4450825185986300825}
   - component: {fileID: 4655553834380335606}
+  - component: {fileID: 3417500782110457256}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -2522,14 +2523,14 @@ RectTransform:
   m_GameObject: {fileID: 5127429113317650226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6034698994752921926}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -256}
+  m_AnchoredPosition: {x: 0, y: -150}
   m_SizeDelta: {x: 480.1183, y: 65.8047}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4450825185986300825
@@ -2570,6 +2571,38 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3417500782110457256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5127429113317650226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e37c7442ebf9581409e105dff3d9c07b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effect.StretchEffect
+  isPlayOnStart: 0
+  isPlayOnEnable: 1
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0.5
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 1
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1.5
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 1
 --- !u!1 &5228022087703001873
 GameObject:
   m_ObjectHideFlags: 0
@@ -3779,7 +3812,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 329.2, y: 116.6}
+  m_AnchoredPosition: {x: 709, y: 77}
   m_SizeDelta: {x: 178.4, y: 196.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8597241215279487882
@@ -3949,7 +3982,7 @@ MonoBehaviour:
   isSmallOnEnd: 1
   smallTiming: 0.1
   waitTimeAfterEffect: 0
-  targetPosition: {x: 210, y: 54.4, z: 0}
+  targetPosition: {x: 575, y: -60, z: 0}
   isResetOnNext: 1
   isResetedThisTime: 0
   isResetOnStart: 1

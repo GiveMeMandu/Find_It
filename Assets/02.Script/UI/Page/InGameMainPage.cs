@@ -161,7 +161,17 @@ namespace UI.Page
         private HiddenObj _currentFoundObj;
         private Vector2 _tooltipSize = new Vector2(235.2f, 135f);
 
-        public override bool BlockEscape => true;
+        public override bool BlockEscape => false;
+        override public void OnEscapePressed()
+        {
+            var tutorialController = FindFirstObjectByType<TutorialController>();
+            if (tutorialController != null && tutorialController.IsPlaying)
+            {
+                return; // 튜토리얼 중에는 옵션창을 열지 않음
+            }
+
+            Global.UIManager.OpenPage<OptionPage>();
+        }
         private void OnEnable()
         {
             ShowFoundObjToolTip = false;
