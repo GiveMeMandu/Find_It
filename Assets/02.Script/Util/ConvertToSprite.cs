@@ -10,14 +10,12 @@ public static class ConvertToSprite
     {
         if (sprite.rect.width != sprite.texture.width)
         {
-            int texWid = (int)sprite.rect.width;
-            int texHei = (int)sprite.rect.height;
+            int texWid = (int)sprite.textureRect.width;
+            int texHei = (int)sprite.textureRect.height;
             Texture2D newTex = new Texture2D(texWid, texHei);
-            Color[] defaultPixels = Enumerable.Repeat<Color>(new Color(0, 0, 0, 0), texWid * texHei).ToArray();
-            Color[] pixels = sprite.texture.GetPixels((int)sprite.textureRect.x, (int)sprite.textureRect.y, (int)sprite.textureRect.width, (int)sprite.textureRect.height);
+            Color[] pixels = sprite.texture.GetPixels((int)sprite.textureRect.x, (int)sprite.textureRect.y, texWid, texHei);
 
-            newTex.SetPixels(defaultPixels);
-            newTex.SetPixels((int)sprite.textureRectOffset.x, (int)sprite.textureRectOffset.y, (int)sprite.textureRect.width, (int)sprite.textureRect.height, pixels);
+            newTex.SetPixels(pixels);
             newTex.Apply();
             return newTex;
         }
@@ -27,7 +25,7 @@ public static class ConvertToSprite
         }
     }
 
-    [MenuItem("Assets/Convert Selected Sprite to Texture2D")]
+    [MenuItem("Assets/선택한 Sprite를 Texture2D로 변환")]
     public static void ConvertSelectedSpriteToTexture2D()
     {
         // Get the selected sprite in the editor
