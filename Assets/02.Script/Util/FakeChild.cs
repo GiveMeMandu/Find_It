@@ -101,6 +101,8 @@ namespace Utility
 
         public void Follow(bool forced = false)
         {
+            if(TargetParent != null && !TargetParent.gameObject.activeInHierarchy && HideIfParentDisable) 
+                gameObject.SetActive(false);
             if(!TargetParent && HideIfParentDisable) 
                 gameObject.SetActive(false);
             if(!forced && (!TargetParent || FollowMode == Mode.None)) return;

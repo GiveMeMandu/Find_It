@@ -422,6 +422,34 @@ namespace UI
             Debug.Log($"나침판 효과 종료. 총 {CompassHintCount}개 힌트 제공됨");
         }
 
+        private bool IsValidHintTarget(HiddenObj hiddenObj)
+        {
+            if (hiddenObj == null || hiddenObj.IsFound) return false;
+            
+            // 기본적으로 비활성화된 오브젝트는 힌트 대상에서 제외
+            if (!hiddenObj.gameObject.activeInHierarchy) return false;
+
+            // 스테이지 2 낮밤 기믹 캐치 (NightObj)
+            if (hiddenObj.TryGetComponent<InGame.NightObj>(out var nightObj))
+            {
+                bool isNight = InGame.NightObj.IsGlobalNight;
+                if (!isNight) // 현재 아침인 경우
+                {
+                    // 밤에만 동작하는/켜지는 오브젝트 제외
+                    if (nightObj.isActiveOnNight || nightObj.isHideOnDay || nightObj.isDisableOnStart) 
+                        return false;
+                }
+                else // 현재 밤인 경우
+                {
+                    // 밤에 꺼지는 오브젝트 제외
+                    if (nightObj.isDisableOnNight)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
         private (System.Guid guid, HiddenObj rabbit)? FindClosestUnfoundObject(System.Collections.Generic.HashSet<System.Guid> excludeGuids)
         {
             Camera mainCamera = Camera.main;
@@ -441,7 +469,7 @@ namespace UI
 
             foreach (var kvp in rabbitDict)
             {
-                if (kvp.Value.IsFound || excludeGuids.Contains(kvp.Key)) continue;
+                if (excludeGuids.Contains(kvp.Key) || !IsValidHintTarget(kvp.Value)) continue;
 
                 Vector3 targetPosition = kvp.Value.transform.position;
                 
@@ -704,8 +732,10 @@ namespace UI
 
             foreach (var kvp in rabbitDict)
             {
+                if (!IsValidHintTarget(kvp.Value)) continue;
+
                 // 안개에 가려진 오브젝트는 제외
-                if (!kvp.Value.IsFound && !IsPositionUnderFog(fogManager, kvp.Value.transform.position))
+                if (!IsPositionUnderFog(fogManager, kvp.Value.transform.position))
                 {
                     unfoundObjects.Add((kvp.Key, kvp.Value));
                 }
@@ -768,6 +798,25 @@ namespace UI
         {
             while (_currentMagnifierTarget != null && !_currentMagnifierTarget.IsFound && IsMagnifierEffectActive)
             {
+                if (!_currentMagnifierTarget.gameObject.activeInHierarchy)
+                {
+                    Transform parentTransform = _currentMagnifierTarget.transform.parent;
+                    bool parentFound = false;
+                    while (parentTransform != null)
+                    {
+                        if (parentTransform.TryGetComponent(out HiddenObj parentObj) && parentObj.IsFound)
+                        {
+                            parentFound = true;
+                            break;
+                        }
+                        parentTransform = parentTransform.parent;
+                    }
+                    if (parentFound)
+                    {
+                        break;
+                    }
+                }
+                
                 await UniTask.Delay(100); // 0.1초마다 확인
             }
 
