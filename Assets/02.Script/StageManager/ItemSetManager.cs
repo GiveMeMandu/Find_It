@@ -20,7 +20,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
     public class ItemSetManager : MMSingleton<ItemSetManager>
     {
-        [InfoBox("각 세트 요구 그룹 적을 땐 hide 글자 없애기", EInfoBoxType.Warning)]
+        [InfoBox("각 세트 요구 그룹 적을 땐 hide 글자가 있어도 자동으로 제거됩니다.", EInfoBoxType.Warning)]
         [SerializeField]
         private List<ItemSetData> itemSetDataList;  // Unity Inspector에서 설정 가능
 
@@ -49,9 +49,23 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 // 각 세트별로 완료된 그룹을 추적하기 위한 초기화
                 foreach (var setData in itemSetDataList)
                 {
-                    if (setData != null && !string.IsNullOrEmpty(setData.SetName))
+                    if (setData != null)
                     {
-                        completedGroups[setData.SetName] = new HashSet<string>();
+                        if (setData.RequiredGroups != null)
+                        {
+                            for (int i = 0; i < setData.RequiredGroups.Count; i++)
+                            {
+                                if (!string.IsNullOrEmpty(setData.RequiredGroups[i]))
+                                {
+                                    setData.RequiredGroups[i] = setData.RequiredGroups[i].Replace("hide_", "").Replace("Hide_", "").Replace("HIDE_", "").Trim();
+                                }
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(setData.SetName))
+                        {
+                            completedGroups[setData.SetName] = new HashSet<string>();
+                        }
                     }
                 }
             }

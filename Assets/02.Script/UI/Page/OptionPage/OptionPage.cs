@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using OptionPageNamespace;
 using Manager;
+using NaughtyAttributes;
+using Unity.VisualScripting;
+using UnityWeld.Binding;
 
 namespace UI
 {
@@ -19,7 +22,10 @@ namespace UI
         public RectTransform contentRoot;
         public TabGroup tabGroup;
 
+        [Label("플레이탭 그룹")]
         public GameObject PlayTabContent;
+        [Label("아지트에 있을 때 플레이탭 그룹")]
+        public GameObject AgitPlayTabContent;
 
         public SoundManager soundManager => Global.SoundManager;
 
@@ -50,7 +56,7 @@ namespace UI
         }
         public override void OnClose()
         {
-            
+
             Time.timeScale = 1;
             base.OnClose();
             Global.InputManager.EnableGameInputOnly();
@@ -79,13 +85,27 @@ namespace UI
             // Ensure PlayTabContent is only active when Play tab is open
             if (PlayTabContent != null)
                 PlayTabContent.SetActive(false);
+            if (AgitPlayTabContent != null)
+                AgitPlayTabContent.SetActive(false);
 
             switch (tab)
             {
                 case TabType.Play:
-                    // Play 탭은 동적 그룹 생성을 진행하지 않고 바인딩된 메서드만 사용하도록 비워둡니다.
-                    if (PlayTabContent != null)
-                        PlayTabContent.SetActive(true);
+                    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == (int)Data.SceneNum.START)
+                    {
+                        if (AgitPlayTabContent != null)
+                            AgitPlayTabContent.SetActive(true);
+                        if (PlayTabContent != null)
+                            PlayTabContent.SetActive(false);
+                    }
+                    else
+                    {
+                        if (AgitPlayTabContent != null)
+                            AgitPlayTabContent.SetActive(false);
+                        // Play 탭은 동적 그룹 생성을 진행하지 않고 바인딩된 메서드만 사용하도록 비워둡니다.
+                        if (PlayTabContent != null)
+                            PlayTabContent.SetActive(true);
+                    }
                     break;
                 case TabType.Options:
                     CreateOptionsGroup();
@@ -116,7 +136,7 @@ namespace UI
         public void RestartCurrentScene()
         {
             Global.UIManager.ClosePage(this);
-            
+
             // StageManager에서 관리하는 현재 스테이지의 씬 이름으로 재시작
             if (Global.StageManager != null && !string.IsNullOrEmpty(Global.StageManager.CurrentStageSceneName))
             {
@@ -127,6 +147,15 @@ namespace UI
                 // StageManager 정보가 없을 경우 폴백 (현재 활성화된 씬 재로드)
                 LoadingSceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
             }
+        }
+        [Binding]
+        public void ExitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit(); // 어플리케이션 종료
+#endif
         }
 
 

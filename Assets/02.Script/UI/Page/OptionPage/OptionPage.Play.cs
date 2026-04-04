@@ -56,9 +56,9 @@ namespace UI
 
             // 화면 모드 드롭다운
             var screenModeList = new List<string> { 
-                "UI/Option/ScreenMode_ExclusiveFullScreen", 
-                "UI/Option/ScreenMode_FullScreenWindow", 
-                "UI/Option/ScreenMode_Windowed" 
+                "UI/Option/ExclusiveFullScreen", 
+                "UI/Option/FullScreenWindow", 
+                "UI/Option/Windowed" 
             };
             var currentScreenModeIndex = Global.OptionManager.GetScreenModeIndex();
 

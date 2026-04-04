@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using I2.Loc;
+using UnityEngine.Events;
 
 namespace OptionPageNamespace
 {
@@ -11,7 +12,7 @@ namespace OptionPageNamespace
 	{
 		public TMP_Dropdown dropdown;
 		public Localize labelText;
-
+		public UnityEvent _onValueChangedUnityEvent;
 		private Action<int> _onValueChanged;
 		private List<string> _optionKeys;
 		private bool _isLocalizedOptions;
@@ -86,6 +87,7 @@ namespace OptionPageNamespace
 		private void OnDropdownValueChanged(int index)
 		{
 			_onValueChanged?.Invoke(index);
+			_onValueChangedUnityEvent?.Invoke();
 		}
 
 		private void OnDestroy()

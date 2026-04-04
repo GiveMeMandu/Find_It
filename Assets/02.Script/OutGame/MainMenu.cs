@@ -20,6 +20,15 @@ namespace OutGame
     public class MainMenu : SceneBase
     {
         public static bool IsFirstMainMenuLoad = true;
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticVariables()
+        {
+            IsFirstMainMenuLoad = true;
+        }
+#endif
+
         private MainMenuPage mainMenuPage = null;
         private PageSlideEffect pageSlideEffect = null;
         [SerializeField] private MapSelectView mapSelectView;

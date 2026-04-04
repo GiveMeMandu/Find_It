@@ -47,4 +47,8 @@ public class TextViewModel : BaseViewModel
             OnPropertyChanged(nameof(Text));
         }
     }
+    public void SetText(TextMeshProUGUI textMeshProUGUI)
+    {
+        Text = textMeshProUGUI.text;
+    }
 }
