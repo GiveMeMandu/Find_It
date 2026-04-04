@@ -51,11 +51,13 @@ Shader "Custom/WaterShader_Mobile"
 			{
 				float4 vertex : POSITION;
 				float2 uv : TEXCOORD0;
+				float4 color : COLOR; // 버텍스 컬러 추가
 			};
 
 			struct v2f
 			{
 				float2 uv : TEXCOORD0;
+				float4 color : COLOR; // 버텍스 컬러 추가
 				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
 			};
@@ -75,6 +77,7 @@ Shader "Custom/WaterShader_Mobile"
 			v2f vert(appdata v)
 			{
 				v2f o;
+				o.color = v.color; // 버텍스 컬러 전달
 				
 				#ifdef ENABLE_VERTEX_DISPLACEMENT
 					// 단순화된 정점 변위 - 텍스처 샘플링 없이 사인 함수 사용
@@ -96,7 +99,7 @@ Shader "Custom/WaterShader_Mobile"
 				
 				float2 adjusted = i.uv + (offset - 0.5) / _DisplacementAmountDivider;
 				fixed4 col = tex2D(_MainTex, adjusted);
-				fixed4 colorWithTint = col * _Tint;
+				fixed4 colorWithTint = col * _Tint; 
 				
 				// 단순화된 폼(거품) 계산
 				float offsetMagnitude = length(offset - 0.5) / _DisplacementAmountDivider;
@@ -104,6 +107,7 @@ Shader "Custom/WaterShader_Mobile"
 				float foam = (offsetMagnitude > _FoamThreshold || edgeFoam > 0) ? _FoamAlpha : 0;
 				
 				fixed4 finalColor = lerp(colorWithTint, fixed4(1,1,1,1), foam);
+				finalColor *= i.color; // 버텍스 컬러와 알파값을 최종 결과에 적용
 				
 				// Apply fog
 				UNITY_APPLY_FOG(i.fogCoord, finalColor);

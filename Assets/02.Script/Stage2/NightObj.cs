@@ -52,6 +52,7 @@ namespace InGame
         public List<SpriteRenderer> nightDarkObj;
         [SerializeField] [LabelText("밤에 변할 색깔")] [EnableIf("isChangeColor")] 
         public Color nightColor = Color.black;
+        [LabelText("페이드 시간")] public float fadeDuration = 4f;
         [LabelText("시작시 밤 오브젝트 숨길 것인가")] public bool isHideOnDay = false;
         [LabelText("밤에 강제 활성화 여부")] public bool isActiveOnNight = true;
         [LabelText("밤에 바로 비활성화할것인가")] public bool isDisableOnNight = false;
@@ -175,7 +176,7 @@ namespace InGame
                     if (!isNoFade)
                     {
                         obj.DayObjs.DOFade(0, 0);
-                        obj.DayObjs.DOFade(1, 4f).SetEase(Ease.OutQuart);
+                        obj.DayObjs.DOFade(1, fadeDuration).SetEase(Ease.OutQuart);
                     }
                 }
             }
@@ -190,13 +191,13 @@ namespace InGame
 
                     obj.NightObjs.DOFade(0, 0);
                     if (!isNoFade)
-                        obj.NightObjs.DOFade(1, 4f).SetEase(Ease.OutQuart);
+                        obj.NightObjs.DOFade(1, fadeDuration).SetEase(Ease.OutQuart);
                 }
             }
             foreach (var obj in nightDarkObj)
             {
                 obj.DOColor(new Color(1, 1, 1, 0), 0);
-                obj.DOColor(new Color(175f / 255f, 175f / 255f, 175f / 255f), 5f);
+                obj.DOColor(new Color(175f / 255f, 175f / 255f, 175f / 255f), fadeDuration);
             }
 
             if(isChangeColor) 

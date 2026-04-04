@@ -96,6 +96,8 @@ public class Stage2Manager : InGameSceneBase
                 if(d.TryGetComponent<NightObj>(out var nightObj))
                 {
                     if(nightObj.isNoFade) continue;
+                    d.DOFade(0, nightObj.fadeDuration);
+                    continue;
                 }
             }
             d.DOFade(0, DayToNightTime);
