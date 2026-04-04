@@ -262,6 +262,13 @@ namespace UI
                 return;
             }
 
+            var testObject = FindClosestUnfoundObject(new System.Collections.Generic.HashSet<System.Guid>());
+            if (testObject == null)
+            {
+                Debug.Log("찾을 수 있는 오브젝트가 없으므로 나침반 아이템을 사용하지 않습니다.");
+                return;
+            }
+
             if (Global.ItemManager.UseItem(ItemType.Compass))
             {
                 ActivateCompass();
@@ -306,9 +313,16 @@ namespace UI
                 return;
             }
 
+            var randomObject = SelectRandomUnfoundObject();
+            if (randomObject == null)
+            {
+                Debug.Log("찾을 수 있는 오브젝트가 없으므로 돋보기 아이템을 사용하지 않습니다.");
+                return;
+            }
+
             if (Global.ItemManager.UseItem(ItemType.Hint))
             {
-                ActivateHint();
+                ActivateHint(randomObject.Value);
             }
         }
 
@@ -341,13 +355,13 @@ namespace UI
             DeactivateStopwatchAsync(1f).Forget();
         }
 
-        private void ActivateHint()
+        private void ActivateHint((System.Guid guid, HiddenObj rabbit) selectedObject)
         {
             IsHintActive = true;
             Debug.Log("돋보기 활성화: 무작위 오브젝트 힌트 시작");
 
             // 돋보기 효과 시작
-            MagnifierEffectAsync().Forget();
+            MagnifierEffectAsync(selectedObject).Forget();
         }
 
         private async UniTaskVoid CompassEffectAsync()
@@ -427,26 +441,11 @@ namespace UI
             if (hiddenObj == null || hiddenObj.IsFound) return false;
             
             // 기본적으로 비활성화된 오브젝트는 힌트 대상에서 제외
+            // 스테이지 2의 낮/밤 부모 오브젝트(NightGroup 등)가 통째로 비활성화되거나 
+            // isDisableOnStart, isDisableOnNight 등으로 스스로 비활성화된 경우 모두 걸러집니다.
             if (!hiddenObj.gameObject.activeInHierarchy) return false;
 
-            // 스테이지 2 낮밤 기믹 캐치 (NightObj)
-            if (hiddenObj.TryGetComponent<InGame.NightObj>(out var nightObj))
-            {
-                bool isNight = InGame.NightObj.IsGlobalNight;
-                if (!isNight) // 현재 아침인 경우
-                {
-                    // 밤에만 동작하는/켜지는 오브젝트 제외
-                    if (nightObj.isActiveOnNight || nightObj.isHideOnDay || nightObj.isDisableOnStart) 
-                        return false;
-                }
-                else // 현재 밤인 경우
-                {
-                    // 밤에 꺼지는 오브젝트 제외
-                    if (nightObj.isDisableOnNight)
-                        return false;
-                }
-            }
-
+            // NightObj가 달려있더라도 현재 활성화된 상태라면 힌트 대상으로 인정합니다.
             return true;
         }
 
@@ -592,19 +591,10 @@ namespace UI
             Debug.Log("초시계 효과 해제");
         }
 
-        private async UniTaskVoid MagnifierEffectAsync()
+        private async UniTaskVoid MagnifierEffectAsync((System.Guid guid, HiddenObj rabbit) selectedObject)
         {
-            // 무작위 오브젝트 선택
-            var selectedObject = SelectRandomUnfoundObject();
-            if (selectedObject == null)
-            {
-                Debug.Log("찾을 수 있는 오브젝트가 없습니다.");
-                ResetMagnifierState();
-                return;
-            }
-
-            _currentMagnifierTarget = selectedObject.Value.rabbit;
-            _magnifierTargetGuid = selectedObject.Value.guid;
+            _currentMagnifierTarget = selectedObject.rabbit;
+            _magnifierTargetGuid = selectedObject.guid;
             IsMagnifierEffectActive = true;
 
             Debug.Log($"돋보기 타겟 선택: {_currentMagnifierTarget.name}");
