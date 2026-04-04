@@ -4,6 +4,8 @@ using SRF;
 using SRDebugger;
 using UnityEngine.Scripting;
 using DeskCat.FindIt.Scripts.Core.Main.System;
+using Manager;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -92,5 +94,63 @@ public partial class SROptions
         }
 
         levelManager.FindAllHidden();
+    }
+    [DisplayName("모든 아이템 지급")]
+    public void AddItem()
+    {
+        var itemManager = Manager.Global.ItemManager;
+        if (itemManager != null)
+        {
+            itemManager.AddItem(ItemType.Hint, 10); // 힌트 아이템 10개 지급
+            itemManager.AddItem(ItemType.Compass, 10); // 나침반 아이템 10개 지급
+            itemManager.AddItem(ItemType.Stopwatch, 10); // 초시계 아이템 10개 지급
+            Debug.Log("모든 아이템 10개를 지급했습니다.");
+        }
+        else
+        {
+            Debug.LogError("ItemManager를 찾을 수 없습니다.");
+        }
+    }
+    [DisplayName("힌트 아이템 지급")]
+    public void AddHintItem()
+    {
+        var itemManager = Manager.Global.ItemManager;
+        if (itemManager != null)
+        {
+            itemManager.AddItem(ItemType.Hint, 10); // 힌트 아이템 10개 지급
+            Debug.Log("힌트 아이템 10개를 지급했습니다.");
+        }
+        else
+        {
+            Debug.LogError("ItemManager를 찾을 수 없습니다.");
+        }
+    }
+    [DisplayName("나침반 아이템 지급")]
+    public void AddCompassItem()
+    {
+        var itemManager = Manager.Global.ItemManager;
+        if (itemManager != null)
+        {
+            itemManager.AddItem(ItemType.Compass, 10); // 나침반 아이템 10개 지급
+            Debug.Log("나침반 아이템 10개를 지급했습니다.");
+        }
+        else
+        {
+            Debug.LogError("ItemManager를 찾을 수 없습니다.");
+        }
+    }
+    [DisplayName("초시계 아이템 지급")]
+    public void AddStopwatchItem()
+    {
+        var itemManager = Manager.Global.ItemManager;
+        if (itemManager != null)
+        {
+            itemManager.AddItem(ItemType.Stopwatch, 10); // 초시계 아이템 10개 지급
+            Debug.Log("초시계 아이템 10개를 지급했습니다.");
+        }
+        else
+        {
+            Debug.LogError("ItemManager를 찾을 수 없습니다.");
+        }
     }
 }
