@@ -170,18 +170,18 @@ namespace UI
 
         private void CreateSoundOptionGroup()
         {
-            var soundGroup = CreateOptionGroup("UI/OptionPage/DetailedVolume");
+            var soundGroup = CreateOptionGroup("UI/Option/Sound");
 
             // 배경음 (BGM)
             var bgmSlider = soundGroup.CreateOptionSlider();
-            bgmSlider.Init("UI/OptionPage/BGM", (int)soundManager.BGMVolume, (value) =>
+            bgmSlider.Init("UI/Option/BGM", (int)soundManager.BGMVolume, (value) =>
             {
                 soundManager.BGMVolume = value;
             });
 
             // 효과음 (SFX)
             var sfxSlider = soundGroup.CreateOptionSlider();
-            sfxSlider.Init("UI/OptionPage/SFX", (int)soundManager.SFXVolume, (value) =>
+            sfxSlider.Init("UI/Option/SFX", (int)soundManager.SFXVolume, (value) =>
             {
                 soundManager.SFXVolume = value;
             });
