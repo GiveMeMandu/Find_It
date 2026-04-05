@@ -33,6 +33,12 @@ namespace OutGame
             } else {
                 _levelManager.OnEndEvent.Add(ClearStageTask);
             }
+
+            // 추가적인 StageManager 없이 InGameSceneBase 단독으로 사용될 때 자동 실행되도록 처리
+            if (this.GetType() == typeof(InGameSceneBase))
+            {
+                StartStageBase();
+            }
         }
 
         protected virtual void StartStageBase()

@@ -1230,12 +1230,11 @@ GameObject:
   - component: {fileID: 6507339335702112229}
   - component: {fileID: 7742892429538959623}
   - component: {fileID: 3706286230715587191}
-  - component: {fileID: 6933680319355668378}
   - component: {fileID: 7003700229796368999}
   - component: {fileID: 2036920920141004755}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: RacconThief
-  m_TagString: Hidden
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1429,6 +1428,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _maxClickCount: 1
+  isTutorialTarget: 0
 --- !u!114 &7742892429538959623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1454,41 +1454,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc1c9095f929e54ba2e924d1865a8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HelperList
---- !u!114 &6933680319355668378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6173191097414621629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fde72043aeb481e85fd14e2ff2a5c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DeskCat.FindIt.Scripts.Core.Main.System.HiddenObj
-  hiddenObjFoundType: 0
-  UISprite: {fileID: 0}
-  uiChangeHelper: {fileID: 0}
-  HideOnStart: 0
-  EnableTooltip: 0
-  TooltipsType: 0
-  Tooltips: []
-  EnableBGAnimation: 1
-  BGAnimationPrefab: {fileID: 7532000456490516641, guid: 59ba172f292834c6cb44908bbc1279ee, type: 3}
-  BgAnimationTransform: {fileID: 0}
-  BgAnimationLerp: {fileID: 0}
-  BgAnimationSpriteRenderer: {fileID: 0}
-  HideWhenFound: 1
-  PlaySoundWhenFound: 1
-  clickPriority: 0
-  AudioWhenClick: {fileID: 0}
-  whenFoundEventHelper: {fileID: 0}
-  IsFound: 0
-  baseInfoBool: 1
-  tooltipsBool: 1
-  bgAnimBool: 1
-  actionFoldoutBool: 1
-  spriteRenderer: {fileID: 0}
 --- !u!114 &7003700229796368999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1515,6 +1480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82276f88de6e6254d938ddefe10d2726, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinRushCoin
+  allowContinuousClick: 0
   onFound:
     m_PersistentCalls:
       m_Calls: []

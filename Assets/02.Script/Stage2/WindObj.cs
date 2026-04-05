@@ -45,8 +45,8 @@ namespace InGame
             {
                 while (this != null && gameObject != null && gameObject.activeSelf)
                 {
-                    await transform.DORotate(dir, windTime, rotateMode).SetEase(rotateEase).SetLink(gameObject).WithCancellation(destroyCancellation.Token);
-                    await transform.DORotate(dir * -1, windTime, rotateMode).SetEase(rotateEase).SetLink(gameObject).WithCancellation(destroyCancellation.Token);
+                    await transform.DORotate(dir, windTime, rotateMode).SetEase(rotateEase).SetLink(gameObject).ToUniTask(TweenCancelBehaviour.Kill, cancellationToken: destroyCancellation.Token);
+                    await transform.DORotate(dir * -1, windTime, rotateMode).SetEase(rotateEase).SetLink(gameObject).ToUniTask(TweenCancelBehaviour.Kill, cancellationToken: destroyCancellation.Token);
 
                     if (pauseBetweenSets > 0f)
                     {
@@ -78,8 +78,8 @@ namespace InGame
             {
                 if (this == null || gameObject == null || !gameObject.activeSelf) return;
 
-                await transform.DORotate(dir, windTime, rotateMode).SetEase(rotateEase).SetLink(gameObject).WithCancellation(destroyCancellation.Token);
-                await transform.DORotate(dir * -1, windTime, rotateMode).SetEase(rotateEase).SetLink(gameObject).WithCancellation(destroyCancellation.Token);
+                await transform.DORotate(dir, windTime, rotateMode).SetEase(rotateEase).SetLink(gameObject).ToUniTask(TweenCancelBehaviour.Kill, cancellationToken: destroyCancellation.Token);
+                await transform.DORotate(dir * -1, windTime, rotateMode).SetEase(rotateEase).SetLink(gameObject).ToUniTask(TweenCancelBehaviour.Kill, cancellationToken: destroyCancellation.Token);
                 // Single set finished -> notify
                 if (this != null && gameObject != null && gameObject.activeSelf)
                 {
