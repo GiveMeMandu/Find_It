@@ -289,7 +289,7 @@ public class SetCompletionObject : MonoBehaviour
             {
                 LevelManager.PlayItemFx(AudioWhenClick);
             }
-            if(CompletionView != null)
+            if (CompletionView != null)
             {
                 CompletionView.SetActive(true);
             }
@@ -323,7 +323,7 @@ public class SetCompletionObject : MonoBehaviour
     // 아이템을 찾았을 때 ItemSetManager에서 호출
     public void OnIngredientFound()
     {
-        if (IsFound) return; // 이미 세트가 완성되었으면 무시
+        if (IsFound || IsAccepted) return;
 
         // foundAlertObject 활성화
         if (foundAlertObject != null)

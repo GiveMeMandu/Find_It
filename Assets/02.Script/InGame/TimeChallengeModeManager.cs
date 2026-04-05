@@ -16,7 +16,6 @@ using Manager;
 public class TimeChallengeModeManager : ModeManager
 {
     [Header("Time Challenge Settings")]
-    public float timeLimit = 60f;
     public int maxHints = 3;
     public float bonusTimePerObject = 5f;
 
@@ -50,7 +49,7 @@ public class TimeChallengeModeManager : ModeManager
         currentMode = GameMode.TIME_CHALLENGE;
         Debug.Log("[TimeChallengeModeManager] 타임챌린지 모드 초기화 완료");
 
-        remainingTime = timeLimit;
+        remainingTime = defaultSeconds;
         hintsUsed = 0;
         gameEnded = false;
         timersCompleted = 0;
@@ -282,7 +281,7 @@ public class TimeChallengeModeManager : ModeManager
     public override void OnGameStart()
     {
         base.OnGameStart();
-        Debug.Log($"[TimeChallengeModeManager] 타임챌린지 시작 - 모든 오브젝트를 {timeLimit}초 내에 찾으세요!");
+        Debug.Log($"[TimeChallengeModeManager] 타임챌린지 시작 - 모든 오브젝트를 {defaultSeconds}초 내에 찾으세요!");
     }
 
     public override void OnObjectFound(HiddenObj foundObj)

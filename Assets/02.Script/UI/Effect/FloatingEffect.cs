@@ -27,12 +27,23 @@ namespace UI.Effect
         private bool isFloating = false;
         private Sequence floatingSequence;
 
+        private bool isInitialized = false;
+
         protected override void Start()
         {
             base.Start();
             Initialize();
 
-            if (autoStart)
+            if (autoStart && !isFloating)
+            {
+                StartFloating();
+            }
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            if (autoStart && isInitialized && !isFloating)
             {
                 StartFloating();
             }
@@ -46,6 +57,9 @@ namespace UI.Effect
 
         private void Initialize()
         {
+            if (isInitialized) return;
+            isInitialized = true;
+
             if (isUIEffect)
             {
                 startPosition = GetComponent<RectTransform>().anchoredPosition;
@@ -85,6 +99,9 @@ namespace UI.Effect
         {
             isFloating = false;
             floatingSequence?.Kill();
+            floatingCts?.Cancel();
+            floatingCts?.Dispose();
+            floatingCts = null;
         }
 
         private async UniTaskVoid StartFloatingTask()
@@ -104,19 +121,23 @@ namespace UI.Effect
             }
         }
 
+        private CancellationTokenSource floatingCts;
+
         private async UniTask FloatingGameObjectTask()
         {
-            destroyCancellation.Cancel();
-            destroyCancellation = new CancellationTokenSource();
+            floatingCts?.Cancel();
+            floatingCts?.Dispose();
+            floatingCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellation.Token);
 
             Vector3 targetPos = startPosition + moveDirection * floatingDistance;
 
             try
             {
                 // 위로 이동
-                await transform.DOLocalMove(targetPos, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+                floatingSequence = DOTween.Sequence();
+                await transform.DOLocalMove(targetPos, floatingSpeed).SetEase(easeType).WithCancellation(floatingCts.Token);
                 // 아래로 이동
-                await transform.DOLocalMove(startPosition, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+                await transform.DOLocalMove(startPosition, floatingSpeed).SetEase(easeType).WithCancellation(floatingCts.Token);
             }
             catch (System.OperationCanceledException)
             {
@@ -126,8 +147,9 @@ namespace UI.Effect
 
         private async UniTask FloatingUITask()
         {
-            destroyCancellation.Cancel();
-            destroyCancellation = new CancellationTokenSource();
+            floatingCts?.Cancel();
+            floatingCts?.Dispose();
+            floatingCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellation.Token);
 
             var rectTransform = GetComponent<RectTransform>();
             Vector3 targetPos = startPosition + moveDirection * floatingDistance;
@@ -135,9 +157,10 @@ namespace UI.Effect
             try
             {
                 // 목표 위치로 이동
-                await rectTransform.DOAnchorPos(targetPos, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+                floatingSequence = DOTween.Sequence();
+                await rectTransform.DOAnchorPos(targetPos, floatingSpeed).SetEase(easeType).WithCancellation(floatingCts.Token);
                 // 원래 위치로 복귀
-                await rectTransform.DOAnchorPos(startPosition, floatingSpeed).SetEase(easeType).WithCancellation(destroyCancellation.Token);
+                await rectTransform.DOAnchorPos(startPosition, floatingSpeed).SetEase(easeType).WithCancellation(floatingCts.Token);
             }
             catch (System.OperationCanceledException)
             {
