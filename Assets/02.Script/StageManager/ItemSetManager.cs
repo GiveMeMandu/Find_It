@@ -147,6 +147,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         private async UniTaskVoid ShowSetCompletePages(ItemSetData setData)
         {
             // 미션 완료 페이지 (재료 표시)
+            string localizedSetName = Util.I2LocalizationHelper.GetLocalizedTextFromKorean(setData.SetName);
             var infoPage = Global.UIManager.OpenPage<InGameMissionCompletePage>();
             
             // 정보 초기화 (아이콘은 첫 번째 그룹이나 null 처리)
@@ -154,8 +155,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             int totalNeeded = setData.RequiredGroups.Count;
             
             infoPage.Initialize(
-                missionName: setData.SetName,
-                missionNameDivider: string.Format("<alpha=#00>{0}", setData.SetName),
+                missionName: localizedSetName,
+                missionNameDivider: string.Format("<alpha=#00>{0}", localizedSetName),
                 missionSetIcon: null, 
                 missionSetFoundLeft: $"({currentFound} / {totalNeeded})",
                 isSetFoundComplete: true,

@@ -34,7 +34,6 @@ namespace Manager
         [BoxGroup("챕터 정보")]
         [LabelText("챕터 설명")]
         [TermsPopup("SceneDescription/")]
-        [TextArea(3, 5)]
         public string chapterDescription;
 
         [BoxGroup("챕터 정보")]

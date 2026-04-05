@@ -202,7 +202,7 @@ namespace UnityWeld
             if (chapter != null)
             {
                 CurrentChapterName = Loc.Get(chapter.chapterName);
-                CurrentChapterDescription = chapter.chapterDescription;
+                CurrentChapterDescription = Loc.Get(chapter.chapterDescription);
                 CurrentChapterThumbnail = chapter.chapterThumbnail;
             }
 

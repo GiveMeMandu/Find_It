@@ -83,6 +83,31 @@ public partial class SROptions
             Debug.LogError("CollectionManager 또는 UserDataManager를 찾을 수 없습니다.");
         }
     }
+    [DisplayName("랜덤 컬렉션 획득")]
+    public void GetRandomCollection()
+    {
+        var collectionManager = Manager.Global.CollectionManager;
+        var userDataManager = Manager.Global.UserDataManager;
+        if (collectionManager != null && userDataManager != null)
+        {
+            var allCollections = collectionManager.GetAllCollections();
+            if (allCollections.Count > 0)
+            {
+                int randomIndex = Random.Range(0, allCollections.Count);
+                var randomCollection = allCollections[randomIndex];
+                userDataManager.AddCollection(randomCollection, 1);
+                Debug.Log($"랜덤으로 컬렉션 '{randomCollection.collectionName}'을(를) 1개 획득했습니다.");
+            }
+            else
+            {
+                Debug.LogWarning("획득할 컬렉션이 없습니다.");
+            }
+        }
+        else
+        {
+            Debug.LogError("CollectionManager 또는 UserDataManager를 찾을 수 없습니다.");
+        }
+    }
     [DisplayName("게임 클리어")]
     public void ClearGame()
     {

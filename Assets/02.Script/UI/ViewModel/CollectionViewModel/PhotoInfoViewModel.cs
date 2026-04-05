@@ -56,10 +56,38 @@ namespace UI
             transform.gameObject.SetActive(false);
         }
         
+        private string _stickerButtonText;
+        [Binding]
+        public string StickerButtonText
+        {
+            get => _stickerButtonText;
+            set
+            {
+                _stickerButtonText = value;
+                OnPropertyChanged(nameof(StickerButtonText));
+            }
+        }
+
+        private bool _isAllPlaced;
+        [Binding]
+        public bool IsAllPlaced
+        {
+            get => _isAllPlaced;
+            set
+            {
+                _isAllPlaced = value;
+                OnPropertyChanged(nameof(IsAllPlaced));
+            }
+        }
+        
+        
         public void Show(Sprite photoSprite, string photoName)
         {
             PhotoName = photoName;
             PhotoImage = photoSprite;
+            
+            UpdatePlacedStatus();
+
             if (collectSelectedImage != null && PhotoImage != null)
             {
                 Canvas.ForceUpdateCanvases();
@@ -77,6 +105,64 @@ namespace UI
                     float scale = Mathf.Min(containerW / spriteW, containerH / spriteH);
                     PhotoImageSize = new Vector2(spriteW * scale, spriteH * scale);
                 }
+            }
+        }
+
+        public void UpdatePlacedStatus()
+        {
+            if (string.IsNullOrEmpty(PhotoName)) return;
+
+            var placedStickers = Global.UserDataManager.GetAllPlacedStickers();
+            bool isPlaced = false;
+
+            if (placedStickers != null)
+            {
+                foreach (var data in placedStickers)
+                {
+                    if (data.collectionKey == PhotoName)
+                    {
+                        isPlaced = true;
+                        break;
+                    }
+                }
+            }
+
+            IsAllPlaced = isPlaced;
+
+            if (IsAllPlaced)
+            {
+                StickerButtonText = I2.Loc.LocalizationManager.GetTranslation("UI/Sticker/Already_Used");
+            }
+            else
+            {
+                StickerButtonText = I2.Loc.LocalizationManager.GetTranslation("UI/Sticker/Use_Sticker");
+            }
+        }
+
+        [Binding]
+        public void OnClickPlacePhoto()
+        {
+            if (string.IsNullOrEmpty(PhotoName) || IsAllPlaced)
+            {
+                return;
+            }
+
+            var diaryViewModel = FindFirstObjectByType<CollectionDiaryViewModel>(UnityEngine.FindObjectsInactive.Include);
+            var collectionPage = FindFirstObjectByType<UI.Page.CollectionPage>(UnityEngine.FindObjectsInactive.Include);
+
+            if (collectionPage != null)
+            {
+                collectionPage.tabGroup.SelectTab(0);
+            }
+
+            if (diaryViewModel != null)
+            {
+                diaryViewModel.PlaceNewPhotoSticker(PhotoName, PhotoImage);
+                UpdatePlacedStatus();
+            }
+            else
+            {
+                Debug.LogWarning("CollectionDiaryViewModel not found in scene!");
             }
         }
     }

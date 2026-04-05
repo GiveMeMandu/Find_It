@@ -58,7 +58,7 @@ namespace UI.Page
 
         public void Initialize(string missionSetName, GameObject targetObject, bool enableCameraEffect, float cameraZoomSize = 0f, Vector3 cameraOffset = default)
         {
-            MissionSetName = missionSetName;
+            MissionSetName = Util.I2LocalizationHelper.GetLocalizedTextFromKorean(missionSetName);
             _targetObject = targetObject;
             _cameraZoomSize = cameraZoomSize;
             _cameraOffset = cameraOffset;

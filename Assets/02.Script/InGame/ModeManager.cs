@@ -31,7 +31,7 @@ public abstract class ModeManager : AutoTaskControl
 
     public virtual void OnObjectFound(HiddenObj foundObj)
     {
-        Debug.Log($"[ModeManager] 오브젝트 발견: {foundObj.name}");
+        // Debug.Log($"[ModeManager] 오브젝트 발견: {foundObj.name}");
     }
 
     public virtual void OnGameEnd()

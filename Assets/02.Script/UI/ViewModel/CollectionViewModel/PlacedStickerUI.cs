@@ -12,6 +12,7 @@ namespace UI
     public class PlacedStickerUI : ViewModel, IPointerDownHandler, IDragHandler
     {
         public string StickerId { get; private set; }
+        public string PhotoKey { get; private set; } // Added for Photo stickers
         public CollectionSO Collection { get; private set; }
         public CollectionDiaryViewModel DiaryViewModel { get; private set; }
 
@@ -67,6 +68,31 @@ namespace UI
             SetSelected(false);
         }
 
+        public void InitPhoto(CollectionData.PlacedStickerData data, Sprite photoSprite, string photoName, CollectionDiaryViewModel diary)
+        {
+            rectTransform = GetComponent<RectTransform>();
+            canvas = GetComponentInParent<Canvas>();
+            DiaryViewModel = diary;
+            Collection = null; // Null because it's a photo
+            PhotoKey = photoName;
+            StickerId = data.id;
+
+            if (stickerImage != null)
+                stickerImage.sprite = photoSprite;
+
+            // Compute size according to reference container
+            UpdateSizeFromReference();
+
+            LoadData(data);
+
+            if (closeButton != null)
+                closeButton.onClick.AddListener(OnCloseClicked);
+            
+            // Set up resize handler if not using a custom script
+            SetupResizeRotateHandle();
+            
+            SetSelected(false);
+        }
 
         // Set SizeDelta using sizeReferenceImage as the bounding container
         public void UpdateSizeFromReference()
@@ -103,7 +129,7 @@ namespace UI
             return new CollectionData.PlacedStickerData
             {
                 id = StickerId,
-                collectionKey = Collection.name,
+                collectionKey = Collection != null ? Collection.name : PhotoKey,
                 posX = rectTransform.anchoredPosition3D.x,
                 posY = rectTransform.anchoredPosition3D.y,
                 posZ = rectTransform.anchoredPosition3D.z,

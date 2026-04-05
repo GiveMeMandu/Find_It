@@ -45,6 +45,7 @@ namespace UI
             
             Image = sprite;
             Name = photoName;
+            IsLocked = false;
 
             if (IconImage != null && Image != null)
             {
@@ -99,6 +100,18 @@ namespace UI
             {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        private bool _isLocked;
+        [Binding]
+        public bool IsLocked
+        {
+            get => _isLocked;
+            set
+            {
+                _isLocked = value;
+                OnPropertyChanged(nameof(IsLocked));
             }
         }
     }

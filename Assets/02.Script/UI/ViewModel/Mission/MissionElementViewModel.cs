@@ -107,8 +107,9 @@ namespace UI
         public void Initialize(ItemSetData itemSetData)
         {
             _currentSetName = itemSetData.SetName;
-            MissionName = string.Format("{0}", itemSetData.SetName);
-            MissionNameDivider = string.Format("<alpha=#00>{0}", itemSetData.SetName);
+            string localizedSetName = Util.I2LocalizationHelper.GetLocalizedTextFromKorean(itemSetData.SetName);
+            MissionName = string.Format("{0}", localizedSetName);
+            MissionNameDivider = string.Format("<alpha=#00>{0}", localizedSetName);
             MissionItemColor = new Color(39f / 255f, 156f / 255f, 123f / 255f, 1f);
             MissionItemColorAlpha = 1f;
             MissionItemColorWhite = new Color(1f, 1f, 1f, 1f);

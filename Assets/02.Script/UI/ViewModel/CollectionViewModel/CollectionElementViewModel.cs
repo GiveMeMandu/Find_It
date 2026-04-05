@@ -58,7 +58,11 @@ namespace UI
                     ImageSize = new Vector2(spriteW * scale, spriteH * scale);
                 }
             }
-            Name = LocalizationManager.GetTranslation(collection.collectionName);
+
+            string nameTerm = string.IsNullOrEmpty(collection.collectionName) ? $"Collection/Name/{collection.name}" : collection.collectionName;
+            string translatedName = LocalizationManager.GetTranslation(nameTerm);
+            Name = string.IsNullOrEmpty(translatedName) ? collection.name : translatedName;
+            
             Count = Global.CollectionManager.GetCollectionCount(collection);
         }
 
@@ -85,6 +89,18 @@ namespace UI
             {
                 _imageSize = value;
                 OnPropertyChanged(nameof(ImageSize));
+            }
+        }
+
+        private bool isLocked;
+        [Binding]
+        public bool IsLocked
+        {
+            get => isLocked;
+            set
+            {
+                isLocked = value;
+                OnPropertyChanged(nameof(IsLocked));
             }
         }
 
@@ -120,6 +136,14 @@ namespace UI
             set
             {
                 _count = value;
+                if (_count > 0)
+                {
+                    IsLocked = false;
+                }
+                else
+                {
+                    IsLocked = true;
+                }
                 OnPropertyChanged(nameof(Count));
             }
         }

@@ -48,9 +48,84 @@ namespace UI
             }
         }
 
+        
+        private bool isLocked;
+
+        [Binding]
+        public bool IsLocked
+        {
+            get => isLocked;
+            set
+            {
+                isLocked = value;
+                OnPropertyChanged(nameof(IsLocked));
+            }
+        }
+        private int allCount;
+        [Binding]
+        public int AllCount
+        {
+            get => allCount;
+            set
+            {
+                allCount = value;
+                OnPropertyChanged(nameof(AllCount));
+            }
+        }
+
+        private int curCount;
+        [Binding]
+        public int CurCount
+        {
+            get => curCount;
+            set
+            {
+                curCount = value;
+                OnPropertyChanged(nameof(CurCount));
+            }
+        }
+
+        private string _stickerButtonText;
+        [Binding]
+        public string StickerButtonText
+        {
+            get => _stickerButtonText;
+            set
+            {
+                _stickerButtonText = value;
+                OnPropertyChanged(nameof(StickerButtonText));
+            }
+        }
+
+        private bool _isAllPlaced;
+        [Binding]
+        public bool IsAllPlaced
+        {
+            get => _isAllPlaced;
+            set
+            {
+                _isAllPlaced = value;
+                OnPropertyChanged(nameof(IsAllPlaced));
+            }
+        }
+
         [Binding]
         public void OnClickPlaceSticker()
         {
+            if(_currentCollection == null || IsLocked)
+            {
+                return;
+            }
+            if (CurCount <= 0)
+            {
+                IsAllPlaced = true;
+                StickerButtonText = I2.Loc.LocalizationManager.GetTranslation("UI/Sticker/Already_Used");
+                return;
+            }else
+            {
+                IsAllPlaced = false;
+                StickerButtonText = I2.Loc.LocalizationManager.GetTranslation("UI/Sticker/Use_Sticker");
+            }
             if (_currentCollection != null)
             {
                 var diaryViewModel = FindFirstObjectByType<CollectionDiaryViewModel>(UnityEngine.FindObjectsInactive.Include);
@@ -65,8 +140,20 @@ namespace UI
                 {
                     diaryViewModel.PlaceNewSticker(_currentCollection);
                     // Refresh count text
-                    CollectionCount = Global.CollectionManager.GetCollectionCount(_currentCollection).ToString();
+                    CurCount = Global.CollectionManager.GetCollectionCount(_currentCollection);
+                    CollectionCount = CurCount.ToString();
                     UpdateIsPlacedStatus();
+                    
+                    if (CurCount <= 0)
+                    {
+                        StickerButtonText = I2.Loc.LocalizationManager.GetTranslation("UI/Sticker/Already_Used");
+                        IsAllPlaced = true;
+                    }
+                    else
+                    {
+                        StickerButtonText = I2.Loc.LocalizationManager.GetTranslation("UI/Sticker/Use_Sticker");
+                        IsAllPlaced = false;
+                    }
                 }
                 else
                 {
@@ -162,7 +249,40 @@ namespace UI
         {
             _collectionPage = FindFirstObjectByType<CollectionPage>(UnityEngine.FindObjectsInactive.Include);
             _currentCollection = collection;
-            CollectionName = LocalizationManager.GetTranslation(collection.collectionName);
+    
+            CurCount = Global.CollectionManager.GetCollectionCount(collection);
+            
+            int placedCount = 0;
+            var placedStickers = Global.UserDataManager.GetAllPlacedStickers();
+            if (placedStickers != null)
+            {
+                foreach (var data in placedStickers)
+                {
+                    if (data.collectionKey == collection.name)
+                    {
+                        placedCount++;
+                    }
+                }
+            }
+            
+            AllCount = CurCount + placedCount;
+            IsLocked = AllCount <= 0;
+
+            if (CurCount <= 0)
+            {
+                StickerButtonText = I2.Loc.LocalizationManager.GetTranslation("UI/Sticker/Already_Used");
+                IsAllPlaced = true;
+            }
+            else
+            {
+                StickerButtonText = I2.Loc.LocalizationManager.GetTranslation("UI/Sticker/Use_Sticker");
+                IsAllPlaced = false;
+            }
+            
+            string nameTerm = string.IsNullOrEmpty(collection.collectionName) ? $"Collection/Name/{collection.name}" : collection.collectionName;
+            string translatedName = LocalizationManager.GetTranslation(nameTerm);
+            CollectionName = string.IsNullOrEmpty(translatedName) ? collection.name : translatedName;
+            
             CollectionCount = Global.CollectionManager.GetCollectionCount(collection).ToString();
             CollectionImage = collection.collectionImage;
             if (collectSelectedImage != null && CollectionImage != null)

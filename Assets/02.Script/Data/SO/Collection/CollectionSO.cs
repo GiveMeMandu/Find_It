@@ -9,10 +9,12 @@ namespace SO
     [CreateAssetMenu(fileName = "Collection", menuName = "Collection/Collection Info")]
     public class CollectionSO : ScriptableObject
     {
+        [PreviewField(alignment: ObjectFieldAlignment.Center, Height = 200)]
         [LabelText("이미지")] public Sprite collectionImage;
-        [LabelText("이름")] [TermsPopup("Collection/Name/")] 
+        [LabelText("이름")]
+        [TermsPopup("Collection/Name/")]
         public string collectionName;
-        [LabelText("챕터 인덱스")] 
+        [LabelText("챕터 인덱스")]
         [Tooltip("StageManager의 chapters 리스트 인덱스 (0부터 시작)")]
         public int chapterIndex;
 
@@ -25,14 +27,15 @@ namespace SO
         public string mappingKeywords;
 
         [Button("자동으로 컬렉션 정보 설정")]
-        public void SetCollectionInfo(){
+        public void SetCollectionInfo()
+        {
             // 에셋 이름에서 기본 텍스트 키를 자동으로 생성
             string assetName = this.name;
             collectionName = "Collection/Name/" + assetName;
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             EditorUtility.SetDirty(this);
-            #endif
+#endif
         }
     }
 }
