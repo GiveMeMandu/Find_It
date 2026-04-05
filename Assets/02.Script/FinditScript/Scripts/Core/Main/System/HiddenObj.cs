@@ -71,6 +71,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         public SpriteRenderer spriteRenderer;
 
+        [Tooltip("Enable debug logs for GetUISprite")]
+        public bool debugGetUISprite = false;
+
         // Cached UI sprite so GetUISprite works even if the GameObject is inactive
         private Sprite cachedUISprite;
 
@@ -100,17 +103,33 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     }
                 }
 
-                // UIChangeHelper 컴포넌트 자동 찾기
+                // UIChangeHelper 컴포넌트 자동 찾기 (자식까지 검색)
                 if (uiChangeHelper == null)
                 {
-                    uiChangeHelper = GetComponent<UIChangeHelper>();
+                    uiChangeHelper = GetComponentInChildren<UIChangeHelper>(true);
                 }
                 cachedUISprite = (uiChangeHelper != null && uiChangeHelper.sprite != null) ? uiChangeHelper.sprite : UISprite;
             }
 
-            // 객체가 비활성화되어 있으면 캐시된 값만 반환
+            // 객체가 비활성화되어 있으면 UIChangeHelper의 최신 스프라이트로 캐시를 갱신한 뒤 반환
             if (!gameObject.activeInHierarchy)
             {
+                if (uiChangeHelper == null)
+                {
+                    uiChangeHelper = GetComponentInChildren<UIChangeHelper>(true);
+                }
+                var inactiveSprite = (uiChangeHelper != null && uiChangeHelper.sprite != null) ? uiChangeHelper.sprite : cachedUISprite;
+                if (inactiveSprite != null)
+                {
+                    cachedUISprite = inactiveSprite;
+                }
+                if (debugGetUISprite)
+                {
+                    string helperName = (uiChangeHelper != null && uiChangeHelper.sprite != null) ? uiChangeHelper.sprite.name : "null";
+                    string uiName = UISprite != null ? UISprite.name : "null";
+                    string cachedName = cachedUISprite != null ? cachedUISprite.name : "null";
+                    Debug.Log($"[HiddenObj.GetUISprite] (INACTIVE) obj={gameObject.name} uiHelper.sprite={helperName} UISprite={uiName} cached={cachedName} returning={cachedName}");
+                }
                 return cachedUISprite;
             }
 
@@ -123,6 +142,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (currentSprite != null)
             {
                 cachedUISprite = currentSprite;
+            }
+            if (debugGetUISprite)
+            {
+                string helperName = (uiChangeHelper != null && uiChangeHelper.sprite != null) ? uiChangeHelper.sprite.name : "null";
+                string uiName = UISprite != null ? UISprite.name : "null";
+                string cachedName = cachedUISprite != null ? cachedUISprite.name : "null";
+                string returnName = currentSprite != null ? currentSprite.name : "null";
+                Debug.Log($"[HiddenObj.GetUISprite] (ACTIVE) obj={gameObject.name} uiHelper.sprite={helperName} UISprite={uiName} cached={cachedName} returning={returnName}");
             }
 
             return currentSprite;
@@ -247,10 +274,16 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                     }
                 }
 
-                // UIChangeHelper 컴포넌트 자동 찾기
+                // UIChangeHelper 컴포넌트 자동 찾기 (자식까지 검색)
                 if (uiChangeHelper == null)
                 {
-                    uiChangeHelper = GetComponent<UIChangeHelper>();
+                    uiChangeHelper = GetComponentInChildren<UIChangeHelper>(true);
+                }
+
+                // 인스펙터에서의 혼동을 방지하기 위해, uiChangeHelper의 스프라이트를 우선적으로 UISprite 필드에 동기화합니다
+                if (uiChangeHelper != null && uiChangeHelper.sprite != null)
+                {
+                    UISprite = uiChangeHelper.sprite;
                 }
 
                 // WhenFoundEventHelper 컴포넌트 자동 찾기

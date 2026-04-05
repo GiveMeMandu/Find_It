@@ -279,7 +279,10 @@ public class SetCompletionObject : MonoBehaviour
             {
                 LevelManager.PlayItemFx(AudioWhenClick);
             }
-            // CompletionView.SetActive(true);
+            if(CompletionView != null)
+            {
+                CompletionView.SetActive(true);
+            }
 
             // ItemSetManager에 클릭되었음을 알림
             if (ItemSetManager.Instance != null)
