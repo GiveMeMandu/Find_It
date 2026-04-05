@@ -169,10 +169,19 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (visualPage != null)
             {
                 // CompletionObject가 있으면 그 위치로 카메라 이동, 없으면 null 전달 (연출 페이지에서 예외처리됨)
-                GameObject target = setData.CompletionObject != null ? setData.CompletionObject.gameObject : null;
-                bool enableCameraEffect = setData.CompletionObject != null && setData.CompletionObject.enableCameraEffect;
-                float cameraZoomSize = setData.CompletionObject != null ? setData.CompletionObject.defaultCameraZoomSize : 0f;
-                visualPage.Initialize(setData.SetName, target, enableCameraEffect, cameraZoomSize);
+                GameObject target = null;
+                bool enableCameraEffect = false;
+                float cameraZoomSize = 0f;
+                Vector3 cameraOffset = Vector3.zero;
+
+                if (setData.CompletionObject != null)
+                {
+                    target = setData.CompletionObject.customTarget != null ? setData.CompletionObject.customTarget : setData.CompletionObject.gameObject;
+                    enableCameraEffect = setData.CompletionObject.enableCameraEffect;
+                    cameraZoomSize = setData.CompletionObject.defaultCameraZoomSize;
+                    cameraOffset = setData.CompletionObject.cameraOffset;
+                }
+                visualPage.Initialize(setData.SetName, target, enableCameraEffect, cameraZoomSize, cameraOffset);
             }
 
             await UniTask.Yield();

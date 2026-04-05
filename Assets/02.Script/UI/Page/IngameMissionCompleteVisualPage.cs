@@ -37,6 +37,7 @@ namespace UI.Page
 
         private GameObject _targetObject;
         private float _cameraZoomSize;
+        private Vector3 _cameraOffset;
         private bool _enableCameraEffect;
         [Binding]
         public bool EnableCameraEffect
@@ -55,11 +56,12 @@ namespace UI.Page
             Global.UIManager.ClosePage(this);
         }
 
-        public void Initialize(string missionSetName, GameObject targetObject, bool enableCameraEffect, float cameraZoomSize = 0f)
+        public void Initialize(string missionSetName, GameObject targetObject, bool enableCameraEffect, float cameraZoomSize = 0f, Vector3 cameraOffset = default)
         {
             MissionSetName = missionSetName;
             _targetObject = targetObject;
             _cameraZoomSize = cameraZoomSize;
+            _cameraOffset = cameraOffset;
             EnableCameraEffect = enableCameraEffect;
             TitleText = "Mission Found";
 
@@ -79,7 +81,7 @@ namespace UI.Page
                     cameraViewModel.ItemSetName = MissionSetName;
                     
                     // 카메라 연출 시작 및 완료 대기 (줌 크기 전달)
-                    await cameraViewModel.PlayCameraEffect(_targetObject, _cameraZoomSize, () =>
+                    await cameraViewModel.PlayCameraEffect(_targetObject, _cameraZoomSize, _cameraOffset, () =>
                     {
                         // 연출 완료 후 페이지 닫기
                         Global.UIManager.ClosePage(this);

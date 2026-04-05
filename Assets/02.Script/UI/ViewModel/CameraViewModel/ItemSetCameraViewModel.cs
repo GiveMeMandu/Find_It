@@ -63,8 +63,9 @@ namespace UI
         /// </summary>
         /// <param name="targetObject">카메라가 이동할 대상 오브젝트</param>
         /// <param name="zoomSize">확대할 Orthographic Size (0 이하이면 줌 안 함)</param>
+        /// <param name="offset">카메라 이동 시 적용할 타겟의 오프셋 위치</param>
         /// <param name="onComplete">연출 완료 콜백</param>
-        public async UniTask PlayCameraEffect(GameObject targetObject, float zoomSize = 0f, Action onComplete = null)
+        public async UniTask PlayCameraEffect(GameObject targetObject, float zoomSize = 0f, Vector3 offset = default, Action onComplete = null)
         {
             _targetObject = targetObject;
             IsFocusIconActive = false;
@@ -94,15 +95,16 @@ namespace UI
                 }
 
                 // 카메라 이동 + 줌 (1초) - zoomSize가 유효하면 이동과 줌을 동시에
+                Vector3 targetPos = _targetObject.transform.position + offset;
                 if (zoomSize > 0f)
                 {
                     await Util.CameraSetting.CameraView2D.Instance.MoveCameraAndZoomAsync(
-                        _targetObject.transform.position, zoomSize, 1f);
+                        targetPos, zoomSize, 1f);
                 }
                 else
                 {
                     await Util.CameraSetting.CameraView2D.Instance.MoveCameraToPositionAsync(
-                        _targetObject.transform.position, 1f);
+                        targetPos, 1f);
                 }
             }
 

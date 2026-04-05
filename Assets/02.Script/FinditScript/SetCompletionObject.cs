@@ -69,6 +69,16 @@ public class SetCompletionObject : MonoBehaviour
     [Range(0.5f, 10f)]
     public float defaultCameraZoomSize = 3f;
 
+    [Label("카메라 이동 오프셋")]
+    [InfoBox("카메라가 타겟 위치에서 얼만큼 떨어져서 비출지 설정합니다.")]
+    [ShowIf("enableCameraEffect")]
+    public Vector3 cameraOffset = Vector3.zero;
+
+    [Label("커스텀 타겟")]
+    [InfoBox("카메라가 비출 커스텀 대상을 지정합니다. 비워두면 이 스크립트가 붙은 오브젝트를 타겟으로 합니다.")]
+    [ShowIf("enableCameraEffect")]
+    public GameObject customTarget;
+
     private Camera _mainCamera;
     private Canvas _indicatorCanvas;
 
@@ -333,6 +343,8 @@ public class SetCompletionObject : MonoBehaviour
     {
         if (!enableCameraEffect) return;
 
+        Vector3 targetPos = (customTarget != null ? customTarget.transform.position : transform.position) + cameraOffset;
+
         // 카메라 확대 영역을 와이어프레임 박스로 시각화
         float aspect = Camera.main != null ? Camera.main.aspect : 16f / 9f;
         float height = defaultCameraZoomSize * 2f;
@@ -340,22 +352,22 @@ public class SetCompletionObject : MonoBehaviour
 
         // 초록색 와이어프레임: 확대 시 보이는 영역
         Gizmos.color = new Color(0f, 1f, 0f, 0.8f);
-        Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0f));
+        Gizmos.DrawWireCube(targetPos, new Vector3(width, height, 0f));
 
         // 반투명 초록색 면: 확대 영역 채우기
         Gizmos.color = new Color(0f, 1f, 0f, 0.1f);
-        Gizmos.DrawCube(transform.position, new Vector3(width, height, 0f));
+        Gizmos.DrawCube(targetPos, new Vector3(width, height, 0f));
 
         // 중앙 십자 표시
         Gizmos.color = Color.yellow;
         float crossSize = Mathf.Min(width, height) * 0.05f;
-        Gizmos.DrawLine(transform.position - Vector3.right * crossSize, transform.position + Vector3.right * crossSize);
-        Gizmos.DrawLine(transform.position - Vector3.up * crossSize, transform.position + Vector3.up * crossSize);
+        Gizmos.DrawLine(targetPos - Vector3.right * crossSize, targetPos + Vector3.right * crossSize);
+        Gizmos.DrawLine(targetPos - Vector3.up * crossSize, targetPos + Vector3.up * crossSize);
 
 #if UNITY_EDITOR
         // 라벨 표시
         UnityEditor.Handles.Label(
-            transform.position + Vector3.up * (defaultCameraZoomSize + 0.3f),
+            targetPos + Vector3.up * (defaultCameraZoomSize + 0.3f),
             $"Zoom: {defaultCameraZoomSize:F1} (w:{width:F1} x h:{height:F1})",
             new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, normal = { textColor = Color.green } }
         );
