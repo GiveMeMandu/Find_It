@@ -31,10 +31,10 @@ namespace UI.Effect
 
         protected override void Start()
         {
-            base.Start();
             Initialize();
+            base.Start();
 
-            if (autoStart && !isFloating)
+            if (autoStart && !isFloating && !isPlaying)
             {
                 StartFloating();
             }
@@ -42,8 +42,9 @@ namespace UI.Effect
 
         protected override void OnEnable()
         {
+            Initialize();
             base.OnEnable();
-            if (autoStart && isInitialized && !isFloating)
+            if (autoStart && isInitialized && !isFloating && !isPlaying)
             {
                 StartFloating();
             }
@@ -108,6 +109,13 @@ namespace UI.Effect
         {
             while (isFloating)
             {
+                // VFXObject에서 이미 이펙트를 재생 중이라면, 충돌을 막기 위해 잠시 대기합니다.
+                if (isPlaying)
+                {
+                    await UniTask.Yield(destroyCancellation.Token);
+                    continue;
+                }
+
                 if (isUIEffect)
                 {
                     await FloatingUITask();
@@ -128,6 +136,7 @@ namespace UI.Effect
             floatingCts?.Cancel();
             floatingCts?.Dispose();
             floatingCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellation.Token);
+            floatingSequence?.Kill();
 
             Vector3 targetPos = startPosition + moveDirection * floatingDistance;
 
@@ -150,6 +159,7 @@ namespace UI.Effect
             floatingCts?.Cancel();
             floatingCts?.Dispose();
             floatingCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellation.Token);
+            floatingSequence?.Kill();
 
             var rectTransform = GetComponent<RectTransform>();
             Vector3 targetPos = startPosition + moveDirection * floatingDistance;

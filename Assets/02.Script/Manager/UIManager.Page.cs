@@ -98,10 +98,11 @@ namespace Manager
         
         public T OpenPage<T>(params object[] parameters) where T : PageViewModel
         {
-            if (_pageStack.Count > 0)
-            {
-                CurrentPage.gameObject.SetActive(false);
-            }
+            // 애니메이션 초기화 방지를 위해 SetActive를 끄지 않습니다.
+            // if (_pageStack.Count > 0)
+            // {
+            //     CurrentPage.gameObject.SetActive(false);
+            // }
             
             T pagePrefab = FindPage<T>();
             T pageInstance = Instantiate(pagePrefab, _pageGroup.transform);
@@ -163,7 +164,7 @@ namespace Manager
 
             if (_pageStack.Count > 0)
             {
-                CurrentPage.gameObject.SetActive(true);
+                // CurrentPage.gameObject.SetActive(true);
                 // CurrentPage.Focus();
             }
         }

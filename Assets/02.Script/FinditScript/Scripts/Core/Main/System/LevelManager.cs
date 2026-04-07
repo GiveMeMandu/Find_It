@@ -238,6 +238,11 @@ DebugGameState();
                     // Hidden 태그를 가진 오브젝트 확인
                     if (child.CompareTag("Hidden"))
                     {
+                        if(!child.gameObject.TryGetComponent<SpriteRenderer>(out var sr))
+                        {
+                            // Debug.LogWarning($"[LevelManager] Object {child.name} has 'Hidden' tag but no SpriteRenderer component found. Skipping this object.");
+                            continue; // SpriteRenderer가 없는 오브젝트는 건너뛰기
+                        }
                         // HiddenObj 컴포넌트가 없다면 추가
                         HiddenObj hiddenObj = null;
                         if (!child.TryGetComponent<HiddenObj>(out hiddenObj))

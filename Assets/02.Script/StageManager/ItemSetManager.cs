@@ -117,7 +117,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             return InGameObjectNameFilter.GetBaseGroupName(obj.gameObject.name);
         }
 
-        private void CheckSetCompletion(ItemSetData setData)
+        private void CheckSetCompletion(ItemSetData setData, HiddenObj obj = null)
         {
             var completedGroupsForSet = completedGroups[setData.SetName];
             bool allGroupsCompletelyFound = setData.RequiredGroups.All(groupName => 
@@ -137,33 +137,46 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 foundSets.Add(setData.SetName);
                 
                 // 세트 완성 시 미션 완료 페이지와 연출 페이지 동시 오픈
-                ShowSetCompletePages(setData).Forget();
+                ShowSetCompletePages(setData, obj).Forget();
 
                 OnSetCompleted?.Invoke(setData.SetName);
                 CheckAllSetsFound();
             }
         }
 
-        private async UniTaskVoid ShowSetCompletePages(ItemSetData setData)
+        private async UniTaskVoid ShowSetCompletePages(ItemSetData setData, HiddenObj obj = null)
         {
             // 미션 완료 페이지 (재료 표시)
             string localizedSetName = Util.I2LocalizationHelper.GetLocalizedTextFromKorean(setData.SetName);
             var infoPage = Global.UIManager.OpenPage<InGameMissionCompletePage>();
             
-            // 정보 초기화 (아이콘은 첫 번째 그룹이나 null 처리)
+            // 마지막으로 찾은 오브젝트(obj)를 기준으로 아이콘과 개수 표시
+            Sprite icon = obj != null ? obj.UISprite : null;
             int currentFound = setData.RequiredGroups.Count;
             int totalNeeded = setData.RequiredGroups.Count;
+            
+            if (obj != null && LevelManager.Instance != null && LevelManager.Instance.TargetObjDic != null)
+            {
+                string groupName = GetGroupName(obj);
+                var groupList = LevelManager.Instance.TargetObjDic.Values.FirstOrDefault(g => g.BaseGroupName == groupName);
+                if (groupList != null)
+                {
+                    currentFound = groupList.FoundCount;
+                    totalNeeded = groupList.TotalCount;
+                }
+            }
             
             infoPage.Initialize(
                 missionName: localizedSetName,
                 missionNameDivider: string.Format("<alpha=#00>{0}", localizedSetName),
-                missionSetIcon: null, 
+                missionSetIcon: icon, 
                 missionSetFoundLeft: $"({currentFound} / {totalNeeded})",
                 isSetFoundComplete: true,
                 isGroupComplete: true,
                 missionStatus: "Mission Complete!",
                 missionNameAlpha: 1f
             );
+            Debug.Log($"Mission Complete Page opened for set: {setData.SetName} with localized name: {localizedSetName}" + $" CurrentFound: {currentFound} / {totalNeeded}");
 
             // 연출 페이지 동시 오픈
             var visualPage = Global.UIManager.OpenPage<IngameMissionCompleteVisualPage>();
@@ -186,39 +199,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             }
 
             await UniTask.Yield();
-        }
-
-        // SetCompletionObject에서 호출: 미션 현황판 보기
-        public void ShowMissionIngredientsPage(string setName)
-        {
-            var setData = itemSetDataList.Find(x => x.SetName == setName);
-            if (setData != null)
-            {
-                ShowMissionStatusPage(setData).Forget();
-            }
-        }
-
-        protected virtual async UniTask ShowMissionStatusPage(ItemSetData setData)
-        {
-            var page = Global.UIManager.OpenPage<InGameMissionCompletePage>();
-            
-            // 현재 진행도 계산
-            int currentFound = completedGroups.ContainsKey(setData.SetName) ? completedGroups[setData.SetName].Count : 0;
-            int totalNeeded = setData.RequiredGroups.Count;
-            bool isSetComplete = currentFound >= totalNeeded;
-
-            page.Initialize(
-                missionName: setData.SetName,
-                missionNameDivider: string.Format("<alpha=#00>{0}", setData.SetName),
-                missionSetIcon: null, 
-                missionSetFoundLeft: $"({currentFound} / {totalNeeded})",
-                isSetFoundComplete: isSetComplete,
-                isGroupComplete: false,
-                missionStatus: $"Mission! ({FoundSetsCount}/{TotalSetsCount})",
-                missionNameAlpha: 1f
-            );
-            
-            await page.WaitForClose();
         }
 
         private void CheckAllSetsFound()
@@ -279,13 +259,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (isSetWillBeCompleted)
             {
                 completedGroups[setData.SetName].Add(groupName);
-                CheckSetCompletion(setData);
+                CheckSetCompletion(setData, obj);
                 return;
             }
 
             var page = Global.UIManager.OpenPage<InGameMissionCompletePage>();
             
             float missionNameAlpha = isGroupComplete && !completedGroups[setData.SetName].Contains(groupName) ? 0.6f : 1f;
+            // Debug.Log($"[ItemSetManager] Showing Task Alert Page for group: {groupName} in set: {setData.SetName}. Found in group: {foundInGroup}/{totalInGroup}, Group complete: {isGroupComplete}");
             
             page.Initialize(
                 missionName: setData.SetName,
@@ -302,7 +283,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (isGroupComplete && !completedGroups[setData.SetName].Contains(groupName))
             {
                 completedGroups[setData.SetName].Add(groupName);
-                CheckSetCompletion(setData);
+                CheckSetCompletion(setData, obj);
             }
             
             await page.WaitForClose();
