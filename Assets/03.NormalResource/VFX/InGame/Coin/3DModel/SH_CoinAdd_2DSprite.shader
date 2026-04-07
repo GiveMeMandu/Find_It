@@ -7,6 +7,7 @@ Shader "SH_CoinAdd_2DSprite"
         _RotationAngle ("Rotation Angle", Range(0, 1)) = 0.3
         _Speed ("Speed", Range(0, 50)) = 1
         [Toggle(_RANDOMIZE_SPEED)] _RandomizeSpeed ("Randomize Speed", Float) = 0
+        _RandomSeed ("Random Seed (Set via script)", Range(0, 1)) = 0
         _SpeedRandomMin ("Speed Random Min", Range(0, 50)) = 0.5
         _SpeedRandomMax ("Speed Random Max", Range(0, 50)) = 3
         _Frequancy ("Frequancy", Range(0, 50)) = 5
@@ -94,6 +95,7 @@ Shader "SH_CoinAdd_2DSprite"
                 half4 _LineColor;
                 float _RotationAngle;
                 float _Speed;
+                float _RandomSeed;
                 float _SpeedRandomMin;
                 float _SpeedRandomMax;
                 float _Frequancy;
@@ -132,9 +134,8 @@ Shader "SH_CoinAdd_2DSprite"
                 output.uv = TRANSFORM_TEX(input.uv, _MainTex);
                 output.color = input.color * _Color * _RendererColor;
 
-                // 오브젝트 월드 위치로 인스턴스별 고유 시드 생성
-                float3 objWorldPos = GetObjectToWorldMatrix()._m03_m13_m23;
-                output.randomSeed = Hash(objWorldPos.xy + objWorldPos.z);
+                // 월드 위치 기반 랜덤은 객체가 이동하면 값이 계속 변하므로 고정된 속성값을 사용합니다.
+                output.randomSeed = _RandomSeed;
 
                 return output;
             }
@@ -224,6 +225,7 @@ Shader "SH_CoinAdd_2DSprite"
                 half4 _LineColor;
                 float _RotationAngle;
                 float _Speed;
+                float _RandomSeed;
                 float _SpeedRandomMin;
                 float _SpeedRandomMax;
                 float _Frequancy;
@@ -260,8 +262,7 @@ Shader "SH_CoinAdd_2DSprite"
                 output.uv = TRANSFORM_TEX(input.uv, _MainTex);
                 output.color = input.color * _Color * _RendererColor;
 
-                float3 objWorldPos = GetObjectToWorldMatrix()._m03_m13_m23;
-                output.randomSeed = Hash(objWorldPos.xy + objWorldPos.z);
+                output.randomSeed = _RandomSeed;
 
                 return output;
             }

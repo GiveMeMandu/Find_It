@@ -127,7 +127,7 @@ public class CoinRushModeManager : ModeManager
     private Dictionary<Guid, HiddenObj> coinObjDic = new Dictionary<Guid, HiddenObj>();
     // HiddenObj 없이 LeanClickEvent로 클릭 처리하는 코인 관리
     private Dictionary<Guid, CoinRushCoin> _leanCoinDic = new Dictionary<Guid, CoinRushCoin>();
-    private List<GameObject> activeCoinObjects = new List<GameObject>();
+    public List<GameObject> activeCoinObjects = new List<GameObject>();
 
     public override void InitializeMode()
     {
@@ -551,13 +551,13 @@ public class CoinRushModeManager : ModeManager
         foreach (var kvp in coinObjDic)
         {
             var coinObj = kvp.Value;
-            if (coinObj == null || coinObj.gameObject == null)
+            if (coinObj == null || coinObj.gameObject == null || !coinObj.gameObject.activeInHierarchy)
             {
                 coinsToRemove.Add(kvp.Key);
                 continue;
             }
 
-            // CoinRushCoin 컴포넌트에서 수명 관리가 이루어지므로 여기서는 null 체크만
+            // CoinRushCoin 컴포넌트에서 수명 관리가 이루어지므로 여기서는 비활성화/null 체크만
         }
 
         // Dictionary에서 제거
@@ -566,11 +566,11 @@ public class CoinRushModeManager : ModeManager
             coinObjDic.Remove(guid);
         }
 
-        // _leanCoinDic null 정리
+        // _leanCoinDic null 및 비활성화 정리
         var leanCoinsToRemove = new List<Guid>();
         foreach (var kvp in _leanCoinDic)
         {
-            if (kvp.Value == null || kvp.Value.gameObject == null)
+            if (kvp.Value == null || kvp.Value.gameObject == null || !kvp.Value.gameObject.activeInHierarchy)
                 leanCoinsToRemove.Add(kvp.Key);
         }
         foreach (var guid in leanCoinsToRemove)
@@ -579,18 +579,12 @@ public class CoinRushModeManager : ModeManager
         }
 
         // 오브젝트 리스트 정리
-        activeCoinObjects.RemoveAll(obj => obj == null);
+        activeCoinObjects.RemoveAll(obj => obj == null || !obj.activeInHierarchy);
     }
 
     private void SpawnCoin()
     {
-        // 미리 세팅된 코인을 사용하는 경우 런타임 생성 안 함
-        if (usePresetCoins) return;
-
-        // 게임 시작시 모든 코인 생성 옵션이 켜져있으면 개별 스폰 안 함
-        if (spawnAllCoinsAtStart) return;
-
-        if (coinObjDic.Count >= maxCoinsOnScreen) return;
+        if (activeCoinObjects.Count >= maxCoinsOnScreen) return;
 
         if (coinPrefab != null)
         {

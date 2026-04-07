@@ -31,13 +31,24 @@ namespace UI.Effect
         private Vector3 currentTargetPosition;
         private bool isFloating = false;
         private bool isInitialized = false;
+        private CancellationTokenSource floatingCts;
 
         protected override void Start()
         {
-            base.Start();
             Initialize();
+            base.Start();
 
-            if (autoStart)
+            if (autoStart && !isFloating && !isPlaying)
+            {
+                StartFloating();
+            }
+        }
+
+        protected override void OnEnable()
+        {
+            Initialize();
+            base.OnEnable();
+            if (autoStart && isInitialized && !isFloating && !isPlaying)
             {
                 StartFloating();
             }
@@ -79,12 +90,21 @@ namespace UI.Effect
         public void StopFloating()
         {
             isFloating = false;
+            floatingCts?.Cancel();
+            floatingCts?.Dispose();
+            floatingCts = null;
         }
 
         private async UniTaskVoid StartFloatingTask()
         {
             while (isFloating)
             {
+                if (isPlaying)
+                {
+                    await UniTask.Yield(destroyCancellation.Token);
+                    continue;
+                }
+
                 if (isUIEffect)
                 {
                     await RandomFloatingUITask();
@@ -149,8 +169,9 @@ namespace UI.Effect
 
         private async UniTask RandomFloatingGameObjectTask()
         {
-            destroyCancellation.Cancel();
-            destroyCancellation = new CancellationTokenSource();
+            floatingCts?.Cancel();
+            floatingCts?.Dispose();
+            floatingCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellation.Token);
 
             Vector3 newTargetPosition = GenerateRandomTargetPosition();
             float duration = Random.Range(minDuration, maxDuration);
@@ -160,7 +181,7 @@ namespace UI.Effect
                 // 새 위치로 이동
                 await transform.DOLocalMove(newTargetPosition, duration)
                     .SetEase(easeType)
-                    .WithCancellation(destroyCancellation.Token);
+                    .WithCancellation(floatingCts.Token);
 
                 // 현재 타겟 위치 업데이트
                 currentTargetPosition = newTargetPosition;
@@ -173,8 +194,9 @@ namespace UI.Effect
 
         private async UniTask RandomFloatingUITask()
         {
-            destroyCancellation.Cancel();
-            destroyCancellation = new CancellationTokenSource();
+            floatingCts?.Cancel();
+            floatingCts?.Dispose();
+            floatingCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellation.Token);
 
             var rectTransform = GetComponent<RectTransform>();
             Vector3 newTargetPosition = GenerateRandomTargetPosition();
@@ -185,7 +207,7 @@ namespace UI.Effect
                 // 새 위치로 이동
                 await rectTransform.DOAnchorPos(newTargetPosition, duration)
                     .SetEase(easeType)
-                    .WithCancellation(destroyCancellation.Token);
+                    .WithCancellation(floatingCts.Token);
 
                 // 현재 타겟 위치 업데이트
                 currentTargetPosition = newTargetPosition;

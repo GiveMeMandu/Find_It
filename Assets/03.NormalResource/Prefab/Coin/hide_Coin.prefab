@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 8508528131992173082}
   - component: {fileID: 500718871782877510}
   - component: {fileID: 5198181199979971257}
+  - component: {fileID: 4252777791821925712}
+  - component: {fileID: 4829170107696124453}
+  - component: {fileID: 849441930070153507}
   m_Layer: 3
   m_Name: hide_Coin
   m_TagString: Hidden
@@ -36,6 +39,7 @@ Transform:
   m_Children:
   - {fileID: 1282438455771974909}
   - {fileID: 8589024638997792578}
+  - {fileID: 4875558010626410535}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4690245607432888828
@@ -108,6 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82276f88de6e6254d938ddefe10d2726, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinRushCoin
+  allowContinuousClick: 0
   onFound:
     m_PersistentCalls:
       m_Calls:
@@ -127,6 +132,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 4829170107696124453}
+        m_TargetAssemblyTypeName: AfterTimeCount, Assembly-CSharp
+        m_MethodName: StartTiming
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -198,6 +215,122 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HideWhenFoundHelper
   hideWhenFound: 0
+--- !u!114 &4252777791821925712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7546995733187749340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8e2fb5a3680324b9c0e2c6c9964571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Effect.FadeVFX
+  isPlayOnStart: 0
+  isPlayOnEnable: 1
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 0
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  fadeMode: 0
+  startAlpha: 0
+  endAlpha: 1
+  duration: 0.5
+  animationEase: 1
+  forceStartAlpha: 1
+  useYoyoLoop: 0
+--- !u!114 &4829170107696124453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7546995733187749340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0a16480ea89e8b47a0689084da83afe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfterTimeCount
+  AfterTimeEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7546995733187749340}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  TimeCount: 3
+  IsStartOnEnable: 0
+--- !u!114 &849441930070153507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7546995733187749340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 204d661193d94374ca19cb42510f9847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Effect.RandomFloatingEffect
+  isPlayOnStart: 0
+  isPlayOnEnable: 1
+  isStopOtherEffect: 0
+  startDelay: 0
+  delay: 0
+  isRandomDelay: 0
+  minRandomDelay: 0
+  maxRandomDelay: 1
+  isLoopForce: 1
+  isUIEffect: 0
+  effectAddValue: 0
+  effectSpeed: 1
+  isPlayLock: 0
+  OnEffectStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEffectEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaying: 0
+  chainType: 0
+  chainFireType: 0
+  otherVFXs: []
+  chainStartDelay: 0
+  chainDelay: 0
+  floatingMode: 2
+  minDistance: 0.2
+  maxDistance: 0.5
+  minDuration: 1.38
+  maxDuration: 1.85
+  pauseDuration: 0.2
+  boundingArea: {x: 0.15, y: 0.15, z: 0}
+  easeType: 4
+  autoStart: 1
+  returnToOrigin: 1
+  returnChance: 100
 --- !u!1001 &2220982431524952696
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -350,4 +483,74 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4268596622412111481, guid: b99a0b42a58fdee4a87f4c74be4d9ddf, type: 3}
   m_PrefabInstance: {fileID: 3094317056831033988}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5064258098032353065
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5877964067865651473}
+    m_Modifications:
+    - target: {fileID: 427470077629011721, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_Name
+      value: Shine
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.047
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011727, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_SortingLayer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 427470077629011727, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1564024643
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+--- !u!4 &4875558010626410535 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 427470077629011726, guid: a39c90dc652caf34b82874c02d052c8c, type: 3}
+  m_PrefabInstance: {fileID: 5064258098032353065}
   m_PrefabAsset: {fileID: 0}

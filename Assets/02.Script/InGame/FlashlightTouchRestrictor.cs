@@ -79,43 +79,55 @@ public class FlashlightTouchRestrictor : MonoBehaviour
 
     private void Update()
     {
-        if (leanDragTranslate == null)
+        // LeanDragTranslate 비활성화
+        if (leanDragTranslate != null && leanDragTranslate.enabled)
         {
-            leanDragTranslate = GetComponent<LeanDragTranslate>();
-            if (leanDragTranslate == null) return;
-        }
-        // LeanDragTranslate의 손가락 상태 확인
-        framesSinceEnable++;
-        if (framesSinceEnable == 120)
-        {
-            Debug.LogWarning("[FlashlightTouchRestrictor] Still waiting for LeanTouch/LeanDragTranslate to produce fingers after 120 frames.");
+            leanDragTranslate.enabled = false;
         }
 
-        Lean.Touch.LeanFinger[] fingersArray = null;
-        System.Collections.Generic.List<Lean.Touch.LeanFinger> fingers = null;
-        try
-        {
-            // 기존 API returns List<LeanFinger>
-            fingers = leanDragTranslate.Use.UpdateAndGetFingers();
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogWarningFormat(this, "[FlashlightTouchRestrictor] Exception while UpdateAndGetFingers: {0}", ex.Message);
-        }
-        bool isDragging = fingers != null && fingers.Count > 0;
+        // 그냥 마우스(또는 터치) 위치를 바로 따라가도록 설정
+        Vector2 screenPos = Vector2.zero;
+        bool hasInput = false;
 
-        // 드래그 상태 변화 감지
-        if (isDragging && !wasDragging)
+        if (UnityEngine.InputSystem.Mouse.current != null)
         {
-            // 드래그 시작
-            OnDragStart?.Invoke();
-            wasDragging = true;
+            screenPos = UnityEngine.InputSystem.Mouse.current.position.value;
+            hasInput = true;
         }
-        else if (!isDragging && wasDragging)
+        else if (UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count > 0)
         {
-            // 드래그 종료
-            OnDragEnd?.Invoke();
-            wasDragging = false;
+            screenPos = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[0].screenPosition;
+            hasInput = true;
+        }
+        else
+        {
+            screenPos = UnityEngine.Input.mousePosition;
+            hasInput = true;
+        }
+
+        if (hasInput)
+        {
+            if (transform.parent is RectTransform parentRect)
+            {
+                Canvas canvas = GetComponentInParent<Canvas>();
+                Camera cam = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? 
+                             (canvas.worldCamera != null ? canvas.worldCamera : Camera.main) : null;
+
+                if (RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect, screenPos, cam, out Vector3 worldPoint))
+                {
+                    transform.position = worldPoint;
+                }
+            }
+            else
+            {
+                // UI가 아닌 경우 월드 공간 변환
+                if (Camera.main != null)
+                {
+                    Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, Mathf.Abs(Camera.main.transform.position.z)));
+                    worldPos.z = transform.position.z;
+                    transform.position = worldPos;
+                }
+            }
         }
     }
 

@@ -162,7 +162,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             if (spriteRenderer != null)
             {
-                return spriteRenderer.color;
+                Color c = spriteRenderer.color;
+                c.a = 1f;
+                return c;
             }
 
             // spriteRenderer가 없으면 자식에서 찾기
@@ -170,11 +172,15 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             if (childSr != null)
             {
                 spriteRenderer = childSr;
-                return childSr.color;
+                Color c = childSr.color;
+                c.a = 1f;
+                return c;
             }
 
-            // 기본값으로 흰색 반환
-            return Color.white;
+            // 기본값으로 흰색 반환 (alpha 강제 1)
+            Color white = Color.white;
+            white.a = 1f;
+            return white;
         }
 
         // Call to refresh the cached UI sprite if components change at runtime

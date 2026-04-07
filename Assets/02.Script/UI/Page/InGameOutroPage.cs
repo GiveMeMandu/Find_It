@@ -70,15 +70,18 @@ namespace UI.Page
             
             try
             {
-                await UniTask.Delay(3000, cancellationToken: cancellationToken);
+                bool isCancelled = await UniTask.Delay(3000, cancellationToken: cancellationToken).SuppressCancellationThrow();
             }
             finally
             {
                 Global.InputManager.EnableAllInput();
+                _closeTaskSource?.TrySetResult(true);
             }
 
-            Global.UIManager.ClosePage();
-            _closeTaskSource.SetResult(true);
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                Global.UIManager.ClosePage();
+            }
         }
 
         public UniTask WaitForClose()
