@@ -14,7 +14,7 @@ public class RacerController : MonoBehaviour
 
     public void Updates()
     {
-        if (Input.GetKey(KeyCode.W) || Input.GetMouseButton(0)) {
+        if (InputCompatibility.GetKey(KeyCode.W) || InputCompatibility.GetMouseButton(0)) {
             speed = speed * 0.98f + 100 * 0.02f;
         } else if (Input.GetKey(KeyCode.Space)) {
             speed = speed * 0.98f + 150 * 0.02f;
@@ -22,12 +22,12 @@ public class RacerController : MonoBehaviour
             speed = speed * 0.98f;
         }
 
-        if (Input.GetKey(KeyCode.D)) {
+        if (InputCompatibility.GetKey(KeyCode.D)) {
             transform.Rotate(0, 0, - Time.deltaTime * 45);
 
         }
 
-         if (Input.GetKey(KeyCode.A)) {
+         if (InputCompatibility.GetKey(KeyCode.A)) {
             transform.Rotate(0, 0, Time.deltaTime* 45);
 
         }

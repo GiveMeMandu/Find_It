@@ -142,7 +142,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj
         private Vector3 CalculateObjPosition()
         {
             _mZCoord = _mainCamera.WorldToScreenPoint(gameObject.transform.position).z;
-            var mousePoint = Input.mousePosition;
+            var mousePoint = InputCompatibility.MousePosition();
             mousePoint.z = _mZCoord;
             return _mainCamera.ScreenToWorldPoint(mousePoint);
         }

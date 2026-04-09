@@ -157,12 +157,12 @@ public class CameraRootPanning : MonoBehaviour
         // Fallback to legacy Input system
         else
         {
-            var mousePosition = Input.mousePosition;
+            var mousePosition = InputCompatibility.MousePosition2D();
             float w = Screen.width, h = Screen.height;
             var minimumSize = Mathf.Min(w, h);
             float hw = w * 0.5f, hh = h * 0.5f;
 
-            var centeredPosition = mousePosition - new Vector3(hw, hh);
+            var centeredPosition = mousePosition - new Vector2(hw, hh);
             normalizedPosition = centeredPosition / (minimumSize * 0.5f);
         }
 

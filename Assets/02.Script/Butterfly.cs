@@ -50,7 +50,7 @@ public class Butterfly : MonoBehaviour
             transform.localScale = _initScale * Mathf.Lerp(1, 0.6f, (transform.position.y + 5.6f) / 2.6f );
         }
         else if(_currentState == State.Hold) {
-            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = Camera.main.ScreenToWorldPoint(InputCompatibility.MousePosition());
         }else if(_currentState == State.Sit)
         {
             timer += Time.deltaTime;

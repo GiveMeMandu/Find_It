@@ -73,7 +73,7 @@ public class ToonFXSceneSelect : MonoBehaviour
 void Update ()
 {
  
-     if(Input.GetKeyDown(KeyCode.J))
+    if(InputCompatibility.GetKeyDown(KeyCode.J))
 	 {
          GUIHide = !GUIHide;
      

@@ -54,7 +54,7 @@ public class DialogSystem : MonoBehaviour
 
 	public bool UpdateDialog()
 	{
-		if (Input.GetKeyDown(keyCodeSkip) || Input.GetMouseButtonDown(0))
+		if (InputCompatibility.GetKeyDown(keyCodeSkip) || InputCompatibility.GetMouseButtonDown(0))
 		{
 			// 애니메이션이나 페이드 효과 재생 중에는 스킵할 수 없음
 			if (isPlayingAnimation || isImageFading)

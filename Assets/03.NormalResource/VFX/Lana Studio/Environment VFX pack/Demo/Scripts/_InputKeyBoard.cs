@@ -44,11 +44,11 @@ public class _InputKeyBoard : MonoBehaviour
         switch (_pressType)
         {
             case PressType.GetKey:
-                return Input.GetKey(keycode);
+                return InputCompatibility.GetKey(keycode);
             case PressType.GetKeyDown:
-                return Input.GetKeyDown(keycode);
+                return InputCompatibility.GetKeyDown(keycode);
             case PressType.GetKeyUp:
-                return Input.GetKeyUp(keycode);
+                return InputCompatibility.GetKeyUp(keycode);
             default:
                 return false;
         }

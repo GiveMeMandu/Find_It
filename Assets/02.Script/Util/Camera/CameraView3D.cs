@@ -72,10 +72,10 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             if (!isPan) return;
 
-            if (Input.GetMouseButton(1) || Input.GetMouseButton(2))
+            if (InputCompatibility.GetMouseButton(1) || InputCompatibility.GetMouseButton(2))
             {
-                float x = Input.GetAxis("Mouse X");
-                float y = Input.GetAxis("Mouse Y");
+                float x = InputCompatibility.GetAxis("Mouse X");
+                float y = InputCompatibility.GetAxis("Mouse Y");
                 Vector3 right = transform.right;
                 Vector3 up = transform.forward;
 
@@ -87,7 +87,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 UpdateCameraDistance(false);
             }
 
-            if (Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2))
+            if (InputCompatibility.GetMouseButtonUp(1) || InputCompatibility.GetMouseButtonUp(2))
             {
                 if (isPanReturn)
                 {
@@ -108,7 +108,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         {
             if (!isOrbit) return;
 
-            if (Input.GetMouseButton(0))
+            if (InputCompatibility.GetMouseButton(0))
             {
                 UpdateCameraPosition();
                 UpdateCameraDistance(true);
@@ -117,8 +117,8 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void UpdateCameraPosition()
         {
-            _cameraX += Input.GetAxis("Mouse X") * distance * 2f;
-            _cameraY -= Input.GetAxis("Mouse Y") * 2f;
+            _cameraX += InputCompatibility.GetAxis("Mouse X") * distance * 2f;
+            _cameraY -= InputCompatibility.GetAxis("Mouse Y") * 2f;
 
             _cameraX = ClampAngle(_cameraX, xMinLimit, xMaxLimit);
             _cameraY = ClampAngle(_cameraY, yMinLimit, yMaxLimit);
@@ -126,7 +126,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
 
         private void UpdateCameraDistance(bool isRotate)
         {
-            distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * 5, distanceMin, distanceMax);
+            distance = Mathf.Clamp(distance - InputCompatibility.GetAxis("Mouse ScrollWheel") * 5, distanceMin, distanceMax);
             if (Physics.Linecast(orbitTarget.position, transform.position, out var hit))
             {
                 distance -= hit.distance;

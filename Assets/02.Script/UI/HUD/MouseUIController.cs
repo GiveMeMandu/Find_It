@@ -80,7 +80,7 @@ public class MouseUIController : MonoBehaviour
         Cursor.visible = false;
         
         // 마우스 위치 가져오기
-        MousePosition = Mouse.current?.position.value ?? Input.mousePosition;
+        MousePosition = Mouse.current?.position.value ?? InputCompatibility.MousePosition2D();
         
         // UI 위치 업데이트
         if (MouseCursorUI != null)

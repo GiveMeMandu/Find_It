@@ -101,7 +101,7 @@ public class FlashlightTouchRestrictor : MonoBehaviour
         }
         else
         {
-            screenPos = UnityEngine.Input.mousePosition;
+            screenPos = InputCompatibility.MousePosition2D();
             hasInput = true;
         }
 
