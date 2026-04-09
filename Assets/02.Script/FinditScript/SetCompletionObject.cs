@@ -243,24 +243,52 @@ public class SetCompletionObject : MonoBehaviour
     // LeanClick 등을 통해 Inspector에서 연결할 Public 함수
     public void OnClickMission()
     {
-        if (IsAccepted) return;
-
-        IsAccepted = true;
-
-        if (questionAlertObject != null) questionAlertObject.SetActive(false);
-        if (foundAlertObject != null) foundAlertObject.SetActive(false);
-        if (OffScreenIndicator != null) OffScreenIndicator.gameObject.SetActive(false);
-
-        // 오디오 재생
-        if (AudioWhenClick != null)
+        // _missionItemGroup 이 없는 경우는 기존의 수락 동작을 유지
+        if (_missionItemGroup == null)
         {
-            LevelManager.PlayItemFx(AudioWhenClick);
+            if (IsAccepted) return;
+            IsAccepted = true;
+
+            if (questionAlertObject != null) questionAlertObject.SetActive(false);
+            if (foundAlertObject != null) foundAlertObject.SetActive(false);
+            if (OffScreenIndicator != null) OffScreenIndicator.gameObject.SetActive(false);
+
+            if (AudioWhenClick != null)
+            {
+                LevelManager.PlayItemFx(AudioWhenClick);
+            }
+
+            return;
         }
 
-        // 미션 아이템 그룹 뷰모델 활성화 및 초기화
-        if (_missionItemGroup != null)
+        // 토글 동작: 켜져 있으면 끄고, 꺼져 있으면 기존 활성화 + 초기화 수행
+        bool currentlyActive = MissionItemGroupCanvas.gameObject.activeSelf;
+
+        if (currentlyActive)
         {
-            MissionItemGroupCanvas.gameObject.SetActive(true);
+            // 닫기
+            _missionItemGroup.gameObject.SetActive(false);
+            if (MissionItemGroupCanvas != null)
+                MissionItemGroupCanvas.gameObject.SetActive(false);
+            IsAccepted = false;
+            return;
+        }
+        else
+        {
+            // 열기 (기존 동작)
+            IsAccepted = true;
+
+            if (questionAlertObject != null) questionAlertObject.SetActive(false);
+            if (foundAlertObject != null) foundAlertObject.SetActive(false);
+            if (OffScreenIndicator != null) OffScreenIndicator.gameObject.SetActive(false);
+
+            if (AudioWhenClick != null)
+            {
+                LevelManager.PlayItemFx(AudioWhenClick);
+            }
+
+            if (MissionItemGroupCanvas != null)
+                MissionItemGroupCanvas.gameObject.SetActive(true);
             _missionItemGroup.gameObject.SetActive(true);
 
             // 데이터 초기화
@@ -268,10 +296,10 @@ public class SetCompletionObject : MonoBehaviour
             {
                 var itemSetDataList = ItemSetManager.Instance.GetItemSetDataList();
                 var setData = itemSetDataList.Find(x => x.SetName == SetName);
-                if (setData != null)
-                {
-                    _missionItemGroup.Initialize(setData);
-                }
+                    if (setData != null)
+                    {
+                        _missionItemGroup.Initialize(setData);
+                    }
             }
         }
     }

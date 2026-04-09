@@ -176,7 +176,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
                 missionStatus: "Mission Complete!",
                 missionNameAlpha: 1f
             );
-            Debug.Log($"Mission Complete Page opened for set: {setData.SetName} with localized name: {localizedSetName}" + $" CurrentFound: {currentFound} / {totalNeeded}");
+            // Debug.Log($"Mission Complete Page opened for set: {setData.SetName} with localized name: {localizedSetName}" + $" CurrentFound: {currentFound} / {totalNeeded}");
 
             // 연출 페이지 동시 오픈
             var visualPage = Global.UIManager.OpenPage<IngameMissionCompleteVisualPage>();

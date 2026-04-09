@@ -1,12 +1,12 @@
 ﻿using DeskCat.FindIt.Scripts.Core.Main.System;
 using UnityEditor;
 using UnityEngine;
-using NaughtyAttributes.Editor;
+using Sirenix.OdinInspector.Editor;
 
 namespace DeskCat.FindIt.Scripts.Editor
 {
     [CustomEditor(typeof(LevelManager))]
-    public class LevelManagerEditor : NaughtyInspector
+    public class LevelManagerEditor : OdinEditor
     {
         private LevelManager LevelManagerTarget;
         

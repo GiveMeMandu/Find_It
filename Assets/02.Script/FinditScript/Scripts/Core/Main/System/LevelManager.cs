@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DeskCat.FindIt.Scripts.Core.Model;
-using NaughtyAttributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,19 +19,33 @@ using UI;
 using UI.Page;
 using System.Numerics;
 
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 namespace DeskCat.FindIt.Scripts.Core.Main.System
 {
+    [Serializable]
+    [InlineProperty]
+    [HideReferenceObjectPicker]
     public class HiddenObjGroup
     {
+        [ShowInInspector]
+        [ListDrawerSettings(Expanded = true)]
         public List<HiddenObj> Objects { get; set; }
-        public int TotalCount => Objects.Count;
+        [ShowInInspector]
+        public int TotalCount => Objects != null ? Objects.Count : 0;
+        [ShowInInspector]
         public int FoundCount { get; set; }
-        public HiddenObj Representative => Objects[0];
+        [ShowInInspector]
+        public HiddenObj Representative => (Objects != null && Objects.Count > 0) ? Objects[0] : null;
+        [ShowInInspector]
         public Dictionary<HiddenObj, bool> ObjectStates { get; private set; }
+        [ShowInInspector]
         public HiddenObj LastClickedObject { get; set; }
+        [ShowInInspector]
         public string BaseGroupName { get; private set; }
 
         // UI 연결을 위한 참조 추가
+        [ShowInInspector]
         public HiddenObjUI AssociatedUI { get; set; }
 
         public HiddenObjGroup(List<HiddenObj> objects, string baseGroupName)
@@ -76,8 +89,15 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         public Transform normalHiddenObjGroup; // 일반 숨김 오브젝트들의 부모 Transform
         [Header("Default Background Animation")]
         public GameObject DefaultBgAnimation;
+        
+        [ShowInInspector]
+        [ListDrawerSettings(Expanded = true)]
         public HiddenObj[] TargetObjs;
+        
+        [ShowInInspector]
+        [ListDrawerSettings(Expanded = true)]
         public HiddenObj[] RabbitObjs;
+        
         public TextMeshProUGUI RabbitCountText;
         public bool IsRandomItem;
         public int MaxRandomItem;
@@ -121,10 +141,14 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         // 기존 CurrentLevelName, NextLevelName 제거하고 SceneBase에서 자동으로 가져오기
         public bool IsOverwriteGameEnd;
         public UnityEvent GameEndEvent;
-        
-        [Label("게임 종료 시 아이템 세트 미션 체크 여부")]
+
+        [LabelText("게임 종료 시 아이템 세트 미션 체크 여부")]
         public bool CheckItemSetCondition = true;
 
+        [ShowInInspector]
+        [LabelText("Target Object Groups")]
+        [PropertySpace(6)]
+        [DictionaryDrawerSettings(KeyLabel = "ID", ValueLabel = "Group", DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
         public Dictionary<Guid, HiddenObjGroup> TargetObjDic = new Dictionary<Guid, HiddenObjGroup>();
         public Dictionary<Guid, HiddenObj> RabbitObjDic = new Dictionary<Guid, HiddenObj>();
         private DateTime StartTime;
@@ -137,7 +161,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
         // 새로운 변수 추가
         private List<HiddenObj> normalHiddenObjs = new List<HiddenObj>();
 
-        // HiddenObjUI 관리를 위한 리스트 추가
+        [ShowInInspector]
+        [ReadOnly]
+        [ListDrawerSettings(Expanded = true, DraggableItems = false, HideAddButton = true, HideRemoveButton = true)]
         private List<HiddenObjUI> allHiddenObjUIs = new List<HiddenObjUI>();
 
         // ModeSelector 캐싱
@@ -186,7 +212,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.System
             CollectHiddenObjects();
             BuildDictionary();
             ScrollViewTrigger();
-DebugGameState();
+            DebugGameState();
             // 버튼들 null 체크
             if (ToggleBtn != null)
                 ToggleBtn.onClick.AddListener(ToggleScrollView);
@@ -310,7 +336,7 @@ DebugGameState();
                             {
                                 bgObj = Instantiate(bgAnimPrefab, hiddenObj.transform);
                                 // Debug.Log($"Added BGAnimation to {hiddenObj.gameObject.name}" +
-                                    // (bgAnimHelper != null ? " (custom)" : " (default)"));
+                                // (bgAnimHelper != null ? " (custom)" : " (default)"));
                                 hiddenObj.BgAnimationTransform = bgObj.transform;
                                 hiddenObj.SetBgAnimation(bgObj);
                             }
@@ -376,7 +402,7 @@ DebugGameState();
                 Debug.LogWarning("[LevelManager] TargetObjDic is null. Cannot toggle scroll view.");
                 return;
             }
-            
+
             UIScrollType = (UIScrollType == UIScrollType.Vertical) ? UIScrollType.Horizontal : UIScrollType.Vertical;
             ScrollViewTrigger();
         }
@@ -389,7 +415,7 @@ DebugGameState();
                 Debug.LogWarning("[LevelManager] TargetObjDic is null. Skipping ScrollViewTrigger.");
                 return;
             }
-            
+
             // ScrollView들이 null인지 체크
             if (HorizontalScrollView == null || VerticalScrollView == null)
             {
@@ -458,7 +484,7 @@ DebugGameState();
         {
             UIClickEvent?.Invoke();
         }
-        
+
         /// <summary>
         /// CoinRushModeManager의 코인들을 TargetObjDic에 포함
         /// (미리 세팅된 코인 또는 시작시 생성된 코인)
@@ -476,7 +502,7 @@ DebugGameState();
                     if (coinDic != null && coinDic.Count > 0)
                     {
                         Debug.Log($"[LevelManager] Including {coinDic.Count} coins from CoinRushModeManager");
-                        
+
                         // 각 코인을 개별 그룹으로 추가 (TimeChallengeManager 방식)
                         foreach (var kvp in coinDic)
                         {
@@ -492,19 +518,19 @@ DebugGameState();
                                         GameObject bgObj = Instantiate(DefaultBgAnimation, coinObj.transform);
                                         coinObj.BgAnimationTransform = bgObj.transform;
                                         coinObj.SetBgAnimation(bgObj);
-                                        
+
                                         Debug.Log($"[LevelManager] Added BGAnimation to coin: {coinObj.gameObject.name}");
                                     }
                                 }
-                                
+
                                 var group = new HiddenObjGroup(
-                                    new List<HiddenObj> { coinObj }, 
+                                    new List<HiddenObj> { coinObj },
                                     coinObj.gameObject.name
                                 );
                                 TargetObjDic.Add(kvp.Key, group);
                             }
                         }
-                        
+
                         Debug.Log($"[LevelManager] Total objects after including coins: {TargetObjDic.Count}");
                     }
                 }
@@ -520,7 +546,7 @@ DebugGameState();
             {
                 normalHiddenObjs.AddRange(TargetObjs);
             }
-            
+
             // CoinRushModeManager의 미리 세팅된 코인들을 포함
             IncludeCoinRushCoins();
 
@@ -773,9 +799,9 @@ DebugGameState();
             // DARK 모드인 경우 미션(ItemSet) 검사 제외
             bool isDarkMode = modeSelector != null && modeSelector.selectedMode == ModeManager.GameMode.DARK;
             // ItemSet 조건 체크: CheckItemSetCondition이 false면 무조건 통과, true면 조건 체크
-            bool itemSetConditionMet = !CheckItemSetCondition 
-                || isDarkMode 
-                || ItemSetManager.Instance == null 
+            bool itemSetConditionMet = !CheckItemSetCondition
+                || isDarkMode
+                || ItemSetManager.Instance == null
                 || (ItemSetManager.Instance.FoundSetsCount == ItemSetManager.Instance.TotalSetsCount);
 
             // 모든 숨겨진 오브젝트를 찾았고, ItemSet 조건도 만족하면 게임 종료
@@ -838,7 +864,7 @@ DebugGameState();
 
             EndTime = DateTime.Now;
             var timeUsed = EndTime.Subtract(StartTime);
-            
+
             // 게임 종료 시 코인 데이터 저장
             if (Global.CoinManager != null)
             {
@@ -887,7 +913,7 @@ DebugGameState();
                     if (Global.CollectionManager != null)
                     {
                         var earnedStickers = Global.CollectionManager.GetEarnedThisStage();
-                        
+
                         var groupedStickers = earnedStickers
                             .Where(c => c != null)
                             .GroupBy(c => c)
@@ -912,7 +938,7 @@ DebugGameState();
                     if (gainedCoin > global::System.Numerics.BigInteger.Zero)
                     {
                         Sprite resultCoinSprite = this.coinSprite;
-                        
+
                         // 기존 코인 러쉬 매니저에서의 스프라이트 가져오기 (호환성 유지 및 덮어쓰기)
                         var coinRushManager = FindAnyObjectByType<CoinRushModeManager>();
                         if (coinRushManager != null && coinRushManager.coinSprite != null)
