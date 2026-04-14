@@ -13,6 +13,11 @@ namespace OptionPageNamespace
 		public TMP_Dropdown dropdown;
 		public Localize labelText;
 		public UnityEvent _onValueChangedUnityEvent;
+		[Header("Localization")]
+		[Tooltip("폰트를 변경할 I2 Term Key를 입력하세요")]
+		[TermsPopup]
+		public string fontTerm = "Gumi Romance SDF";
+		
 		private Action<int> _onValueChanged;
 		private List<string> _optionKeys;
 		private bool _isLocalizedOptions;
@@ -55,8 +60,28 @@ namespace OptionPageNamespace
 		private void RefreshOptions(IReadOnlyList<string> options)
 		{
 			dropdown.ClearOptions();
+			
+			// 1. 인스펙터에 지정한 Term Key를 이용해 폰트 에셋을 가져옵니다.
+			TMP_FontAsset targetFont = null;
+			if (!string.IsNullOrEmpty(fontTerm))
+			{
+				targetFont = LocalizationManager.GetTranslatedObjectByTermName<TMP_FontAsset>(fontTerm);
+			}
+
 			if (options != null)
 			{
+				// 2. 드롭다운 본체의 폰트 설정 (선택된 항목 표시용)
+				if (targetFont != null && dropdown.captionText != null)
+				{
+					dropdown.captionText.font = targetFont;
+				}
+
+				// 3. 드롭다운 리스트 아이템들의 폰트 설정 (중요: 리스트가 펼쳐졌을 때의 폰트)
+				if (targetFont != null && dropdown.itemText != null)
+				{
+					dropdown.itemText.font = targetFont;
+				}
+
 				List<string> optionList = new List<string>(options.Count);
 				for (int i = 0; i < options.Count; i++)
 				{

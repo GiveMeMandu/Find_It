@@ -32,7 +32,7 @@ namespace UI
             {
                 foreach (var labelText in _labelTexts)
                 {
-                    labelText.Term = labelTerm;
+                    labelText.SetTerm(labelTerm);
                 }
             }
 

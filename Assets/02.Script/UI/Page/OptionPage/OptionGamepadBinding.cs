@@ -19,7 +19,7 @@ namespace OptionPageNamespace
             // I2.Loc을 사용하여 로컬라이즈된 텍스트로 설정
             if (labelText != null)
             {
-                labelText.Term = label;
+                labelText.SetTerm(label);
             }
 
             _onClick = onClick;

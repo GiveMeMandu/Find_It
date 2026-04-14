@@ -45,14 +45,19 @@ namespace UI.Page
         private void OnEnable()
         {
             _cts = new CancellationTokenSource();
-            _curStage = Global.CurrentScene.SceneName.ToString();
+
+            int chapterIdx = Global.StageManager.CurrentChapterIndex + 1;
+            int stageIdx = Global.StageManager.CurrentStageIndex + 1;
+            CurStage = $"stage{chapterIdx}_{stageIdx}";
 
             // 전체 스테이지 이름 사용
-            string stageKey = _curStage;
-            _stageName = I2.Loc.LocalizationManager.GetTranslation("SceneName/" + stageKey);
+            string stageKey = Global.StageManager.CurrentStageSceneName;
+            if (string.IsNullOrEmpty(stageKey) && Global.CurrentScene != null)
+            {
+                stageKey = Global.CurrentScene.SceneName.ToString();
+            }
 
-            // 위에 표기를 위해 _ 대신 - 쓰기
-            _curStage = _curStage.Replace('_', '-');
+            StageName = I2.Loc.LocalizationManager.GetTranslation("SceneName/" + Global.CurrentScene.SceneName.ToString());
 
             Global.InputManager.DisableGameInputOnly();
             DisableInputAndDestroyAsync(_cts.Token).Forget();

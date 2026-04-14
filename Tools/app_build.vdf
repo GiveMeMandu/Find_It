@@ -1,0 +1,21 @@
+"AppBuild"
+{
+	"AppID" "4523950" // Your AppID
+"desc" "0.2615.a4d00255" // internal description for this build
+	"SetLive" "default" // set this build live on beta branch develop
+	"ContentRoot" "..\Builds\content\" // content root folder relative to this script file
+	"BuildOutput" "..\Builds\output\" // put build cache and log files on different drive for better performance
+	"verbose" "0" // spew more build details in console
+	"Depots"
+	{
+		"4523951" // your DepotID
+		{
+			"FileMapping"
+			{
+				"LocalPath" "*" // all files from contentroot folder
+				"DepotPath" "." // mapped into the root of the depot
+				"recursive" "1" // include all subfolders
+			}
+		}
+	}
+}

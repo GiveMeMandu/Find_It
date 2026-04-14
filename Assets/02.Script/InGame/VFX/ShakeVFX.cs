@@ -113,8 +113,11 @@ namespace Effect
             }
             catch (OperationCanceledException)
             {
-                // 작업 취소 시 회전 초기화
-                ResetAnimation();
+                // 작업 취소 시 회전 초기화. (DOKill은 DOTween Update 루프 충돌 방지를 위해 생략)
+                if (this != null && transform != null)
+                {
+                    transform.localRotation = originalRotation;
+                }
                 throw;
             }
         }
@@ -170,10 +173,9 @@ namespace Effect
             }
             catch (OperationCanceledException)
             {
-                // 작업 취소 시 회전 초기화
+                // 작업 취소 시 회전 초기화. (DOKill은 생략)
                 if (rectTransform != null)
                 {
-                    rectTransform.DOKill();
                     rectTransform.localRotation = originalUIRotation;
                 }
                 throw;
