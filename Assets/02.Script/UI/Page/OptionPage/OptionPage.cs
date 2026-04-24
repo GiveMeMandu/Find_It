@@ -164,7 +164,7 @@ namespace UI
             var optionGroupObj = Instantiate(optionGroupPrefab, contentRoot).gameObject;
             optionGroupObj.SetActive(true);
             var optionGroup = optionGroupObj.GetComponent<OptionGroup>();
-            optionGroup.labelText.Term = labelTerm;
+            optionGroup.labelText.SetTerm(labelTerm);
             return optionGroup;
         }
 
