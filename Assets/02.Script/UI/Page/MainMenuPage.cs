@@ -103,7 +103,7 @@ namespace UI.Page
             ShowMapButton = false;
 
 
-            Global.UIManager.OpenPage<MapSelectPage>();
+            Global.UIManager.OpenPage<BookPage>();
         }
         [Binding]
         public void OnClickCollectionButton()

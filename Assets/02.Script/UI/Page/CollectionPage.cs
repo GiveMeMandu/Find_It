@@ -22,6 +22,10 @@ namespace UI.Page
 
         public override void Init(params object[] parameters)
         {
+        }
+        private void OnEnable()
+        {
+            
             _tabButtonLayoutGroup = tabGroup.GetComponent<HorizontalLayoutGroup>();
             // 초기화 시 첫 번째 탭이 선택되도록 설정
             if (tabGroup != null)

@@ -52,6 +52,11 @@
         protected Vector2 lastDragPosition;
 
         /// <summary>
+        /// 처음에 터치한 페이지를 기억하여, 마우스를 밖에서 뗐을 때 올바른 뷰에 TouchUp을 보내기 위함
+        /// </summary>
+        protected PageEnum lastTouchedPage;
+
+        /// <summary>
         /// Whether we are dragging
         /// </summary>
         protected bool dragging;
@@ -235,6 +240,7 @@
                     // page hit
                     touchDownPosition = hitPosition;
                     lastDragPosition = hitPosition;
+                    lastTouchedPage = page; // 터치한 페이지 기억
 
                     if (touchDownDetected != null)
                     {
@@ -291,15 +297,19 @@
             PageEnum page;
             bool tableOfContents;
 
-            // get the hit point if we can
-            if (GetHitPoint(position, out hitPosition, out hitPositionNormalized, out page, out tableOfContents))
-            {
-                // no longer touching.
-                touchDown = false;
+            // no longer touching. 무조건 터치 상태 해제
+            touchDown = false;
 
-                // call the handler
-                touchUpDetected(page, hitPositionNormalized, dragging);
+            // 콜라이더 밖에서 마우스/터치를 뗐더라도 마우스 업 이벤트를 보내기 위함
+            bool hit = GetHitPoint(position, out hitPosition, out hitPositionNormalized, out page, out tableOfContents);
+            
+            // 만약 콜라이더를 벗어난 상태에서 뗐다면, 처음 눌렀던 페이지에 마우스 업 이벤트를 발생시킵니다.
+            if (!hit)
+            {
+                page = lastTouchedPage;
             }
+
+            touchUpDetected(page, hitPositionNormalized, dragging);
         }
 
         /// <summary>
@@ -333,16 +343,14 @@
                 // determine if the table of contents "button" was hit
                 tableOfContents = hit.collider.gameObject.name == TableOfContentsColliderName;
 
-                // get the page index to use for the page rects
-                var pageIndex = (int)page;
-
                 // set the hit position using the x and z axis
                 hitPosition = new Vector2(hit.point.x, hit.point.z);
 
-                // normalize the hit position against the page rects
-                hitPositionNormalized = new Vector2((hit.point.x - pageRects[pageIndex].xMin) / pageRects[pageIndex].width,
-                                                        (hit.point.z - pageRects[pageIndex].yMin) / pageRects[pageIndex].height
-                                                        );
+                // normalize the hit position against the current bounds
+                // (Awake 시점의 고정된 pageRects 대신 실시간 bounds를 사용하여 페이지가 펼쳐지거나 움직였을 때의 위치 변화를 완벽하게 반영합니다)
+                Bounds currentBounds = hit.collider.bounds;
+                hitPositionNormalized = new Vector2((hit.point.x - currentBounds.min.x) / currentBounds.size.x,
+                                                    (hit.point.z - currentBounds.min.z) / currentBounds.size.z);
 
                 return true;
             }

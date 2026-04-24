@@ -345,8 +345,8 @@
 
                         if (pageView != null)
                         {
-                            // call touchdown on the page view
-                            pageView.TouchDown();
+                            if (pageView is PageView_UI uiView) uiView.HandlePointerDown(hitPointNormalized);
+                            else pageView.TouchDown();
                         }
 
                         break;
@@ -358,8 +358,8 @@
 
                         if (pageView != null)
                         {
-                            // call the touchdown on the page view
-                            pageView.TouchDown();
+                            if (pageView is PageView_UI uiView) uiView.HandlePointerDown(hitPointNormalized);
+                            else pageView.TouchDown();
                         }
 
                         break;
@@ -418,12 +418,19 @@
 
                     if (dragging)
                     {
+                        // UI 뷰가 켜져 있다면 드래그 중이더라도 터치를 떼었음을 알려주어야 스크롤이 자연스럽게 종료(Elastic 등)됩니다.
+                        PageView leftView = GetPageView(book.CurrentLeftPageNumber);
+                        if (leftView != null && leftView is PageView_UI uiLeft) uiLeft.HandlePointerUp(hitPointNormalized);
+
+                        PageView rightView = GetPageView(book.CurrentRightPageNumber);
+                        if (rightView != null && rightView is PageView_UI uiRight) uiRight.HandlePointerUp(hitPointNormalized);
+
                         // get the left page view if available.
                         // in this demo we only have one group of pages that handle the drag: the map.
                         // instead of having logic for dragging on both pages, we'll just handle it on the left
                         pageView = GetPageView(book.CurrentLeftPageNumber);
 
-                        if (pageView != null)
+                        if (pageView != null && !(pageView is PageView_UI))
                         {
                             // call the drag method on the page view
                             pageView.Drag(Vector2.zero, true);
@@ -441,8 +448,16 @@
 
                             if (pageView != null)
                             {
+                                if (pageView is PageView_UI uiView)
+                                {
+                                    bool clickedUI = uiView.HandlePointerUp(hitPointNormalized);
+                                    if (clickedUI)
+                                    {
+                                        return; // 진짜 버튼 등 상호작용하는 UI를 클릭한 거라면 책장을 넘기지 않습니다.
+                                    }
+                                }
                                 // cast a ray into the page and exit if we hit something (don't turn the page)
-                                if (pageView.RayCast(hitPointNormalized, BookAction))
+                                else if (pageView.RayCast(hitPointNormalized, BookAction))
                                 {
                                     return;
                                 }
@@ -457,8 +472,16 @@
 
                             if (pageView != null)
                             {
+                                if (pageView is PageView_UI uiView)
+                                {
+                                    bool clickedUI = uiView.HandlePointerUp(hitPointNormalized);
+                                    if (clickedUI)
+                                    {
+                                        return; // 진짜 버튼 등 상호작용하는 UI를 클릭한 거라면 책장을 넘기지 않습니다.
+                                    }
+                                }
                                 // cast a ray into the page and exit if we hit something (don't turn the page)
-                                if (pageView.RayCast(hitPointNormalized, BookAction))
+                                else if (pageView.RayCast(hitPointNormalized, BookAction))
                                 {
                                     return;
                                 }
@@ -553,12 +576,30 @@
             if (book.CurrentState == EndlessBook.StateEnum.OpenMiddle)
             {
                 // get the page view if available
-                var pageView = GetPageView(book.CurrentLeftPageNumber);
+                // for UI, we check which page we're dragging on
+                var pageView = GetPageView(page == TouchPad.PageEnum.Left ? book.CurrentLeftPageNumber : book.CurrentRightPageNumber);
 
                 if (pageView != null)
                 {
-                    // drag
-                    pageView.Drag(incrementalChange, false);
+                    if (pageView is PageView_UI uiView)
+                    {
+                        var rects = touchPad.pageColliders;
+                        int idx = (int)page;
+                        Vector2 normCurrent = new Vector2(
+                            (currentPosition.x - rects[idx].bounds.min.x) / rects[idx].bounds.size.x,
+                            (currentPosition.y - rects[idx].bounds.min.z) / rects[idx].bounds.size.z
+                        );
+                        Vector2 normDelta = new Vector2(
+                            incrementalChange.x / rects[idx].bounds.size.x,
+                            incrementalChange.y / rects[idx].bounds.size.z
+                        );
+                        uiView.HandleDrag(normCurrent, normDelta);
+                    }
+                    else
+                    {
+                        // drag map (demo default)
+                        pageView.Drag(incrementalChange, false);
+                    }
                 }
             }
         }
