@@ -10,8 +10,13 @@ using UnityEngine.InputSystem;
 /// </summary>
 public static class InputCompatibility
 {
+    private static Vector3? _forcedMousePosition;
+
+    public static void SetForcedMousePosition(Vector3? pos) => _forcedMousePosition = pos;
+
     public static Vector3 MousePosition()
     {
+        if (_forcedMousePosition.HasValue) return _forcedMousePosition.Value;
         if (Mouse.current != null)
         {
             var p = Mouse.current.position.ReadValue();
@@ -22,6 +27,7 @@ public static class InputCompatibility
 
     public static Vector2 MousePosition2D()
     {
+        if (_forcedMousePosition.HasValue) return (Vector2)_forcedMousePosition.Value;
         if (Mouse.current != null)
             return Mouse.current.position.ReadValue();
         return Vector2.zero;
