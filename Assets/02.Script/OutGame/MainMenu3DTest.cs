@@ -43,7 +43,7 @@ namespace OutGame
         protected override void Start()
         {
             base.Start();
-            Global.UIManager.OpenPage<BookPage>();
+            // Global.UIManager.OpenPage<BookPage>();
             // mainMenuPage = Global.UIManager.OpenPage<MainMenuPage>();
             if(mapSelectView == null) mapSelectView = FindAnyObjectByType<MapSelectView>();
             if (mainMenuPage != null)

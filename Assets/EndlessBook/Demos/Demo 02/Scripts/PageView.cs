@@ -21,6 +21,9 @@
         public LayerMask raycastLayerMask;
         public float maxRayCastDistance = 1000f;
 
+        [Tooltip("Whether this page can be turned or not.")]
+        public bool canTurnPage = true;
+
         void Awake()
         {
             // cache the page camera

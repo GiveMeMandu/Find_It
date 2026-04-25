@@ -375,6 +375,8 @@
         /// <param name="dragging">Whether we were dragging</param>
         protected virtual void TouchPadTouchUpDetected(TouchPad.PageEnum page, Vector2 hitPointNormalized, bool dragging)
         {
+            PageView pageView;
+
             switch (book.CurrentState)
             {
                 case EndlessBook.StateEnum.ClosedFront:
@@ -398,6 +400,9 @@
                         case TouchPad.PageEnum.Left:
 
                             // transition from the OpenFront to the ClosedFront states
+                            pageView = GetPageView(0);
+                            if (pageView != null && !pageView.canTurnPage) return;
+
                             ClosedFront();
 
                             break;
@@ -405,6 +410,9 @@
                         case TouchPad.PageEnum.Right:
 
                             // transition from the OpenFront to the OpenMiddle states
+                            pageView = GetPageView(0);
+                            if (pageView != null && !pageView.canTurnPage) return;
+
                             OpenMiddle();
 
                             break;
@@ -413,8 +421,6 @@
                     break;
 
                 case EndlessBook.StateEnum.OpenMiddle:
-
-                    PageView pageView;
 
                     if (dragging)
                     {
@@ -451,13 +457,13 @@
                                 if (pageView is PageView_UI uiView)
                                 {
                                     bool clickedUI = uiView.HandlePointerUp(hitPointNormalized);
-                                    if (clickedUI)
+                                    if (clickedUI || !uiView.canTurnPage)
                                     {
                                         return; // 진짜 버튼 등 상호작용하는 UI를 클릭한 거라면 책장을 넘기지 않습니다.
                                     }
                                 }
                                 // cast a ray into the page and exit if we hit something (don't turn the page)
-                                else if (pageView.RayCast(hitPointNormalized, BookAction))
+                                else if (!pageView.canTurnPage || pageView.RayCast(hitPointNormalized, BookAction))
                                 {
                                     return;
                                 }
@@ -475,13 +481,13 @@
                                 if (pageView is PageView_UI uiView)
                                 {
                                     bool clickedUI = uiView.HandlePointerUp(hitPointNormalized);
-                                    if (clickedUI)
+                                    if (clickedUI || !uiView.canTurnPage)
                                     {
                                         return; // 진짜 버튼 등 상호작용하는 UI를 클릭한 거라면 책장을 넘기지 않습니다.
                                     }
                                 }
                                 // cast a ray into the page and exit if we hit something (don't turn the page)
-                                else if (pageView.RayCast(hitPointNormalized, BookAction))
+                                else if (!pageView.canTurnPage || pageView.RayCast(hitPointNormalized, BookAction))
                                 {
                                     return;
                                 }
@@ -499,6 +505,9 @@
                         case TouchPad.PageEnum.Left:
 
                             // transition from the OpenBack to the OpenMiddle states
+                            pageView = GetPageView(999);
+                            if (pageView != null && !pageView.canTurnPage) return;
+
                             OpenMiddle();
 
                             break;
@@ -506,6 +515,9 @@
                         case TouchPad.PageEnum.Right:
 
                             // transition from the OpenBack to the ClosedBack states
+                            pageView = GetPageView(999);
+                            if (pageView != null && !pageView.canTurnPage) return;
+
                             ClosedBack();
 
                             break;

@@ -22,9 +22,6 @@ namespace echo17.EndlessBook.Demo02
         [Tooltip("드래그 민감도 (기본 1.0. 값이 너무 크면 수치를 낮춰보세요. 예: 0.2~0.5)")]
         public float dragSensitivity = 0.3f;
 
-        [Tooltip("UI가 없는 빈 여백을 터치해도 책장이 넘어가지 않게 무조건 막을지 여부입니다. (테스트용으로 유용합니다)")]
-        public bool alwaysBlockPageTurn = false;
-
         private PointerEventData currentEventData;
         private GameObject currentPointerPress;
         private GameObject currentDragObject;
@@ -203,9 +200,6 @@ namespace echo17.EndlessBook.Demo02
             {
                 EventSystem.current.SetSelectedGameObject(null);
             }
-
-            // alwaysBlockPageTurn이 체크되어 있다면 UI를 못 눌러도 무조건 책장을 넘기지 않게 방어합니다.
-            if (alwaysBlockPageTurn) return true;
 
             return wasUIInteracting;
         }
