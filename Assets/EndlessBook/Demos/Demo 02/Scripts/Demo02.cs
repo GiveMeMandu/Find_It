@@ -451,6 +451,7 @@
 
                             // get the left page view if available
                             pageView = GetPageView(book.CurrentLeftPageNumber);
+                            Debug.Log($"[Demo02] Left PageView found: {(pageView != null ? pageView.name : "null")}, Type: {(pageView != null ? pageView.GetType().Name : "none")}");
 
                             if (pageView != null)
                             {
@@ -459,13 +460,24 @@
                                     bool clickedUI = uiView.HandlePointerUp(hitPointNormalized);
                                     if (clickedUI || !uiView.canTurnPage)
                                     {
-                                        return; // 진짜 버튼 등 상호작용하는 UI를 클릭한 거라면 책장을 넘기지 않습니다.
+                                        Debug.Log("[Demo02] UI interaction or page locked. Page turn blocked.");
+                                        return;
                                     }
                                 }
                                 // cast a ray into the page and exit if we hit something (don't turn the page)
-                                else if (!pageView.canTurnPage || pageView.RayCast(hitPointNormalized, BookAction))
+                                else 
                                 {
-                                    return;
+                                    bool isHit = false;
+                                    if (pageView is PageView_3D pv3d) 
+                                        isHit = pv3d.RayCast3D(hitPointNormalized, BookAction);
+                                    else 
+                                        isHit = pageView.RayCast(hitPointNormalized, BookAction);
+
+                                    if (!pageView.canTurnPage || isHit)
+                                    {
+                                        Debug.Log($"[Demo02] Interaction successful or page locked. Page turn blocked.");
+                                        return;
+                                    }
                                 }
                             }
 
@@ -475,6 +487,7 @@
 
                             // get the right page view if available
                             pageView = GetPageView(book.CurrentRightPageNumber);
+                            Debug.Log($"[Demo02] Right PageView found: {(pageView != null ? pageView.name : "null")}, Type: {(pageView != null ? pageView.GetType().Name : "none")}");
 
                             if (pageView != null)
                             {
@@ -483,13 +496,24 @@
                                     bool clickedUI = uiView.HandlePointerUp(hitPointNormalized);
                                     if (clickedUI || !uiView.canTurnPage)
                                     {
-                                        return; // 진짜 버튼 등 상호작용하는 UI를 클릭한 거라면 책장을 넘기지 않습니다.
+                                        Debug.Log("[Demo02] UI interaction or page locked. Page turn blocked.");
+                                        return;
                                     }
                                 }
                                 // cast a ray into the page and exit if we hit something (don't turn the page)
-                                else if (!pageView.canTurnPage || pageView.RayCast(hitPointNormalized, BookAction))
+                                else 
                                 {
-                                    return;
+                                    bool isHit = false;
+                                    if (pageView is PageView_3D pv3d) 
+                                        isHit = pv3d.RayCast3D(hitPointNormalized, BookAction);
+                                    else 
+                                        isHit = pageView.RayCast(hitPointNormalized, BookAction);
+
+                                    if (!pageView.canTurnPage || isHit)
+                                    {
+                                        Debug.Log($"[Demo02] Interaction successful or page locked. Page turn blocked.");
+                                        return;
+                                    }
                                 }
                             }
 
@@ -661,7 +685,15 @@
             // search for a page view.
             // 0 = front page,
             // 999 = back page
-            return pageViews.Where(x => x.name == string.Format("PageView_{0}", (pageNumber == 0 ? "Front" : (pageNumber == 999 ? "Back" : pageNumber.ToString("00"))))).FirstOrDefault();
+            string pageName = string.Format("PageView_{0}", (pageNumber == 0 ? "Front" : (pageNumber == 999 ? "Back" : pageNumber.ToString("00"))));
+            var view = pageViews.FirstOrDefault(x => x != null && x.name == pageName);
+            
+            if (view != null)
+            {
+                var view3D = view.GetComponent<PageView_3D>();
+                if (view3D != null) return view3D;
+            }
+            return view;
         }
 
         /// <summary>
