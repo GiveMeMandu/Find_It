@@ -2,6 +2,8 @@ namespace echo17.EndlessBook.Demo02
 {
     using UnityEngine;
     using UnityEngine.EventSystems;
+    using Lean.Touch;
+    using DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj;
 
     public class PageView_3D : PageView
     {
@@ -11,67 +13,94 @@ namespace echo17.EndlessBook.Demo02
         [Header("Gizmo Debug")]
         public bool debugDrawRay = true;
         private Ray lastRay;
+        private Vector3 _dragOffset;
+        private bool _isDragging = false;
+        private GameObject _dragTarget;
 
-        // 명시적으로 새로운 메서드 정의
+        public override bool RayCast(Vector2 hitPointNormalized, BookActionDelegate action)
+        {
+            return RayCast3D(hitPointNormalized, action);
+        }
+
         public bool RayCast3D(Vector2 hitPointNormalized, BookActionDelegate action)
         {
-            if (pageViewCamera == null)
-            {
-                pageViewCamera = GetComponentInChildren<Camera>();
-            }
+            if (pageViewCamera == null) pageViewCamera = GetComponentInChildren<Camera>();
             if (pageViewCamera == null) return false;
 
             lastRay = pageViewCamera.ViewportPointToRay(hitPointNormalized);
             
-            // 1. 2D Raycast 시도
             RaycastHit2D hit2D = Physics2D.Raycast(lastRay.origin, lastRay.direction, maxRayCastDistance, raycastLayerMask);
-            if (hit2D.collider != null)
-            {
-                Debug.Log($"[PageView_3D] 2D Hit 성공! 대상: {hit2D.collider.gameObject.name}");
-                return HandleHit2D(hit2D, action);
-            }
+            if (hit2D.collider != null) return HandleHit(hit2D.collider.gameObject, hit2D.point, action);
 
-            // 2. 3D Raycast 시도
             RaycastHit hit;
-            if (Physics.Raycast(lastRay, out hit, maxRayCastDistance, raycastLayerMask))
+            if (Physics.Raycast(lastRay, out hit, maxRayCastDistance, raycastLayerMask)) return HandleHit(hit.collider.gameObject, hit.point, action);
+
+            return false;
+        }
+
+        public void HandleDrag3D(Vector2 hitPointNormalized, Vector2 deltaNormalized)
+        {
+            if (pageViewCamera == null) pageViewCamera = GetComponentInChildren<Camera>();
+            if (pageViewCamera == null) return;
+
+            Ray ray = pageViewCamera.ViewportPointToRay(hitPointNormalized);
+
+            if (_dragTarget == null)
             {
-                Debug.Log($"[PageView_3D] 3D Hit 성공! 대상: {hit.collider.gameObject.name}");
-                return HandleHit(hit, action);
+                RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, maxRayCastDistance, raycastLayerMask);
+                if (hit2D.collider != null) _dragTarget = hit2D.collider.gameObject;
+                else
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit, maxRayCastDistance, raycastLayerMask)) _dragTarget = hit.collider.gameObject;
+                }
             }
 
-            Debug.Log($"[PageView_3D] 레이 Hit 실패. 좌표: {hitPointNormalized}");
-            return false;
+            if (_dragTarget != null)
+            {
+                var dragObj = _dragTarget.GetComponentInParent<DragObj>();
+                if (dragObj != null)
+                {
+                    float dist = Vector3.Distance(dragObj.transform.position, pageViewCamera.transform.position);
+                    Vector3 targetWorldPos = ray.GetPoint(dist);
+                    
+                    if (!_isDragging)
+                    {
+                        _dragOffset = dragObj.transform.position - targetWorldPos;
+                        _isDragging = true;
+                    }
+                    
+                    dragObj.transform.position = targetWorldPos + _dragOffset;
+                }
+            }
+        }
+
+        public void EndDrag3D() 
+        { 
+            _isDragging = false; 
+            _dragTarget = null;
         }
 
         private void OnDrawGizmos()
         {
             if (!debugDrawRay) return;
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(lastRay.origin, lastRay.origin + lastRay.direction * 5f);
+            Gizmos.DrawLine(lastRay.origin, lastRay.origin + lastRay.direction * 15f);
         }
 
-        private bool HandleHit2D(RaycastHit2D hit, BookActionDelegate action)
+        private bool HandleHit(GameObject target, Vector3 hitPoint, BookActionDelegate action)
         {
-            return TriggerObjectInteraction(hit.collider.gameObject, (Vector3)hit.point);
-        }
+            // 1. 레거시 OnMouseDown 메시지 전달
+            target.SendMessage("OnMouseDown", SendMessageOptions.DontRequireReceiver);
 
-        protected override bool HandleHit(RaycastHit hit, BookActionDelegate action)
-        {
-            return TriggerObjectInteraction(hit.collider.gameObject, hit.point);
-        }
-
-        private bool TriggerObjectInteraction(GameObject target, Vector3 hitPoint)
-        {
-            bool handled = false;
-
+            // 2. LeanClickEvent 처리 (클릭 이벤트 발사)
             var leanClick = target.GetComponentInParent<LeanClickEvent>();
             if (leanClick != null && leanClick.Enable)
             {
                 leanClick.OnClickEvent?.Invoke();
-                Debug.Log($"[PageView_3D] LeanClickEvent invoked on: {target.name}");
-                handled = true;
             }
 
+            // 3. 표준 인터페이스 처리
             var pointerEventData = new PointerEventData(EventSystem.current)
             {
                 button = this.button,
@@ -79,13 +108,7 @@ namespace echo17.EndlessBook.Demo02
                 pointerCurrentRaycast = new RaycastResult { gameObject = target }
             };
 
-            if (ExecuteEvents.ExecuteHierarchy(target, pointerEventData, ExecuteEvents.pointerClickHandler))
-            {
-                Debug.Log($"[PageView_3D] IPointerClickHandler executed on: {target.name}");
-                handled = true;
-            }
-
-            return handled;
+            return ExecuteEvents.ExecuteHierarchy(target, pointerEventData, ExecuteEvents.pointerClickHandler);
         }
     }
 }

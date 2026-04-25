@@ -633,8 +633,26 @@
                     }
                     else
                     {
-                        // drag map (demo default)
-                        pageView.Drag(incrementalChange, false);
+                        Debug.Log($"[Demo02] Drag Detected on: {pageView.name}, Type: {pageView.GetType().Name}");
+                        if (pageView is PageView_3D pv3d)
+                        {
+                             var rects = touchPad.pageColliders;
+                            int idx = (int)page;
+                            Vector2 normCurrent = new Vector2(
+                                (currentPosition.x - rects[idx].bounds.min.x) / rects[idx].bounds.size.x,
+                                (currentPosition.y - rects[idx].bounds.min.z) / rects[idx].bounds.size.z
+                            );
+                            Vector2 normDelta = new Vector2(
+                                incrementalChange.x / rects[idx].bounds.size.x,
+                                incrementalChange.y / rects[idx].bounds.size.z
+                            );
+                            pv3d.HandleDrag3D(normCurrent, normDelta);
+                        }
+                        else
+                        {
+                            // drag map (demo default)
+                            pageView.Drag(incrementalChange, false);
+                        }
                     }
                 }
             }

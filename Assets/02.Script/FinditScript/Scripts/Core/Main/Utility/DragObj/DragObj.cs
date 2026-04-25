@@ -1,13 +1,14 @@
-﻿using System;
+using System;
 using DeskCat.FindIt.Scripts.Core.Main.System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using Util.CameraSetting;
 
 namespace DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj
 {
     [Serializable] public class DragAndDropEvent3D : UnityEvent<DragObj> { }
-    public class DragObj : MonoBehaviour
+    public class DragObj : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
     {
         public string DropRegionName = "";
         public bool HideWhenDropToRegion = true;
@@ -41,12 +42,16 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj
 
         private HiddenObj _hiddenObj;
         private BoxCollider2D _collider;
+        private Vector3? _virtualMousePosition = null;
 
+        public HiddenObj GetCurrentHiddenObj() => _hiddenObj;
+        public void SetVirtualMousePosition(Vector3 screenPos) => _virtualMousePosition = screenPos;
+        public void ClearVirtualMousePosition() => _virtualMousePosition = null;
 
-        public HiddenObj GetCurrentHiddenObj()
-        {
-            return _hiddenObj;
-        }
+        // 가상 드래그 API 추가
+        public void StartVirtualDrag(Vector3 initialPosition) { OnBeginDrag(null); }
+        public void UpdateVirtualDrag(Vector3 newWorldPosition) { }
+        public void EndVirtualDrag() { OnEndDrag(null); }
 
         private void Start()
         {
@@ -60,10 +65,12 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj
             
             _hiddenObj = GetComponent<HiddenObj>();
             _collider = GetComponent<BoxCollider2D>();
-
         }
 
-        private void OnMouseDown()
+        public void OnPointerDown(PointerEventData eventData) => OnBeginDrag(eventData);
+        public void OnPointerUp(PointerEventData eventData) => OnEndDrag(eventData);
+
+        public void OnBeginDrag(PointerEventData eventData)
         {
             var position = gameObject.transform.position;
             _xPosition = position.x;
@@ -78,7 +85,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj
             CameraView3D.SetEnableOrbit(false);
         }
 
-        private void OnMouseDrag()
+        public void OnDrag(PointerEventData eventData)
         {
             if (!EnableCollisionWhenDrag)
             {
@@ -96,10 +103,9 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj
             {
                 _hiddenObj.DragRegionAction?.Invoke();
             }
-
         }
 
-        private void OnMouseUp()
+        public void OnEndDrag(PointerEventData eventData)
         {   
             if (!EnableCollisionWhenDrag)
             {
@@ -117,7 +123,6 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj
             {
                 transform.position = new Vector3(_xPosition, _yPosition, _zPosition);
             }
-
         }
 
         private void DropRegionCheck()
@@ -142,7 +147,7 @@ namespace DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj
         private Vector3 CalculateObjPosition()
         {
             _mZCoord = _mainCamera.WorldToScreenPoint(gameObject.transform.position).z;
-            var mousePoint = InputCompatibility.MousePosition();
+            Vector3 mousePoint = _virtualMousePosition.HasValue ? _virtualMousePosition.Value : InputCompatibility.MousePosition();
             mousePoint.z = _mZCoord;
             return _mainCamera.ScreenToWorldPoint(mousePoint);
         }
