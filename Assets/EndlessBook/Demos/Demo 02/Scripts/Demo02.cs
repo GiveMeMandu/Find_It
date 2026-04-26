@@ -431,6 +431,10 @@
                         PageView rightView = GetPageView(book.CurrentRightPageNumber);
                         if (rightView != null && rightView is PageView_UI uiRight) uiRight.HandlePointerUp(hitPointNormalized);
 
+                        // PageView_3D 드래그 종료 (어느 쪽 페이지에서 드래그가 시작됐든 정리)
+                        if (leftView is PageView_3D pv3dLeft) pv3dLeft.EndDrag3D();
+                        if (rightView is PageView_3D pv3dRight) pv3dRight.EndDrag3D();
+
                         // get the left page view if available.
                         // in this demo we only have one group of pages that handle the drag: the map.
                         // instead of having logic for dragging on both pages, we'll just handle it on the left

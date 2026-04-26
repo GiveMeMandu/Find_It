@@ -560,4 +560,109 @@ public class LeanClickEvent : LeanSelectableByFinger
 
 		return depth;
 	}
+
+	// --- 외부 카메라 뷰(PageView_3D 등)에서 터치 처리 시 사용하는 static API ---
+
+	/// <summary>
+	/// 외부에서 OnGlobalClickSuccess 이벤트를 발생시키는 래퍼 (static event는 선언 클래스 내부에서만 invoke 가능)
+	/// </summary>
+	public static void RaiseGlobalClickSuccess(GameObject go, Vector2 screenPos)
+	{
+		OnGlobalClickSuccess?.Invoke(go, screenPos);
+	}
+
+	/// <summary>
+	/// 미리 수집한 Collider2D 배열에서 우선순위가 가장 높은 LeanClickEvent를 반환
+	/// </summary>
+	public static LeanClickEvent FindTopPriorityClickEvent(Collider2D[] allHits)
+	{
+		if (allHits == null || allHits.Length == 0) return null;
+
+		bool hasOverHiddenLayer = System.Array.Exists(allHits,
+			h => h != null && h.gameObject.layer == Helper.LayerManager.OverHiddenObjectLayer);
+
+		bool hasUnfoundHiddenObj = !hasOverHiddenLayer && System.Array.Exists(allHits, h =>
+		{
+			if (h == null) return false;
+			var ho = h.GetComponent<HiddenObj>();
+			return ho != null && !ho.IsFound;
+		});
+
+		var candidates = new List<LeanClickEvent>();
+		foreach (var col in allHits)
+		{
+			if (col == null) continue;
+			var ce = col.GetComponent<LeanClickEvent>();
+			if (ce == null || !ce.Enable) continue;
+
+			if (hasOverHiddenLayer && col.gameObject.layer != Helper.LayerManager.OverHiddenObjectLayer)
+				continue;
+
+			if (hasUnfoundHiddenObj)
+			{
+				var ho = ce.GetComponent<HiddenObj>();
+				if (ho == null || ho.IsFound) continue;
+			}
+
+			candidates.Add(ce);
+		}
+
+		if (candidates.Count == 0) return null;
+		if (candidates.Count == 1) return candidates[0];
+
+		candidates.Sort(CompareClickEventPriority);
+		return candidates[0];
+	}
+
+	private static int CompareClickEventPriority(LeanClickEvent a, LeanClickEvent b)
+	{
+		if (a.gameObject.layer == Helper.LayerManager.OverHiddenObjectLayer &&
+			b.gameObject.layer != Helper.LayerManager.OverHiddenObjectLayer) return -1;
+		if (b.gameObject.layer == Helper.LayerManager.OverHiddenObjectLayer &&
+			a.gameObject.layer != Helper.LayerManager.OverHiddenObjectLayer) return 1;
+
+		var hiddenA = a.GetComponent<HiddenObj>();
+		var hiddenB = b.GetComponent<HiddenObj>();
+		bool aHidden = hiddenA != null && !hiddenA.IsFound;
+		bool bHidden = hiddenB != null && !hiddenB.IsFound;
+		if (aHidden && !bHidden) return -1;
+		if (bHidden && !aHidden) return 1;
+
+		int depthA = GetHierarchyDepthStatic(a.transform);
+		int depthB = GetHierarchyDepthStatic(b.transform);
+		if (depthA != depthB)
+			return LeanTouch.CurrentReverseLayerOrder ? depthA.CompareTo(depthB) : depthB.CompareTo(depthA);
+
+		if (a.transform.parent == b.transform.parent)
+			return LeanTouch.CurrentReverseLayerOrder
+				? a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex())
+				: b.transform.GetSiblingIndex().CompareTo(a.transform.GetSiblingIndex());
+
+		Transform aParent = a.transform.parent, bParent = b.transform.parent;
+		while (aParent != null && bParent != null && aParent.parent != bParent.parent)
+		{
+			if (aParent.parent == null || bParent.parent == null) break;
+			aParent = aParent.parent;
+			bParent = bParent.parent;
+		}
+
+		if (aParent != null && bParent != null && aParent.parent == bParent.parent)
+			return LeanTouch.CurrentReverseLayerOrder
+				? aParent.GetSiblingIndex().CompareTo(bParent.GetSiblingIndex())
+				: bParent.GetSiblingIndex().CompareTo(aParent.GetSiblingIndex());
+
+		Transform aRoot = a.transform, bRoot = b.transform;
+		while (aRoot.parent != null) aRoot = aRoot.parent;
+		while (bRoot.parent != null) bRoot = bRoot.parent;
+		return LeanTouch.CurrentReverseLayerOrder
+			? aRoot.GetSiblingIndex().CompareTo(bRoot.GetSiblingIndex())
+			: bRoot.GetSiblingIndex().CompareTo(aRoot.GetSiblingIndex());
+	}
+
+	private static int GetHierarchyDepthStatic(Transform t)
+	{
+		int depth = 0;
+		while (t.parent != null) { depth++; t = t.parent; }
+		return depth;
+	}
 }

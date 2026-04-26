@@ -265,22 +265,59 @@
             PageEnum page;
             bool tableOfContents;
 
-            // get the hit point if we can
-            if (GetHitPoint(position, out hitPosition, out hitPositionNormalized, out page, out tableOfContents))
+            bool hit = GetHitPoint(position, out hitPosition, out hitPositionNormalized, out page, out tableOfContents);
+
+            // 드래그 중이면 시작 페이지로 고정 (다른 페이지나 collider 밖으로 이동해도 드래그 유지)
+            if (dragging)
             {
-                // get the offset from the last drag position
-                var offset = hitPosition - lastDragPosition;
-
-                // if the offset is more than the drag minimum
-                if (offset.magnitude >= DragThreshold)
+                page = lastTouchedPage;
+                if (!hit)
                 {
-                    // dragging is true, fire the handler and update the last position
-
-                    dragging = true;
-                    dragDetected(page, touchDownPosition, hitPosition, offset);
-                    lastDragPosition = hitPosition;
+                    // collider 밖: 시작 페이지 평면에 투영해 위치 추정
+                    hit = ProjectOntoPagePlane(position, lastTouchedPage, out hitPosition, out hitPositionNormalized);
                 }
             }
+
+            if (!hit) return;
+
+            // get the offset from the last drag position
+            var offset = hitPosition - lastDragPosition;
+
+            // if the offset is more than the drag minimum
+            if (offset.magnitude >= DragThreshold)
+            {
+                dragging = true;
+                dragDetected(page, touchDownPosition, hitPosition, offset);
+                lastDragPosition = hitPosition;
+            }
+        }
+
+        /// <summary>
+        /// 페이지 collider의 표면 평면에 마우스 레이를 투영해 hitPosition을 구한다.
+        /// collider 밖으로 드래그가 벗어났을 때 드래그가 끊기지 않도록 하기 위해 사용.
+        /// </summary>
+        protected virtual bool ProjectOntoPagePlane(Vector2 mousePosition, PageEnum page,
+            out Vector2 hitPosition, out Vector2 hitPositionNormalized)
+        {
+            hitPosition = Vector2.zero;
+            hitPositionNormalized = Vector2.zero;
+
+            Collider col = pageColliders[(int)page];
+            Plane pagePlane = new Plane(col.transform.up, col.bounds.center);
+            Ray ray = mainCamera.ScreenPointToRay(mousePosition);
+
+            float enter;
+            if (!pagePlane.Raycast(ray, out enter)) return false;
+
+            Vector3 worldPoint = ray.GetPoint(enter);
+            hitPosition = new Vector2(worldPoint.x, worldPoint.z);
+
+            Bounds bounds = col.bounds;
+            hitPositionNormalized = new Vector2(
+                (worldPoint.x - bounds.min.x) / bounds.size.x,
+                (worldPoint.z - bounds.min.z) / bounds.size.z);
+
+            return true;
         }
 
         /// <summary>
