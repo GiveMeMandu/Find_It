@@ -15,6 +15,7 @@ namespace Manager
             (letterBox != null && letterBox.IsPlaying);
 
         public BlurController BlurController => blurController;
+        public BushWipe BushWipe => bushWipe;
         private bool _isEffectPlaying;
 
         [SerializeField] private RectTransform _Fader;
@@ -22,6 +23,7 @@ namespace Manager
         [SerializeField] private EyeBlinkScreen eyeBlinkScreen;
         [SerializeField] private LetterBox letterBox;
         [SerializeField] private BlurController blurController;
+        [SerializeField] private BushWipe bushWipe;
 
         private CancellationTokenSource _fadeToken;
 

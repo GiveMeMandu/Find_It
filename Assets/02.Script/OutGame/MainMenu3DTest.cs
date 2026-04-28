@@ -66,6 +66,7 @@ namespace OutGame
             IsFirstMainMenuLoad = false;
             
             CanPlay = true;
+            Global.UIEffectManager.BushWipe.WipeOut();
             Global.UIManager.mouseUIController.FadeIn();
             // 인게임 스테이지에서 Start 씬으로 전환된 경우 리뷰 페이지 열기
             if (LoadingSceneManager.shouldOpenReviewPage)
