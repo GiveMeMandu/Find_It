@@ -110,8 +110,16 @@
         /// </summary>
         public PageView[] pageViews;
 
+        /// <summary>
+        /// Component to change color based on page
+        /// </summary>
+        public PageColorChange pageColorController;
+
         void Start()
         {
+            // find page color controller if not set
+            if (pageColorController == null) pageColorController = Object.FindAnyObjectByType<PageColorChange>();
+
             // turn off all the mini-scenes since no pages are visible
             TurnOffAllPageViews();
 
@@ -137,6 +145,20 @@
         /// <param name="pageNumber">Current page number</param>
         protected virtual void OnBookStateChanged(EndlessBook.StateEnum fromState, EndlessBook.StateEnum toState, int pageNumber)
         {
+            if (pageColorController != null)
+            {
+                // 현재 상태에 따른 페이지 번호 결정
+                int currentPage = pageNumber;
+                if (toState == EndlessBook.StateEnum.ClosedFront) currentPage = 0;
+                else if (toState == EndlessBook.StateEnum.ClosedBack) currentPage = 999;
+                else if (toState == EndlessBook.StateEnum.OpenFront) currentPage = 0;
+                else if (toState == EndlessBook.StateEnum.OpenBack) currentPage = 999;
+                else if (toState == EndlessBook.StateEnum.OpenMiddle) currentPage = book.CurrentRightPageNumber;
+
+                // 상태 변경 시에는 openCloseTime 동안 부드럽게 변경
+                pageColorController.BlendColorByPage(currentPage, openCloseTime);
+            }
+
             switch (toState)
             {
                 case EndlessBook.StateEnum.ClosedFront:
@@ -168,8 +190,12 @@
                     }
 
                     // turn off the front and back page mini-scenes
-                    TogglePageView(0, false);
-                    TogglePageView(999, false);
+                    TogglePageView(0, false, true);
+                    TogglePageView(999, false, true);
+
+                    // turn on the left and right page views
+                    if (book.CurrentLeftPageNumber > 0) TogglePageView(book.CurrentLeftPageNumber, true);
+                    if (book.CurrentRightPageNumber > 0) TogglePageView(book.CurrentRightPageNumber, true);
 
                     break;
 
@@ -211,6 +237,10 @@
             {
                 if (pageViews[i] != null)
                 {
+                    // Use index logic to match page numbers if needed, 
+                    // but usually TogglePageView by page number is better.
+                    // Here we just notify and deactivate each view directly.
+                    pageViews[i].WillDeactivate();
                     pageViews[i].Deactivate();
                 }
             }
@@ -221,24 +251,38 @@
         /// </summary>
         /// <param name="pageNumber">The page number</param>
         /// <param name="on">Whether the mini-scene is on or off</param>
-        protected virtual void TogglePageView(int pageNumber, bool on)
+        /// <param name="activateNow">Whether to actually activate/deactivate the object now</param>
+        protected virtual void TogglePageView(int pageNumber, bool on, bool activateNow = true)
         {
             var pageView = GetPageView(pageNumber);
 
             if (pageView != null)
             {
-                if (pageView != null)
+                if (on)
                 {
-                    if (on)
-                    {
-                        pageView.Activate();
-                    }
-                    else
+                    if (activateNow) pageView.Activate();
+                }
+                else
+                {
+                    // Always notify that the page is about to be hidden
+                    pageView.WillDeactivate();
+
+                    if (activateNow)
                     {
                         pageView.Deactivate();
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Notifies a page view that it will be deactivated
+        /// </summary>
+        /// <param name="pageNumber">The page number</param>
+        protected virtual void NotifyWillDeactivate(int pageNumber)
+        {
+            if (pageNumber < 0) return;
+            TogglePageView(pageNumber, false, false);
         }
 
         /// <summary>
@@ -254,6 +298,13 @@
         /// <param name="turnDirection">The direction the page is turning</param>
         protected virtual void OnPageTurnStart(Page page, int pageNumberFront, int pageNumberBack, int pageNumberFirstVisible, int pageNumberLastVisible, Page.TurnDirectionEnum turnDirection)
         {
+            if (pageColorController != null)
+            {
+                // 페이지가 넘어가기 시작할 때 목표 페이지(오른쪽)의 색상으로 블렌딩 시작
+                // 개별 페이지 넘김 시간인 singlePageTurnTime 사용
+                pageColorController.BlendColorByPage(pageNumberLastVisible, singlePageTurnTime);
+            }
+
             // play page turn sound if not flipping through multiple pages
             if (!flipping)
             {
@@ -262,6 +313,10 @@
 
             // turn off the touch pad
             ToggleTouchPad(false);
+
+            // Notify pages that are currently visible but will be hidden
+            NotifyWillDeactivate(book.CurrentLeftPageNumber);
+            NotifyWillDeactivate(book.CurrentRightPageNumber);
 
             // turn on the front and back page views of the page if necessary
             TogglePageView(pageNumberFront, true);
@@ -776,6 +831,32 @@
         {
             // turn of the touch pad
             ToggleTouchPad(false);
+
+            // if we are leaving OpenMiddle, notify pages that will be hidden
+            if (book.CurrentState == EndlessBook.StateEnum.OpenMiddle)
+            {
+                if (state == EndlessBook.StateEnum.ClosedFront || state == EndlessBook.StateEnum.ClosedBack)
+                {
+                    NotifyWillDeactivate(book.CurrentLeftPageNumber);
+                    NotifyWillDeactivate(book.CurrentRightPageNumber);
+                }
+                else if (state == EndlessBook.StateEnum.OpenFront)
+                {
+                    NotifyWillDeactivate(book.CurrentRightPageNumber);
+                }
+                else if (state == EndlessBook.StateEnum.OpenBack)
+                {
+                    NotifyWillDeactivate(book.CurrentLeftPageNumber);
+                }
+            }
+            else if (book.CurrentState == EndlessBook.StateEnum.OpenFront && state == EndlessBook.StateEnum.ClosedFront)
+            {
+                NotifyWillDeactivate(0);
+            }
+            else if (book.CurrentState == EndlessBook.StateEnum.OpenBack && state == EndlessBook.StateEnum.ClosedBack)
+            {
+                NotifyWillDeactivate(999);
+            }
 
             // set the state
             book.SetState(state, openCloseTime, OnBookStateChanged);

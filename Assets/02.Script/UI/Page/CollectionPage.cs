@@ -19,6 +19,7 @@ namespace UI.Page
         public Sprite albumIcon;
         public Sprite cameraIcon;
         public Sprite stickerIcon;
+        public int InitTabIndex = 2;
 
         public override void Init(params object[] parameters)
         {
@@ -41,7 +42,7 @@ namespace UI.Page
                 LayoutRebuilder.ForceRebuildLayoutImmediate(_tabButtonLayoutGroup.GetComponent<RectTransform>());
                 _tabButtonLayoutGroup.enabled = false;
             }
-            tabGroup.SelectTab(2); // 첫 번째 탭 선택
+            tabGroup.SelectTab(InitTabIndex); // 초기 탭 선택
         }
         [Binding]
         public override void ClosePage()

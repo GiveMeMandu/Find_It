@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityWeld;
 using UnityWeld.Binding;
 using echo17.EndlessBook.Demo02;
+using Cysharp.Threading.Tasks;
 
 namespace UI.Page
 {
@@ -27,10 +28,13 @@ namespace UI.Page
         public int stickerPageNumber = 5;
 
         private Demo02 _bookController;
+        private int? _queuedPageNumber = null;
+        private Coroutine _queueCoroutine = null;
 
         void OnEnable()
         {
             Init();
+            DisableLayoutRebuilder().Forget();
         }
         public override void Init(params object[] parameters)
         {
@@ -49,34 +53,23 @@ namespace UI.Page
             {
                 LayoutRebuilder.ForceRebuildLayoutImmediate(_tabButtonLayoutGroup.GetComponent<RectTransform>());
             }
-            
-            // 시작 시 탭 선택 로직을 코루틴으로 실행하여 북 컨트롤러가 준비된 후 넘어가도록 함
-            StartCoroutine(InitialSelectTab(2));
+            tabGroup.SelectTab(2); // 첫 번째 탭 선택 (초기화 시에는 기능 미실행)
         }
-
-        private System.Collections.IEnumerator InitialSelectTab(int index)
+        public async UniTaskVoid DisableLayoutRebuilder()
         {
-            // 한 프레임 대기하여 BookController 등이 완전히 초기화되기를 기다림
-            yield return null;
-            if (tabGroup != null)
+            await UniTask.DelayFrame(1); // 다음 프레임까지 대기하여 레이아웃 계산이 완료되도록 함
+            if (_tabButtonLayoutGroup != null)
             {
-                tabGroup.SelectTab(index);
+                _tabButtonLayoutGroup.enabled = false;
             }
-        }
-
-        void Start()
-        {
-            _tabButtonLayoutGroup.enabled = false;
         }
 
         private void SafeTurnToPage(int pageNumber)
         {
             if (_bookController == null || _bookController.book == null) return;
 
-            // 이미 넘기고 있는 중이면 무시 (버튼 연타 방지)
-            if (_bookController.book.IsTurningPages || _bookController.book.IsChangingState) return;
-
-            // 이미 해당 페이지가 펼쳐져 있다면 무시
+            // 이미 해당 페이지가 펼쳐져 있거나 넘기는 중인 목표가 같다면 무시
+            if (_queuedPageNumber == pageNumber) return;
             if (_bookController.book.CurrentState == echo17.EndlessBook.EndlessBook.StateEnum.OpenMiddle)
             {
                 if (_bookController.book.CurrentLeftPageNumber == pageNumber || _bookController.book.CurrentRightPageNumber == pageNumber)
@@ -85,7 +78,48 @@ namespace UI.Page
                 }
             }
 
+            // 현재 넘기는 중이거나 상태 변경 중이면 예약
+            if (_bookController.book.IsTurningPages || _bookController.book.IsChangingState)
+            {
+                _queuedPageNumber = pageNumber;
+                if (_queueCoroutine == null)
+                {
+                    _queueCoroutine = StartCoroutine(ProcessQueueCoroutine());
+                }
+                return;
+            }
+
+            // 즉시 실행 가능한 경우
+            _queuedPageNumber = null;
             _bookController.TurnToPage(pageNumber);
+        }
+
+        private System.Collections.IEnumerator ProcessQueueCoroutine()
+        {
+            while (_queuedPageNumber.HasValue)
+            {
+                // 책이 동작을 멈출 때까지 대기
+                while (_bookController.book.IsTurningPages || _bookController.book.IsChangingState)
+                {
+                    yield return null;
+                }
+
+                // 예약된 페이지가 있다면 실행
+                if (_queuedPageNumber.HasValue)
+                {
+                    int targetPage = _queuedPageNumber.Value;
+                    _queuedPageNumber = null; // 실행 전 비움 (연속 예약 대비)
+                    
+                    // 이미 목표 페이지에 도달해있는지 다시 확인
+                    if (!(_bookController.book.CurrentLeftPageNumber == targetPage || _bookController.book.CurrentRightPageNumber == targetPage))
+                    {
+                        _bookController.TurnToPage(targetPage);
+                        // 넘기기 시작했으므로 다음 루프에서 다시 대기
+                        yield return null; 
+                    }
+                }
+            }
+            _queueCoroutine = null;
         }
 
         [Binding]

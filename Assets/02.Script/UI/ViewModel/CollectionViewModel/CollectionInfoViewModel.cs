@@ -9,6 +9,7 @@ using UnityWeld;
 using UnityWeld.Binding;
 using UnityEngine.UI;
 using UI.Page;
+using echo17.EndlessBook.Demo02;
 
 namespace UI
 {
@@ -108,6 +109,12 @@ namespace UI
                 OnPropertyChanged(nameof(IsAllPlaced));
             }
         }
+        private BookPage _bookPage;
+        public void Start()
+        {
+            _bookPage = FindFirstObjectByType<BookPage>(UnityEngine.FindObjectsInactive.Include);
+        }
+
 
         [Binding]
         public void OnClickPlaceSticker()
@@ -139,6 +146,12 @@ namespace UI
                 if (diaryViewModel != null)
                 {
                     diaryViewModel.PlaceNewSticker(_currentCollection);
+                    
+                    if (_bookPage != null)
+                    {
+                        _bookPage.OnClickAlbumViewButton();
+                    }
+
                     // Refresh count text
                     CurCount = Global.CollectionManager.GetCollectionCount(_currentCollection);
                     CollectionCount = CurCount.ToString();

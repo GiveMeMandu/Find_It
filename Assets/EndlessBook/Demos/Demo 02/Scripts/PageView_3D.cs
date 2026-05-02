@@ -4,6 +4,8 @@ namespace echo17.EndlessBook.Demo02
     using UnityEngine.EventSystems;
     using Lean.Touch;
     using DeskCat.FindIt.Scripts.Core.Main.Utility.DragObj;
+    using UnityEngine.Events;
+    using Cysharp.Threading.Tasks;
 
     public class PageView_3D : PageView
     {
@@ -17,6 +19,35 @@ namespace echo17.EndlessBook.Demo02
         private DragObj _activeDragObj;
         private Vector3 _dragStartPos;        // 드래그 시작 시 오브젝트 월드 위치
         private Vector2 _dragInitialViewport; // 드래그 시작 시 뷰포트 좌표
+        public UnityEvent onPageOpen;
+        public UnityEvent onPageOpenComplete;
+        public UnityEvent onPageWillClose;
+        public UnityEvent onPageClose;
+        public override void Activate()
+        {
+            base.Activate();
+
+            onPageOpen?.Invoke();
+            PageOpenComplete().Forget();
+        }
+
+        public override void WillDeactivate()
+        {
+            base.WillDeactivate();
+            onPageWillClose?.Invoke();
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+
+            onPageClose?.Invoke();
+        }
+        public async UniTaskVoid PageOpenComplete()
+        {
+            await UniTask.WaitForSeconds(0.7f);
+            onPageOpenComplete?.Invoke();
+        }
 
         public override bool RayCast(Vector2 hitPointNormalized, BookActionDelegate action)
         {

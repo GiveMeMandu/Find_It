@@ -24,6 +24,8 @@
         [Tooltip("Whether this page can be turned or not.")]
         public bool canTurnPage = true;
 
+        protected bool willDeactivateNotified;
+
         void Awake()
         {
             // cache the page camera
@@ -32,6 +34,7 @@
 
         public virtual void Activate()
         {
+            willDeactivateNotified = false;
             // turn on. Useful for when a page is now being shown in the book
             gameObject.SetActive(true);
         }
@@ -41,6 +44,13 @@
             // turn off. Useful for when a page is no longer visible.
             // No need to render the page scene any longer
             gameObject.SetActive(false);
+        }
+
+        public virtual void WillDeactivate()
+        {
+            if (willDeactivateNotified) return;
+            willDeactivateNotified = true;
+            // Called when the page is about to be deactivated/hidden.
         }
 
         /// <summary>

@@ -206,18 +206,28 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 3ce0fe26b6967ad409790f5c30e93acf, type: 3}
   - {fileID: 21300000, guid: f570d6eb78b343f4281bf91f3ea1564f, type: 3}
   - {fileID: 21300000, guid: 9a02335e91c7ed64c83da3ceaa7c8241, type: 3}
-  scaleRange: {x: 0.8, y: 1.4}
+  scaleRange: {x: 0.75, y: 1.6}
   rotationRange: {x: -172.5, y: 213.2}
   hueRange: {x: 0.2, y: 0.25}
   saturationRange: {x: 0.45, y: 0.7}
   valueRange: {x: 0.75, y: 1}
-  spacing: -220.5
-  positionOffsetRange: -10
+  useRGBRange: 1
+  colorMin: {r: 0.796446, g: 0.9056602, b: 0.69633305, a: 1}
+  colorMax: {r: 1, g: 1, b: 1, a: 1}
+  spacing: -220
+  positionOffsetRange: 0
   animDuration: 1.8
   staggerDelay: 0
-  animEase: 12
+  animEase: 3
   outScreenDistance: 1000
   container: {fileID: 5435901207307292488}
+  fadeImage: {fileID: 3659302903944510116}
+  OnBushWipeInComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBushWipeOutComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3202033083053108267
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,7 +1019,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2008069497251515212
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1050,8 +1060,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.95686275, g: 1, b: 0.8862745, a: 1}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
