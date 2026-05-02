@@ -488,6 +488,11 @@
         public bool IsTurningPages { get { return isTurningPages; } }
 
         /// <summary>
+        /// Is the book changing state (opening/closing)?
+        /// </summary>
+        public bool IsChangingState { get { return isChangingState; } }
+
+        /// <summary>
         /// Is a page being dragged manually?
         /// </summary>
         public bool IsDraggingPage { get { return isDraggingPage; } }
@@ -1012,7 +1017,15 @@
             }
 
             // set the materials and start the animation
-            page.Turn(turnToPage.turnDirection, turnToPage.pageTurnTime, GetPageMaterial(pageNumberFront), GetPageMaterial(pageNumberBack));
+            var frontMat = GetPageMaterial(pageNumberFront);
+            var backMat = GetPageMaterial(pageNumberBack);
+            Debug.Log("[EndlessBook] TurnPage: page=" + (page == null ? "null" : page.gameObject.name) + " (Index=" + (page == null ? -1 : page.Index) + ") direction=" + turnToPage.turnDirection + " pageTurnTime=" + turnToPage.pageTurnTime + " frontMat=" + (frontMat == null ? "null" : frontMat.name) + " backMat=" + (backMat == null ? "null" : backMat.name));
+            if (page == null)
+            {
+                Debug.LogError("[EndlessBook] TurnPage: page is null. Aborting TurnPage call.");
+                return;
+            }
+            page.Turn(turnToPage.turnDirection, turnToPage.pageTurnTime, frontMat, backMat);
 
             // set the book's left (first visible) and right (last visible) page materials
             switch (turnToPage.turnDirection)

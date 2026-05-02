@@ -785,7 +785,7 @@
         /// Turns to a page
         /// </summary>
         /// <param name="pageNumber"></param>
-        protected virtual void TurnToPage(int pageNumber)
+        public virtual void TurnToPage(int pageNumber)
         {
             var newLeftPageNumber = pageNumber % 2 == 0 ? pageNumber - 1 : pageNumber;
 

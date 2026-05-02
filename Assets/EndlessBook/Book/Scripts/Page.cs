@@ -91,41 +91,79 @@
         /// <summary>
         /// The front and back materials
         /// </summary>
-        public Material PageFrontMaterial { get { return pageRenderer.sharedMaterials[pageFrontMaterialIndex]; } }
-        public Material PageBackMaterial { get { return pageRenderer.sharedMaterials[pageBackMaterialIndex]; } }
+        public Material PageFrontMaterial 
+        { 
+            get 
+            { 
+                EnsureInitialized();
+                return pageRenderer.sharedMaterials[pageFrontMaterialIndex]; 
+            } 
+        }
+        public Material PageBackMaterial 
+        { 
+            get 
+            { 
+                EnsureInitialized();
+                return pageRenderer.sharedMaterials[pageBackMaterialIndex]; 
+            } 
+        }
 
-        void Awake()
+        private bool _isInitialized = false;
+
+        void OnEnable()
         {
-            // cache some components
+            EnsureInitialized();
+        }
 
+        protected virtual void EnsureInitialized()
+        {
+            if (_isInitialized) return;
+            _isInitialized = true;
+
+            // cache some components
             controller = GetComponent<Animator>();
             pageRenderer = GetComponentInChildren<Renderer>();
-
+            
             // cache the animation clip lengths
             if (controller != null)
             {
                 animationClipLengths = new float[System.Enum.GetNames(typeof(TurnDirectionEnum)).Length];
 
                 var ac = controller.runtimeAnimatorController;
-                for (var i = 0; i < ac.animationClips.Length; i++)
+                if (ac != null)
                 {
-                    var index = (int)(TurnDirectionEnum)System.Enum.Parse(typeof(TurnDirectionEnum), ac.animationClips[i].name);
-                    animationClipLengths[index] = ac.animationClips[i].length;
+                    var clips = ac.animationClips;
+                    if (clips != null)
+                    {
+                        for (var i = 0; i < clips.Length; i++)
+                        {
+                            try
+                            {
+                                var index = (int)(TurnDirectionEnum)System.Enum.Parse(typeof(TurnDirectionEnum), clips[i].name);
+                                animationClipLengths[index] = clips[i].length;
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+                    }
                 }
             }
 
             // index the materials used
-
-            var materials = pageRenderer.sharedMaterials;
-            for (var i = 0; i < materials.Length; i++)
+            var materials = pageRenderer != null ? pageRenderer.sharedMaterials : null;
+            if (materials != null)
             {
-                if (materials[i].name == PageFrontMaterialName)
+                for (var i = 0; i < materials.Length; i++)
                 {
-                    pageFrontMaterialIndex = i;
-                }
-                if (materials[i].name == PageBackMaterialName)
-                {
-                    pageBackMaterialIndex = i;
+                    if (materials[i].name == PageFrontMaterialName)
+                    {
+                        pageFrontMaterialIndex = i;
+                    }
+                    if (materials[i].name == PageBackMaterialName)
+                    {
+                        pageBackMaterialIndex = i;
+                    }
                 }
             }
         }
@@ -135,6 +173,7 @@
 			// if the page animation is reversing, then we check to see if the animation is complete
 			if (reversing)
 			{
+                if (controller == null) return;
 				var stateInfo = controller.GetCurrentAnimatorStateInfo(0);
 				if (stateInfo.normalizedTime <= 0.0f)
 				{
@@ -154,31 +193,69 @@
         /// <param name="backMaterial">The back of the page material</param>
         public virtual void Turn(TurnDirectionEnum direction, float time, Material frontMaterial, Material backMaterial)
         {
-			// cache the turn direction
-			turnDirectionHash = direction == TurnDirectionEnum.TurnForward ? AnimationDirectionForwardHash : AnimationDirectionBackwardHash;
-			oppositeTurnDirectionHash = direction == TurnDirectionEnum.TurnForward ? AnimationDirectionBackwardHash : AnimationDirectionForwardHash;
+            EnsureInitialized();
+
+            // cache the turn direction
+            turnDirectionHash = direction == TurnDirectionEnum.TurnForward ? AnimationDirectionForwardHash : AnimationDirectionBackwardHash;
+            oppositeTurnDirectionHash = direction == TurnDirectionEnum.TurnForward ? AnimationDirectionBackwardHash : AnimationDirectionForwardHash;
 
             // turn on the page
             gameObject.SetActive(true);
 
-            // update the materials
+            // update the materials (guard for nulls)
+            if (pageRenderer == null)
+            {
+                Debug.LogError("[Page] Turn: pageRenderer is null on '" + gameObject.name + gameObject.GetInstanceID() + "'. Aborting Turn to avoid NullReferenceException.");
+                return;
+            }
+
             var materials = pageRenderer.sharedMaterials;
-            materials[pageFrontMaterialIndex] = frontMaterial;
-            materials[pageBackMaterialIndex] = backMaterial;
-            pageRenderer.sharedMaterials = materials;
+            if (materials == null)
+            {
+                Debug.LogError("[Page] Turn: pageRenderer.sharedMaterials is null on '" + gameObject.name + "'. Aborting Turn.");
+                return;
+            }
+
+            if (pageFrontMaterialIndex < 0 || pageFrontMaterialIndex >= materials.Length || pageBackMaterialIndex < 0 || pageBackMaterialIndex >= materials.Length)
+            {
+                Debug.LogWarning("[Page] Turn: material indices out of range on '" + gameObject.name + "'. frontIndex=" + pageFrontMaterialIndex + " backIndex=" + pageBackMaterialIndex + " materialsCount=" + materials.Length);
+            }
+            else
+            {
+                materials[pageFrontMaterialIndex] = frontMaterial;
+                materials[pageBackMaterialIndex] = backMaterial;
+                pageRenderer.sharedMaterials = materials;
+            }
 
             // set the page turn animation speed: clip length / desired length = speed
-			if (time == 0)
-			{
-				// if the time is set to zero because the page is being manually dragged,
-				// then set the animation speed to zero
-				controller.SetFloat(AnimationSpeedHash, 0);
-			}
-			else
-			{
-				// animation is proceding normally, so set the speed
-				controller.SetFloat(AnimationSpeedHash, animationClipLengths[(int)direction] / time);
-			}
+            if (controller == null)
+            {
+                Debug.LogError("[Page] Turn: controller is null on '" + gameObject.name + "'. Cannot set animation speed or trigger.");
+                return;
+            }
+
+            if (time == 0)
+            {
+                // if the time is set to zero because the page is being manually dragged,
+                // then set the animation speed to zero
+                controller.SetFloat(AnimationSpeedHash, 0);
+            }
+            else
+            {
+                // animation is proceeding normally, so set the speed
+                if (animationClipLengths == null)
+                {
+                    Debug.LogError("[Page] Turn: animationClipLengths is null on '" + gameObject.name + "'. Cannot compute speed.");
+                    return;
+                }
+                int idx = (int)direction;
+                if (idx < 0 || idx >= animationClipLengths.Length)
+                {
+                    Debug.LogError("[Page] Turn: animationClipLengths index " + idx + " out of range (len=" + animationClipLengths.Length + ") on '" + gameObject.name + "'.");
+                    return;
+                }
+                controller.SetFloat(AnimationSpeedHash, animationClipLengths[idx] / time);
+            }
 
             // set the triggers to control which animation is playing
             controller.SetTrigger(turnDirectionHash);
