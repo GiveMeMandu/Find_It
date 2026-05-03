@@ -5,6 +5,7 @@
     using System.Linq;
     using UnityEngine;
     using echo17.EndlessBook;
+    using Cysharp.Threading.Tasks;
 
     /// <summary>
     /// The type of action to occur from a page view
@@ -208,8 +209,43 @@
                     break;
             }
 
+            // 1. 책이 어떤 상태로든 이동을 마쳤을 때 실행
+            if (toState == EndlessBook.StateEnum.OpenMiddle || 
+                toState == EndlessBook.StateEnum.OpenFront || 
+                toState == EndlessBook.StateEnum.OpenBack)
+            {
+                // 현재 화면에 보이는 페이지들의 PageView_3D를 찾아 완료 알림을 보냄
+                if (toState == EndlessBook.StateEnum.OpenMiddle)
+                {
+                    NotifyPageOpen(book.CurrentLeftPageNumber);
+                    NotifyPageOpen(book.CurrentRightPageNumber);
+                }
+                else if (toState == EndlessBook.StateEnum.OpenFront)
+                {
+                    NotifyPageOpen(0);
+                }
+                else if (toState == EndlessBook.StateEnum.OpenBack)
+                {
+                    NotifyPageOpen(999);
+                }
+            }
+
             // turn on the touchpad
             ToggleTouchPad(true);
+        }
+
+        /// <summary>
+        /// 도우미 메서드: PageView_3D를 찾아 완료 알림을 보냄
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        protected virtual void NotifyPageOpen(int pageNumber)
+        {
+            var view = GetPageView(pageNumber) as PageView_3D;
+            if (view != null)
+            {
+                // PageView_3D에 있는 UniTask 메서드 호출 (0.7초 대기 후 이벤트 발생)
+                view.PageOpenComplete().Forget();
+            }
         }
 
         /// <summary>

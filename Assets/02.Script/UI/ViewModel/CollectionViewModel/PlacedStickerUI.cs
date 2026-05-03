@@ -152,13 +152,16 @@ namespace UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform.parent as RectTransform, eventData.position, eventData.pressEventCamera, out Vector2 localPointerPosition))
+            // 델타(delta)를 기반으로 이동하여 PageView_UI의 민감도 설정을 따릅니다.
+            // ScreenPointToLocalPointInRectangle을 두 번 호출하여 현재와 이전 위치의 로컬 차이를 계산합니다.
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform.parent as RectTransform, eventData.position, eventData.pressEventCamera, out Vector2 currentPos) &&
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform.parent as RectTransform, eventData.position - eventData.delta, eventData.pressEventCamera, out Vector2 lastPos))
             {
                 // Ensure this sticker becomes the selected one if dragged directly
                 DiaryViewModel.SelectSticker(this);
                 
-                Vector3 offsetToOriginal = localPointerPosition - originalLocalPointerPosition;
-                Vector3 newPos = originalPanelLocalPosition + offsetToOriginal;
+                Vector2 localDelta = currentPos - lastPos;
+                Vector3 newPos = rectTransform.localPosition + (Vector3)localDelta;
 
                 // Clamp to boundary if provided
                 if (DiaryViewModel.boundaryRect != null)
@@ -210,50 +213,42 @@ namespace UI
             resizeRotateArea.triggers.Add(downEntry);
         }
 
-        private Vector2 _originalPointer;
-        private Vector3 _originalScale;
-        private float _originalAngle;
-        private Vector2 _originalDir;
-
-        private void OnResizeRotateDown(PointerEventData data)
+        private void OnResizeRotateDown(PointerEventData _)
         {
             DiaryViewModel.SelectSticker(this);
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform.parent as RectTransform, data.position, data.pressEventCamera, out _originalPointer);
-            _originalScale = rectTransform.localScale;
-            
-            // For rotation
-            Vector2 rectLocalPos = rectTransform.localPosition;
-            _originalDir = (_originalPointer - rectLocalPos).normalized;
-            _originalAngle = rectTransform.localEulerAngles.z;
         }
 
         private void OnResizeRotateDrag(PointerEventData data)
         {
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform.parent as RectTransform, data.position, data.pressEventCamera, out Vector2 currentPointer))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    rectTransform.parent as RectTransform, data.position, data.pressEventCamera, out Vector2 currentPos) &&
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    rectTransform.parent as RectTransform, data.position - data.delta, data.pressEventCamera, out Vector2 lastPos))
             {
-                Vector2 rectLocalPos = rectTransform.localPosition;
-                Vector2 currentDir = (currentPointer - rectLocalPos).normalized;
+                Vector2 localDelta = currentPos - lastPos;
+                Vector2 toPointer = currentPos - (Vector2)rectTransform.localPosition;
+                float dist = toPointer.magnitude;
 
-                // Scale (distance based)
-                float initialDist = Vector2.Distance(_originalPointer, rectLocalPos);
-                float currentDist = Vector2.Distance(currentPointer, rectLocalPos);
-                
-                    if (initialDist > 0.01f)
-                    {
-                        float scaleFactor = currentDist / initialDist;
-                        Vector3 newScale = _originalScale * scaleFactor;
-                        
-                        // Limit scale between 0.5x and 2.5x
-                        newScale.x = Mathf.Clamp(newScale.x, 0.5f, 2.5f);
-                        newScale.y = Mathf.Clamp(newScale.y, 0.5f, 2.5f);
-                        newScale.z = Mathf.Clamp(newScale.z, 0.5f, 2.5f);
-                        
-                        rectTransform.localScale = newScale;
-                    }
+                if (dist > 0.01f)
+                {
+                    Vector2 radial = toPointer / dist;
 
-                    // Rotate
-                float angleOffset = Vector2.SignedAngle(_originalDir, currentDir);
-                rectTransform.localEulerAngles = new Vector3(0, 0, _originalAngle + angleOffset);
+                    // Scale: delta의 반경 방향 성분으로 incremental 스케일
+                    float radialDelta = Vector2.Dot(localDelta, radial);
+                    float scaleFactor = (dist + radialDelta) / dist;
+                    Vector3 newScale = rectTransform.localScale * scaleFactor;
+                    newScale.x = Mathf.Clamp(newScale.x, 0.5f, 2.5f);
+                    newScale.y = Mathf.Clamp(newScale.y, 0.5f, 2.5f);
+                    newScale.z = Mathf.Clamp(newScale.z, 0.5f, 2.5f);
+                    rectTransform.localScale = newScale;
+
+                    // Rotate: delta의 접선 방향 성분으로 incremental 회전
+                    Vector2 tangent = new(-radial.y, radial.x);
+                    float tangentialDelta = Vector2.Dot(localDelta, tangent);
+                    float angleChange = tangentialDelta / dist * Mathf.Rad2Deg;
+                    Vector3 euler = rectTransform.localEulerAngles;
+                    rectTransform.localEulerAngles = new Vector3(euler.x, euler.y, euler.z + angleChange);
+                }
 
                 DiaryViewModel.SaveStickerState(this);
             }

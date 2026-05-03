@@ -67,6 +67,24 @@ namespace UI
                 _tabs[index].button.onClick.Invoke();
         }
 
+        public void DeselectAll()
+        {
+            if (_selectedIndex < 0 || _selectedIndex >= _tabs.Count) return;
+
+            int previousSelectedIndex = _selectedIndex;
+            _selectedIndex = -1;
+
+            for (int i = 0; i < _tabs.Count; i++)
+            {
+                if (_tabs[i] == null) continue;
+
+                if (i == previousSelectedIndex)
+                    _tabs[i].SetState(false, false);
+                else
+                    _tabs[i].SetVisualState(false);
+            }
+        }
+
         private void SelectTab(int index, Action onSelect)
         {
             if (_selectedIndex == index) return;

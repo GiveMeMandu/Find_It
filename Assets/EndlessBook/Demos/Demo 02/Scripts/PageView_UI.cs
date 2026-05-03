@@ -76,6 +76,7 @@ namespace echo17.EndlessBook.Demo02
             currentEventData = new PointerEventData(EventSystem.current)
             {
                 position = screenPos,
+                pressPosition = screenPos, // 드래그 시작 위치 저장
                 button = PointerEventData.InputButton.Left
             };
 
@@ -108,7 +109,11 @@ namespace echo17.EndlessBook.Demo02
 
                 // 스크롤뷰 등을 대비한 초기화 (잠재적 드래그 인식)
                 currentEventData.pointerPress = currentPointerPress;
-                currentDragObject = ExecuteEvents.ExecuteHierarchy(hitObject, currentEventData, ExecuteEvents.initializePotentialDrag);
+                currentDragObject = ExecuteEvents.GetEventHandler<IDragHandler>(hitObject);
+                if (currentDragObject == null)
+                {
+                    currentDragObject = ExecuteEvents.ExecuteHierarchy(hitObject, currentEventData, ExecuteEvents.initializePotentialDrag);
+                }
             }
             else
             {
@@ -126,7 +131,12 @@ namespace echo17.EndlessBook.Demo02
             SwapEventCamera(); // 드래그 중에도 이벤트 카메라 최신화
 
             Vector2 screenPos = NormalizedToScreen(hitPointNormalized);
-            Vector2 deltaScreen = new Vector2(deltaNormalized.x * targetRenderTexture.width, deltaNormalized.y * targetRenderTexture.height) * dragSensitivity;
+            
+            // 드래그 민감도를 델타(delta)에만 적용합니다.
+            // 위치(position)를 원본 그대로 전달해야 회전/크기 조절 핸들이 정확하게 작동합니다.
+            // 대신 스크롤뷰 등 delta를 사용하는 요소들은 민감도의 영향을 받게 됩니다.
+            Vector2 fullDeltaScreen = DeltaNormalizedToScreen(deltaNormalized);
+            Vector2 deltaScreen = fullDeltaScreen * dragSensitivity;
 
             // record debug drag
             debugLastDragNormalized = hitPointNormalized;
@@ -206,6 +216,24 @@ namespace echo17.EndlessBook.Demo02
 
         private Vector2 NormalizedToScreen(Vector2 hitPointNormalized)
         {
+            Vector2 size = GetTargetSize();
+            return new Vector2(
+                hitPointNormalized.x * size.x,
+                hitPointNormalized.y * size.y
+            );
+        }
+
+        private Vector2 DeltaNormalizedToScreen(Vector2 deltaNormalized)
+        {
+            Vector2 size = GetTargetSize();
+            return new Vector2(
+                deltaNormalized.x * size.x,
+                deltaNormalized.y * size.y
+            );
+        }
+
+        private Vector2 GetTargetSize()
+        {
             Camera cam = pageViewCamera != null ? pageViewCamera : GetComponentInChildren<Camera>();
             float width = targetRenderTexture.width;
             float height = targetRenderTexture.height;
@@ -215,11 +243,7 @@ namespace echo17.EndlessBook.Demo02
                 width = cam.pixelWidth;
                 height = cam.pixelHeight;
             }
-
-            return new Vector2(
-                hitPointNormalized.x * width,
-                hitPointNormalized.y * height
-            );
+            return new Vector2(width, height);
         }
 
         // Map a viewport-normalized point to a world point using the page camera and raycasts

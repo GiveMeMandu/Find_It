@@ -54,11 +54,7 @@ namespace UI
 
         public void SetState(bool selected, bool isLeftOfSelected)
         {
-            if (selectedHighlight != null)
-                selectedHighlight.SetActive(selected);
-
-            if (button != null)
-                button.enabled = !selected;
+            SetVisualState(selected);
 
             if (selected)
                 OnSelected?.Invoke();
@@ -70,6 +66,15 @@ namespace UI
                 else
                     OnDeselectedRight?.Invoke();
             }
+        }
+
+        public void SetVisualState(bool selected)
+        {
+            if (selectedHighlight != null)
+                selectedHighlight.SetActive(selected);
+
+            if (button != null)
+                button.enabled = !selected;
         }
     }
 }

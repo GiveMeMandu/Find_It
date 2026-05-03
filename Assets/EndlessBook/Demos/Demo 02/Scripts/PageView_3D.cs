@@ -28,7 +28,6 @@ namespace echo17.EndlessBook.Demo02
             base.Activate();
 
             onPageOpen?.Invoke();
-            PageOpenComplete().Forget();
         }
 
         public override void WillDeactivate()
@@ -45,7 +44,7 @@ namespace echo17.EndlessBook.Demo02
         }
         public async UniTaskVoid PageOpenComplete()
         {
-            await UniTask.WaitForSeconds(0.7f);
+            // await UniTask.WaitForSeconds(0.7f);
             onPageOpenComplete?.Invoke();
         }
 

@@ -63,8 +63,13 @@ namespace UI.Page
                 _tabButtonLayoutGroup.enabled = false;
             }
         }
+        public void OnClickOptionButton()
+        {
+            // 옵션 페이지로 이동
+            Global.UIManager.OpenPage<OptionPage>();
+        }
 
-        private void SafeTurnToPage(int pageNumber)
+        public void SafeTurnToPage(int pageNumber)
         {
             if (_bookController == null || _bookController.book == null) return;
 
